@@ -29,7 +29,7 @@ except KeyError as e:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.199.2.111', ]
 
 
 # Application definition
@@ -85,7 +85,7 @@ DATABASES = {
         'NAME': 'planner',
         'USER': 'postgres',
         'PASSWORD': 'Comebackplz56!!',
-        'HOST': '10.199.2.111',
+        # 'HOST': 'localhost',
     }
 }
 

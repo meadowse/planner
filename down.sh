@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo killall gunicorn
+sudo kill $(cat "/var/run/gunicorn/planner/dev.pid")
