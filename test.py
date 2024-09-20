@@ -18,13 +18,16 @@ def get_mp_id_and_name():
         """
         cur.execute(sql)
         result = cur.fetchone()
-
+        str = result[1]
+        List = str.split('\r\n')
+        for elem in List:
+            if
         # Преобразование результата в список словарей
         # result_list = [{'manager_name': row[0], 'total_payments': row[1]} for row in result]
 
         # Сериализация в JSON
-        json_result = json.dumps(result, ensure_ascii=False)
+        # json_result = json.dumps(result, ensure_ascii=False)
 
-        return json_result
+        return List
 
 print(get_mp_id_and_name())
