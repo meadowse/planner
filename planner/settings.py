@@ -29,7 +29,7 @@ except KeyError as e:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.199.2.111', ]
+ALLOWED_HOSTS = ['10.199.2.112', '10.199.2.118', '127.0.0.1', ]
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     # 'csp.middleware.CSPMiddleware',
 ]
 
@@ -147,3 +149,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # project/settings.py
 # Allow browsers to load normalize.css from cdn.jsdelivr.net
 # CSP_STYLE_SRC = ["'self'", "cdn.jsdelivr.net"]
+
+# CORS SETTINGS
+CORS_ALLOW_ALL_ORIGINS = False  # Разрешить все источники или нет
+CORS_ALLOWED_ORIGINS = [
+    "https://rasilka.ru",       # Добавьте разрешенные источники
+    "https://rasilka.online",  # Другие разрешенные источники
+    'http://localhost:3500',
+    'http://10.199.2.118:3500',
+    'http://10.13.13.5:3000'
+]
+
+CSRF_TRUSTED_ORIGINS = ['https://rasilka.ru', 'https://rasilka.online', 'http://localhost:3500', 'http://10.199.2.118:3500', 'http://10.13.13.5:3000', ]

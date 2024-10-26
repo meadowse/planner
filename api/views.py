@@ -25,7 +25,6 @@ def getAgreements(request):
             JOIN T206 ON T233.F4870 = T206.ID  -- Соединяем T233 с T206 по ID контакта
             JOIN T253 ON T212.ID = T253.F5024  -- Соединяем T212 с T253 по ID договора
             JOIN T3 ON T253.F5022 = T3.ID  -- Соединяем T253 с T3 по ID сотрудника
-            WHERE T212.ID > 2350
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
         result = cur.fetchall()
