@@ -9,7 +9,7 @@ def serialize_value(value):
         return value.isoformat()  # Преобразуем в строку формата YYYY-MM-DD или YYYY-MM-DDTHH:MM:SS
     return value
 
-def get_contracts_info():
+def getAgreements(request):
     with firebirdsql.connect(
         host=config.host,
         database=config.database,
