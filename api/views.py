@@ -2,6 +2,7 @@ import firebirdsql
 from django.http import JsonResponse
 import config
 from datetime import date, datetime
+# from time import perf_counter
 
 def serialize_value(value):
     """Преобразует значения в формат, подходящий для JSON."""
@@ -10,6 +11,7 @@ def serialize_value(value):
     return value
 
 def getAgreements(request):
+    # start = perf_counter()
     with firebirdsql.connect(
         host=config.host,
         database=config.database,
@@ -35,7 +37,6 @@ def getAgreements(request):
         FROM T212 
         LEFT JOIN T237 ON T212.F4948 = T237.ID -- Направление работ
         LEFT JOIN T205 ON T212.F4540 = T205.ID -- Контрагент
-        LEFT JOIN T233 ON T212.ID = T233.F4963  -- Соединяем T212 с T233 по ID договора
         WHERE T212.ID > 2530
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
@@ -68,4 +69,6 @@ def getAgreements(request):
             else:
                 contacts = {'contacts': [{'fullName': '', 'phone': ['', ''], 'post': '', 'email': ''}]}
             obj.update(contacts)
+        # end = perf_counter()
+        # print(end - start)
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
