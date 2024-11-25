@@ -21,22 +21,24 @@ def getAgreements(request):
     ) as con:
         cur = con.cursor()
         sql = """
-        SELECT T212.ID AS ID,  
-        T212.F4538 AS ContractNum, 
+        SELECT T212.ID AS ID, 
+        T212.F4538 AS Contract_Num, 
         T212.F4544 AS Stage, 
         T212.F4946 AS Address, 
         T237.F4890 AS services, 
         T212.F4648 AS Path, 
         T212.F4566 AS Date_of_ending, 
         T205.F4332 AS Company, 
-        '' AS Contacts, 
+        '' AS Contact_Name,
         (SELECT LIST(T3.F4886) 
         FROM T253 
         LEFT JOIN T3 ON T253.F5022 = T3.ID 
-        WHERE T212.ID = T253.F5024) AS responsible
+        WHERE T212.ID = T253.F5024) AS participants, 
+        T3.F4886 AS responsible 
         FROM T212 
         LEFT JOIN T237 ON T212.F4948 = T237.ID -- Направление работ
         LEFT JOIN T205 ON T212.F4540 = T205.ID -- Контрагент
+        JOIN T3 ON T212.F4546 = T3.ID
         WHERE T212.ID > 2530
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
