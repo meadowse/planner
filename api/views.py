@@ -55,6 +55,14 @@ def getAgreements(request):
             obj.update(stage)
             services = {'services': [{'title': obj.get('services')}]}
             obj.update(services)
+            if obj.get('participants') is not None:
+                participants = obj.get('participants').split(',')
+                data = {'participants': []}
+                for participant in participants:
+                    data.get('participants').append({'fullName': participant.strip()})
+                obj.update(data)
+            responsible = {'responsible': {'fullName': obj.get('responsible').strip()}}
+            obj.update(responsible)
             date = {'date': {'title': 'Срок работы', 'value': obj.get('date')}}
             obj.update(date)
             cur = con.cursor()
