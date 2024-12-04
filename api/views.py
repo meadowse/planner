@@ -82,3 +82,32 @@ def getAgreements(request):
         # end = perf_counter()
         # print(end - start)
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+
+def employees(request):
+    # start = perf_counter()
+    with firebirdsql.connect(
+            host=config.host,
+            database=config.database,
+            user=config.user,
+            password=config.password,
+            charset=config.charset
+    ) as con:
+        cur = con.cursor()
+        sql = """select T3.ID as id, 
+        T3.F4886 as fullName, 
+        T4.F7 as post, 
+        T3.F4887SRC as photo, 
+        T3.F14 as phone, 
+        T3.F12 as email 
+        from T3 left join T4 on T3.F11 = T4.ID"""
+        cur.execute(sql)
+        result = cur.fetchall()
+        # Преобразование результата в список словарей
+        columns = ('id', 'fullName', 'post', 'photo', 'phone', 'email')
+        json_result = [
+            {col: serialize_value(value) for col, value in zip(columns, row)}
+            for row in result
+        ]  # Создаем список словарей с сериализацией значений
+        # end = perf_counter()
+        # print(end - start)
+        return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
