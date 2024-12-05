@@ -69,7 +69,13 @@ def getAgreements(request):
             dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding')}}
             obj.update(dateOfEnding)
             cur = con.cursor()
-            sql = "select T206.F4359 as fullName, T206.F4356 as tel1, T206.F4357 as tel2, T206.F4358 as email from T233 left join T206 on T233.F4870 = T206.ID where T233.F4963 = " + str(obj.get('id'))
+            sql = ("select T206.F4359 as fullName, "
+                   "T206.F4356 as tel1, "
+                   "T206.F4357 as tel2, "
+                   "T206.F4358 as email "
+                   "from T233 "
+                   "left join T206 on T233.F4870 = T206.ID "
+                   "where T233.F4963 = ") + str(obj.get('id'))
             cur.execute(sql)
             result = cur.fetchall()
             if len(result) > 0:
@@ -102,7 +108,9 @@ def employees(request):
         T3.F4887SRC as photo, 
         T3.F14 as phone, 
         T3.F12 as email 
-        from T3 left join T4 on T3.F11 = T4.ID"""
+        from T3 
+        left join T4 on T3.F11 = T4.ID 
+        where T3.F5383 = 1"""
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
