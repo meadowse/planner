@@ -21,15 +21,16 @@ def getAgreements(request):
     ) as con:
         cur = con.cursor()
         sql = """
-        SELECT T212.ID AS ID, 
-        T212.F4538 AS Contract_Num, 
-        T212.F4544 AS Stage, 
-        T212.F4946 AS Address, 
+        SELECT T212.ID AS id, 
+        T212.F4538 AS contractNum, 
+        T212.F4544 AS stage, 
+        T212.F4946 AS address, 
         T237.F4890 AS services, 
-        T212.F4648 AS Path, 
-        T212.F4566 AS Date_of_ending, 
-        T205.F4332 AS Company, 
-        '' AS Contact_Name,
+        T212.F4648 AS path, 
+        T212.F4610 AS dateOfStart, 
+        T212.F4566 AS dateOfEnding, 
+        T205.F4332 AS company, 
+        '' AS contacts,
         (SELECT LIST(T3.F4886) 
         FROM T253 
         LEFT JOIN T3 ON T253.F5022 = T3.ID 
@@ -44,7 +45,7 @@ def getAgreements(request):
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
-        columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'date', 'company', 'contacts', 'participants', 'responsible')
+        columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'responsible')
         json_result = [
             {col: serialize_value(value) for col, value in zip(columns, row)}
             for row in result
@@ -63,8 +64,10 @@ def getAgreements(request):
                 obj.update(data)
             responsible = {'responsible': {'fullName': obj.get('responsible').strip()}}
             obj.update(responsible)
-            date = {'date': {'title': 'Срок работы', 'value': obj.get('date')}}
-            obj.update(date)
+            dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
+            obj.update(dateOfStart)
+            dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding')}}
+            obj.update(dateOfEnding)
             cur = con.cursor()
             sql = "select T206.F4359 as fullName, T206.F4356 as tel1, T206.F4357 as tel2, T206.F4358 as email from T233 left join T206 on T233.F4870 = T206.ID where T233.F4963 = " + str(obj.get('id'))
             cur.execute(sql)
