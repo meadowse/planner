@@ -1,17 +1,10 @@
 import firebirdsql
 from django.http import JsonResponse
 import config
-from datetime import date, datetime
-# from time import perf_counter
-
-def serialize_value(value):
-    """Преобразует значения в формат, подходящий для JSON."""
-    if isinstance(value, (date, datetime)):
-        return value.isoformat()  # Преобразуем в строку формата YYYY-MM-DD или YYYY-MM-DDTHH:MM:SS
-    return value
+from time import perf_counter
 
 def getAgreements(request):
-    # start = perf_counter()
+    start = perf_counter()
     with firebirdsql.connect(
         host=config.host,
         database=config.database,
@@ -30,34 +23,38 @@ def getAgreements(request):
         T212.F4610 AS dateOfStart, 
         T212.F4566 AS dateOfEnding, 
         T205.F4332 AS company, 
-        '' AS contacts,
-        (SELECT LIST(T3.F4886) 
-        FROM T253 
-        LEFT JOIN T3 ON T253.F5022 = T3.ID 
-        WHERE T212.ID = T253.F5024) AS participants, 
-        T3.F4886 AS responsible 
+        LIST(T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts, 
+        LIST(participants.F4886) AS participants, 
+        responsible.F4886 AS responsible, 
+        LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4970 || ';' || T218.F4696, '*') AS tasks 
         FROM T212 
-        LEFT JOIN T237 ON T212.F4948 = T237.ID -- Направление работ
-        LEFT JOIN T205 ON T212.F4540 = T205.ID -- Контрагент
-        JOIN T3 ON T212.F4546 = T3.ID
-        WHERE T212.ID > 2530
+        LEFT JOIN T237 ON T212.F4948 = T237.ID 
+        LEFT JOIN T205 ON T212.F4540 = T205.ID 
+        LEFT JOIN T233 ON T233.F4963 = T212.ID 
+        LEFT JOIN T206 ON T233.F4870 = T206.ID 
+        LEFT JOIN T253 ON T212.ID = T253.F5024 
+        LEFT JOIN T3 participants ON T253.F5022 = participants.ID 
+        LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID 
+        LEFT JOIN T218 ON T218.F4691 = T212.ID 
+        WHERE T212.ID > 2530 
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
-        columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'responsible')
+        columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'responsible', 'tasks')
         json_result = [
-            {col: serialize_value(value) for col, value in zip(columns, row)}
+            {col: value for col, value in zip(columns, row)}
             for row in result
         ]  # Создаем список словарей с сериализацией значений
         for obj in json_result:
-            title = obj.get('stage')
-            stage = {'stage': {'title': title}}
+            stage = {'stage': {'title': obj.get('stage')}}
             obj.update(stage)
             services = {'services': [{'title': obj.get('services')}]}
             obj.update(services)
-            if obj.get('participants') is not None:
-                participants = obj.get('participants').split(',')
+            participants = obj.get('participants')
+            if participants is not None:
+                participants = participants.split(',')
                 data = {'participants': []}
                 for participant in participants:
                     data.get('participants').append({'fullName': participant.strip()})
@@ -68,28 +65,31 @@ def getAgreements(request):
             obj.update(dateOfStart)
             dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding')}}
             obj.update(dateOfEnding)
-            cur = con.cursor()
-            sql = ("select T206.F4359 as fullName, "
-                   "T206.F4356 as tel1, "
-                   "T206.F4357 as tel2, "
-                   "T206.F4358 as email "
-                   "from T233 "
-                   "left join T206 on T233.F4870 = T206.ID "
-                   "where T233.F4963 = ") + str(obj.get('id'))
-            cur.execute(sql)
-            result = cur.fetchall()
-            if len(result) > 0:
+            Str = obj.get('contacts')
+            if Str is not None:
                 contacts = {'contacts': []}
-                for allData in result:
-                    for data in allData:
+                List = Str.split(',')
+                for allData in List:
+                    list2 = allData.split(';')
+                    for data in list2:
                         if data is not None:
                             data.strip()
-                    contacts.get('contacts').append({'fullName': allData[0], 'phone': [allData[1], allData[2]], 'post': '', 'email': allData[3]})
-            else:
-                contacts = {'contacts': [{'fullName': '', 'phone': ['', ''], 'post': '', 'email': ''}]}
-            obj.update(contacts)
-        # end = perf_counter()
-        # print(end - start)
+                    contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]], 'post': '', 'email': list2[3]})
+                obj.update(contacts)
+            Str = obj.get('tasks')
+            if Str is not None:
+                tasks = {'tasks': []}
+                List = Str.split('*')
+                for allData in List:
+                    list2 = allData.split(';')
+                    list2[0].strip()
+                    dateOfStart = list2[1]
+                    if list2[1] is None:
+                        dateOfStart = list2[2]
+                    tasks.get('tasks').append({'title': list2[0], 'dateOfStart': dateOfStart, 'dateOfEnding': list2[3]})
+                obj.update(tasks)
+        end = perf_counter()
+        print(end - start)
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
 def employees(request):
@@ -116,7 +116,7 @@ def employees(request):
         # Преобразование результата в список словарей
         columns = ('id', 'fullName', 'post', 'photo', 'phone', 'email')
         json_result = [
-            {col: serialize_value(value) for col, value in zip(columns, row)}
+            {col: value for col, value in zip(columns, row)}
             for row in result
         ]  # Создаем список словарей с сериализацией значений
         # end = perf_counter()
