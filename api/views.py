@@ -71,28 +71,23 @@ def getAgreements(request):
             dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding')}}
             obj.update(dateOfEnding)
             Str = obj.get('contacts')
-            if Str is not None:
-                contacts = {'contacts': []}
-                List = Str.split(',')
-                for allData in List:
-                    list2 = allData.split(';')
-                    for data in list2:
-                        if data is not None:
-                            data.strip()
-                    contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]], 'post': '', 'email': list2[3]})
-                obj.update(contacts)
+            contacts = {'contacts': []}
+            List = Str.split(',')
+            for allData in List:
+                list2 = allData.split(';')
+                for data in list2:
+                    if data is not None:
+                        data.strip()
+                contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]], 'post': '', 'email': list2[3]})
+            obj.update(contacts)
             Str = obj.get('tasks')
-            if Str is not None:
-                tasks = {'tasks': []}
-                List = Str.split('*')
-                for allData in List:
-                    list2 = allData.split(';')
-                    list2[0].strip()
-                    dateOfStart = list2[1]
-                    if list2[1] is None:
-                        dateOfStart = list2[2]
-                    tasks.get('tasks').append({'title': list2[0], 'dateOfStart': dateOfStart, 'dateOfEnding': list2[3]})
-                obj.update(tasks)
+            tasks = {'tasks': []}
+            List = Str.split('*')
+            for allData in List:
+                list2 = allData.split(';')
+                list2[0].strip()
+                tasks.get('tasks').append({'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2]})
+            obj.update(tasks)
         end = perf_counter()
         print(end - start)
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
