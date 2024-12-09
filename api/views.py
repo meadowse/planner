@@ -23,10 +23,15 @@ def getAgreements(request):
         T212.F4610 AS dateOfStart, 
         T212.F4566 AS dateOfEnding, 
         T205.F4332 AS company, 
-        LIST(T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts, 
+        LIST(CASE WHEN T206.F4359 IS NULL THEN '' ELSE T206.F4359 END || ';' || 
+        CASE WHEN T206.F4356 IS NULL THEN '' ELSE T206.F4356 END || ';' || 
+        CASE WHEN T206.F4357 IS NULL THEN '' ELSE T206.F4357 END || ';' || 
+        CASE WHEN T206.F4358 IS NULL THEN '' ELSE T206.F4358 END) AS contacts, 
         LIST(participants.F4886) AS participants, 
         responsible.F4886 AS responsible, 
-        LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4970 || ';' || T218.F4696, '*') AS tasks 
+        LIST(CASE WHEN T218.F4695 IS NULL THEN '' ELSE T218.F4695 END || ';' || 
+        CASE WHEN T218.F5569 IS NULL THEN (CASE WHEN T218.F4970 IS NULL THEN '' ELSE T218.F4970 END) ELSE T218.F5569 END || ';' || 
+        CASE WHEN T218.F4696 IS NULL THEN '' ELSE T218.F4696 END, '*') AS tasks 
         FROM T212 
         LEFT JOIN T237 ON T212.F4948 = T237.ID 
         LEFT JOIN T205 ON T212.F4540 = T205.ID 
