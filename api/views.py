@@ -23,11 +23,11 @@ def getAgreements(request):
         T212.F4610 AS dateOfStart, 
         T212.F4566 AS dateOfEnding, 
         T205.F4332 AS company, 
-        LIST(CASE WHEN T206.F4359 IS NULL THEN '' ELSE T206.F4359 END || ';' || 
+        LIST(DISTINCT CASE WHEN T206.F4359 IS NULL THEN '' ELSE T206.F4359 END || ';' || 
         CASE WHEN T206.F4356 IS NULL THEN '' ELSE T206.F4356 END || ';' || 
         CASE WHEN T206.F4357 IS NULL THEN '' ELSE T206.F4357 END || ';' || 
         CASE WHEN T206.F4358 IS NULL THEN '' ELSE T206.F4358 END) AS contacts, 
-        LIST(participants.F4886) AS participants, 
+        LIST(DISTINCT participants.F4886) AS participants, 
         responsible.F4886 AS responsible, 
         LIST(CASE WHEN T218.F4695 IS NULL THEN '' ELSE T218.F4695 END || ';' || 
         CASE WHEN T218.F5569 IS NULL THEN (CASE WHEN T218.F4970 IS NULL THEN '' ELSE T218.F4970 END) ELSE T218.F5569 END || ';' || 
