@@ -75,10 +75,13 @@ def getAgreements(request):
             List = Str.split(',')
             for allData in List:
                 list2 = allData.split(';')
+                flag = 0
                 for data in list2:
-                    if data is not None:
-                        data.strip()
-                contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]], 'post': '', 'email': list2[3]})
+                    data.strip()
+                    if data == '':
+                        flag += 1
+                if flag < 4:
+                    contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]], 'post': '', 'email': list2[3]})
             obj.update(contacts)
             Str = obj.get('tasks')
             tasks = {'tasks': []}
@@ -86,7 +89,10 @@ def getAgreements(request):
             for allData in List:
                 list2 = allData.split(';')
                 list2[0].strip()
-                tasks.get('tasks').append({'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2]})
+                if list2[0] == '' and list2[1] == '' and list2[2] == '':
+                    continue
+                else:
+                    tasks.get('tasks').append({'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2]})
             obj.update(tasks)
         end = perf_counter()
         print(end - start)
