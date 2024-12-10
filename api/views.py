@@ -41,7 +41,7 @@ def getAgreements(request):
         LEFT JOIN T3 participants ON T253.F5022 = participants.ID 
         LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID 
         LEFT JOIN T218 ON T218.F4691 = T212.ID 
-        WHERE T212.ID > 2530 
+        WHERE T212.ID > 2530 AND T212.ID = 2361
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
@@ -128,3 +128,44 @@ def employees(request):
         # end = perf_counter()
         # print(end - start)
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+
+def addParticipants(request):
+    if request.method != "POST":
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+    else:
+        contractId = request.POST.get('contractId')
+        participants = request.POST.get('participants')
+        with firebirdsql.connect(
+                host=config.host,
+                database=config.database,
+                user=config.user,
+                password=config.password,
+                charset=config.charset
+        ) as con:
+            cur = con.cursor()
+            for participantId in participants:
+                cur.execute(f'SELECT GEN_ID(GEN_T253, 1) FROM RDB$DATABASE')
+                Id = cur.fetchonemap().get('GEN_ID', None)
+                values = {
+                    'id': Id,
+                    'F5022': participantId,
+                    'F5024': contractId,
+                }
+                sql = f"""
+                INSERT INTO T253 (
+                {', '.join(values.keys())}
+                ) VALUES (
+                {', '.join(f"'{value}'" for value in values.values())}
+                )
+                """
+                cur.execute(sql)
+                con.commit()
+                return JsonResponse({'ok': True})
+
+def delParticipants(request):
+    if request.method != "POST":
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+    else:
+        contractId = request.POST.get('contractId')
+        participants = request.POST.get('participants')
+        return JsonResponse({'ok': True})
