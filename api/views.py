@@ -154,7 +154,7 @@ def corParticipants(request):
             for data in participants:
                 participantId = data.get('participantId')
                 for participant in List:
-                    if participantId != participant(0):
+                    if participantId != participant[0]:
                         cur.execute(f'SELECT GEN_ID(GEN_T253, 1) FROM RDB$DATABASE')
                         Id = cur.fetchonemap().get('GEN_ID', None)
                         values = {
@@ -177,7 +177,7 @@ def corParticipants(request):
                 if len(participantId) != 0:
                     sql = f"""
                     DELETE FROM T253 
-                    WHERE F5022 = '{participantId(0)}' AND F5024 = '{contractId}'
+                    WHERE F5022 = '{participantId[0]}' AND F5024 = '{contractId}'
                     """
                     cur.execute(sql)
                     con.commit()
