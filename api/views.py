@@ -172,9 +172,9 @@ def corParticipants(request):
                         cur.execute(sql)
                         con.commit()
                     else:
-                        participant = ()
+                        participant[0] = 0
             for participantId in List:
-                if len(participantId) != 0:
+                if participantId[0] != 0:
                     sql = f"""
                     DELETE FROM T253 
                     WHERE F5022 = '{participantId[0]}' AND F5024 = '{contractId}'
