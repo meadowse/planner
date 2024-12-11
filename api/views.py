@@ -129,7 +129,7 @@ def employees(request):
         # print(end - start)
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
-def addParticipants(request):
+def corParticipants(request):
     if request.method != "POST":
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
     else:
@@ -143,29 +143,31 @@ def addParticipants(request):
                 charset=config.charset
         ) as con:
             cur = con.cursor()
-            for participantId in participants:
-                cur.execute(f'SELECT GEN_ID(GEN_T253, 1) FROM RDB$DATABASE')
-                Id = cur.fetchonemap().get('GEN_ID', None)
-                values = {
-                    'id': Id,
-                    'F5022': participantId,
-                    'F5024': contractId,
-                }
-                sql = f"""
-                INSERT INTO T253 (
-                {', '.join(values.keys())}
-                ) VALUES (
-                {', '.join(f"'{value}'" for value in values.values())}
-                )
-                """
-                cur.execute(sql)
-                con.commit()
-                return JsonResponse({'ok': True})
-
-def delParticipants(request):
-    if request.method != "POST":
-        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
-    else:
-        contractId = request.POST.get('contractId')
-        participants = request.POST.get('participants')
-        return JsonResponse({'ok': True})
+            for data in participants:
+                participantId = data.get('participantId')
+                cur.execute(f'SELECT * FROM T253 WHERE T253.F5022 = {participantId} AND T253.F5024 = {contractId}')
+                if cur.rowcount == 0:
+                    cur.execute(f'SELECT GEN_ID(GEN_T253, 1) FROM RDB$DATABASE')
+                    Id = cur.fetchonemap().get('GEN_ID', None)
+                    values = {
+                        'id': Id,
+                        'F5022': participantId,
+                        'F5024': contractId,
+                    }
+                    sql = f"""
+                    INSERT INTO T253 (
+                    {', '.join(values.keys())}
+                    ) VALUES (
+                    {', '.join(f"'{value}'" for value in values.values())}
+                    )
+                    """
+                    cur.execute(sql)
+                    con.commit()
+                else:
+                    sql = f"""
+                    DELETE FROM T253 
+                    WHERE F5022 = '{participantId}' AND F5024 = '{contractId}'
+                    """
+                    cur.execute(sql)
+                    con.commit()
+            return JsonResponse({'ok': True})
