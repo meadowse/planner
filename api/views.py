@@ -150,35 +150,35 @@ def corParticipants(request):
             cur = con.cursor()
             cur.execute(f'SELECT T253.F5022 FROM T253 WHERE T253.F5024 = {contractId}')
             List = cur.fetchall()
-            ListDel = []
+            List2 = []
+            for participantId in List:
+                List2.append(participantId[0])
             for data in participants:
                 participantId = data.get('participantId')
-                for participant in List:
-                    if participantId != participant[0]:
-                        cur.execute(f'SELECT GEN_ID(GEN_T253, 1) FROM RDB$DATABASE')
-                        Id = cur.fetchonemap().get('GEN_ID', None)
-                        values = {
-                            'id': Id,
-                            'F5022': participantId,
-                            'F5024': contractId,
-                        }
-                        sql = f"""
-                        INSERT INTO T253 (
-                        {', '.join(values.keys())}
-                        ) VALUES (
-                        {', '.join(f"'{value}'" for value in values.values())}
-                        )
-                        """
-                        cur.execute(sql)
-                        con.commit()
-                    else:
-                        participant[0] = 0
-            for participantId in List:
-                if participantId[0] != 0:
+                if participantId not in List2:
+                    cur.execute(f'SELECT GEN_ID(GEN_T253, 1) FROM RDB$DATABASE')
+                    Id = cur.fetchonemap().get('GEN_ID', None)
+                    values = {
+                        'id': Id,
+                        'F5022': participantId,
+                        'F5024': contractId,
+                    }
                     sql = f"""
-                    DELETE FROM T253 
-                    WHERE F5022 = '{participantId[0]}' AND F5024 = '{contractId}'
+                    INSERT INTO T253 (
+                    {', '.join(values.keys())}
+                    ) VALUES (
+                    {', '.join(f"'{value}'" for value in values.values())}
+                    )
                     """
                     cur.execute(sql)
                     con.commit()
+                else:
+                    List2.remove(participantId)
+            for participantId in List2:
+                sql = f"""
+                DELETE FROM T253 
+                WHERE F5022 = '{participantId[0]}' AND F5024 = '{contractId}'
+                """
+                cur.execute(sql)
+                con.commit()
             return JsonResponse({'ok': True})
