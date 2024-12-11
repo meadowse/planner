@@ -30,7 +30,7 @@ def getAgreements(request):
         CASE WHEN T206.F4356 IS NULL THEN '' ELSE T206.F4356 END || ';' || 
         CASE WHEN T206.F4357 IS NULL THEN '' ELSE T206.F4357 END || ';' || 
         CASE WHEN T206.F4358 IS NULL THEN '' ELSE T206.F4358 END) AS contacts, 
-        LIST(DISTINCT participants.F4886) AS participants, 
+        LIST(DISTINCT participants.ID || ';' || participants.F4886) AS participants, 
         responsible.F4886 AS responsible, 
         LIST(CASE WHEN T218.F4695 IS NULL THEN '' ELSE T218.F4695 END || ';' || 
         CASE WHEN T218.F5569 IS NULL THEN (CASE WHEN T218.F4970 IS NULL THEN '' ELSE T218.F4970 END) ELSE T218.F5569 END || ';' || 
@@ -65,7 +65,8 @@ def getAgreements(request):
                 participants = participants.split(',')
                 data = {'participants': []}
                 for participant in participants:
-                    data.get('participants').append({'fullName': participant.strip()})
+                    data2 = participant.split(';')
+                    data.get('participants').append({'participantId': data2[0], 'fullName': data2[1].strip()})
                 obj.update(data)
             responsible = {'responsible': {'fullName': obj.get('responsible').strip()}}
             obj.update(responsible)
