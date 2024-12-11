@@ -2,6 +2,7 @@ import firebirdsql
 from django.http import JsonResponse
 import config
 from time import perf_counter
+from django.views.decorators.csrf import csrf_exempt
 
 def getAgreements(request):
     start = perf_counter()
@@ -129,6 +130,7 @@ def employees(request):
         # print(end - start)
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
+@csrf_exempt
 def corParticipants(request):
     if request.method != "POST":
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
