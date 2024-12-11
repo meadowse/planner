@@ -66,7 +66,7 @@ def getAgreements(request):
                 data = {'participants': []}
                 for participant in participants:
                     data2 = participant.split(';')
-                    data.get('participants').append({'participantId': data2[0], 'fullName': data2[1].strip()})
+                    data.get('participants').append({'participantId': int(data2[0]), 'fullName': data2[1].strip()})
                 obj.update(data)
             responsible = {'responsible': {'fullName': obj.get('responsible').strip()}}
             obj.update(responsible)
