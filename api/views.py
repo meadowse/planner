@@ -1,3 +1,5 @@
+import json
+
 import firebirdsql
 from django.http import JsonResponse
 import config
@@ -135,8 +137,9 @@ def corParticipants(request):
     if request.method != "POST":
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
     else:
-        contractId = request.POST.get('contractId')
-        participants = request.POST.get('participants')
+        obj = json.loads(request.body)
+        contractId = obj.get('contractId')
+        participants = obj.get('participants')
         with firebirdsql.connect(
                 host=config.host,
                 database=config.database,
