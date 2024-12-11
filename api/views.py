@@ -148,30 +148,36 @@ def corParticipants(request):
                 charset=config.charset
         ) as con:
             cur = con.cursor()
+            cur.execute(f'SELECT T253.F5022 FROM T253 WHERE T253.F5024 = {contractId}')
+            List = cur.fetchall()
+            ListDel = []
             for data in participants:
                 participantId = data.get('participantId')
-                cur.execute(f'SELECT * FROM T253 WHERE T253.F5022 = {participantId} AND T253.F5024 = {contractId}')
-                if cur.rowcount == 0:
-                    cur.execute(f'SELECT GEN_ID(GEN_T253, 1) FROM RDB$DATABASE')
-                    Id = cur.fetchonemap().get('GEN_ID', None)
-                    values = {
-                        'id': Id,
-                        'F5022': participantId,
-                        'F5024': contractId,
-                    }
-                    sql = f"""
-                    INSERT INTO T253 (
-                    {', '.join(values.keys())}
-                    ) VALUES (
-                    {', '.join(f"'{value}'" for value in values.values())}
-                    )
-                    """
-                    cur.execute(sql)
-                    con.commit()
-                else:
+                for participant in List:
+                    if participantId != participant(0):
+                        cur.execute(f'SELECT GEN_ID(GEN_T253, 1) FROM RDB$DATABASE')
+                        Id = cur.fetchonemap().get('GEN_ID', None)
+                        values = {
+                            'id': Id,
+                            'F5022': participantId,
+                            'F5024': contractId,
+                        }
+                        sql = f"""
+                        INSERT INTO T253 (
+                        {', '.join(values.keys())}
+                        ) VALUES (
+                        {', '.join(f"'{value}'" for value in values.values())}
+                        )
+                        """
+                        cur.execute(sql)
+                        con.commit()
+                    else:
+                        participant = ()
+            for participantId in List:
+                if len(participantId) != 0:
                     sql = f"""
                     DELETE FROM T253 
-                    WHERE F5022 = '{participantId}' AND F5024 = '{contractId}'
+                    WHERE F5022 = '{participantId(0)}' AND F5024 = '{contractId}'
                     """
                     cur.execute(sql)
                     con.commit()
