@@ -176,7 +176,7 @@ def corParticipants(request):
                 sql = f"""
                 DELETE FROM T253 
                 WHERE F5022 = '{participantId}' AND F5024 = '{contractId}'
-                """format()
+                """
                 cur.execute(sql)
                 con.commit()
             return JsonResponse({'ok': True})
