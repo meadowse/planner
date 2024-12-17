@@ -21,6 +21,7 @@ from .views import *  # смотрим по разным классам в
 
 urlpatterns = [
     path('', getAgreements, name='getAgreements'),
+    path('getAgreement', getAgreement, name='getAgreement'),
     path('employee/', employees, name='employees'),
     path('corParticipants', corParticipants, name='corParticipants')
 ]

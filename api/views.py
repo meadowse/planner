@@ -180,3 +180,101 @@ def corParticipants(request):
                 cur.execute(sql)
                 con.commit()
             return JsonResponse({'ok': True})
+
+def getAgreement(request):
+    start = perf_counter()
+    if request.method != "POST":
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+    else:
+        obj = json.loads(request.body)
+        contractId = obj.get('contractId')
+        with firebirdsql.connect(
+            host=config.host,
+            database=config.database,
+            user=config.user,
+            password=config.password,
+            charset=config.charset
+        ) as con:
+            cur = con.cursor()
+            sql = f"""
+            SELECT T212.ID AS id,
+            T212.F4538 AS contractNum,
+            T212.F4544 AS stage,
+            T212.F4946 AS address,
+            T237.F4890 AS services,
+            T212.F4648 AS path,
+            T212.F4610 AS dateOfStart,
+            T212.F4566 AS dateOfEnding,
+            T205.F4332 AS company,
+            LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
+            LIST(DISTINCT participants.ID || ';' || participants.F4886) AS participants,
+            responsible.F4886 AS responsible,
+            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696, '*') AS tasks
+            FROM T212
+            LEFT JOIN T237 ON T212.F4948 = T237.ID
+            LEFT JOIN T205 ON T212.F4540 = T205.ID
+            LEFT JOIN T233 ON T233.F4963 = T212.ID
+            LEFT JOIN T206 ON T233.F4870 = T206.ID
+            LEFT JOIN T253 ON T212.ID = T253.F5024
+            LEFT JOIN T3 participants ON T253.F5022 = participants.ID
+            LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
+            LEFT JOIN T218 ON T218.F4691 = T212.ID
+            WHERE T212.ID = {contractId}
+            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12
+            """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
+            cur.execute(sql)
+            result = cur.fetchall()
+            # Преобразование результата в список словарей
+            columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'responsible', 'tasks')
+            json_result = [
+                {col: value for col, value in zip(columns, row)}
+                for row in result
+            ]  # Создаем список словарей с сериализацией значений
+            for obj in json_result:
+                stage = {'stage': {'title': obj.get('stage')}}
+                obj.update(stage)
+                services = {'services': [{'title': obj.get('services')}]}
+                obj.update(services)
+                participants = obj.get('participants')
+                if participants is not None:
+                    participants = participants.split(',')
+                    data = {'participants': []}
+                    for participant in participants:
+                        data2 = participant.split(';')
+                        data.get('participants').append({'participantId': int(data2[0]), 'fullName': data2[1].strip()})
+                    obj.update(data)
+                responsible = {'responsible': {'fullName': obj.get('responsible').strip()}}
+                obj.update(responsible)
+                dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
+                obj.update(dateOfStart)
+                dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding')}}
+                obj.update(dateOfEnding)
+                Str = obj.get('contacts')
+                contacts = {'contacts': []}
+                if Str is not None:
+                    List = Str.split(',')
+                    for allData in List:
+                        list2 = allData.split(';')
+                        flag = 0
+                        for data in list2:
+                            data.strip()
+                            if data == '':
+                                flag += 1
+                        if flag < 4:
+                            contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]], 'post': '', 'email': list2[3]})
+                obj.update(contacts)
+                Str = obj.get('tasks')
+                tasks = {'tasks': []}
+                if Str is not None:
+                    List = Str.split('*')
+                    for allData in List:
+                        list2 = allData.split(';')
+                        list2[0].strip()
+                        if list2[0] == '' and list2[1] == '' and list2[2] == '':
+                            continue
+                        else:
+                            tasks.get('tasks').append({'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2]})
+                obj.update(tasks)
+            end = perf_counter()
+            print(end - start)
+            return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
