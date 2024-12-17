@@ -175,8 +175,8 @@ def corParticipants(request):
             for participantId in List2:
                 sql = f"""
                 DELETE FROM T253 
-                WHERE F5022 = '{participantId[0]}' AND F5024 = '{contractId}'
-                """
+                WHERE F5022 = '{participantId}' AND F5024 = '{contractId}'
+                """format()
                 cur.execute(sql)
                 con.commit()
             return JsonResponse({'ok': True})
