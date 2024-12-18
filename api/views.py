@@ -181,6 +181,7 @@ def corParticipants(request):
                 con.commit()
             return JsonResponse({'ok': True})
 
+@csrf_exempt
 def getAgreement(request):
     start = perf_counter()
     if request.method != "POST":
