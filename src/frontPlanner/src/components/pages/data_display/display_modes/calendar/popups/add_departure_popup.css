@@ -1,0 +1,150 @@
+.popup.add_departure {
+    max-width: 60%;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1.5px solid #e7e7e7;
+    border-radius: 10px;
+    background-color: #fff;
+    z-index: 10;
+}
+
+.popup_wrapper.add_departure {
+    padding: 1vw;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2vw;
+}
+
+/* Контент всплывающего окна */
+
+.popup_content.add_departure {
+    display: grid;
+    grid-template-columns: 2fr max-content;
+    column-gap: 4vw;
+}
+
+/* Левая часть формы */
+
+.add_departure_popup_form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vw;
+}
+
+.add_departure_popup_form > * {
+    display: grid;
+    grid-template-columns: minmax(max-content, 0.5fr) 1fr;
+}
+
+/* Элементы формы */
+
+.ic_btn.select_obj,
+.inpt_field.subject_of_survey,
+.inpt_field.add_departure {
+    padding: 0.3vw 1vw;
+    border: 0.5px solid #e7e7e7;
+    border-radius: 5px;
+    outline: none;
+}
+
+/* Блок "Объект" */
+
+.form_item_wrapper.obj_of_departure {
+    position: relative;
+}
+
+.ic_btn.select_obj {
+    width: 100%;
+}
+
+/* Блок "Предмет обследования" */
+
+/* Блок "Ответственный" */
+
+.popup_content.add_departure .form_item.responsible {
+    column-gap: 0;
+}
+
+/* Блок "Кто выезжает" */
+
+.popup_content.add_departure .users_content.departing {
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.popup_content.add_departure .users_content.departing::-webkit-scrollbar {
+    display: none;
+}
+
+.popup_content.add_departure .list_users.departing {
+    display: flex;
+    column-gap: 0.5vw;
+}
+
+/* Блок "Дата" */
+
+.popup_content.add_departure .date_container.date_departure {
+    display: flex;
+    align-items: center;
+    column-gap: 0.5vw;
+}
+
+.popup_content.add_departure .departure_date {
+    padding: 0.3vw 0.5vw;
+    white-space: nowrap;
+    border: 1.5px solid #dc3e3e;
+    border-radius: 5px;
+    color: #dc3e3e;
+}
+
+/* Блок "Контакт для связи" */
+
+.popup_content.add_departure .text_area.contacts,
+.popup_content.add_departure .text_area.comment {
+    padding: 0.5vw;
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+    outline: none;
+    resize: none;
+}
+
+/* "Программа работ" */
+
+.popup_content.add_departure .block_upload_job {
+    display: flex;
+    column-gap: 0.5vw;
+}
+
+.btn_upload_job,
+.btn_add_equipment {
+    padding: 0.5vw;
+    background-color: #95b9ca;
+    border-radius: 5px;
+    font-family: 'Montserrat-SemiBold';
+    color: #fff;
+}
+
+/* Блок "Комментарий" */
+
+.form_item.contacts,
+.form_item.work_program,
+.form_item.comment {
+    align-items: flex-start;
+}
+
+/* Правая часть формы */
+
+.add_departure_popup_form.right {
+    padding-right: 5vw;
+}
+
+.form_item.equipment {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    row-gap: 1vw;
+}

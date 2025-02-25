@@ -1,0 +1,4178 @@
+[
+    {
+        "id": 2361,
+        "contractNum": "2025-09-519-КУ",
+        "stage": {
+            "title": null
+        },
+        "address": "Москва, Гольяново, ул. Иркутская, д. 17, строен. 9",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-09-519-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-14"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-25"
+        },
+        "company": "МЕХАНИКА",
+        "contacts": [
+            {
+                "fullName": "Кормилицин Олег Юрьевич",
+                "phone": ["+7 (926) 315-71-17", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 12,
+                "fullName": "Архипова Татьяна"
+            },
+            {
+                "participantId": 1,
+                "fullName": "Букреев Александр"
+            }
+        ],
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": [
+            {
+                "title": "Необходимо согласовать договор",
+                "dateOfStart": "2025-01-25",
+                "dateOfEnding": "2025-01-26"
+            },
+            {
+                "title": "Необходимо согласовать договор",
+                "dateOfStart": "2025-01-25",
+                "dateOfEnding": "2025-01-26"
+            }
+        ]
+    },
+    {
+        "id": 2532,
+        "contractNum": "2025-01-635-СЭ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г Москва, ул Кастанаевская, вл 38",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-635-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-05"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-13"
+        },
+        "company": "АЛЕЛА-5",
+        "contacts": [
+            {
+                "fullName": "Николай",
+                "phone": ["+7 (929) 928-70-23", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 23,
+                "fullName": "Пирогова Наталия"
+            }
+        ],
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": [
+            {
+                "title": "Прошу проверить и взять в работу",
+                "dateOfStart": "2025-11-05",
+                "dateOfEnding": "2025-11-05"
+            },
+            {
+                "title": "Прошу назначить ответсвенного ПрМ",
+                "dateOfStart": "2025-11-05",
+                "dateOfEnding": "2025-11-05"
+            }
+        ]
+    },
+    {
+        "id": 2533,
+        "contractNum": "2025-11-636-СЭ",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": null,
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-636-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-01"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-11"
+        },
+        "company": "ОСТ",
+        "contacts": [
+            {
+                "fullName": "Виктор",
+                "phone": ["+7 (926) 212-99-80", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 23,
+                "fullName": "Пирогова Наталия"
+            }
+        ],
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": [
+            {
+                "title": "Прошу проверить и назначить ответственного ПрМ",
+                "dateOfStart": "2025-11-01",
+                "dateOfEnding": "2025-11-02"
+            },
+            {
+                "title": "Прошу взять в работу ",
+                "dateOfStart": "2025-11-01",
+                "dateOfEnding": "2025-11-05"
+            }
+        ]
+    },
+    {
+        "id": 2535,
+        "contractNum": "2025-11-637-РНС",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, проезд Энтузиастов, д.15",
+        "services": [
+            {
+                "title": "Размещение некапитальных строений"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-637-РНС",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-20"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-11"
+        },
+        "company": "МОСКОВСКИЙ МАШИНОСТРОИТЕЛЬНЫЙ ЗАВОД ВПЕРЕД",
+        "contacts": [
+            {
+                "fullName": "Сорокин Павел Вячеславович",
+                "phone": ["+7 (916) 515-85-12", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "",
+                "dateOfStart": "2025-11-02",
+                "dateOfEnding": "2025-11-02"
+            },
+            {
+                "title": "Выез размещение некапитальных строений 636-ПП",
+                "dateOfStart": "2025-11-21",
+                "dateOfEnding": "2025-11-22"
+            },
+            {
+                "title": "ПРНС по 636-ПП",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-11-22"
+            }
+        ]
+    },
+    {
+        "id": 2536,
+        "contractNum": "2025-11-638-ТО",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, Б. Якиманка, д. 42, стр. 1-2, 3",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-638-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-08"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-14"
+        },
+        "company": "ФЕДЕРАЛЬНОЕ АУ ГЛАВНОЕ УПРАВЛЕНИЕ ГОСУДАРСТВЕННОЙ ЭКСПЕРТИЗЫ",
+        "contacts": [
+            {
+                "fullName": "АНДРЕКОВ КОНСТАНТИН ВЯЧЕСЛАВОВИЧ",
+                "phone": ["+7 (995) 321-31-23", ""],
+                "post": "",
+                "email": "k.andrekov@gge.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2537,
+        "contractNum": "2025-11-639-ЛСП",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, ул. Косинская, д.9, стр.7",
+        "services": [
+            {
+                "title": "Легализация"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-639-ЛСП",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-07"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-11-20"
+        },
+        "company": "ЖИЛСТРОЙ",
+        "contacts": [
+            {
+                "fullName": "Кононыхина Елена",
+                "phone": ["+7 (960) 149-78-20", ""],
+                "post": "",
+                "email": "ekononikhina@zhstroy.ru"
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            }
+        ],
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "Назначить исполнителей и выезд",
+                "dateOfStart": "2025-11-07",
+                "dateOfEnding": "2025-11-07"
+            },
+            {
+                "title": "Контроль выполнения за 2 дня",
+                "dateOfStart": "2025-11-07",
+                "dateOfEnding": "2025-11-21"
+            },
+            {
+                "title": "АГР реконструкция",
+                "dateOfStart": "2025-11-07",
+                "dateOfEnding": "2025-11-21"
+            }
+        ]
+    },
+    {
+        "id": 2539,
+        "contractNum": "2025-11-640-АР",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, 3-я Парковая улица, д.57",
+        "services": [
+            {
+                "title": "Архитектурные решения"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-640-АР",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-13"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-11"
+        },
+        "company": "МТК-ДИАЛЭКС",
+        "contacts": [
+            {
+                "fullName": "Михаил",
+                "phone": ["+7 (985) 171-31-81", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            }
+        ],
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "Выезд размещение некапитальных строений",
+                "dateOfStart": "2025-11-13",
+                "dateOfEnding": "2025-11-18"
+            },
+            {
+                "title": "ПРНС",
+                "dateOfStart": "2025-11-13",
+                "dateOfEnding": "2025-11-27"
+            }
+        ]
+    },
+    {
+        "id": 2543,
+        "contractNum": "2025-11-641-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Нижний новгород, ул. Грузинская, д.26",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-641-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-05"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-11-12"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Кирилл",
+                "phone": ["+7 (926) 254-01-22", ""],
+                "post": "",
+                "email": "burokadastr@mail.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка АС/ОТС",
+                "dateOfStart": "2025-11-11",
+                "dateOfEnding": "2025-11-11"
+            }
+        ]
+    },
+    {
+        "id": 2547,
+        "contractNum": "2025-11-642-КУ",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "Российская Федерация, г. Москва, вн.тер.г. муниципальный округ Якиманка, ул. Большая Якиманка, д. 42, стр. 1-2",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-642-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "Малахов Алексей Викторович",
+        "contacts": [
+            {
+                "fullName": "Малахов Алексей Викторович",
+                "phone": ["+7 (495) 766-61-21", "+7 (495) 727-66-83"],
+                "post": "",
+                "email": "alex@arhburo.com"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": [
+            {
+                "title": "Прошу назначит ответственного ПрМ",
+                "dateOfStart": "2025-11-07",
+                "dateOfEnding": "2025-11-07"
+            },
+            {
+                "title": "Подготовка ПД (ОТС по факту)",
+                "dateOfStart": "2025-11-14",
+                "dateOfEnding": "2025-11-14"
+            }
+        ]
+    },
+    {
+        "id": 2548,
+        "contractNum": "2025-11-643-АР",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "Холодильный пер., д. 3, стр. 5, Холодильный пер., д. 3, стр. 2",
+        "services": [
+            {
+                "title": "Архитектурные решения"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-643-АР",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-11"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-06"
+        },
+        "company": "РЕСПЕКТ",
+        "contacts": [
+            {
+                "fullName": "Парфёнова Ольга Дмитриевна",
+                "phone": ["+7 (925) 002-20-08", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            }
+        ],
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "3 D модели на стр 5 и стр 2",
+                "dateOfStart": "2025-11-11",
+                "dateOfEnding": "2025-12-04"
+            },
+            {
+                "title": "Проверить статус готовности док-ии",
+                "dateOfStart": "2025-11-12",
+                "dateOfEnding": "2025-11-29"
+            },
+            {
+                "title": "Выезд фотофиксация благоустройства и фасадов",
+                "dateOfStart": "2025-11-12",
+                "dateOfEnding": "2025-11-13"
+            }
+        ]
+    },
+    {
+        "id": 2549,
+        "contractNum": "2025-11-644-ЛСП",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, ул. Малая Ордынка, д. 3",
+        "services": [
+            {
+                "title": "Легализация"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-644-ЛСП",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-07"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-19"
+        },
+        "company": "ФИРМА РЕМСТРОЙКРОВЛЯ",
+        "contacts": [
+            {
+                "fullName": "Мороз Дмитрий",
+                "phone": ["+7 (985) 133-99-01", ""],
+                "post": "",
+                "email": "1780961@mail.ru"
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            }
+        ],
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "Поставить исполнителей организовать выезд",
+                "dateOfStart": "2025-11-07",
+                "dateOfEnding": "2025-11-07"
+            },
+            {
+                "title": "25.11 контроль выполнения работ",
+                "dateOfStart": "2025-11-07",
+                "dateOfEnding": "2025-11-28"
+            },
+            {
+                "title": "Выезд АГР ЗОС ",
+                "dateOfStart": "2025-11-07",
+                "dateOfEnding": "2025-11-08"
+            },
+            {
+                "title": "АГР",
+                "dateOfStart": "2025-11-08",
+                "dateOfEnding": "2025-11-22"
+            },
+            {
+                "title": "ЗОС",
+                "dateOfStart": "2025-11-08",
+                "dateOfEnding": "2025-11-15"
+            }
+        ]
+    },
+    {
+        "id": 2551,
+        "contractNum": "2025-11-646-ППН",
+        "stage": {
+            "title": null
+        },
+        "address": "г. Москва, ул. Паперника, д. 7, к. 1",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-646-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "МПО ЭЛЕКТРОМОНТАЖ",
+        "contacts": [
+            {
+                "fullName": "Иванова Елена",
+                "phone": ["+7 (963) 711-36-75", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2552,
+        "contractNum": "2025-11-646-ТО",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "ул Мясницкая, д. 40А стр.2",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-646-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-07"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-05"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Дмитрий Михайлович Шумков",
+                "phone": ["+7 (916) 990-06-10", ""],
+                "post": "",
+                "email": "archingpro@yandex.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": [
+            {
+                "title": "Выезд техническое обследование, отбор проб в лабораторию\n",
+                "dateOfStart": "2025-11-12",
+                "dateOfEnding": "2025-11-13"
+            },
+            {
+                "title": "Поверочный расчёт",
+                "dateOfStart": "2025-11-14",
+                "dateOfEnding": "2025-11-20"
+            }
+        ]
+    },
+    {
+        "id": 2553,
+        "contractNum": "2025-11-647-ППН",
+        "stage": {
+            "title": "Успех"
+        },
+        "address": "город Москва, вн.тер.г. муниципальный округ Соколиная гора, проспект Будённого, Дом 32А",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-647-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "КОНСАЛТИНГОВАЯ КОМПАНИЯ КОР",
+        "contacts": [
+            {
+                "fullName": "Кораблин Алексей",
+                "phone": ["+7 (905) 735-66-29", ""],
+                "post": "",
+                "email": "korablin@corconsult.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Подготовка АС/ОТС",
+                "dateOfStart": "2025-11-11",
+                "dateOfEnding": "2025-11-11"
+            }
+        ]
+    },
+    {
+        "id": 2554,
+        "contractNum": "2025-11-648-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, вн.тер.г. муниципальный округ Таганский, ул. Нижегородская, д. 32, стр. 3",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-648-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-07"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-11-14"
+        },
+        "company": "КОНСАЛТИНГОВАЯ КОМПАНИЯ КОР",
+        "contacts": [
+            {
+                "fullName": "Ксения Березкина",
+                "phone": ["+7 (953) 425-77-53", ""],
+                "post": "",
+                "email": "berezkina@corconsult.ru"
+            },
+            {
+                "fullName": "Маргарита Пинашкина",
+                "phone": ["", ""],
+                "post": "",
+                "email": "pinashkina@corconsult.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС)",
+                "dateOfStart": "2025-11-11",
+                "dateOfEnding": "2025-11-11"
+            },
+            {
+                "title": "Разработка ПД (АС/ОТС)",
+                "dateOfStart": "2025-11-11",
+                "dateOfEnding": "2025-11-11"
+            }
+        ]
+    },
+    {
+        "id": 2555,
+        "contractNum": "2025-11-649-СЭ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, Сокол, пр-кт. Ленинградский, д. 80, корп. 16",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-649-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-09"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-18"
+        },
+        "company": "МОСКВА - СОКОЛ",
+        "contacts": [
+            {
+                "fullName": "Бурмистрова Лариса Петровна",
+                "phone": ["+7 (495) 780-54-45", ""],
+                "post": "",
+                "email": "l.burmistrova@socium-sokol.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2564,
+        "contractNum": "2025-11-650-КУ",
+        "stage": {
+            "title": "Успех"
+        },
+        "address": "г.Москва, в р-н п.Мозжинка",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-650-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-11"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-21"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Влад",
+                "phone": ["+7 (916) 647-77-88", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2565,
+        "contractNum": "2025-11-651-КУ",
+        "stage": {
+            "title": "Успех"
+        },
+        "address": "г. Москва, в р-н п.Мозжинка",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-651-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-15"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-21"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Влад",
+                "phone": ["+7 (916) 647-77-88", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2566,
+        "contractNum": "2025-11-652-ППН",
+        "stage": {
+            "title": "Успех"
+        },
+        "address": "г. Москва, Краснодарский проезд, д. 2, 8, 12",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-652-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-11"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-11-18"
+        },
+        "company": "Букреев Александр Иванович",
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД",
+                "dateOfStart": "2025-11-12",
+                "dateOfEnding": "2025-11-12"
+            }
+        ]
+    },
+    {
+        "id": 2567,
+        "contractNum": "2025-11-653-АР",
+        "stage": {
+            "title": "Успех"
+        },
+        "address": "г.Москва,ул.Генерала Дорохова, д. 20",
+        "services": [
+            {
+                "title": "Архитектурные решения"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-653-АР",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "Чоботов Павел Дмитриевич",
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2568,
+        "contractNum": "2025-11-654-ТО",
+        "stage": {
+            "title": "Аннулировано"
+        },
+        "address": "г. Москва, ул. Кожевническая, вл. 1Б, стр. 2",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-654-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ЛУК-ГРУПП",
+        "contacts": [
+            {
+                "fullName": "Менеджер Юлия",
+                "phone": ["+7 (985) 017-33-03", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": [
+            {
+                "title": "Пролшу проверить и назначить ответственного ПрМ",
+                "dateOfStart": "2025-11-11",
+                "dateOfEnding": "2025-11-12"
+            },
+            {
+                "title": "Прошу проверить и взять в работу",
+                "dateOfStart": "2025-11-11",
+                "dateOfEnding": "2025-11-12"
+            }
+        ]
+    },
+    {
+        "id": 2571,
+        "contractNum": "2025-11-655-ТО",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, вн.тер.г. муниципальный округ Хамовники, пр-т Комсомольский, д. 21/10, пом 3/1",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-655-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-20"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-22"
+        },
+        "company": "ТСП-ГРУПП",
+        "contacts": [
+            {
+                "fullName": "Иван",
+                "phone": ["+7 (915) 484-35-53", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": [
+            {
+                "title": "Подготовка и ведение журнала авторского надзора.",
+                "dateOfStart": "2025-11-21",
+                "dateOfEnding": "2025-12-31"
+            },
+            {
+                "title": "Авторский надзор",
+                "dateOfStart": "2025-11-20",
+                "dateOfEnding": "2025-12-31"
+            }
+        ]
+    },
+    {
+        "id": 2573,
+        "contractNum": "2025-11-656-ПБ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, Волоколамское шоссе, д. 116",
+        "services": [
+            {
+                "title": "Пожарная безопасность"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-656-ПБ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-06"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-07"
+        },
+        "company": "Сытникова Алла Михайловна",
+        "contacts": [
+            {
+                "fullName": "Андреев Олег",
+                "phone": ["+7 (966) 369-29-80", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Радачинский Александр"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2574,
+        "contractNum": "2025-11-657-СЭ",
+        "stage": {
+            "title": null
+        },
+        "address": "МО, д. Жуковка, ул. Ильинский проезд, д. 2, стр. 1",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-657-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "АНО ОБЩЕОБРАЗОВАТЕЛЬНАЯ ОРГАНИЗАЦИЯ ШКОЛА ПРЕЗИДЕНТ",
+        "contacts": [
+            {
+                "fullName": "Татьяна",
+                "phone": ["+7 (905) 774-34-55", ""],
+                "post": "",
+                "email": "beketovatv@gmail.com"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2575,
+        "contractNum": "2025-11-658-СЭ",
+        "stage": {
+            "title": null
+        },
+        "address": "МО, д. Жуковка, ул. Ильинский проезд, д. 2, стр. 1",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-658-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "АНО ОБЩЕОБРАЗОВАТЕЛЬНАЯ ОРГАНИЗАЦИЯ ШКОЛА ПРЕЗИДЕНТ",
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2577,
+        "contractNum": "2025-11-659-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "город Москва, ул. Новый Арбат, д. 21, стр. 2",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-659-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-12"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-11-19"
+        },
+        "company": "АЛИГРАНД",
+        "contacts": [
+            {
+                "fullName": "Али",
+                "phone": ["+7 (903) 512-41-41", ""],
+                "post": "",
+                "email": "novha@mail.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС)",
+                "dateOfStart": "2025-11-14",
+                "dateOfEnding": "2025-11-14"
+            }
+        ]
+    },
+    {
+        "id": 2578,
+        "contractNum": "2025-11-660-КУ",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "Московская область, р-н. Люберецкий, рп. Малаховка, ул. Шоссейная, д. 40",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-660-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-14"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-25"
+        },
+        "company": "АВИАТОР",
+        "contacts": [
+            {
+                "fullName": "Этина Елена ",
+                "phone": ["+7 (903) 275-33-14", ""],
+                "post": "",
+                "email": "etina@mrdoors.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": [
+            {
+                "title": "",
+                "dateOfStart": "2025-11-14",
+                "dateOfEnding": "2025-11-14"
+            },
+            {
+                "title": "Отправил акт в ЭДО. Проверить подписание",
+                "dateOfStart": "2025-12-06",
+                "dateOfEnding": "2025-12-11"
+            },
+            {
+                "title": "",
+                "dateOfStart": "2025-11-14",
+                "dateOfEnding": "2025-11-14"
+            },
+            {
+                "title": "Отправил акт в ЭДО. Проверить подписание",
+                "dateOfStart": "2025-12-06",
+                "dateOfEnding": "2025-12-11"
+            }
+        ]
+    },
+    {
+        "id": 2579,
+        "contractNum": "2025-11-661-СЭ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "Российская Федерация, Московская область, г.о. Химки, г. Химки, мкр. ИКЕА, корп. 2",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-661-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-21"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-05"
+        },
+        "company": "МЕГА СЕРВИС",
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2582,
+        "contractNum": "2025-11-662-ППН",
+        "stage": {
+            "title": "Успех"
+        },
+        "address": " Москва, Люблино, проезд. Краснодарский, д. 8",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-662-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-20"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-11-27"
+        },
+        "company": "БАУМАН КАДАСТР",
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Подготовка ПП и ТЗ",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            }
+        ]
+    },
+    {
+        "id": 2586,
+        "contractNum": "2025-11-663-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, Краснодарский проезд, д. 8",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-663-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-15"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-11-22"
+        },
+        "company": "БАУМАН КАДАСТР",
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разрабокта ПД (АС/ОТС)",
+                "dateOfStart": "2025-11-18",
+                "dateOfEnding": "2025-11-18"
+            }
+        ]
+    },
+    {
+        "id": 2587,
+        "contractNum": "2025-11-664-ТО",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, внутригородское муниципальное образование Хамовники, ул. Зубовская, влад. 7, ул. Россолимо, влад. 4",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-664-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "АНО СОЮЗЭКСПЕРТИЗА ТОРГОВО-ПРОМЫШЛЕННОЙ ПАЛАТЫ РОССИЙСКОЙ ФЕДЕРАЦИИ",
+        "contacts": [
+            {
+                "fullName": "Полыгалова О.А. ",
+                "phone": ["", ""],
+                "post": "",
+                "email": "stroy@soex.ru "
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2588,
+        "contractNum": "2025-11-665-КУ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, пос.Внуковское, дер.Изварино, уч.46/46А",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-665-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-20"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-18"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Сергей Фокин",
+                "phone": ["+7 (926) 767-99-17", ""],
+                "post": "",
+                "email": "ser111@myrambler.ru"
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            },
+            {
+                "participantId": 130,
+                "fullName": "Харьков Алексей"
+            }
+        ],
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2590,
+        "contractNum": "2025-11-666-СЭ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": " г. Москва, ул. Маршала Новикова, дом 2, корпус 2",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-666-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-18"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-02"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": " Екатерина",
+                "phone": ["+7 (903) 960-64-57", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2592,
+        "contractNum": "2025-11-667-АР",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "РФ, Московская область, городской округ Клин, д. Кузнечково",
+        "services": [
+            {
+                "title": "Архитектурные решения"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-667-АР",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-18"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-11-28"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Пенькова Антонина",
+                "phone": ["71440", ""],
+                "post": "",
+                "email": "penkova@capitalgroupcorp.com"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Новиков Константин"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2593,
+        "contractNum": "2025-11-668-РНС",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, ул. Печорская, вл. 3",
+        "services": [
+            {
+                "title": "Размещение некапитальных строений"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-668-РНС",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-19"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-10"
+        },
+        "company": "КАРАТ-II",
+        "contacts": [
+            {
+                "fullName": "Караханов Рубен Борисович",
+                "phone": ["+7 (925) 517-20-30", ""],
+                "post": "",
+                "email": "karat11rbk@mail.ru"
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            }
+        ],
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "Связаться по выезду: Караханов Рубен Борисович\n+7 (925) 517-20-30",
+                "dateOfStart": "2025-11-19",
+                "dateOfEnding": "2025-11-19"
+            },
+            {
+                "title": "Выезд Проект размещения некапитального строения 636-ПП",
+                "dateOfStart": "2025-11-20",
+                "dateOfEnding": "2025-11-20"
+            },
+            {
+                "title": "ПРНС по 636-ПП",
+                "dateOfStart": "2025-11-27",
+                "dateOfEnding": "2025-12-04"
+            },
+            {
+                "title": "",
+                "dateOfStart": "2025-12-03",
+                "dateOfEnding": "2025-12-03"
+            }
+        ]
+    },
+    {
+        "id": 2596,
+        "contractNum": "2025-11-669-СЭ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, Ленинградский проспект, д. 80, корп. 11",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-669-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-21"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-04"
+        },
+        "company": "НАУЧНЫЙ МИР",
+        "contacts": [
+            {
+                "fullName": "Самсоненко Максим Васильевич",
+                "phone": ["+7 (916) 555-32-31", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": [
+            {
+                "title": "Согласовать договор и назначить ПрМ",
+                "dateOfStart": "2025-11-20",
+                "dateOfEnding": "2025-11-20"
+            },
+            {
+                "title": "Согласовать договор",
+                "dateOfStart": "2025-11-20",
+                "dateOfEnding": "2025-11-20"
+            }
+        ]
+    },
+    {
+        "id": 2597,
+        "contractNum": "2025-11-670-ОКН",
+        "stage": {
+            "title": null
+        },
+        "address": "Московская область, г. Чехов, Привокзальная площадь, д. 7",
+        "services": [
+            {
+                "title": "Объекты культурного наследия"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-670-ОКН",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "СЖД-ПРОЕКТ",
+        "contacts": [
+            {
+                "fullName": "Ирина",
+                "phone": ["+7 (926) 206-91-79", ""],
+                "post": "",
+                "email": "zhmykovais@trcont.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Харьков Алексей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2598,
+        "contractNum": "2025-11-671-КУ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "Российская Федерация, город Москва, вн.тер.г. муниципальный округ Кунцево, улица 1-я Мякининская, земельный участок 8",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-671-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-23"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-12"
+        },
+        "company": "ООО \"ГРАН-СИТИ\"",
+        "contacts": [
+            {
+                "fullName": "Мария",
+                "phone": ["+7 (925) 000-80-00", ""],
+                "post": "",
+                "email": "Mariya-belikova@mail.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2599,
+        "contractNum": "2025-11-672-АР",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, ул. Рябиновая, д.14А",
+        "services": [
+            {
+                "title": "Архитектурные решения"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-672-АР",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ЗАПАД",
+        "contacts": [
+            {
+                "fullName": "Александр",
+                "phone": ["+7 (926) 107-95-88", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            }
+        ],
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "Назначить исполнителя, договориться о выезде",
+                "dateOfStart": "2025-11-22",
+                "dateOfEnding": "2025-11-25"
+            },
+            {
+                "title": "Выезл на ПРНС по 636-ПП",
+                "dateOfStart": "2025-11-22",
+                "dateOfEnding": "2025-11-25"
+            },
+            {
+                "title": "ПРНС по 636-ПП ",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-12-06"
+            }
+        ]
+    },
+    {
+        "id": 2600,
+        "contractNum": "2025-11-673-ТО",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "Московская область, г.о. Луховицы, п. Сельхозтехника, стр.8",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-673-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-20"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-11-30"
+        },
+        "company": "МОСЕВРОСЕРВИС",
+        "contacts": [
+            {
+                "fullName": "Георгий Зыков",
+                "phone": ["+7 (912) 826-21-89", ""],
+                "post": "",
+                "email": "ggzykov@gmail.com"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": [
+            {
+                "title": "Подготовка технического заключения",
+                "dateOfStart": "2025-11-20",
+                "dateOfEnding": "2025-11-29"
+            },
+            {
+                "title": "Расчёт для задачи",
+                "dateOfStart": "2025-11-20",
+                "dateOfEnding": "2025-11-29"
+            },
+            {
+                "title": "Расчёт",
+                "dateOfStart": "2025-11-22",
+                "dateOfEnding": "2025-11-29"
+            },
+            {
+                "title": "Отчет сдал. В понедельник подготовить акты и счет",
+                "dateOfStart": "2025-12-05",
+                "dateOfEnding": "2025-12-09"
+            }
+        ]
+    },
+    {
+        "id": 2601,
+        "contractNum": "2025-11-674-ППН",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, вн.тер.г. муниципальный округ Сокол, Ленинградский проспект, 80 , корп. 17 пом 1/1",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-674-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-21"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-11"
+        },
+        "company": "МОСКВА - СОКОЛ",
+        "contacts": [
+            {
+                "fullName": "Бурмистрова Лариса Петровна",
+                "phone": ["7495780544521608", ""],
+                "post": "",
+                "email": "l.burmistrova@socium-sokol.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Корректировка ПД от 2021г",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            },
+            {
+                "title": "Ждем данные от МБКР",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-11-26"
+            }
+        ]
+    },
+    {
+        "id": 2602,
+        "contractNum": "2025-11-675-КУ",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "Московская область, городской округ Мытищи, г. Мытищи, ул. Рождественская, д. 2, кв. 602",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-675-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-29"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-11"
+        },
+        "company": "Гамбурцев Сергей Даниелович",
+        "contacts": [
+            {
+                "fullName": "Даниел Сергеевич",
+                "phone": ["+8 (905) 774-94-74", ""],
+                "post": "",
+                "email": "admin@obosobka1.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС) Петя",
+                "dateOfStart": "2025-11-29",
+                "dateOfEnding": "2025-11-29"
+            }
+        ]
+    },
+    {
+        "id": 2603,
+        "contractNum": "2025-11-676-АР",
+        "stage": {
+            "title": null
+        },
+        "address": " г. Москва, Волоколамское шоссе, д. 88, к. 9, стр. 2.",
+        "services": [
+            {
+                "title": "Архитектурные решения"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-676-АР",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ЗЕНИТ СПОРТ",
+        "contacts": [
+            {
+                "fullName": "Прокудин Игорь Александрович ",
+                "phone": ["+7 (915) 144-84-18", ""],
+                "post": "",
+                "email": "zenit1961@mail.ru"
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            }
+        ],
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "Прошу проверить и согласовать ",
+                "dateOfStart": "2025-11-22",
+                "dateOfEnding": "2025-11-22"
+            },
+            {
+                "title": "Прошу проверить и назначить ответственность ПрМ",
+                "dateOfStart": "2025-11-22",
+                "dateOfEnding": "2025-11-22"
+            },
+            {
+                "title": "Олег прошу проверить договор. Важный и срочный, сроки!!!! Берем сопровождение согласования в Москомархитектуре. Оплата в 3 этапа согласовано с Лешей Лаврухиным",
+                "dateOfStart": "2025-11-22",
+                "dateOfEnding": "2025-11-22"
+            }
+        ]
+    },
+    {
+        "id": 2604,
+        "contractNum": "2025-11-677-РНС",
+        "stage": {
+            "title": null
+        },
+        "address": "(Местоположение установлено относительно ориентира, расположенного в границах участка. Почтовый адрес ориентира: г Москва, ул 8 Марта, вл 10, стр 3,9,10,11,12.)",
+        "services": [
+            {
+                "title": "Размещение некапитальных строений"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-677-РНС",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "НАУЧНО-ПРОИЗВОДСТВЕННОЕ ОБЪЕДИНЕНИЕ ДАЛЬНЕЙ РАДИОЛОКАЦИИ",
+        "contacts": [
+            {
+                "fullName": "Ирина Викторовна",
+                "phone": ["+7 (985) 998-37-75", "+7 (495) 232-00-06"],
+                "post": "",
+                "email": "ipavlova@npodr.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2606,
+        "contractNum": "2025-11-678-ТО",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "пос. Московский, квартал 32, домовладение 16, строение 5",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-678-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-06"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-17"
+        },
+        "company": "АСТОР ЭСТЕЙТС ЛТД",
+        "contacts": [
+            {
+                "fullName": "Обгольц Наталья Юрьевна",
+                "phone": ["+7 (911) 230-73-35", "+7 (916) 664-54-67"],
+                "post": "",
+                "email": "natalya.obgolts@rndv.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "Выезд - сканирование 8 и 9 этажей.",
+                "dateOfStart": "2025-12-11",
+                "dateOfEnding": "2025-12-11"
+            }
+        ]
+    },
+    {
+        "id": 2607,
+        "contractNum": "2025-11-679-СТЭ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "Домодедовский округ, с. Успенское",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-679-СТЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-25"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-06"
+        },
+        "company": "МИТЛИС",
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2608,
+        "contractNum": "2025-11-680-ТО",
+        "stage": {
+            "title": null
+        },
+        "address": "Москва, пер. Большой Дровяной, д. 11",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-680-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "АРИСТАРХОВСКИЙ",
+        "contacts": [
+            {
+                "fullName": "Константин",
+                "phone": ["+7 (915) 455-13-36", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2609,
+        "contractNum": "2025-11-681-ППН",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, пер. Холодильный, д. 3, корп. 1, строен. 4",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-681-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-25"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-09"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Семён",
+                "phone": ["+7 (916) 608-78-73", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Выезд на объект и обмер пом.",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            },
+            {
+                "title": "Разработ ПД (АС/ОТС)",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            },
+            {
+                "title": "Техплан",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            }
+        ]
+    },
+    {
+        "id": 2610,
+        "contractNum": "2025-11-682-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "город Москва, вн.тер.г. муниципальный округ Бабушкинский, улица Лётчика Бабушкина, дом 15, помещение 1/1",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-682-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-25"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-02"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Кузнецов Денис Александрович",
+                "phone": ["+8 (925) 340-39-92", ""],
+                "post": "",
+                "email": "denis.hotbox@yandex.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС)",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            },
+            {
+                "title": "Техплан",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            }
+        ]
+    },
+    {
+        "id": 2611,
+        "contractNum": "2025-11-683-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "Москва, ул. Рудневка, вл. 43А",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-683-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-28"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-12"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Александр",
+                "phone": ["+7 (991) 888-15-88", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Назначить ПМ",
+                "dateOfStart": "2025-11-28",
+                "dateOfEnding": "2025-11-28"
+            },
+            {
+                "title": "Разработка ПД (АС/ОТС) делает Петя",
+                "dateOfStart": "2025-11-28",
+                "dateOfEnding": "2025-11-28"
+            }
+        ]
+    },
+    {
+        "id": 2612,
+        "contractNum": "2025-11-684-ТО",
+        "stage": {
+            "title": null
+        },
+        "address": "Российская Федерация, вн. тер. г. городской округ Щербинка, ул. Космонавтов, дом. 16А  ",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-684-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ВИТА ХАУС",
+        "contacts": [
+            {
+                "fullName": "Вячеслав",
+                "phone": ["+7 (916) 671-96-05", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2613,
+        "contractNum": "2025-11-685-КУ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "Москва, ул. Лебедянская 14, к. 1, стр. 2",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-685-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-25"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-02"
+        },
+        "company": null,
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2614,
+        "contractNum": "2025-11-686-РНС",
+        "stage": {
+            "title": "Аннулировано"
+        },
+        "address": "г.Москва, Калужское шоссе, дом 4",
+        "services": [
+            {
+                "title": "Размещение некапитальных строений"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-686-РНС",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Петр",
+                "phone": ["+7 (916) 261-55-90", "+7 (916) 261-55-90"],
+                "post": "",
+                "email": "Bobrik-62@ya.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "Просьба, наполнить папку документацией от закакзчика перед подписанием",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            }
+        ]
+    },
+    {
+        "id": 2615,
+        "contractNum": "2025-11-687-ЛСП",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г.Москва, ул.Дмитровка Большая, д.7/5, стр.2",
+        "services": [
+            {
+                "title": "Легализация"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-687-ЛСП",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-26"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-10"
+        },
+        "company": "ФИРМА РЕМСТРОЙКРОВЛЯ",
+        "contacts": [
+            {
+                "fullName": "Ирина",
+                "phone": ["+7 (903) 137-66-88", ""],
+                "post": "",
+                "email": ""
+            },
+            {
+                "fullName": "Мороз Дмитрий",
+                "phone": ["+7 (985) 133-99-01", ""],
+                "post": "",
+                "email": "1780961@mail.ru"
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            }
+        ],
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "Выезд АГР ЗОС ",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-11-27"
+            },
+            {
+                "title": "АГР ",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-12-13"
+            },
+            {
+                "title": "ЗКИ",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-12-13"
+            },
+            {
+                "title": "Организовать выезд на объект по просьбе Теймура",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            },
+            {
+                "title": "ЗОС ",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-12-13"
+            },
+            {
+                "title": "Согласовать договор",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            },
+            {
+                "title": "Выезд АГР ЗОС ",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-11-27"
+            },
+            {
+                "title": "АГР ",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-12-13"
+            },
+            {
+                "title": "ЗКИ",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-12-13"
+            },
+            {
+                "title": "Организовать выезд на объект по просьбе Теймура",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            },
+            {
+                "title": "ЗОС ",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-12-13"
+            },
+            {
+                "title": "Согласовать договор",
+                "dateOfStart": "2025-11-25",
+                "dateOfEnding": "2025-11-25"
+            }
+        ]
+    },
+    {
+        "id": 2617,
+        "contractNum": "2025-11-688-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "город Москва, вн.тер.г. муниципальный округ Марьина роща, проезд Марьиной Рощи 3-й, дом 40, строение 1, помещение 1Н/6",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-688-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-25"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-02"
+        },
+        "company": "КОНСАЛТИНГОВАЯ КОМПАНИЯ КОР",
+        "contacts": [
+            {
+                "fullName": "Шестопалько Валерия",
+                "phone": ["+7 (967) 054-33-01", ""],
+                "post": "",
+                "email": "shestopalko@corconsult.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС)",
+                "dateOfStart": "2025-11-26",
+                "dateOfEnding": "2025-11-26"
+            }
+        ]
+    },
+    {
+        "id": 2618,
+        "contractNum": "2025-11-689-ЛСП",
+        "stage": {
+            "title": "Работа приостановлена"
+        },
+        "address": "г. Москва, пер. Богословский, д. 12А, кв. 50",
+        "services": [
+            {
+                "title": "Легализация"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-689-ЛСП",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-27"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-11"
+        },
+        "company": "АВТОТЕХЦЕНТР ПРИВОЛЬНАЯ",
+        "contacts": [
+            {
+                "fullName": "Черемисин Игорь Владимирович",
+                "phone": ["+7 (925) 802-83-33", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            }
+        ],
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "Пауза Дубль АГРа",
+                "dateOfStart": "2025-12-05",
+                "dateOfEnding": "2025-12-06"
+            },
+            {
+                "title": "Пауза Дубль ЗОС",
+                "dateOfStart": "2025-12-05",
+                "dateOfEnding": "2025-12-06"
+            }
+        ]
+    },
+    {
+        "id": 2619,
+        "contractNum": "2025-11-690-ЛСП",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, шоссе Варшавское, д. 64А ",
+        "services": [
+            {
+                "title": "Легализация"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-690-ЛСП",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-27"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-11"
+        },
+        "company": "ВАРШАВСКОЕ 64А",
+        "contacts": [
+            {
+                "fullName": " Максим",
+                "phone": ["+7 (925) 050-81-91", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            }
+        ],
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "Выезд по размещение некапитального строения по 1255-ПП",
+                "dateOfStart": "2025-11-28",
+                "dateOfEnding": "2025-11-28"
+            },
+            {
+                "title": "ЭЗ на ПРНС по 1255-ПП",
+                "dateOfStart": "2025-11-27",
+                "dateOfEnding": "2025-12-09"
+            },
+            {
+                "title": "",
+                "dateOfStart": "2025-11-29",
+                "dateOfEnding": "2025-11-29"
+            }
+        ]
+    },
+    {
+        "id": 2620,
+        "contractNum": "2025-11-691-ППН",
+        "stage": {
+            "title": "Успех"
+        },
+        "address": "Москва, ул. Рудневка, вл. 43А",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-691-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-29"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-13"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Коротаев Игорь Леонидович",
+                "phone": ["+7 (978) 629-42-35", ""],
+                "post": "",
+                "email": "Оolgakorotaeva11@gmail.com"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС) Делает Петя",
+                "dateOfStart": "2025-11-29",
+                "dateOfEnding": "2025-11-29"
+            },
+            {
+                "title": "Назначить ПрМ",
+                "dateOfStart": "2025-12-02",
+                "dateOfEnding": "2025-12-02"
+            }
+        ]
+    },
+    {
+        "id": 2621,
+        "contractNum": "2025-11-692-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, вн.тер.г. муниципальный округ Москворечье-Сабурово, шоссе Каширское, дом 49, строение 11",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-692-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-27"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-11-30"
+        },
+        "company": "КОНСАЛТИНГОВАЯ КОМПАНИЯ КОР",
+        "contacts": [
+            {
+                "fullName": "Шестопалько Валерия",
+                "phone": ["+7 (967) 054-33-01", ""],
+                "post": "",
+                "email": "shestopalko@corconsult.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС)",
+                "dateOfStart": "2025-11-29",
+                "dateOfEnding": "2025-11-29"
+            }
+        ]
+    },
+    {
+        "id": 2622,
+        "contractNum": "2025-11-693-ТО",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, улица Большая Новодмитровская, вл. 14, стр. 3, 4, 5, 7",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-693-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-28"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-16"
+        },
+        "company": "МОРЗЕ",
+        "contacts": [
+            {
+                "fullName": "Александр Бондарь",
+                "phone": ["+7 (926) 253-93-36", ""],
+                "post": "",
+                "email": ""
+            },
+            {
+                "fullName": "Олег",
+                "phone": ["+7 (926) 477-16-79", ""],
+                "post": "",
+                "email": "ov.busarev@jet.su"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2623,
+        "contractNum": "2025-11-694-ТО",
+        "stage": {
+            "title": null
+        },
+        "address": "г.Москва, Лучников переулок, дом 7/4 строение 3",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-694-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Новиков Алексей ",
+                "phone": ["+7 (965) 138-84-44", ""],
+                "post": "",
+                "email": "9265380427@mail.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2625,
+        "contractNum": "2025-11-695-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "Московская область, р-н. Дмитровский, г. Яхрома, ул. Парковая, д. 3",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-695-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-28"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-05"
+        },
+        "company": "Грибова Мария Александровна",
+        "contacts": [
+            {
+                "fullName": "Мария Грибова",
+                "phone": ["+7 (965) 162-20-67", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС)",
+                "dateOfStart": "2025-11-29",
+                "dateOfEnding": "2025-11-29"
+            }
+        ]
+    },
+    {
+        "id": 2625,
+        "contractNum": "2025-11-696-ТО",
+        "stage": {
+            "title": null
+        },
+        "address": "г. Москва, ул. Люблинская д.100, стр. 2",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-696-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ОРЕОНТА",
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": [
+            {
+                "title": "Связаться с директором, запросить подписание и оплату",
+                "dateOfStart": "2025-12-06",
+                "dateOfEnding": "2025-12-10"
+            }
+        ]
+    },
+    {
+        "id": 2626,
+        "contractNum": "2025-11-697-ППН",
+        "stage": {
+            "title": "Успех"
+        },
+        "address": "г. Москва, вн.тер.г. муниципальный округ Басманный, переулок Гусятников, д. 4, стр. 3",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-697-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-28"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-05"
+        },
+        "company": "КОНСАЛТИНГОВАЯ КОМПАНИЯ КОР",
+        "contacts": [
+            {
+                "fullName": "Александр Кузмичев",
+                "phone": ["+7 (925) 437-26-79", ""],
+                "post": "",
+                "email": "kuzmichev@corconsult.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС)",
+                "dateOfStart": "2025-11-29",
+                "dateOfEnding": "2025-11-29"
+            }
+        ]
+    },
+    {
+        "id": 2627,
+        "contractNum": "2025-11-698-ТО",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "улица Ильинка, дом 6/1, строение 1",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-698-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-11"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-01"
+        },
+        "company": "ТОРГОВО-ПРОМЫШЛЕННАЯ ПАЛАТА РОССИЙСКОЙ ФЕДЕРАЦИИ",
+        "contacts": [
+            {
+                "fullName": "Макаров Александр Сергеевич",
+                "phone": ["+7 (916) 671-35-76", "+7 (495) 620-03-26"],
+                "post": "",
+                "email": "Makarov.AS@tpprf.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2628,
+        "contractNum": "2025-11-699-ППН",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "город Москва, вн.тер.г. муниципальный округ Молжаниновский, ш. Международное, д. 28Б, стр. 1",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-699-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-11-29"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-06"
+        },
+        "company": "КОНСАЛТИНГОВАЯ КОМПАНИЯ КОР",
+        "contacts": [
+            {
+                "fullName": "Шестопалько Валерия",
+                "phone": ["+7 (967) 054-33-01", ""],
+                "post": "",
+                "email": "shestopalko@corconsult.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС)",
+                "dateOfStart": "2025-12-05",
+                "dateOfEnding": "2025-12-05"
+            }
+        ]
+    },
+    {
+        "id": 2630,
+        "contractNum": "2025-11-700-КУ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, ул. Вешних Вод,  д. 4,  г. Москва, ул. Вешних Вод,  д. 8, в/г 5/1а, лит. 28, г. Москва, ул. Вешних Вод,  д. 8, в/г 5/1а, лит. 85, г. Москва, ул. Вешних Вод,   д. 8, в/г 5/1а, лит. 59, г. Москва, ул. Вешних Вод,  д. 8, в/г 5/1а, лит. 87, г. Москва, ул. Вешних Вод,  д 8, в/г 5/1а, лит 93",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-700-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-01-29"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-01"
+        },
+        "company": "КАПИТАЛ ГРУП",
+        "contacts": [
+            {
+                "fullName": "Михаил",
+                "phone": ["", "+7 (926) 568-08-30"],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2631,
+        "contractNum": "2025-11-701-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, ул. Люблинская, д. 100",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-11-701-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-02"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-08"
+        },
+        "company": "Грибова Мария Александровна",
+        "contacts": [
+            {
+                "fullName": "Мария Грибова",
+                "phone": ["", ""],
+                "post": "",
+                "email": "manyaysti@mail.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС)",
+                "dateOfStart": "2025-12-05",
+                "dateOfEnding": "2025-12-05"
+            }
+        ]
+    },
+    {
+        "id": 2633,
+        "contractNum": "2025-12-702-ЛСП",
+        "stage": {
+            "title": null
+        },
+        "address": "г. Москва, ул. Марксистская, д. 34, корп.6",
+        "services": [
+            {
+                "title": "Легализация"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-702-ЛСП",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Григорьва Ирина",
+                "phone": ["+7 (926) 125-12-44", "+7 (926) 125-12-44"],
+                "post": "",
+                "email": "arina125125@gmail.com"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2634,
+        "contractNum": "2025-12-703-П",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, СВАО, Илимская улица, вл.3/5",
+        "services": [
+            {
+                "title": "Комплексное проектирование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-703-П",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-02"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-09"
+        },
+        "company": "СТРОЙ СЕРВИС",
+        "contacts": [
+            {
+                "fullName": "Гончаров Валентин",
+                "phone": ["+7 (905) 589-87-59", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Новиков Константин"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2635,
+        "contractNum": "2025-12-704-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г.Москва, ул.Фрунзенская 3-Я, д.7",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-704-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "БАУМАН КАДАСТР",
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разрабокта ПД (АС/ОТС)",
+                "dateOfStart": "2025-12-05",
+                "dateOfEnding": "2025-12-05"
+            }
+        ]
+    },
+    {
+        "id": 2637,
+        "contractNum": "2025-12-705-ТО",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, 2-й Капотнинский пр-д, з/у1",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-705-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-04"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-15"
+        },
+        "company": "ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ \"АЛЬФА\"",
+        "contacts": [
+            {
+                "fullName": "Арутюн",
+                "phone": ["+7 (926) 926-88-20", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": [
+            {
+                "title": "Прошу взять в работу",
+                "dateOfStart": "2025-12-02",
+                "dateOfEnding": "2025-12-02"
+            },
+            {
+                "title": "Прошу назначить ответственного ПрМ",
+                "dateOfStart": "2025-12-02",
+                "dateOfEnding": "2025-12-03"
+            },
+            {
+                "title": "",
+                "dateOfStart": "2025-12-09",
+                "dateOfEnding": "2025-12-12"
+            }
+        ]
+    },
+    {
+        "id": 2638,
+        "contractNum": "2025-12-706-ЛСП",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, Озерковская наб., д.50, стр. 1",
+        "services": [
+            {
+                "title": "Легализация"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-706-ЛСП",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-12"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-31"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Ирина",
+                "phone": ["+7 (903) 796-52-74", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2640,
+        "contractNum": "2025-12-707-ТО",
+        "stage": {
+            "title": null
+        },
+        "address": "Российская Федерация, округ Дорогомилово, улица Киевская, дом 2 ",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-707-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "БЕЛКОМ КОММУНИКЕЙШН",
+        "contacts": [
+            {
+                "fullName": "Маркин Сергей ",
+                "phone": ["+7 (903) 107-22-93", ""],
+                "post": "",
+                "email": "markin.sergey@mail.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": [
+            {
+                "title": "Прошу проверить и согласовать",
+                "dateOfStart": "2025-12-04",
+                "dateOfEnding": "2025-12-03"
+            },
+            {
+                "title": "Прошу назначить ответственного ПрМ",
+                "dateOfStart": "2025-12-04",
+                "dateOfEnding": "2025-12-03"
+            },
+            {
+                "title": "Прошк проверить правки по договору, которые внес Заказчик ",
+                "dateOfStart": "2025-12-11",
+                "dateOfEnding": "2025-12-11"
+            }
+        ]
+    },
+    {
+        "id": 2641,
+        "contractNum": "2025-12-708-КУ",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": " Московская область, Пушкинский район, с. Барково",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-708-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-02-04"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-11"
+        },
+        "company": null,
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2642,
+        "contractNum": "2025-12-709-КУ",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, ул. Илимская, д. 3, . Москва, ул. Илимская, д. 3, стр. 29, г. Москва, ул. Илимская, д. 3, стр. 10, г. Москва, ул. Илимская, д. 3, стр. 8, г. Москва, ул. Илимская, д. 3Б, строен. 1, город Москва, ул. Илимская, влд. 3/5, г. Москва,  ул. Илимская, д. 3, стр. 9, г. Москва, ул. Илимская, д. 3, стр. 5",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-709-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-02-04"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-18"
+        },
+        "company": "СТРОЙ СЕРВИС",
+        "contacts": [
+            {
+                "fullName": "Mikhail",
+                "phone": ["", ""],
+                "post": "",
+                "email": "shiryaev@capitalgroupcorp.com"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2643,
+        "contractNum": "2025-12-710-СЭ",
+        "stage": {
+            "title": null
+        },
+        "address": "г. Москва, ЮАО, р-н Нагорный, Электролитный проезд, д. 3, стр. 16",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-710-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ОСТ",
+        "contacts": [
+            {
+                "fullName": "Виктор",
+                "phone": ["+7 (926) 212-99-80", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": [
+            {
+                "title": "Прошу проверить и взять в работу. Выезд. 6.12.2025 в 10,30",
+                "dateOfStart": "2025-12-04",
+                "dateOfEnding": "2025-12-04"
+            },
+            {
+                "title": "Прошу назначить ответственного ПрМ",
+                "dateOfStart": "2025-12-05",
+                "dateOfEnding": "2025-12-04"
+            }
+        ]
+    },
+    {
+        "id": 2646,
+        "contractNum": "2025-12-711-ППН",
+        "stage": {
+            "title": null
+        },
+        "address": "г.Москва, ул.Пречистенка, д.37, стр.2",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-711-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ЧАЙКА",
+        "contacts": [
+            {
+                "fullName": "Елизавета",
+                "phone": ["+7 (917) 542-96-94", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            },
+            {
+                "participantId": 4,
+                "fullName": "Волков Сергей"
+            }
+        ],
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Прошу проверить и согласовать",
+                "dateOfStart": "2025-12-05",
+                "dateOfEnding": "2025-12-05"
+            },
+            {
+                "title": "Прошу назначить ответственного ПрМ",
+                "dateOfStart": "2025-12-05",
+                "dateOfEnding": "2025-12-05"
+            },
+            {
+                "title": "Прошу проверить и согласовать",
+                "dateOfStart": "2025-12-05",
+                "dateOfEnding": "2025-12-05"
+            },
+            {
+                "title": "Прошу назначить ответственного ПрМ",
+                "dateOfStart": "2025-12-05",
+                "dateOfEnding": "2025-12-05"
+            }
+        ]
+    },
+    {
+        "id": 2647,
+        "contractNum": "2025-12-712-АР",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "г. Москва, шоссе Варшавское, д. 64А",
+        "services": [
+            {
+                "title": "Архитектурные решения"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-712-АР",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ВАРШАВСКОЕ 64А",
+        "contacts": [
+            {
+                "fullName": " Максим",
+                "phone": ["+7 (925) 050-81-91", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": [
+            {
+                "participantId": 10,
+                "fullName": "Коломоец Павел"
+            }
+        ],
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "ПРНС по 1255-ПП",
+                "dateOfStart": "2025-12-06",
+                "dateOfEnding": "2025-12-13"
+            }
+        ]
+    },
+    {
+        "id": 2648,
+        "contractNum": "2025-12-713-СС",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, Сыромятнический проезд, вл. 4, стр. 2",
+        "services": [
+            {
+                "title": "Судебное сопровождение"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-713-СС",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-10"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-17"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Андреев Олег",
+                "phone": ["+7 (966) 369-29-80", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Андреев Олег"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2649,
+        "contractNum": "2025-12-714-СС",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, Сыромятнический проезд, вл. 4, стр. 2",
+        "services": [
+            {
+                "title": "Судебное сопровождение"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-714-СС",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-10"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-17"
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Андреев Олег",
+                "phone": ["+7 (966) 369-29-80", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Андреев Олег"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2650,
+        "contractNum": "2025-12-715-ЛСП",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, улица Доватора, дом 8 ",
+        "services": [
+            {
+                "title": "Легализация"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-715-ЛСП",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-09"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-01-03"
+        },
+        "company": "ДОВАТОР",
+        "contacts": [
+            {
+                "fullName": "Светлана Алексеевна",
+                "phone": ["+7 (985) 600-42-80", ""],
+                "post": "",
+                "email": "Nikulina_svet63@mail.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": [
+            {
+                "title": "АГР",
+                "dateOfStart": "2025-12-16",
+                "dateOfEnding": "2025-12-27"
+            }
+        ]
+    },
+    {
+        "id": 2653,
+        "contractNum": "2025-12-716-ППН",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "Московская область, городской округ Красногорск, г. Красногорск, ул. Ленина, д.2, помещ. 1",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-716-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-07"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-21"
+        },
+        "company": "ГРУППА КОМПАНИЙ ГЛОБАЛ КВОЛИТИ",
+        "contacts": [
+            {
+                "fullName": "Татьяна",
+                "phone": ["+7 (915) 096-78-40", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": [
+            {
+                "title": "Разработка ПД (АС/ОТС)",
+                "dateOfStart": "2025-12-12",
+                "dateOfEnding": "2025-12-12"
+            },
+            {
+                "title": "Выезд на объект. Проверка планировки и обмер в рамках помещения.",
+                "dateOfStart": "2025-12-10",
+                "dateOfEnding": "2025-12-06"
+            }
+        ]
+    },
+    {
+        "id": 2654,
+        "contractNum": "2025-12-717-КУ",
+        "stage": {
+            "title": null
+        },
+        "address": "г. Москва, ул. Сокольнический Вал, д. 1Л, строен. 13",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-717-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "УПРАВЛЯЮЩАЯ КОМПАНИЯ ОЛИМП КАПИТАЛ",
+        "contacts": [
+            {
+                "fullName": "Наталья",
+                "phone": ["+7 (965) 218-44-43", "+7 (499) 922-21-74"],
+                "post": "",
+                "email": "nataz72@yandex.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": [
+            {
+                "title": "Подписать доки. Отправил приглашение в ЭДО",
+                "dateOfStart": "2025-02-06",
+                "dateOfEnding": "2025-02-11"
+            }
+        ]
+    },
+    {
+        "id": 2655,
+        "contractNum": "2025-12-718-ПБ",
+        "stage": {
+            "title": null
+        },
+        "address": "Москва, Сокол, пр-кт. Ленинградский, д. 80, корп. 37",
+        "services": [
+            {
+                "title": "Пожарная безопасность"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-718-ПБ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "МОСКВА - СОКОЛ",
+        "contacts": [
+            {
+                "fullName": "Ольга Олеговна Ковалевская",
+                "phone": ["+7 (919) 108-78-33", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Радачинский Александр"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2657,
+        "contractNum": "2025-12-719-КУ",
+        "stage": {
+            "title": null
+        },
+        "address": "Московская область, г. Клин, ул. Трудовая, д.37",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-719-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ГАЗООБЕСПЕЧИВАЮЩАЯ КОМПАНИЯ КЛИН",
+        "contacts": [],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2658,
+        "contractNum": "2025-12-720-ТО",
+        "stage": {
+            "title": null
+        },
+        "address": "Российская Федерация, город Москва, вн.тер.г. муниципальный округ Даниловский, улица Автозаводская, Дом 22, Корпус 1",
+        "services": [
+            {
+                "title": "Обследование"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-720-ТО",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Андрей",
+                "phone": ["+7 (903) 672-95-15", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Солоха Николай"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2659,
+        "contractNum": "2025-12-721-КУ",
+        "stage": {
+            "title": "Работа завершена"
+        },
+        "address": "город Москва, вн.тер.г. поселение Новофедоровское, деревня Кузнецово, д. 54Б, стр. 1",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-721-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-02-10"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-02-11"
+        },
+        "company": "ЦЕРЕРА ГРУПП",
+        "contacts": [
+            {
+                "fullName": "Александр",
+                "phone": ["+7 (916) 670-25-05", ""],
+                "post": "",
+                "email": "Alex-d7@mail.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2661,
+        "contractNum": "2025-12-722-СЭ",
+        "stage": {
+            "title": null
+        },
+        "address": "г. Москва, пр-т Солнцевский, д. 21",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-722-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ПЛАНТА",
+        "contacts": [
+            {
+                "fullName": "Абрамова Ольга",
+                "phone": ["+7 (925) 771-51-57", ""],
+                "post": "",
+                "email": "7715157@gmail.com"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2662,
+        "contractNum": "2025-12-723-СЭ",
+        "stage": {
+            "title": null
+        },
+        "address": "г. Москва, пр-т Солнцевский, д. 21",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-723-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ФЛОРА",
+        "contacts": [
+            {
+                "fullName": "Абрамова Ольга",
+                "phone": ["+7 (925) 771-51-57", ""],
+                "post": "",
+                "email": "7715157@gmail.com"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2663,
+        "contractNum": "2025-12-725-СЭ",
+        "stage": {
+            "title": null
+        },
+        "address": "г. Москва, пр-т Солнцевский, д. 21",
+        "services": [
+            {
+                "title": "Строительно-техническая экспертиза"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-725-СЭ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ЦЕНТРАЛЬНЫЙ ПРОСПЕКТ",
+        "contacts": [
+            {
+                "fullName": "Абрамова Ольга",
+                "phone": ["+7 (925) 771-51-57", ""],
+                "post": "",
+                "email": "7715157@gmail.com"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Пирогова Наталия"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2664,
+        "contractNum": "2025-12-725-КУ",
+        "stage": {
+            "title": null
+        },
+        "address": "город Москва, вн.тер.г. муниципальный округ Алтуфьевский, шоссе Алтуфьевское, дом 79А, строение 25",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-725-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ААС НЕДВИЖИМОСТЬ",
+        "contacts": [
+            {
+                "fullName": "Дмитрий",
+                "phone": ["+7 (926) 790-03-48", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2665,
+        "contractNum": "2025-12-726-РНС",
+        "stage": {
+            "title": null
+        },
+        "address": "Российская Федерация, город Москва, внутригородская территория муниципальный округ Ново-Переделкино, улица Федосьино, земельный участок 12А",
+        "services": [
+            {
+                "title": "Размещение некапитальных строений"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-726-РНС",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "МИР ИНВЕСТИЦИЙ",
+        "contacts": [
+            {
+                "fullName": "Кулишенко Янина Евгеньевна",
+                "phone": ["+7 (925) 361-31-67", ""],
+                "post": "",
+                "email": "kulishenkoy@yandex.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2666,
+        "contractNum": "2025-12-727-КУ",
+        "stage": {
+            "title": null
+        },
+        "address": "г. Москва, ул. Большая Семёновская, вл. 43, стр. 1",
+        "services": [
+            {
+                "title": "Кадастровые работы"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-727-КУ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Левчук Юрий ",
+                "phone": ["+7 (916) 653-91-69", ""],
+                "post": "",
+                "email": "89166539169@mail.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Волков Сергей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2667,
+        "contractNum": "2025-12-728-АР",
+        "stage": {
+            "title": null
+        },
+        "address": "г. Москва, ул. Остоженка, д. 26/1",
+        "services": [
+            {
+                "title": "Архитектурные решения"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-728-АР",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "Артемьев Виктор Львович",
+        "contacts": [
+            {
+                "fullName": "Иванов Руслан Махтыевич ",
+                "phone": ["+7 (499) 280-40-77", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Коломоец Павел"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2668,
+        "contractNum": "2025-12-729-ОКН",
+        "stage": {
+            "title": null
+        },
+        "address": "г. Москва, ул. Земляной Вал, д. 29, стр. 9",
+        "services": [
+            {
+                "title": "Объекты культурного наследия"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-729-ОКН",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": "ПОНЧИКИ",
+        "contacts": [
+            {
+                "fullName": "Василий",
+                "phone": ["+7 (916) 036-06-36", ""],
+                "post": "",
+                "email": "kvr1953@mail.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Харьков Алексей"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2669,
+        "contractNum": "2025-12-730-ППН",
+        "stage": {
+            "title": "В работе"
+        },
+        "address": "г. Москва, вн.тер.г. муниципальный округ Басманный, пер Нижний Сусальный, д. 5, стр. 8",
+        "services": [
+            {
+                "title": "Перепланировка и переустройство"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-730-ППН",
+        "dateOfStart": {
+            "title": "",
+            "value": "2025-12-12"
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": "2025-12-19"
+        },
+        "company": "КОНСАЛТИНГОВАЯ КОМПАНИЯ КОР",
+        "contacts": [
+            {
+                "fullName": "Ксения Березкина",
+                "phone": ["+7 (953) 425-77-53", ""],
+                "post": "",
+                "email": "berezkina@corconsult.ru"
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": []
+    },
+    {
+        "id": 2670,
+        "contractNum": "2025-12-731-ППНЖ",
+        "stage": {
+            "title": null
+        },
+        "address": "Москва, ул. Маршала Тухачевского, д. 32, к.2",
+        "services": [
+            {
+                "title": "Перепланировка в МКД"
+            }
+        ],
+        "pathToFolder": "N:\\3. Договоры\\2025\\2025-12-731-ППНЖ",
+        "dateOfStart": {
+            "title": "",
+            "value": null
+        },
+        "dateOfEnding": {
+            "title": "Срок работы",
+            "value": null
+        },
+        "company": null,
+        "contacts": [
+            {
+                "fullName": "Островская Ирина Вячеславовна",
+                "phone": ["+7 (905) 728-99-44", ""],
+                "post": "",
+                "email": ""
+            }
+        ],
+        "participants": null,
+        "responsible": {
+            "fullName": "Комаренко Аркадий"
+        },
+        "tasks": []
+    }
+]

@@ -1,0 +1,256 @@
+.table-mode__wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+}
+
+.table-mode__wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.table-mode__wrapper_empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table-mode__info-message {
+    font-size: calc(0.75rem + 0.6875 * (100vw - 20rem) / 100);
+    font-family: 'Montserrat-SemiBold';
+}
+
+/* Таблица данных */
+
+.table-mode {
+    width: 100%;
+    height: max-content;
+    position: absolute;
+    inset: 0;
+    border-spacing: 0;
+}
+
+/* Шапка таблицы */
+
+.table-mode__thead {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    left: 0;
+    text-align: left;
+    background-color: transparent;
+}
+
+.table-mode__thead-tr {
+    background-color: #f1f1f1;
+}
+
+.table-mode__thead-th:first-child {
+    border-top-left-radius: 0.3125rem;
+    border-bottom-left-radius: 0.3125rem;
+}
+
+.table-mode__thead-th:last-child {
+    border-top-right-radius: 0.3125rem;
+    border-bottom-right-radius: 0.3125rem;
+}
+
+/* Тело таблицы */
+
+.table-mode__tbody {
+    width: 100%;
+    height: 100%;
+}
+
+.table-mode__tbody-tr:not(:last-child) td {
+    border-bottom: 1px solid #dfdfdf;
+}
+
+.table-mode__thead th,
+.table-mode__tbody td {
+    padding: 0.5rem 1rem;
+}
+
+.table-mode__thead-th-inner {
+    display: flex;
+    align-items: center;
+    column-gap: 0.625rem;
+}
+
+.table-mode__tbody-td {
+}
+
+/* Ячейкa "Группа / Ответственный" */
+
+.cell__group {
+    width: max-content;
+    padding: 0.3vw;
+    font-family: 'Montserrat-SemiBold';
+    border-radius: 0.3125rem;
+    background-color: #6d6d6d;
+    color: #fff;
+}
+
+/* Ячейки "Кем создан и Кто выполняет" */
+
+.cell__participant {
+    display: inline-flex;
+    column-gap: 0.5vw;
+    align-items: center;
+}
+
+.cell__participants {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+}
+
+.cell__participant-img {
+    width: 1.25rem;
+    height: 1.25rem;
+    object-fit: contain;
+}
+
+/* Ячейка "Стадия" */
+
+.cell__stage {
+    width: max-content;
+    padding: 0.3rem;
+    border-radius: 0.3125rem;
+}
+
+/* Ячейка "Выезды", "Сроки" */
+
+.cell__date {
+    padding: 0.3vw;
+    width: max-content;
+    border: 1px solid #666666;
+    border-radius: 0.3125rem;
+    white-space: nowrap;
+    text-align: center;
+    font-size: calc(0.5625rem + 0.375 * (100vw - 20rem) / 100);
+}
+
+/* .cell__depart-date,
+.cell__duration-work {
+    padding: 0.3vw;
+    width: max-content;
+    border: 1px solid #666666;
+    border-radius: 0.3125rem;
+    white-space: nowrap;
+    text-align: center;
+    font-size: calc(0.5625rem + 0.375 * (100vw - 20rem) / 100);
+} */
+
+.cell__depart-date_active {
+    border: 1.5px solid #dc3e3e;
+    color: #dc3e3e;
+}
+
+/* Ячейка "Путь к папке/файлу" */
+
+.cell__path-to-folder {
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+}
+
+.cell__btn-copy-path {
+    cursor: pointer;
+}
+
+/* Ячейка "Сотрудник" */
+
+.cell__person {
+    width: max-content;
+    display: flex;
+    align-items: center;
+    column-gap: 0.3125rem;
+}
+
+.cell__person-photo {
+    width: 2rem;
+    height: 2rem;
+    display: block;
+}
+
+/* .cell__person-fullname {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.5rem + 0.375 * (100vw - 20rem) / 100);
+} */
+
+/* Ячейка "Название прибора" */
+
+.cell__equipment {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.cell__equipment-image {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.cell__equipment-text {
+    display: flex;
+    column-gap: 0.9375rem;
+    align-items: center;
+}
+
+.cell__equipment-text span {
+    color: #666666;
+}
+
+/* Ячейка "Список дат" */
+
+.cell__dates-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.cell__dates-wrapper .cell__dates {
+    position: absolute;
+    inset: 0;
+}
+
+.cell__dates,
+.cell__dates-item {
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+}
+
+.cell__dates-item-value {
+    padding: 2px 6px;
+    border: 1.5px solid #e7e7e7;
+    border-radius: 5px;
+}
+
+/* Ячейка "Местоположение" */
+
+.cell__locations-wrapper {
+    max-width: 100%;
+    height: 100%;
+    position: relative;
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.cell__locations {
+    display: flex;
+    column-gap: 0.3125rem;
+    align-items: center;
+    position: absolute;
+    inset: 0;
+}
+
+.cell__location {
+}

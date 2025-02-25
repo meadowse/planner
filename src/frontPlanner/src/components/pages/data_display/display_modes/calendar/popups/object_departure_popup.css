@@ -1,0 +1,32 @@
+.popup.obj_of_departure {
+    width: 100%;
+    top: 2vw;
+}
+
+.popup_wrapper.obj_of_departure {
+    padding: 1vw;
+}
+
+.popup_content.obj_of_departure,
+.list_departure_objects{
+    display: flex;
+    flex-direction: column;
+}
+
+.popup_content.obj_of_departure{
+    row-gap: 0.8vw;
+}
+
+.inpt_search_object {
+    padding: 0.3vw 0.5vw;
+    border-radius: 5px;
+    background-color: #e7e7e7;
+    outline: none;
+}
+
+.list_departure_objects {
+    max-height: 130px;
+    height: 100%;
+    row-gap: 0.5vw;
+    overflow-y: scroll;
+}

@@ -1,0 +1,11 @@
+services:
+  backPlanner:
+    image: back_planner
+    build: "./src/backPlanner"
+#    ports:
+#      - 8888:8000
+  frontPlanner:
+    image: front_planner
+    build: "./src/frontPlanner"
+    ports:
+      - 3000:3000

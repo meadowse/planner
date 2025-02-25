@@ -1,0 +1,490 @@
+{
+    "section": "Моспроекткомплекс",
+    "higherleveldivision": null,
+    "photo": "/img/struct_company/company.jpg",
+    "director": {
+        "fullName": "Ширинов Заур",
+        "email": "z.shirinov@mosproektkompleks.ru",
+        "post": "Генеральный директор",
+        "photo": "/img/user.svg",
+        "gender": "Мужской"
+    },
+    "subordinates": [
+        {
+            "fullName": "Блинова Анастасия",
+            "email": "a.blinova@mosproektkompleks.ru",
+            "post": null,
+            "photo": "/img/user.svg",
+            "gender": "Женский",
+            "divisions": ["Моспроекткомплекс"]
+        },
+        {
+            "fullName": "Черных Марина",
+            "email": "marina@liderpoiska.ru",
+            "post": null,
+            "photo": "/img/user.svg",
+            "gender": "Женский",
+            "divisions": ["Моспроекткомплекс"]
+        },
+        {
+            "fullName": "Гуров Никита Андреевич",
+            "email": "n.gurov@mosproektkompleks.ru",
+            "post": "Инженер обследования зданий и сооружений",
+            "photo": "/img/user.svg",
+            "gender": "Мужской",
+            "divisions": ["Моспроекткомплекс"]
+        },
+        {
+            "fullName": "Ерëмин Николай Иванович",
+            "email": "n.eremin@mosproektkompleks.ru",
+            "post": "Инженер по обследованию",
+            "photo": "/img/user.svg",
+            "gender": "Мужской",
+            "divisions": ["Моспроекткомплекс"]
+        },
+        {
+            "fullName": "Мостовой Вадим Юрьевич",
+            "email": "z.shirinov@mosproektkompleks.ru",
+            "post": "Генеральный директор",
+            "photo": "/img/user.svg",
+            "gender": "Мужской",
+            "divisions": ["Моспроекткомплекс"]
+        },
+        {
+            "fullName": "Романова Виктория Юрьевна",
+            "email": "v.romanova@mosproektkompleks.ru",
+            "post": "Маркетолог",
+            "photo": "/img/user.svg",
+            "gender": "Женский",
+            "divisions": ["Моспроекткомплекс"]
+        },
+        {
+            "fullName": "Тузина Евгения",
+            "email": "tuzina.evgeniya@gmail.com",
+            "post": "Генеральный директор",
+            "photo": "/img/user.svg",
+            "gender": "Женский",
+            "divisions": ["Моспроекткомплекс"]
+        },
+        {
+            "fullName": "Харьков Алексей Владимирович",
+            "email": "a.harkov@mosproektkompleks.ru",
+            "post": "Главный архитектор проекта",
+            "photo": "/img/user.svg",
+            "gender": "Мужской",
+            "divisions": ["Моспроекткомплекс"]
+        }
+    ],
+    "subsectionsData": [
+        {
+            "section": "Департамент продаж",
+            "higherleveldivision": "Моспроекткомплекс",
+            "photo": "/img/struct_company/sales_department.jpg",
+            "director": {
+                "fullName": "Ширинов Теймур",
+                "email": "t.shirinov@mosproektkompleks.ru",
+                "post": "Генеральный директор",
+                "photo": "/img/user.svg",
+                "gender": "Мужской"
+            },
+            "subordinates": [
+                {
+                    "fullName": "Лаврухин Алексей Романович",
+                    "email": "a.lavruhin@mosproektkompleks.ru",
+                    "post": "Руководитель отдела продаж",
+                    "photo": "/img/user.svg",
+                    "gender": "Мужской",
+                    "divisions": ["Департамент продаж", "Отдел продаж"]
+                },
+                {
+                    "fullName": "Ткаченко Максим Александрович",
+                    "email": "m.tkachenko@mosproektkompleks.ru",
+                    "post": null,
+                    "photo": "/img/user.svg",
+                    "gender": "Мужской",
+                    "divisions": ["Департамент продаж"]
+                },
+                {
+                    "fullName": "Харитонова Светлана Игоревна",
+                    "email": "s.haritonova@mosproektkompleks.ru",
+                    "post": "Специалист по работе с клиентами",
+                    "photo": "/img/user.svg",
+                    "gender": "Женский",
+                    "divisions": ["Департамент продаж"]
+                }
+            ],
+            "subsectionsData": [
+                {
+                    "section": "Бухгалтерия",
+                    "higherleveldivision": "Департамент продаж",
+                    "photo": "/img/struct_company/accounting.jpg",
+                    "director": {
+                        "fullName": "Раевская Лариса",
+                        "email": "l.raevskaya@mosproektkompleks.ru",
+                        "post": "Главный бухгалтер",
+                        "photo": "/img/user.svg",
+                        "gender": "Женский"
+                    },
+                    "subordinates": [],
+                    "subsectionsData": []
+                },
+                {
+                    "section": "Отдел маркетинга",
+                    "higherleveldivision": "Департамент продаж",
+                    "photo": "/img/struct_company/marketing.jpg",
+                    "director": {
+                        "fullName": "Уланов Максим Геннадьевич",
+                        "email": "m.ulanov@mosproektkompleks.ru",
+                        "post": "Руководитель отдела маркетинга",
+                        "photo": "/img/user.svg",
+                        "gender": "Мужской"
+                    },
+                    "subordinates": [
+                        {
+                            "fullName": "Лаврухина Мария Владимировна",
+                            "email": "m.sumlinova@mosproektkompleks.ru",
+                            "post": "Руководитель арт-отдела",
+                            "photo": "/img/user.svg",
+                            "gender": "Женский",
+                            "divisions": ["Отдел маркетинга"]
+                        },
+                        {
+                            "fullName": "Мусаев Бахтиер Анварович",
+                            "email": "b.musaev@mosproektkompleks.ru",
+                            "post": "Инженер информационных технологий",
+                            "photo": "/img/user.svg",
+                            "gender": "Мужской",
+                            "divisions": ["Отдел маркетинга"]
+                        },
+                        {
+                            "fullName": "Некрасов Илья Алексеевич",
+                            "email": "i.nekrasov@mosproektkompleks.ru",
+                            "post": "Вэб-разработчик",
+                            "photo": "/img/user.svg",
+                            "gender": "Мужской",
+                            "divisions": ["Отдел маркетинга"]
+                        },
+                        {
+                            "fullName": "Покровская Анастасия Юрьевна",
+                            "email": "a.pokrovskaya@mosproektkompleks.ru",
+                            "post": "Журналист-редактор",
+                            "photo": "/img/user.svg",
+                            "gender": "Женский",
+                            "divisions": ["Отдел маркетинга"]
+                        },
+                        {
+                            "fullName": "Филиппов Никита Игоревич",
+                            "email": "n.filippov@mosproektkompleks.ru",
+                            "post": "Программист",
+                            "photo": "/img/user.svg",
+                            "gender": "Мужской",
+                            "divisions": ["Отдел маркетинга"]
+                        }
+                    ],
+                    "subsectionsData": []
+                },
+                {
+                    "section": "Отдел продаж",
+                    "higherleveldivision": "Департамент продаж",
+                    "photo": "/img/struct_company/section_sales.jpg",
+                    "director": {
+                        "fullName": "Лаврухин Алексей Романович",
+                        "email": "a.lavruhin@mosproektkompleks.ru",
+                        "post": "Руководитель отдела продаж",
+                        "photo": "/img/user.svg",
+                        "gender": "Мужской",
+                        "divisions": ["Департамент продаж", "Отдел продаж"]
+                    },
+                    "subordinates": [
+                        {
+                            "fullName": "Завьялова Виктория Олеговна",
+                            "email": "v.zavyalova@mosproektkompleks.ru",
+                            "post": "Менеджер по продажам",
+                            "photo": "/img/user.svg",
+                            "gender": "Женский",
+                            "divisions": ["Отдел продаж"]
+                        },
+                        {
+                            "fullName": "Иксанов Эдуард Миясярович",
+                            "email": "e.iksanov@mosproektkompleks.ru",
+                            "post": "Менеджер по продажам",
+                            "photo": "/img/user.svg",
+                            "gender": "Мужской",
+                            "divisions": ["Отдел продаж"]
+                        },
+                        {
+                            "fullName": "Ляпакина Анна Андреевна",
+                            "email": "n.filippov@mosproektkompleks.ru",
+                            "post": "Менеджер по продажам",
+                            "photo": "/img/user.svg",
+                            "gender": "Женский",
+                            "divisions": ["Отдел продаж"]
+                        }
+                    ],
+                    "subsectionsData": [
+                        {
+                            "section": "Отдел по работе с входящими звонками",
+                            "higherleveldivision": "Отдел продаж",
+                            "photo": "/img/struct_company/incoming_calls.jpg",
+                            "director": {
+                                "fullName": "Таранец Олеся Сергеевна",
+                                "email": "o.taranec@mosproektkompleks.ru",
+                                "post": "Руководитель направления по работе с партнёрами",
+                                "photo": "/img/user.svg",
+                                "gender": "Женский"
+                            },
+                            "subordinates": [
+                                {
+                                    "fullName": "Иванников Олег Михайлович",
+                                    "email": "v.zavyalova@mosproektkompleks.ru",
+                                    "post": "Отдел по работе с входящими звонками",
+                                    "photo": "/img/user.svg",
+                                    "gender": "Женский",
+                                    "divisions": ["Отдел по работе с входящими звонками"]
+                                },
+                                {
+                                    "fullName": "Орловская Анастасия Леонидовна",
+                                    "email": "a.orlovskaya@mosproektkompleks.ru",
+                                    "post": "Специалист по документообороту",
+                                    "photo": "/img/user.svg",
+                                    "gender": "Женский",
+                                    "divisions": ["Отдел по работе с входящими звонками"]
+                                },
+                                {
+                                    "fullName": "Романов Август",
+                                    "email": "a.romanov@mosproektkompleks.ru",
+                                    "post": null,
+                                    "photo": "/img/user.svg",
+                                    "gender": "Мужской",
+                                    "divisions": ["Отдел по работе с входящими звонками"]
+                                }
+                            ],
+                            "subsectionsData": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "section": "Производственный департамент",
+            "higherleveldivision": "Моспроекткомплекс",
+            "photo": "/img/struct_company/prod_department.jpg",
+            "director": {
+                "fullName": "Ширинов Заур",
+                "email": "z.shirinov@mosproektkompleks.ru",
+                "post": "Генеральный директор",
+                "photo": "/img/user.svg",
+                "gender": "Мужской"
+            },
+            "subordinates": [
+                {
+                    "fullName": "Архипова Татьяна Ниловна",
+                    "email": "t.arhipova@mosproektkompleks.ru",
+                    "post": "Главный Специалист по охране труда",
+                    "photo": "/img/user.svg",
+                    "gender": "Женский",
+                    "divisions": ["Производственный департамент"]
+                },
+                {
+                    "fullName": "Букреев Александр",
+                    "email": "a.bukreev@mosproektkompleks.ru",
+                    "post": null,
+                    "photo": "/img/user.svg",
+                    "gender": "Мужской",
+                    "division": ["Производственный департамент"]
+                },
+                {
+                    "fullName": "Демидов Владимир Вячеславович",
+                    "email": "v.demidov@mosproektkompleks.ru",
+                    "post": null,
+                    "photo": "/img/user.svg",
+                    "gender": "Мужской",
+                    "division": ["Производственный департамент"]
+                },
+                {
+                    "fullName": "Малашенко Екатерина Сергеевна",
+                    "email": "e.malashenko@mosproektkompleks.ru",
+                    "post": "Менеджер по персоналу",
+                    "photo": "/img/user.svg",
+                    "gender": "Женский",
+                    "divisions": ["Производственный департамент"]
+                },
+                {
+                    "fullName": "Цыкарев Александр",
+                    "email": "a.cykarev@mosproektkompleks.ru",
+                    "post": null,
+                    "photo": "/img/user.svg",
+                    "gender": "Мужской",
+                    "division": ["Производственный департамент"]
+                }
+            ],
+            "subsectionsData": [
+                {
+                    "section": "Кадастровый отдел",
+                    "higherleveldivision": "Производственный департамент",
+                    "photo": "/img/struct_company/cadastral.jpg",
+                    "director": {
+                        "fullName": "Волков Сергей Викторович",
+                        "email": "s.volkov@mosproektkompleks.ru",
+                        "post": "руководитель кадастрового отдела",
+                        "photo": "/img/user.svg",
+                        "gender": "Мужской"
+                    },
+                    "subordinates": [
+                        {
+                            "fullName": "Гришаков Аркадий Анатольевич",
+                            "email": "a.grishakov@mosproektkompleks.ru",
+                            "post": "Специалист кадастрового отдела",
+                            "photo": "/img/user.svg",
+                            "gender": "Мужской",
+                            "division": ["Кадастровый отдел"]
+                        },
+                        {
+                            "fullName": "Оксенюк Анастасия Витальевна",
+                            "email": "e.malashenko@mosproektkompleks.ru",
+                            "post": "Кадастровый инженер",
+                            "photo": "/img/user.svg",
+                            "gender": "Женский",
+                            "divisions": ["Кадастровый отдел"]
+                        },
+                        {
+                            "fullName": "Серебрякова Анна Викторовна",
+                            "email": "a.serebryakova@mosproektkompleks.ru",
+                            "post": "Специалист кадастрового отдела",
+                            "photo": "/img/user.svg",
+                            "gender": "Женский",
+                            "division": ["Кадастровый отдел"]
+                        }
+                    ],
+                    "subsectionsData": []
+                },
+                {
+                    "section": "Отдел обследования",
+                    "higherleveldivision": "Производственный департамент",
+                    "photo": "/img/struct_company/examination.jpg",
+                    "director": {
+                        "fullName": "Солоха Николай Сергеевич",
+                        "email": "n.soloha@mosproektkompleks.ru",
+                        "post": null,
+                        "photo": "/img/user.svg",
+                        "gender": "Мужской"
+                    },
+                    "subordinates": [
+                        {
+                            "fullName": "Ганиев Дамир Наилевич",
+                            "email": "d.ganiev@mosproektkompleks.ru",
+                            "post": "Инженер по обследованию",
+                            "photo": "/img/user.svg",
+                            "gender": "Мужской",
+                            "division": [
+                                "Отдел обследования",
+                                "Группа Д.Ганиева",
+                                "Обследование (Ганиев)",
+                                "Заместитель руководителя отдела"
+                            ]
+                        },
+                        {
+                            "fullName": "Лайпанов Ислам Адамович",
+                            "email": "i.laypanov@mosproektkompleks.ru",
+                            "post": "заместитель руководителя отдела обследования",
+                            "photo": "/img/user.svg",
+                            "gender": "Женский",
+                            "divisions": [
+                                "Отдел обследования",
+                                "Группа И.Лайпанова",
+                                "Обследование (Лайпанов)",
+                                "Заместитель руководителя отдела"
+                            ]
+                        },
+                        {
+                            "fullName": "Соломатин Владимир Дмитриевич",
+                            "email": "v.solomatin@mosproektkompleks.ru",
+                            "post": "Инженер по обследованию",
+                            "photo": "/img/user.svg",
+                            "gender": "Мужской",
+                            "division": ["Отдел обследования"]
+                        }
+                    ],
+                    "subsectionsData": [
+                        {
+                            "section": "Группа Д.Ганиева",
+                            "higherleveldivision": "Отдел обследования",
+                            "photo": "/img/struct_company/company.jpg",
+                            "director": {
+                                "fullName": "Ганиев Дамир Наилевич",
+                                "email": "d.ganiev@mosproektkompleks.ru",
+                                "post": "Инженер по обследованию",
+                                "photo": "/img/user.svg",
+                                "gender": "Мужской"
+                            },
+                            "subordinates": [
+                                {
+                                    "fullName": "Кононов Олег Вячеславович",
+                                    "email": "v.solomatin@mosproektkompleks.ru",
+                                    "post": "Инженер по обследованию",
+                                    "photo": "/img/user.svg",
+                                    "gender": "Мужской",
+                                    "division": ["Группа Д.Ганиева", "Обследование (Ганиев)"]
+                                },
+                                {
+                                    "fullName": "Судаева Софья Витальевна",
+                                    "email": "s.sudaeva@mosproektkompleks.ru",
+                                    "post": "Инженер-конструктор",
+                                    "photo": "/img/user.svg",
+                                    "gender": "Женский",
+                                    "divisions": ["Группа Д.Ганиева", "Обследование (Ганиев)"]
+                                }
+                            ],
+                            "subsectionsData": []
+                        },
+                        {
+                            "section": "Группа Д.Тарасевича",
+                            "higherleveldivision": "Отдел обследования",
+                            "photo": "/img/struct_company/company.jpg",
+                            "director": {
+                                "fullName": "Тарасевич Дмитрий Андреевич",
+                                "email": "d.tarasevich@mosproektkompleks.ru",
+                                "post": "Инженер-конструктор",
+                                "photo": "/img/user.svg",
+                                "gender": "Мужской"
+                            },
+                            "subordinates": [
+                                {
+                                    "fullName": "Гилязова Эльвира Равилевна",
+                                    "email": "e.gilyazova@mosproektkompleks.ru",
+                                    "post": "Инженер по обследованию",
+                                    "photo": "/img/user.svg",
+                                    "gender": "Женский",
+                                    "division": ["Группа Д.Тарасевича"]
+                                },
+                                {
+                                    "fullName": "Жданов Данил Анатольевич",
+                                    "email": "d.zhdanov@mosproektkompleks.ru",
+                                    "post": "Инженер-конструктор",
+                                    "photo": "/img/user.svg",
+                                    "gender": "Мужской",
+                                    "divisions": ["Группа Д.Тарасевича"]
+                                }
+                            ],
+                            "subsectionsData": []
+                        }
+                    ]
+                },
+                {
+                    "section": "Отдел проектов перепланировки",
+                    "higherleveldivision": "Производственный департамент",
+                    "photo": "/img/struct_company/redevelopment.jpg",
+                    "director": {
+                        "fullName": "Комаренко Аркадий Вадимович",
+                        "email": "a.komarenko@mosproektkompleks.ru",
+                        "post": "Инженер-проектировщик",
+                        "photo": "/img/user.svg",
+                        "gender": "Мужской"
+                    },
+                    "subordinates": [],
+                    "subsectionsData": []
+                }
+            ]
+        }
+    ]
+}

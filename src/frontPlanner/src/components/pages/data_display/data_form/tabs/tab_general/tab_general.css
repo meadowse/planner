@@ -1,0 +1,418 @@
+.tab-general {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr;
+    column-gap: calc(20px + 0.3vw);
+    border-radius: 0.325rem;
+    background-color: #f1f1f1;
+}
+
+/* Общие стили */
+
+.tab-general__column {
+    padding: calc(10px + 0.3vw);
+    border-radius: 0.3125rem;
+    background-color: #fff;
+}
+
+.tab-general-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    align-items: center;
+}
+
+.tab-general-row__title {
+    font-family: 'Montserrat-SemiBold';
+    color: #666666;
+}
+
+[data-error]::after,
+.tab-general-row-wrapper[data-error]::after {
+    content: attr(data-error);
+    padding-top: calc(5px + 0.15vw);
+    display: block;
+    text-align: right;
+    color: #c92432;
+}
+
+[data-error]::after {
+    text-align: left;
+}
+
+.tab-general-row-field {
+    padding: calc(5px + 0.3vw) calc(10px + 0.3vw);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e7e7e7;
+    border-radius: 0.3125rem;
+}
+
+.tab-general-row__input {
+    width: 100%;
+    outline: none;
+}
+
+.tab-general-row__ic-btn {
+    padding: 0;
+    width: max-content;
+}
+
+.tab-general-row__ic-btn .icon-btn__image {
+    width: calc(10px + 0.3vw);
+    height: calc(10px + 0.3vw);
+}
+
+/* ******************************* */
+/* ******** Левый столбец ******** */
+/* ******************************* */
+
+.tab-general__left {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    position: relative;
+}
+
+.tab-general__color {
+    width: calc(48px + 0.93vw);
+    height: calc(48px + 0.93vw);
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-top-right-radius: 0.3125rem;
+    border-bottom-left-radius: 100%;
+    z-index: 1;
+}
+
+.tab-general__left-rows {
+    width: 100%;
+    height: 100%;
+    padding: inherit;
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(10px + 0.3vw);
+    position: absolute;
+    inset: 0;
+}
+
+.tab-general__left-rows::-webkit-scrollbar {
+    display: none;
+}
+
+/* Блок "Здание"  */
+
+.tab-general-row__top {
+    align-items: flex-start;
+}
+
+.tab-general__building {
+    display: flex;
+    align-items: flex-start;
+    column-gap: calc(20px + 0.3vw);
+}
+
+.tab-general__image {
+    max-width: calc(175px + 6.25vw);
+    width: 100%;
+    height: calc(75px + 2vw);
+    position: relative;
+    z-index: 0;
+}
+
+.tab-general__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.3125rem;
+}
+
+.tab-general__image-actions {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    background: linear-gradient(0deg, rgba(241, 241, 241, 0.8), rgba(241, 241, 241, 0.8));
+}
+
+.tab-general__image-actions:hover {
+    opacity: 1;
+}
+
+.tab-general__image-message {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.3125rem;
+    text-transform: uppercase;
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.5625rem + 9 * (100vw - 320px) / 1600);
+    color: #fff;
+    background-color: #a5a5a5;
+}
+
+.tab-general__label-image {
+    padding: calc(5px + 0.3vw);
+    border-radius: 0.3125rem;
+    background-color: #ffffff;
+}
+
+.tab__general-select-image {
+    display: none;
+}
+
+.tab-general__label-image {
+    padding: calc(5px + 0.145vw);
+    display: flex;
+    align-items: center;
+    column-gap: calc(5px + 0.145vw);
+    border-radius: 0.3125rem;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.tab-general__download {
+    width: calc(8px + 0.3vw);
+    height: calc(8px + 0.3vw);
+    display: block;
+}
+
+.ic_btn.dropdown_colors {
+    position: relative;
+    z-index: 3;
+}
+
+/* Блок "Менеджер" */
+
+.tab-general__manager {
+    display: flex;
+    align-items: center;
+    column-gap: calc(10px + 0.3vw);
+}
+
+.tab-general-row-item__user {
+    padding: calc(3px + 0.3vw);
+    border-radius: 0.3125rem;
+    background-color: #f1f1f1;
+}
+
+.error_block.manager,
+.error_message.manager {
+    position: static;
+}
+
+/* Блок "Участники" */
+
+.tab-general__participants {
+    display: flex;
+    align-items: center;
+}
+
+.tab-general-row-item__participants {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: calc(10px + 0.3vw);
+}
+
+/* Блок "Компания" */
+
+.tab-general-row__company {
+    margin-top: calc(20px + 0.3vw);
+}
+
+/* Блок "Адрес" */
+
+/* Блок "Путь к папке" */
+
+/* Блок "Поставлена" */
+
+.tab-general-row__creation {
+    position: relative;
+}
+
+.tab-general__creation .popup__tab-general-calendar {
+    top: 0;
+    left: auto;
+    right: 0;
+    transform: translate(0, 0);
+}
+
+/* Блок "Контакты" */
+
+.tab-general-row__delete-contact {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Блок "Контакт" */
+
+.tab-general-row-list {
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(10px + 0.3vw);
+}
+
+.tab-general-row-list__contact {
+    margin-top: calc(20px + 0.3vw);
+}
+
+.ic-btn__add-contact {
+    padding-bottom: calc(5px + 0.3vw);
+}
+
+/* Поле ФИО */
+
+.tab-general-row__title_fio {
+    padding-right: calc(5px + 0.3vw);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Блок "Телефон" */
+
+/* Блок "Почта" */
+
+/* ******************************* */
+/* ***** Cтолбец по середине ***** */
+/* ******************************* */
+
+.tab-general__middle-rows {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(20px + 0.3vw);
+    background-color: #fff;
+}
+
+/* Блок "Сроки" */
+
+.tab-general-row-wrapper__deadlines[data-error]::after {
+    text-align: left;
+}
+
+.tab-general-row__deadlines {
+    display: flex;
+    align-items: flex-start;
+    column-gap: calc(30px + 0.58vw);
+}
+
+.tab-general-row__deadlines .tab-general-row__title {
+    padding-top: calc(5px + 0.3vw);
+}
+
+.tab-general-row__list {
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(5px + 0.3vw);
+}
+
+.tab-general-row__list-item {
+    display: grid;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr);
+    column-gap: calc(10px + 0.3vw);
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.tab-general-row__subtitle {
+    text-align: right;
+}
+
+.tab-general-row__deadline {
+    width: 100%;
+    padding: calc(5px + 0.3vw) calc(10px + 0.3vw);
+    position: relative;
+    border: 1px solid #e7e7e7;
+    border-radius: 0.5rem;
+}
+
+.tab-general-row__deadline + .popup__tab-general-calendar {
+    top: 0;
+    left: auto;
+    right: -50%;
+    transform: translate(50%, 0);
+}
+
+/* Блок "Услуга" */
+
+.tab-general-row__service {
+    flex-grow: 1;
+}
+
+.icon-btn__services {
+    padding: 0;
+}
+
+.tab-general-row-item__services {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.tab-general-row-item__services {
+    margin-top: calc(10px + 0.3vw);
+}
+
+.tab-general__services {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+    position: absolute;
+    inset: 0;
+    font-family: 'Montserrat-SemiBold';
+}
+
+.tab-general__service {
+    display: flex;
+    column-gap: calc(5px + 0.3vw);
+}
+
+.tab-general__btn-del-service {
+    cursor: pointer;
+}
+
+/* Блок "Комментарий" */
+
+.tab-general-row__comment {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(10px + 0.3vw);
+}
+
+.list_item.comment {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    row-gap: 1vw;
+    flex-grow: 1;
+}
+
+.tab-general-row__txt-area {
+    padding: calc(5px + 0.3vw);
+    width: 100%;
+    flex-grow: 1;
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+    outline: none;
+    resize: none;
+}
+
+/* ******************************* */
+/* ******** Правый столбец ******* */
+/* ******************************* */

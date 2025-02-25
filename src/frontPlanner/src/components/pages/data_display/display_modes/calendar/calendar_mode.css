@@ -1,0 +1,169 @@
+/* Календарь */
+.calendar {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(10px + 0.3vw);
+}
+
+.calendar__table,
+.calendar__table-tbody-td {
+    border: 1px solid #dfdfdf;
+    border-collapse: collapse;
+}
+
+.calendar__main {
+    width: 100%;
+    flex-grow: 1;
+    position: relative;
+}
+
+.calendar__main_sidepanel {
+    display: grid;
+    grid-template-columns: 1.5fr 0.5fr;
+    column-gap: calc(0.625rem + 0.3vw);
+}
+
+.calendar__table {
+    width: 100%;
+    height: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    border: 0;
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(9px + 6 * (100vw - 320px) / 1600);
+}
+
+.calendar__table-thead-week {
+    text-align: center;
+    background-color: #f1f1f1;
+}
+
+.calendar__table-thead-day-th {
+    padding: calc(0.3125rem + 0.15vw);
+}
+
+.calendar__table-tbody-td {
+    position: relative;
+}
+
+.calendar__table-tbody-td::after {
+    content: '';
+    position: absolute;
+    width: 20%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, white 85%);
+    pointer-events: none;
+}
+
+.calendar__table-tbody-td_active {
+    background-color: #dfdfdf;
+}
+
+.calendar__table-td-list {
+    padding: calc(0.3125rem + 0.15vw) calc(1.25rem + 0.3vw) 0 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: calc(0.3125rem + 0.15vw);
+    position: absolute;
+    inset: 0;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.calendar__table-td-list::-webkit-scrollbar {
+    display: none;
+}
+
+.calendar__table-td-list-item {
+    padding: 0.3125rem;
+    width: 100%;
+    height: max-content;
+    border-radius: 0.3125rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.calendar__table-td-list-item:hover {
+    overflow: scroll;
+    text-overflow: clip;
+    scrollbar-width: none;
+}
+
+.calendar__table-td-day {
+    position: absolute;
+    bottom: calc(0.3125rem + 0.3vw);
+    right: calc(0.3125rem + 0.3vw);
+    z-index: 1;
+}
+
+.calendar__table-td-day_not-curr {
+    font-family: 'Montserrat-SemiBold';
+    color: #c4c4c4;
+}
+
+/* Всплывающая область с карточками */
+
+.calendar__sidepanel {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.3125rem;
+    background-color: #f1f1f1;
+}
+
+.calendar__sidepanel-main {
+    padding: calc(10px + 0.435vw);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(20px + 0.3vw);
+}
+
+.calendar__sidepanel-header {
+    display: flex;
+    align-items: center;
+    column-gap: calc(15px + 0.3vw);
+}
+
+.calendar__sidepanel-title {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(10px + 10 * (100vw - 320px) / 1600);
+}
+
+.calendar__sidepanel-subtitle {
+    font-size: calc(9px + 6 * (100vw - 320px) / 1600);
+    color: #666666;
+}
+
+.calendar__sidepanel-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.calendar__sidepanel-list-cards {
+    padding-bottom: calc(15px + 0.3vw);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.25rem;
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.calendar__sidepanel-list-cards .kanban-card {
+    background-color: #fff;
+}

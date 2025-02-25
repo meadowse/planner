@@ -1,0 +1,27 @@
+[
+    {
+        "title": "Производственный департамент",
+        "path": "department/",
+        "imgName": "department"
+    },
+    {
+        "title": "Оборудование",
+        "path": "equipment/",
+        "imgName": "equipment"
+    },
+    {
+        "title": "Компания",
+        "path": "company/",
+        "imgName": "company"
+    },
+    {
+        "title": "Задачи",
+        "path": "tasks/",
+        "imgName": "tasks"
+    },
+    {
+        "title": "Чат",
+        "path": "chat/",
+        "imgName": "chats"
+    }
+]

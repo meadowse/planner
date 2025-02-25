@@ -1,0 +1,211 @@
+.tab-work {
+    padding: 1vw;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vw;
+    background-color: #fff;
+}
+
+.tab-work__header {
+    display: flex;
+    column-gap: 1vw;
+    align-items: center;
+    position: relative;
+}
+
+.tab-work__wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+}
+
+.tab-work__wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.tab-work-tree {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vw;
+    position: absolute;
+    inset: 0;
+}
+
+.tab-work-tree__header,
+.tab-work-tree__main,
+.tab-work-tree__branch-nodes {
+    display: grid;
+}
+
+.tab-work-tree__header {
+    padding: calc(10px + 0.3vw) 0;
+    grid-template-columns: repeat(5, 1fr);
+    position: sticky;
+    top: 0;
+    left: 0;
+    font-family: 'Montserrat-SemiBold';
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    z-index: 1;
+}
+ 
+.tab-work-tree__branch {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vw;
+}
+
+.tab-work-tree__branch-nodes > *:not(:first-child){
+    position: relative;
+}
+
+.tab-work-tree__branch-nodes > *:not(:first-child)::after{
+    content: "";
+    display: block;
+    width: 100%;
+    height: 0.125rem;
+    position: absolute;
+    bottom: calc(-5px - 0.15vw);
+    left: 0;
+    background-color: #DFDFDF;
+    /* border-bottom: 1.5px solid #DFDFDF; */
+}
+
+/* Подзадача */
+
+.tab-work-tree__node-subtask {
+    display: flex;
+    column-gap: calc(5px + 0.3vw);
+}
+
+.tab-work-tree__subtask-title {
+    padding: calc(5px + 0.15vw) calc(10px + 0.15vw);
+    border: 1px solid #6d6d6d;
+    border-radius: 0.3125rem;
+    font-family: 'Montserrat-SemiBold';
+    color: #fff;
+    background-color: #6d6d6d;
+}
+
+.tab-work-tree__subtask-btn{
+    padding: 0 calc(5px + 0.3vw);
+    position: relative;
+    border-radius: 0.3125rem;
+    font-size: calc(0.625rem + 4 * (100vw - 320px) / 1600);
+    cursor: pointer;
+    color: #fff;
+    background-color: #99ad60;
+}
+
+.tab-work-tree__subtask-hint {
+    position: relative;
+}
+
+.tab-work-tree__subtask-hint-title {
+    padding: 0 calc(5px + 0.3vw);
+    position: absolute;
+    width: max-content;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity ease-in 0.3s, visibility 0s linear 0.3s;
+    color: #fff;
+    background-color: #99ad60;
+    z-index: 8;
+}
+
+.tab-work-tree__subtask-btn:hover + .tab-work-tree__subtask-hint .tab-work-tree__subtask-hint-title {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+/* Название */
+
+.tab-work-tree__node-name {
+    display: flex;
+    align-items: center;
+}
+
+.tab-work-tree__name-btn {
+    display: flex;
+    align-items: center;
+    column-gap: calc(5px + 0.3vw);
+    font-family: 'Montserrat-SemiBold';
+    cursor: pointer;
+}
+
+/* Ответственный */
+
+.tab-work-tree__node-responsible {
+    display: flex;
+    align-items: center;
+    column-gap: calc(5px + 0.3vw);
+}
+
+.tab-work-tree__responsible-img {
+    width: calc(20px + 0.465vw);
+    height: calc(20px + 0.465vw);
+    display: block;
+}
+
+/* Стадия */
+
+.tab-work-tree__checkbox-wrapper {
+    width: calc(16px + 0.465vw);
+    height: calc(16px + 0.465vw);
+    position: relative;
+}
+
+.tab-work-tree__inpt-checkbox {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    z-index: 1;
+}
+
+.tab-work-tree__custom-checkbox {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #f1f1f1;
+    border-radius: 0.3125rem;
+}
+
+.tab-work-tree__custom-checkbox::before {
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 0.2s ease-in;
+    background-image: url('../../../../../../../public/img/check_mark.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.tab-work-tree__inpt-checkbox:checked + .tab-work-tree__custom-checkbox::before {
+    transform: translate(-50%, -50%) scale(0.7);
+}
+
+/* Срок */
+
+.tab-work-tree__term {
+    padding: calc(5px + 0.15vw) calc(10px + 0.15vw);
+    width: max-content;
+    display: flex;
+    align-items: center;
+    border: 1px solid #666666;
+    border-radius: 0.3125rem;
+    color: #666666;
+}

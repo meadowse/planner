@@ -1,0 +1,1336 @@
+[
+    {
+        "title": "Все объекты",
+        "subsections": [
+            {
+                "title": "Все менеджеры",
+                "data": [
+                    {
+                        "id": 10,
+                        "color": "#A775A8",
+                        "group": "Группа Лайпанов",
+                        "contractNum": "ТО-2796",
+                        "stage": {
+                            "title": "Завершено",
+                            "color": "#92CA77"
+                        },
+                        "company": "ООО «Экспертные решения»",
+                        "services": [
+                            {
+                                "title": "Пожарная безопасность"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Молдагуловой д.11",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Молдагуловой д.11",
+                        "dateCreation": "22.05.24",
+                        "contacts": [
+                            {
+                                "fullName": "Светлана Викторовна",
+                                "post": "Технолог",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "rodrick42@gmail.com"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building5.jpg",
+                        "durationWork": "18.06.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Ильнур Фазульянов",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Диляра Галеева",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Ефим Бояринцев",
+                                "photo": "/img/user.svg",
+                                "post": "null"
+                            },
+                            {
+                                "fullName": "Лейсан Асылова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "4.06.24",
+                            "endDeadline": "8.06.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м525му"
+                        }
+                    },
+                    {
+                        "id": 11,
+                        "color": "#BE7E69",
+                        "group": "Группа Герасова",
+                        "contractNum": "ТО-5118",
+                        "stage": {
+                            "title": "Распределение",
+                            "color": "#D69A9A"
+                        },
+                        "company": "ООО «Ремстройсервис»",
+                        "services": [
+                            {
+                                "title": "Кадастровые работы"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Охотный ряд, д.5 к.6",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул. Охотный ряд, д.5 к.6",
+                        "dateCreation": "4.06.24",
+                        "contacts": [
+                            {
+                                "fullName": "Александр Петрович Друзь",
+                                "post": "Управляющий",
+                                "phone": "8 (950) 665-81-33",
+                                "email": "moye_taguhi16@gmail.com"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building4.jpg",
+                        "durationWork": "23.06.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Николай Солоха",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Анна Белова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Сергей Волков",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Александр Говорухин",
+                                "photo": "/img/user.svg",
+                                "post": "null"
+                            },
+                            {
+                                "fullName": "Данил Карякин",
+                                "photo": "/img/user.svg",
+                                "post": "null"
+                            },
+                            {
+                                "fullName": "Дамир Ганиев",
+                                "photo": "/img/user.svg",
+                                "post": "null"
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "13.06.24",
+                            "endDeadline": "16.06.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м525му"
+                        }
+                    },
+                    {
+                        "id": 12,
+                        "color": "#69BE8B",
+                        "group": "Группа Ганиев",
+                        "contractNum": "ТО-5678",
+                        "stage": {
+                            "title": "Завершено",
+                            "color": "#92CA77"
+                        },
+                        "company": "ООО «Стройтехносфера»",
+                        "services": [
+                            {
+                                "title": "Независимая экспертиза"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Корабельная, д. 6",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул. Корабельная, д. 6",
+                        "dateCreation": "4.06.24",
+                        "contacts": [
+                            {
+                                "fullName": "Лебедев Михаил Романович",
+                                "post": "Руководитель проекта",
+                                "phone": "8 (983) 997-96-88",
+                                "email": "bert50@gmail.com"
+                            }
+                        ],
+                        "imgBuilding": "",
+                        "durationWork": "",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Аркадий Комаренко",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Диляра Галеева",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Аркадий Гришаков",
+                                "post": "Специалист кадастрового отдела",
+                                "photo": "/img/user.svg"
+                            },
+                            {
+                                "fullName": "Алиана Давлетшина",
+                                "post": "Архитектор",
+                                "photo": "/img/user.svg"
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "17.06.24",
+                            "endDeadline": "19.06.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м070мх"
+                        }
+                    },
+                    {
+                        "id": 13,
+                        "color": "#BE6974",
+                        "group": "Группа Тарасевич",
+                        "contractNum": "ТО-3667",
+                        "stage": {
+                            "title": "Правки",
+                            "color": "#DADF9E"
+                        },
+                        "company": "ООО «Строй-Астер»",
+                        "services": [
+                            {
+                                "title": "Легализация самостроя"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Ленина д.11",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Ленина д.11",
+                        "dateCreation": "5.06.24",
+                        "contacts": [
+                            {
+                                "fullName": "Федосеев Андрей Михайлович",
+                                "post": "Архитектор",
+                                "phone": "8 (996) 012-27-24",
+                                "email": "bernadette69@gmail.com"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building1.jpg",
+                        "durationWork": "10.06.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Аркадий Комаренко",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Аркадий Гришаков",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Мария Алешина",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Ирина Егорова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Олег Андреев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "20.06.24",
+                            "endDeadline": "21.06.24"
+                        },
+                        "car": {
+                            "stamp": "Ford Transit",
+                            "numCar": "с702ав"
+                        }
+                    },
+                    {
+                        "id": 14,
+                        "color": "#69AABE",
+                        "group": "Группа Тарасевич",
+                        "contractNum": "ТО-6875",
+                        "stage": {
+                            "title": "Распределение",
+                            "color": "#D69A9A"
+                        },
+                        "company": "ООО «Вектор»",
+                        "services": [
+                            {
+                                "title": "Легализация самостроя"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Семашко д.8",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Семашко д.8",
+                        "dateCreation": "6.06.24",
+                        "contacts": [
+                            {
+                                "fullName": "Соловьев Арсений Егорович",
+                                "post": "Исполнительный мастер",
+                                "phone": "8 (996) 092-96-21",
+                                "email": "cleveland90@gmail.com"
+                            }
+                        ],
+                        "imgBuilding": "",
+                        "durationWork": "",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Аркадий Комаренко",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Татьяна Архипова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Данил Карякин",
+                                "post": "Менеджер по продажам",
+                                "photo": "/img/user.svg"
+                            },
+                            {
+                                "fullName": "Ирина Егорова",
+                                "post": "Инженер конструктор",
+                                "photo": "/img/user.svg"
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "22.06.24",
+                            "endDeadline": "24.06.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м525му"
+                        }
+                    },
+                    {
+                        "id": 15,
+                        "color": "#A775A8",
+                        "group": "Группа Ганиев",
+                        "contractNum": "Д918-08",
+                        "stage": {
+                            "title": "В работе",
+                            "color": "#E3AA74"
+                        },
+                        "company": "ООО «СтройТрансАвто»",
+                        "services": [
+                            {
+                                "title": "Независимая экспертиза"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Александра Печерского д.62",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Александра Печерского д.62",
+                        "dateCreation": "7.06.24",
+                        "contacts": [
+                            {
+                                "fullName": "Федотов Эмиль Дмитриевич",
+                                "post": "Начальник отдела строительства",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "rewesi_kero97@bk.ru"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building5.jpg",
+                        "durationWork": "21.06.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Дамир Ганиев",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Дамир Ганиев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Эльвира Гилязова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "25.06.24",
+                            "endDeadline": "26.06.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м070мх"
+                        }
+                    },
+                    {
+                        "id": 16,
+                        "color": "#69AABE",
+                        "group": "Группа Тарасевич",
+                        "contractNum": "Т0-3886",
+                        "stage": {
+                            "title": "Правки",
+                            "color": "#DADF9E"
+                        },
+                        "company": "ООО «Бетстрой»",
+                        "services": [
+                            {
+                                "title": "Легализация самостроя"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Ломоносова д.16",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Ломоносова д.16",
+                        "dateCreation": "8.06.24",
+                        "contacts": [
+                            {
+                                "fullName": "Чернышева Есения Адриановна",
+                                "post": "Архитектор",
+                                "phone": "8 (900) 219-56-01",
+                                "email": "trisha91@gmail.com"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building6.jpg",
+                        "durationWork": "1.06.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Ислам Лайпанов",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Мария Алешина",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Сергей Волков",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Дамир Ганиев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Ирина Егорова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "28.05.24",
+                            "endDeadline": "29.05.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м525му"
+                        }
+                    },
+                    {
+                        "id": 17,
+                        "color": "#BE6974",
+                        "group": "Группа Жданов",
+                        "contractNum": "ТО-1248",
+                        "stage": {
+                            "title": "Завершено",
+                            "color": "#92CA77"
+                        },
+                        "company": "ООО «ЭраСтрой»",
+                        "services": [
+                            {
+                                "title": "Кадастровые работы"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Лунная д.32",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Лунная д.32",
+                        "dateCreation": "9.06.24",
+                        "contacts": [
+                            {
+                                "fullName": "Игнатьев Алексей Михайлович",
+                                "post": "Конструктор",
+                                "phone": "8 (902) 713-65-57",
+                                "email": "everett_walsh@gmail.com"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building3.jpg",
+                        "durationWork": "28.06.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Дамир Ганиев",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Диляра Галеева",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Аркадий Гришаков",
+                                "post": "Специалист кадастрового отдела",
+                                "photo": "/img/user.svg"
+                            },
+                            {
+                                "fullName": "Алиана Давлетшина",
+                                "post": "Архитектор",
+                                "photo": "/img/user.svg"
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "30.06.24",
+                            "endDeadline": "31.06.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м070мх"
+                        }
+                    },
+                    {
+                        "id": 18,
+                        "color": "#BE6974",
+                        "group": "Группа Лайпанов",
+                        "contractNum": "ТО-7456",
+                        "stage": {
+                            "title": "Проверка",
+                            "color": "#E2CF6B"
+                        },
+                        "company": "ООО «Исток»",
+                        "services": [
+                            {
+                                "title": "Кадастровые работы"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Островитянова д.25",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Островитянова д.25",
+                        "dateCreation": "30.06.24",
+                        "contacts": [
+                            {
+                                "fullName": "Маслова Алёна Михайловна",
+                                "post": "Технолог",
+                                "phone": "8 (936) 060-21-53",
+                                "email": "katharina.bauch@gmail.com"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building1.jpg",
+                        "durationWork": "8.06.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Дамир Ганиев",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Александр Говорухин",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Данил Карякин",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Алиана Давлетшина",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "1.07.24",
+                            "endDeadline": "2.07.24"
+                        },
+                        "car": {}
+                    },
+                    {
+                        "id": 19,
+                        "color": "#B7BE69",
+                        "group": "Группа Жданов",
+                        "contractNum": "ТО-4831",
+                        "stage": {
+                            "title": "В работе",
+                            "color": "#E3AA74"
+                        },
+                        "company": "ООО «Компания»",
+                        "services": [
+                            {
+                                "title": "Проектирование ОКН"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Пушкина д.39",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Пушкина д.39",
+                        "dateCreation": "31.06.24",
+                        "contacts": [
+                            {
+                                "fullName": "Румянцев Артём Артемьевич",
+                                "post": "Инженер строительного проектирования",
+                                "phone": "8 (948) 329-57-35",
+                                "email": "tazaw-ofupo888@gmail.com"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building3.jpg",
+                        "durationWork": "15.06.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Данил Жданов",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Дамир Ганиев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Эльвира Гилязова",
+                                "post": "Инженер-конструктор",
+                                "photo": "/img/user.svg"
+                            },
+                            {
+                                "fullName": "Данил Карякин",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Сергей Волков",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Лейсан Асылова",
+                                "post": "Архитектор",
+                                "photo": "/img/user.svg"
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "3.07.24",
+                            "endDeadline": "8.07.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м070му"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Выезды",
+        "subsections": [
+            {
+                "title": "выезды",
+                "data": [
+                    {
+                        "id": 0,
+                        "color": "#B7BE69",
+                        "group": "Группа Ганиев",
+                        "contractNum": "Д142-21",
+                        "status": {
+                            "title": "Не запланирован",
+                            "color": "#E2CF6B"
+                        },
+                        "company": "ООО «Маконни»",
+                        "services": [
+                            {
+                                "title": "Легализация самостроя"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Молдагуловой д.1",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Молдагуловой д.1",
+                        "dateCreation": "22.05.24",
+                        "contacts": [
+                            {
+                                "fullName": "Макарова Яна Михайловна",
+                                "post": "Технолог",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "yiciw-ocahe58@internet.ru"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building2.jpg",
+                        "departure": "18.05.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Ильнур Фазульянов",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Олег Андреев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Татьяна Архипова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Лейсан Асылова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "4.05.24",
+                            "endDeadline": "8.05.24"
+                        },
+                        "car": {
+                            "stamp": "Ford Transit",
+                            "numCar": "с702ав"
+                        }
+                    },
+                    {
+                        "id": 1,
+                        "color": "#B7BE69",
+                        "group": "Группа Ганиев",
+                        "contractNum": "Д142-21",
+                        "status": {
+                            "title": "Подтвержден",
+                            "color": "#92CA77"
+                        },
+                        "company": "ООО «Маконни»",
+                        "services": [
+                            {
+                                "title": "Пожарная безопасность"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Молдагуловой д.2",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Молдагуловой д.2",
+                        "dateCreation": "23.05.24",
+                        "contacts": [
+                            {
+                                "fullName": "Фадеева Анна Матвеевна",
+                                "post": "Управляющий",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "moye_taguhi16@gmail.com"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building2.jpg",
+                        "departure": "23.05.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Николай Солоха",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Анна Белова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Ефим Бояринцев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Сергей Волков",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "13.05.24",
+                            "endDeadline": "16.05.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м070мх"
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "color": "#A775A8",
+                        "group": "Группа Лайпанов",
+                        "contractNum": "Д142-21",
+                        "status": {
+                            "title": "Подтвержден",
+                            "color": "#92CA77"
+                        },
+                        "company": "ООО «Маконни»",
+                        "services": [
+                            {
+                                "title": "Кадастровые работы"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Молдагуловой д.3",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Молдагуловой д.3",
+                        "dateCreation": "24.05.24",
+                        "contacts": [
+                            {
+                                "fullName": "Семенов Матвей Львович",
+                                "post": "Руководитель проекта",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "kowa_boxujo59@mail.ru"
+                            }
+                        ],
+                        "imgBuilding": "",
+                        "departure": "",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Аркадий Комаренко",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Диляра Галеева",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Дамир Ганиев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Эльвира Гилязова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "17.05.24",
+                            "endDeadline": "19.05.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м070мх"
+                        }
+                    },
+                    {
+                        "id": 3,
+                        "color": "#69AABE",
+                        "group": "Группа Тарасевич",
+                        "contractNum": "Д142-21",
+                        "status": {
+                            "title": "Не запланирован",
+                            "color": "#E2CF6B"
+                        },
+                        "company": "ООО «Маконни»",
+                        "services": [
+                            {
+                                "title": "Кадастровые работы"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Молдагуловой д.4",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Молдагуловой д.4",
+                        "dateCreation": "25.05.24",
+                        "contacts": [
+                            {
+                                "fullName": "Федосеев Андрей Михайлович",
+                                "post": "Архитектор",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "riteka_wiho73@bk.ru"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building3.jpg",
+                        "departure": "10.05.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Аркадий Комаренко",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Александр Говорухин",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Аркадий Гришаков",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Алиана Давлетшина",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Мария Алешина",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Ирина Егорова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Олег Андреев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "20.05.24",
+                            "endDeadline": "21.05.24"
+                        },
+                        "car": {
+                            "stamp": "Ford Transit",
+                            "numCar": "с702ав"
+                        }
+                    },
+                    {
+                        "id": 4,
+                        "color": "#69AABE",
+                        "group": "Группа Тарасевич",
+                        "contractNum": "Д188-21",
+                        "status": {
+                            "title": "Не запланирован",
+                            "color": "#E2CF6B"
+                        },
+                        "company": "ООО «Маконни»",
+                        "services": [
+                            {
+                                "title": "Техническое обследование"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Молдагуловой д.5",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Молдагуловой д.5",
+                        "dateCreation": "26.05.24",
+                        "contacts": [
+                            {
+                                "fullName": "Соловьев Арсений Егорович",
+                                "post": "Исполнительный мастер",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "vejudi-dozo96@list.ru"
+                            }
+                        ],
+                        "imgBuilding": "",
+                        "departure": "",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Аркадий Комаренко",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Татьяна Архипова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Ефим Бояринцев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Лейсан Асылова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "22.05.24",
+                            "endDeadline": "24.05.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м525му"
+                        }
+                    },
+                    {
+                        "id": 5,
+                        "color": "#BE6974",
+                        "group": "Группа Герасова",
+                        "contractNum": "Д918-08",
+                        "status": {
+                            "title": "Подтвержден",
+                            "color": "#92CA77"
+                        },
+                        "company": "ООО «Маконни»",
+                        "services": [
+                            {
+                                "title": "Независимая экспертиза"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Молдагуловой д.6",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Молдагуловой д.6",
+                        "dateCreation": "27.05.24",
+                        "contacts": [
+                            {
+                                "fullName": "Федотов Эмиль Дмитриевич",
+                                "post": "Начальник отдела строительства",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "rewesi_kero97@bk.ru"
+                            }
+                        ],
+                        "imgBuilding": "",
+                        "departure": "",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Николай Солоха",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Дамир Ганиев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Эльвира Гилязова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "25.05.24",
+                            "endDeadline": "26.05.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м070мх"
+                        }
+                    },
+                    {
+                        "id": 6,
+                        "color": "#69AABE",
+                        "group": "Группа Тарасевич",
+                        "contractNum": "Д381-86",
+                        "status": {
+                            "title": "Завершено",
+                            "color": "#6D6D6D"
+                        },
+                        "company": "ООО «Маконни»",
+                        "services": [
+                            {
+                                "title": "Легализация самостроя"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Молдагуловой д.7",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Молдагуловой д.7",
+                        "dateCreation": "28.05.24",
+                        "contacts": [
+                            {
+                                "fullName": "Тихомирова Агния Тимофеевна",
+                                "post": "Архитектор",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "doyiw_ajigo54@list.ru"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building1.jpg",
+                        "departure": "21.05.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Ислам Лайпанов",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Мария Алешина",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Сергей Волков",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Дамир Ганиев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Ирина Егорова",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "28.05.24",
+                            "endDeadline": "29.05.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м525му"
+                        }
+                    },
+                    {
+                        "id": 7,
+                        "color": "#BE6974",
+                        "group": "Группа Герасова",
+                        "contractNum": "Д274-56",
+                        "status": {
+                            "title": "Подтвержден",
+                            "color": "#92CA77"
+                        },
+                        "company": "ООО «Маконни»",
+                        "services": [
+                            {
+                                "title": "Кадастровые работы"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Молдагуловой д.8",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Молдагуловой д.8",
+                        "dateCreation": "29.05.24",
+                        "contacts": [
+                            {
+                                "fullName": "Абрамов Игорь Алексеевич",
+                                "post": "Конструктор",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "sife_yewuca49@yandex.ru"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building2.jpg",
+                        "departure": "21.05.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Николай Солоха",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Диляра Галеева",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Мария Алешина",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Сергей Волков",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "30.05.24",
+                            "endDeadline": "31.05.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м070мх"
+                        }
+                    },
+                    {
+                        "id": 8,
+                        "color": "#BE6974",
+                        "group": "Группа Герасова",
+                        "contractNum": "Д274-56",
+                        "status": {
+                            "title": "Подтвержден",
+                            "color": "#92CA77"
+                        },
+                        "company": "ООО «Маконни»",
+                        "services": [
+                            {
+                                "title": "Техническое обследование"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Молдагуловой д.9",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Молдагуловой д.9",
+                        "dateCreation": "30.05.24",
+                        "contacts": [
+                            {
+                                "fullName": "Наумова Злата Львовна",
+                                "post": "Технолог",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "doyiw_ajigo54@list.ru"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building1.jpg",
+                        "departure": "11.05.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Николай Солоха",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Александр Говорухин",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Данил Карякин",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Алиана Давлетшина",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "1.06.24",
+                            "endDeadline": "2.06.24"
+                        },
+                        "car": {}
+                    },
+                    {
+                        "id": 9,
+                        "color": "#B7BE69",
+                        "group": "Группа Жданов",
+                        "contractNum": "Д142-21",
+                        "status": {
+                            "title": "Завершено",
+                            "color": "#6D6D6D"
+                        },
+                        "company": "ООО «Маконни»",
+                        "services": [
+                            {
+                                "title": "Проектирование ОКН"
+                            }
+                        ],
+                        "address": "г. Москва, ул., Молдагуловой д.10",
+                        "pathToFolder": "X:/Клиенты/2024/Александр Ирина Молдагуловой обследование/г. Москва, ул., Молдагуловой д.10",
+                        "dateCreation": "31.05.24",
+                        "contacts": [
+                            {
+                                "fullName": "Румянцев Артём Артемьевич",
+                                "post": "Инженер строительного проектирования",
+                                "phone": "8 (999) 989-75-65",
+                                "email": "tazaw-ofupo888@gmail.com"
+                            }
+                        ],
+                        "imgBuilding": "/img/buildings/building3.jpg",
+                        "departure": "15.05.24",
+                        "manager": {
+                            "fullName": "Мария Алешина",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "responsible": {
+                            "fullName": "Данил Жданов",
+                            "photo": "/img/user.svg",
+                            "post": null
+                        },
+                        "participants": [
+                            {
+                                "fullName": "Дамир Ганиев",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Данил Карякин",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            },
+                            {
+                                "fullName": "Сергей Волков",
+                                "photo": "/img/user.svg",
+                                "post": null
+                            }
+                        ],
+                        "deadlines": {
+                            "beginDeadline": "3.06.24",
+                            "endDeadline": "8.06.24"
+                        },
+                        "car": {
+                            "stamp": "Haval Dargo",
+                            "numCar": "м070му"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

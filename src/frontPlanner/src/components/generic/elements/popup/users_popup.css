@@ -1,0 +1,102 @@
+.popup__add_user {
+    width: 50%;
+    height: 60vh;
+}
+
+.popup__add_user .popup__wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.popup__content {
+    width: 100%;
+    height: 100%;
+    padding: 0 calc(1.25rem + 0.3vw) calc(1.25rem + 0.3vw) calc(1.5625rem + 0.3vw);
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(0.625rem + 0.3vw);
+}
+
+.popup__inpt-search-user {
+    padding: calc(0.3125rem + 0.3vw);
+    border: 1.5px solid #e7e7e7;
+    border-radius: 0.3125rem;
+    outline: none;
+}
+
+.popup__users {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup__users > :nth-child(1) {
+    margin: calc(0.9375rem + 0.3vw) 0 calc(0.9375rem + 0.3vw);
+}
+
+.popup__title {
+    font-size: calc(0.5625rem + 5 * (100vw - 320px) / 1600);
+}
+
+.popup__list-wrapper {
+    flex-grow: 1;
+    position: relative;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.popup__list-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.popup__list-users {
+    display: grid;
+    /* grid-auto-columns: auto;
+    grid-auto-rows: auto;
+    grid-auto-flow: column; */
+    /* gap: calc(0.9375rem + 0.3vw) calc(1.25rem + 0.3vw); */
+    column-gap: calc(6.25rem + 0.3vw);
+    position: absolute;
+    inset: 0;
+}
+
+.popup__user-list-item {
+    display: flex;
+    align-items: center;
+    column-gap: calc(0.625rem + 0.3vw);
+    cursor: pointer;
+}
+
+.popup__user-list-item img {
+    width: calc(2rem + 0.465vw);
+    height: calc(2rem + 0.465vw);
+    display: block;
+    border-radius: 50%;
+}
+
+.popup-user-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.3125rem;
+}
+
+.popup-user-info__fullname,
+.popup-user-info__post {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.popup-user-info__fullname {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.625rem + 5 * (100vw - 320px) / 1600);
+}
+
+.popup-user-info__fullname:hover,
+.popup-user-info__post:hover {
+    text-overflow: clip;
+    cursor: default;
+}

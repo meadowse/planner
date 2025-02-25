@@ -1,0 +1,48 @@
+.popup__action-selection {
+    padding: 10px 20px;
+    width: max-content;
+}
+
+.popup__action-selection .popup__btn-close-popup{
+    padding: 0;
+}
+
+.popup__content-action-selection{
+    max-width: 90%;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 20px;
+}
+
+/* Заголовок модального окна */
+
+.popup-content__title{
+    text-align: center;
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(10px + 6 * (100vw - 320px) / 1600);
+}
+
+.popup-content__actions{
+    display: flex;
+    column-gap: 20px;
+}
+
+/* Кнопка действия */
+
+.popup__action-selection .btn-action{
+    padding: 10px 25px 10px 25px;
+    border-radius: 5px;
+    cursor:pointer;
+    background-color: #DCDCDC;
+}
+
+.popup__btn-action-yes{
+    border-bottom: 5px solid #00FF7F;
+}
+
+.popup__btn-action-no{
+    border-bottom: 5px solid #FF0033;
+}

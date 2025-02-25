@@ -1,0 +1,53 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(167, 167, 167, 0.35);
+    z-index: 10;
+}
+
+.popup__wrapper-service {
+    padding: 1vw;
+    display: flex;
+    flex-direction: column;
+    row-gap: 45px;
+}
+
+.popup__header,
+.popup__header-operations {
+    display: flex;
+}
+
+.popup__header {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup__header-title {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(12px + 8 * (100vw - 320px) / 1600);
+}
+
+.popup__header-operations {
+    align-items: center;
+    column-gap: 1vw;
+}
+
+.popup_form.left {
+    flex-grow: 1;
+    flex-direction: column;
+    row-gap: 1vw;
+}
+
+.form_item {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+}
+
+.form_item h2 {
+    font-family: 'Montserrat-SemiBold';
+    color: #666666;
+}

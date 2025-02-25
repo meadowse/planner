@@ -1,0 +1,88 @@
+.popup.filters {
+    position: absolute;
+    top: 1vw;
+    left: 0;
+    z-index: 3;
+    border: 1.5px solid #e7e7e7;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background-color: #fff;
+}
+
+.popup_wrapper.filters {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5vw;
+}
+
+.popup_content.filters{
+    padding: 1vw;
+}
+
+.popup_content.filters .list_filters{
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vw;
+}
+
+.filter_item h2{
+    margin-bottom: 0.3vw;
+}
+
+.filter_item_wrapper{
+    display: flex;
+    align-items: center;
+    column-gap: 0.5vw;
+}
+
+/* Дата выезда */
+
+.filter_item_wrapper.date_departure .inpt_data{
+    max-width: 80px;
+    width: 100%;
+    padding: 0.3vw 0.5vw;
+    border: 1.5px solid #e7e7e7;
+    border-radius: 5px;
+    outline: none;
+}
+
+/* Кто выезжает */
+
+/* .filter_item.departing{
+    display: flex;
+    flex-direction: column;
+} */
+
+/* Стадия */
+
+.stages_list,
+.cars_list{
+    display: flex;
+    white-space: nowrap;
+}
+
+.stages_list_item,
+.cars_list_item{
+    padding: 0.3vw;
+    border: 1.5px solid #e7e7e7;
+    border-radius: 5px;
+}
+
+.stages_list_item:first-child,
+.stages_list_item:nth-child(2),
+.cars_list_item:first-child,
+.cars_list_item:nth-child(2){
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.stages_list_item:nth-child(2),
+.stages_list_item:last-child,
+.cars_list_item:nth-child(2),
+.cars_list_item:last-child{
+    border-left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/*  */

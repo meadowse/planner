@@ -2,7 +2,7 @@
 build/
 */__pycache__/
 __pycache__/
-venv/
+.venv/
 static/
 *.pyo
 *.pyc
@@ -26,7 +26,7 @@ static/
 ehthumbs.db
 Thumbs.db
 .idea
-*.md
+#*.md
 *.sublime-workspace
 .orig
 *.ai
@@ -75,6 +75,8 @@ Thumbs.db
 *temp.css
 *temp.js
 *temp.php
+DJANGO_SECRET_KEY.py
+.env
 
 # Разрешенные для размещения в репозитории файлы #
 !.gitignore

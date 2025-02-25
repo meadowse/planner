@@ -1,0 +1,270 @@
+/* .card.calendar {
+    background-color: #fff;
+} */
+
+.kanban-card,
+.kanban-card__main,
+.kanban-card__footer {
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(5px + 0.3vw);
+}
+
+.kanban-card {
+    padding: calc(5px + 0.3vw);
+    row-gap: calc(10px + 0.3vw);
+    border-left-width: 0.5vw;
+    border-left-style: solid;
+    border-radius: 0.5rem;
+    background-color: #f1f1f1;
+}
+
+/* Шапка карточки */
+
+.kanban-card__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Главное содержимое */
+
+.kanban-card__main-title {
+    width: max-content;
+}
+
+/* Изображение */
+
+.kanban-card__figure {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background-color: #dadada;
+}
+
+.kanban-card__image_empty {
+    width: 100%;
+    height: 100%;
+    position: static;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.kanban-card__image-message {
+    text-transform: uppercase;
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.875rem + 8 * (100vw - 320px) / 1600);
+    color: #a8a9ad;
+}
+
+.kanban-card__image {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5rem;
+    object-fit: cover;
+    position: relative;
+    top: 0;
+    left: 0;
+    transition: all 300ms;
+}
+
+.kanban-card__figure:hover .kanban-card__image {
+    transition: all 700ms;
+    transform: scale(1.1);
+}
+
+/* Подпись к рисунку */
+
+.kanban-card__figcaption {
+    padding: calc(5px + 0.3vw);
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    column-gap: 1.25rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 300ms;
+    cursor: default;
+    background-color: rgba(202, 222, 252, 0.5);
+}
+
+.kanban-card__figcaption-left {
+    overflow-x: hidden;
+}
+
+.kanban-card__figure:hover .kanban-card__figcaption {
+    transform: translateY(-100%);
+}
+
+.kanban-card__figcaption-title {
+    margin-bottom: 0.3125rem;
+    padding-right: 0.5rem;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.5rem + 5 * (100vw - 320px) / 1600);
+}
+
+.kanban-card__figcaption-title:hover,
+.kanban-card__figcaption-fullname:hover,
+.kanban-card__figcaption-phones:hover {
+    text-overflow: clip;
+    overflow-x: auto;
+    scrollbar-width: 0;
+}
+
+.kanban-card__figcaption-title::-webkit-scrollbar,
+.kanban-card__figcaption-fullname::-webkit-scrollbar {
+    display: none;
+}
+
+.kanban-card__figcaption-info {
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(5px + 0.3vw);
+}
+
+.kanban-card__figcaption-info-item {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.1875rem;
+}
+
+.kanban-card__figcaption-list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+}
+
+.kanban-card__figcaption-list-wrapper {
+    width: 100%;
+    height: 40px;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.kanban-card__figcaption-list_department {
+}
+
+.kanban-card__figcaption-list_equipments {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.25rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.kanban-card__figcaption-list-item {
+    display: grid;
+    grid-template-columns: 1fr 0.5fr;
+    align-items: center;
+}
+
+.kanban-card__figcaption-list-item h3 {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.5rem + 5 * (100vw - 320px) / 1600);
+    color: #666666;
+}
+
+.kanban-card__figcaption-date {
+    padding: calc(5px + 0.15vw);
+    border: 1.5px solid #666666;
+    border-radius: 0.3125rem;
+    text-align: center;
+    font-size: calc(0.625rem + 5 * (100vw - 320px) / 1600);
+}
+
+.kanban-card__figcaption-date_next {
+    color: #dc3e3e;
+    border-color: #dc3e3e;
+}
+
+.kanban-card__figcaption_equipment {
+    display: block;
+}
+
+.kanban-card__main-text {
+    overflow-x: auto;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    scrollbar-width: none;
+}
+
+.kanban-card__main-text::-webkit-scrollbar {
+    display: none;
+}
+
+.kanban-card__main-text:hover {
+    text-overflow: clip;
+    cursor: default;
+}
+
+.kanban-card__figcaption-fullname {
+    padding-right: 0.5rem;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.kanban-card__figcaption-phones {
+    padding-right: 0.5rem;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    scrollbar-width: 0;
+}
+
+.kanban-card__figcaption-phones::-webkit-scrollbar {
+    display: none;
+}
+
+.kanban-card__figcaption-subtitle {
+    padding: calc(5px + 0.15vw);
+    border: 1.5px solid #dc3e3e;
+    border-radius: 0.3125rem;
+    text-align: center;
+    font-size: calc(0.625rem + 5 * (100vw - 320px) / 1600);
+    color: #dc3e3e;
+}
+
+/* Пользователь */
+
+.kanban-card__footer-user {
+    display: flex;
+    column-gap: calc(5px + 0.3vw);
+    align-items: center;
+}
+
+.kanban-card__footer-user-img {
+    width: calc(24px + 0.87vw);
+    height: calc(24px + 0.87vw);
+    display: block;
+    border-radius: 50%;
+    background-color: #d9d9d9;
+}
+
+.kanban-card__footer-user-title {
+    margin-bottom: 0.1875rem;
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.625rem + 4 * (100vw - 320px) / 1600);
+    color: #666666;
+}
+
+/* Пользователи */
+
+.kanban-card__footer-users {
+    display: flex;
+    row-gap: 0.5vw;
+    column-gap: 1vw;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}

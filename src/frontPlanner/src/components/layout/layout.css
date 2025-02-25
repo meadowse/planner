@@ -1,0 +1,35 @@
+.logo {
+    max-width: 25.5%;
+    width: 100%;
+    position: absolute;
+    top: 2%;
+    left: 0;
+    z-index: -1;
+}
+
+.app {
+    padding: calc(15px + 0.45vw);
+    flex-grow: 1;
+    display: flex;
+    column-gap: calc(20px + 0.9vw);
+}
+
+.app__left-column {
+    padding-top: calc(45px + 1vw);
+}
+
+.app__right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(10px + 0.3vw);
+}
+
+.main {
+    flex: 1;
+}
+
+.page {
+    width: 100%;
+    height: 100%;
+}

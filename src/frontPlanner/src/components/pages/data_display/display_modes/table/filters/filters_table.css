@@ -1,0 +1,34 @@
+/* Фильтры таблицы */
+
+.table-mode__thead-tr-filters {
+    background-color: #fff;
+}
+
+.table-mode__thead-td {
+    padding: 0 0.5rem;
+}
+
+.table-mode__thead-td-reset-filters {
+    width: 100%;
+    padding: 0.3125rem 0.625rem;
+    outline: none;
+}
+
+.table-mode__filters-inpt-filter,
+.dropdown_filter {
+    width: 100%;
+    outline: none;
+}
+
+.table-mode__thead-tr-reset-filters {
+    background-color: #fff;
+}
+
+.table-mode__thead-td-reset-filters p {
+    width: max-content;
+    margin-left: auto;
+    margin-right: 0;
+    cursor: pointer;
+    font-family: 'Montserrat-SemiBold';
+    text-decoration: underline;
+}

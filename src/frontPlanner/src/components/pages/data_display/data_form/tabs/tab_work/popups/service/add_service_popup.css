@@ -1,0 +1,127 @@
+.popup__add-service {
+    max-width: 50%;
+    width: 100%;
+}
+
+.popup__wrapper-add-service {
+    padding: 1vw;
+    display: flex;
+    flex-direction: column;
+    row-gap: 40px;
+}
+
+/* Контент всплывающего окна */
+
+.popup__content-add-service {
+    padding: 0;
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 4vw;
+}
+
+/* Левая часть формы */
+
+.popup__content-add-service-left {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vw;
+}
+
+.popup__add-service .popup-content-item {
+    display: grid;
+    grid-template-columns: minmax(0, 0.5fr) 1fr;
+    column-gap: 10px;
+}
+
+/* Элементы формы */
+
+/* Блок "Отдел" */
+
+/* Блок "Ответственный" */
+
+.popup__responsible-persons {
+    position: relative;
+    display: flex;
+    column-gap: 0.3vw;
+}
+
+.popup__responsible-persons .popup__add-user {
+    top: 0;
+    left: 100px;
+}
+
+/* Общие стили для блоков "Название" и "Комментарий" */
+
+.popup__add-service .txt-area {
+    padding: 0.5vw;
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+    outline: none;
+    resize: none;
+}
+
+/* Блок "Название" */
+
+/* Блок "Сроки" */
+
+.popup-content-item__deadlines {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
+.popup-content-item__deadlines ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    row-gap: 0.5vw;
+}
+
+.popup-content-item__list-deadlines {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5vw;
+}
+
+.popup__add-service .popup-content-item-deadline {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(max-content, 0.1fr) minmax(max-content, 0.15fr);
+    column-gap: 1vw;
+    align-items: center;
+}
+
+.popup-content-item-deadline p :first-child {
+    text-align: right;
+}
+
+.popup-content-item-deadline-val {
+    padding: 10px 15px;
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Правая часть */
+
+.popup__content-add-service-right {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+}
+
+/* Блок "Комментарий" */
+
+.popup__add-service .popup__content-comment {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 0.5vw;
+}
+
+.popup__content-comment .txt-area {
+    width: 100%;
+    height: 100%;
+}

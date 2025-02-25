@@ -1,0 +1,132 @@
+.kanban {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.kanban::-webkit-scrollbar {
+    display: none;
+}
+
+.kanban__wrapper {
+    min-width: 100vw;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-auto-columns: calc(21.5% - 0.8vw);
+    grid-auto-flow: column;
+    column-gap: 0.8vw;
+    position: absolute;
+    inset: 0;
+}
+
+.kanban__wrapper_empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.kanban__info-message {
+    font-size: calc(0.75rem + 11 * (100vw - 320px) / 1600);
+    font-family: 'Montserrat-SemiBold';
+}
+
+.kanban__col-top {
+    margin-bottom: calc(10px + 0.3vw);
+    border-left: 0.5vw solid rgba(109, 109, 109, 0.745098);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.kanban__col-top-content {
+    padding: calc(10px + 0.3vw);
+    background: linear-gradient(90deg, #f1f1f1 0%, rgba(255, 255, 255, 0) 98.09%);
+}
+
+.kanban__col-top-title {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.625rem + 5 * (100vw - 320px) / 1600);
+}
+
+.kanban__col-top-subtitle {
+    padding-top: calc(15px + 0.3vw);
+}
+
+.kanban__col-top-info {
+    display: flex;
+    align-items: center;
+    column-gap: 0.5vw;
+}
+
+.kanban__col-top-img {
+    width: calc(32px + 0.465vw);
+    height: calc(32px + 0.465vw);
+    display: block;
+}
+
+/*  */
+
+.kanban__col-cards {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-right: 0.5vw;
+    border-right: 1.5px solid #dfdfdf;
+}
+
+.kanban__col-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.kanban__col-list-cards {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 1vw;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vw;
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.kanban__col-list-cards::-webkit-scrollbar {
+    display: none;
+}
+
+.kanban__col-list-cards_empty {
+    display: grid;
+    grid-template-rows: max-content 1fr;
+    align-items: center;
+}
+
+.kanban__col-list-cards-message {
+    justify-self: center;
+}
+
+.kanban__card-wrapper .kanban-card {
+    cursor: grab;
+}
+
+.kanban__drop-area {
+    width: 100%;
+    padding: 7.2rem 0;
+    border: 1px dashed #dcdcdc;
+    border-radius: 10px;
+    text-align: center;
+    opacity: 1;
+    transition: all 0.2s ease-in-out;
+}
+
+.kanban__drop-area_hide {
+    opacity: 0;
+    transition: all 0.1s ease-in-out;
+}

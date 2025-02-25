@@ -1,0 +1,109 @@
+.page__company-struct {
+    width: 100%;
+    height: 100%;
+    /* flex-grow: 1; */
+    position: relative;
+    overflow-y: auto;
+}
+
+.page__company-struct::-webkit-scrollbar {
+    display: none;
+}
+
+.page__company-struct-wrapper {
+    padding: 1.25rem 3.75rem;
+    margin: 0 auto;
+    width: max-content;
+    position: absolute;
+    inset: 0;
+}
+
+.page__company-struct-wrapper > :first-child {
+    margin: 0 auto 2.5rem;
+}
+
+.page__company-struct-wrapper > :first-child.card-struct_active::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: calc(50% - 0.625rem);
+    transform: translateX(-50%);
+    width: 0.125rem;
+    height: 1.25rem;
+    background-color: #000;
+}
+
+.page__company-level,
+.page__company-level-item,
+.card-struct_active {
+    position: relative;
+}
+
+.page__company-level {
+    /* width: max-content; */
+    display: grid;
+}
+
+.page__company-level:first-child {
+    column-gap: 9.375rem;
+}
+
+.page__company-level::before {
+    content: '';
+    width: 100%;
+    height: 0.125rem;
+    position: absolute;
+    top: -1.25rem;
+    left: 0;
+    background-color: #000;
+}
+
+.page__company-level .page__company-level-item:first-child::after {
+    content: '';
+    width: calc(50% - 0.6875rem);
+    height: 0.125rem;
+    position: absolute;
+    top: -1.25rem;
+    left: 0;
+    background-color: #fff;
+}
+
+.page__company-level .page__company-level-item:last-child::after {
+    content: '';
+    width: calc(50% + 0.5625rem);
+    height: 0.125rem;
+    position: absolute;
+    top: -1.25rem;
+    right: 0;
+    background-color: #fff;
+}
+
+.page__company-level-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 2.5rem;
+}
+
+.page__company-level-item .card-struct_active::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: calc(50% - 0.625rem);
+    transform: translateX(-50%);
+    width: 0.125rem;
+    height: 1.25rem;
+    background-color: #000;
+}
+
+.page__company-level-item::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: calc(50% - 0.625rem);
+    transform: translateX(-50%);
+    width: 0.125rem;
+    height: 1.25rem;
+    background-color: #000;
+    z-index: 10;
+}

@@ -1,0 +1,71 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(167, 167, 167, 0.35);
+    z-index: 10;
+}
+
+.popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1.5px solid #e7e7e7;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background-color: #fff;
+    z-index: 20;
+}
+
+.popup__filters,
+.popup__works,
+.popup__add-user,
+.popup__deadline,
+.popup__deadline-selection-calendar {
+    left: 0;
+    transform: translate(0%, 0%);
+}
+
+.popup__tab-equipment-calendar {
+    top: 1.25rem;
+    transform: translate(-50%, 0);
+}
+
+.popup__filters {
+    top: 1.25rem;
+}
+
+.popup__works {
+    top: 0.625rem;
+}
+
+.popup__add-user {
+    top: 2.1875rem;
+}
+
+.popup__deadline {
+    top: 2.5rem;
+}
+
+.popup__deadline-selection-calendar {
+    top: 2.5rem;
+}
+
+.popup__wrapper {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5vw;
+}
+
+.popup__btn-close-popup {
+    padding: 0.5vw 0.5vw 0 0;
+}
+
+.btn-close-popup {
+    width: max-content;
+    align-self: flex-end;
+    cursor: pointer;
+}

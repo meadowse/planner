@@ -1,0 +1,274 @@
+/* Общий стиль для кнопки с иконкой */
+
+.icon-btn {
+    padding: 0.625rem 0.9375rem;
+    display: flex;
+    justify-content: space-between;
+    column-gap: 0.5vw;
+    flex-direction: row-reverse;
+    align-items: center;
+    cursor: pointer;
+}
+
+.icon-btn__image {
+    width: calc(8px + 0.3vw);
+    height: calc(8px + 0.3vw);
+    display: block;
+}
+
+/* Стили кнопки для выпадающего меню "Разделы" */
+
+.icon-btn__sections,
+.icon-btn__company {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.875rem + 11 * (100vw - 320px) / 1600);
+}
+
+.ic_btn.department.works_filters_popup,
+.ic_btn.department.add_service_popup {
+    font-family: 'Montserrat-Regular';
+    font-size: calc(0.5vw + 4 * (100vw - 320px) / 1600);
+}
+
+/* Стили для кнопок "Отменить" и "Сохранить" */
+
+.icon-btn__cancel,
+.icon-btn__save {
+    padding: 0.625rem;
+    column-gap: 0.9375rem;
+    border-radius: 5px;
+}
+
+/* Стили кнопки для выпадающего меню "Действие" */
+
+.icon-btn__action {
+    padding: 0;
+    width: auto;
+    border: none;
+}
+
+/* Стили для кнопки "Сохранить" */
+
+.icon-btn__save {
+    font-family: 'Montserrat-SemiBold';
+    background-color: #e0e8b2;
+}
+
+/* Стили для кнопки "Отмена" */
+
+.icon-btn__cancel {
+    font-family: 'Montserrat-SemiBold';
+}
+
+/* Стили кнопки для выпадающего меню "Статус" */
+
+.icon-btn__stage {
+    padding: 0;
+    width: auto;
+    border: none;
+}
+
+.icon-btn__stage .icon-btn__span {
+    border-radius: 5px;
+    padding: 0.3vw;
+}
+
+/* Стили кнопки "Удалить изображение" */
+
+.icon-btn__delete-img {
+    padding: 0.3vw;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+/* Стили кнопки для выпадающего меню "Цвет" */
+
+.icon-btn__color {
+    padding: 0.3vw;
+    width: auto;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+}
+
+.icon-btn__color_active {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.icon-btn__color .icon-btn__span {
+    background-color: transparent;
+}
+
+/* Стили кнопки "Выбрать дату" в режиме отображения данных "Календарь" */
+
+.icon-btn__select-date {
+    padding: 0;
+    width: max-content;
+}
+
+.icon-btn__select-date .icon-btn__span {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(14px + 11 * (100vw - 320px) / 1600);
+}
+
+/* Стили кнопки "Закрыть вспылвающее боковое меню" */
+
+.icon-btn__close-sidepanel {
+    margin-left: auto;
+}
+
+/* Стили кнопки для выпадающего меню "Тип услуги" */
+
+.ic_btn.type_service {
+    padding: 0.3vw 1vw;
+    border: 1.5px solid #f1f1f1;
+    border-radius: 5px;
+    font-family: 'Montserrat-SemiBold';
+}
+
+.ic_btn.type_service .span_ic_btn {
+    padding: 0;
+}
+
+/* Стили кнопки для выпадающего меню "Группа" */
+
+.ic_btn.group {
+    padding: 0;
+    border: none;
+    white-space: nowrap;
+    font-family: 'Montserrat-SemiBold';
+    color: #ffffff;
+}
+
+.ic_btn.group .span_ic_btn {
+    padding: 0.3vw;
+    border-radius: 5px;
+    background-color: #6d6d6d;
+}
+
+/* Стили кнопки для выпадающего меню "ПодОтделы" */
+
+.icon-btn__subsections {
+    width: 100%;
+    height: 100%;
+    padding: 0 0.8vw;
+    border: none;
+    white-space: nowrap;
+    border: 1px solid #e7e7e7;
+    border-radius: 7px;
+}
+
+/* Кнопка "Фильтры" */
+
+.icon-btn__filters {
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+/* Стили кнопки для выпадающего меню "Автомобиль" */
+
+.ic_btn.cars {
+    padding: 0;
+    border: none;
+    white-space: nowrap;
+    font-family: 'Montserrat-SemiBold';
+    color: #ffffff;
+}
+
+.ic_btn.cars .span_ic_btn {
+    padding: 0.3vw;
+    border-radius: 5px;
+    background-color: #6d6d6d;
+}
+
+/* Стили дял кнопок "Создать", "Добавить" */
+
+.icon-btn__create,
+.ic_btn.add {
+    padding: 0 0.8vw;
+    column-gap: 1vw;
+    border-radius: 7px;
+    font-family: 'Montserrat-SemiBold';
+    background-color: #e0e8b2;
+}
+
+/* Стили кнопки "Отмена" */
+
+.ic_btn.close_side_cards {
+    position: absolute;
+    top: 0.5vw;
+    right: 0.5vw;
+}
+
+/* Стили кнопки "Скрыть задачи" */
+
+.ic_btn.all_tasks {
+    flex-direction: row;
+    column-gap: 0.5vw;
+}
+
+/* Стили кнопки "Добавить услугу", "Добавить выезд" */
+
+.icon-btn__add-service,
+.icon-btn__add-departure {
+    padding: 0.5vw;
+    width: max-content;
+    border-radius: 5px;
+    font-family: 'Montserrat-SemiBold';
+    color: #fff;
+    background-color: #99ad60;
+}
+
+/* Стили кнопки "Фильтры" */
+
+.icon-btn__filters-works {
+    width: max-content;
+    flex-direction: row;
+}
+
+/* Стили кнопки "Отделы" */
+
+.icon-btn__department {
+    padding: 0;
+    color: #fff;
+}
+
+.icon-btn__department .icon-btn__span {
+    padding: 5px;
+    border-radius: 5px;
+    font-family: 'Montserrat-SemiBold';
+    background-color: #6d6d6d;
+}
+
+/* Стили кнопки "Группа" */
+
+.icon-btn__group {
+    padding: 0;
+}
+
+/* Стили кнопки "Раскрытие/Скрытие элементов в режиме отображения Ганта" */
+.icon-btn__all-tasks {
+    padding: 0;
+    flex-direction: row;
+    justify-content: flex-start;
+    white-space: nowrap;
+    overflow-x: auto;
+    text-overflow: ellipsis;
+    scrollbar-width: none;
+}
+
+.icon-btn__all-tasks::-webkit-scrollbar {
+    display: none;
+}
+
+.icon-btn__all-tasks .icon-btn__image {
+    width: 0.9375rem;
+    height: 0.625rem;
+}
+
+/* Стили кнопки "Сортировка" */
+
+.ic_btn.sorting {
+    width: 10px;
+    height: 10px;
+}

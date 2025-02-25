@@ -1,0 +1,115 @@
+.popup__sub-task-depart {
+    max-width: 50%;
+    width: 100%;
+}
+
+.popup__wrapper-sub-task-depart {
+    padding: 1vw;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2vw;
+}
+
+/* Контент всплывающего окна */
+
+.popup__content-sub-task-depart {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 4vw;
+}
+
+/* Левая часть формы */
+
+.popup__content-sub-task-depart-left {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vw;
+}
+
+.popup__sub-task-depart .popup-content-item {
+    display: grid;
+    grid-template-columns: minmax(0, 0.5fr) 1fr;
+    column-gap: 10px;
+}
+
+/* Элементы формы */
+
+/* Блок "Группа" */
+
+.popup__sub-task-depart .icon-btn__group .icon-btn__span{
+    padding: 5px;
+    border-radius: 5px;
+    font-family: 'Montserrat-SemiBold';
+    color:#fff;
+    background-color: #6d6d6d;
+}
+
+/* Блок "Ответственный" */
+
+/* Общие стили для блоков "Название" и "Комментарий" */
+
+.popup__sub-task-depart .txt-area {
+    padding: 0.5vw;
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+    outline: none;
+    resize: none;
+}
+
+/* Блок "Название" */
+
+/* Блок "Сроки" */
+
+.popup-content-item__deadlines{
+    display: flex;
+    justify-content: space-between;
+}
+
+.popup-content-item__deadlines ul{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    row-gap: 0.5vw;
+}
+
+.popup-content-item__list-deadlines {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5vw;
+}
+
+.popup__sub-task-depart .popup-content-item-deadline {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(max-content, 0.1fr) minmax(max-content, 0.15fr);
+    column-gap: 1vw;
+    align-items: center;
+}
+
+.popup-content-item-deadline p :first-child {
+    text-align: right;
+}
+
+.popup-content-item-deadline-val {
+    padding: 10px 15px;
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Правая часть */
+
+/* Блок "Комментарий" */
+
+.popup__sub-task-depart .popup__content-comment {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 0.5vw;
+}
+
+.popup__content-comment .txt-area{
+    width: 100%;
+    height: 100%;
+}

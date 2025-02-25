@@ -1,0 +1,137 @@
+[
+    {
+        "id": 1,
+        "fullName": "Мария Алешина",
+        "post": "Менеджер по продажам",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по продажам",
+        "phone": "+7 (252) 575-14-26",
+        "email": "jebolamefo-8788@yopmail.com"
+    },
+    {
+        "id": 2,
+        "fullName": "Олег Андреев",
+        "post": "Руководитель отдела сопровождения судебных экспертиз",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (952) 575-14-26",
+        "email": "jebolamefo-8888@yopmail.com"
+    },
+    {
+        "id": 3,
+        "fullName": "Татьяна Архипова",
+        "post": "Главный Специалист по охране труда",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (152) 575-14-26",
+        "email": "jebolamefo-8778@yopmail.com"
+    },
+    {
+        "id": 4,
+        "fullName": "Лейсан Асылова",
+        "post": "Архитектор",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (352) 575-14-26",
+        "email": "jebolamefo-8768@yopmail.com"
+    },
+    {
+        "id": 5,
+        "fullName": "Анна Белова",
+        "post": "Менеджер по продажам B2B",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (452) 575-14-26",
+        "email": "jebolamefo-8758@yopmail.com"
+    },
+    {
+        "id": 6,
+        "fullName": "Ефим Бояринцев",
+        "post": "Инженер-проектировщик",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (552) 575-14-26",
+        "email": "jebolamefo-8748@yopmail.com"
+    },
+    {
+        "id": 7,
+        "fullName": "Сергей Волков",
+        "post": "руководитель кадастрового отдела",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (652) 575-14-26",
+        "email": "jebolamefo-8738@yopmail.com"
+    },
+    {
+        "id": 8,
+        "fullName": "Диляра Галеева",
+        "post": "Архитектор",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (752) 575-14-26",
+        "email": "jebolamefo-8728@yopmail.com"
+    },
+    {
+        "id": 9,
+        "fullName": "Дамир Ганиев",
+        "post": "Инженер по обследованию",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (852) 575-14-26",
+        "email": "jebolamefo-8718@yopmail.com"
+    },
+    {
+        "id": 10,
+        "fullName": "Эльвира Гилязова",
+        "post": "Инженер-конструктор",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (952) 175-14-26",
+        "email": "jebolamefo-8688@yopmail.com"
+    },
+    {
+        "id": 11,
+        "fullName": "Александр Говорухин",
+        "post": "Инженер-проектировщик ОВиК",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (952) 275-14-26",
+        "email": "jebolamefo-8588@yopmail.com"
+    },
+    {
+        "id": 12,
+        "fullName": "Аркадий Гришаков",
+        "post": "Специалист кадастрового отдела",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (952) 375-14-26",
+        "email": "jebolamefo-8488@yopmail.com"
+    },
+    {
+        "id": 13,
+        "fullName": "Алиана Давлетшина",
+        "post": "Архитектор",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (952) 475-14-26",
+        "email": "jebolamefo-8388@yopmail.com"
+    },
+    {
+        "id": 14,
+        "fullName": "Данил Карякин",
+        "post": "Менеджер по продажам",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (952) 575-14-26",
+        "email": "jebolamefo-8288@yopmail.com"
+    },
+    {
+        "id": 15,
+        "fullName": "Ирина Егорова",
+        "post": "Инженер конструктор",
+        "photo": "/img/user.svg",
+        "subsection": "Отдел по ...",
+        "phone": "+7 (952) 675-14-26",
+        "email": "jebolamefo-8188@yopmail.com"
+    }
+]

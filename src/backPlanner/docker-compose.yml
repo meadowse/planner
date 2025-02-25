@@ -1,0 +1,8 @@
+services:
+  backPlanner:
+    image: back_planner
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000

@@ -1,0 +1,108 @@
+.page-section {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(20px + 0.725vw);
+}
+
+.page-section-header {
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(15px + 0.3vw);
+}
+
+/* Header Top */
+
+.page-section-header__top {
+    display: flex;
+    align-items: center;
+    column-gap: calc(30px + 0.9vw);
+}
+
+.page-section-header__hr-line {
+    position: static;
+    flex: 1;
+    height: 0;
+    padding: 0;
+    border: 1px solid #dfdfdf;
+}
+
+.page-section-header__top-title {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.875rem + 11 * (100vw - 320px) / 1600);
+}
+
+/* Header Bottom */
+
+.page-section-header__bottom {
+    display: flex;
+    justify-content: space-between;
+    column-gap: calc(15px + 0.3vw);
+}
+
+.page-section-header__bottom-left {
+    flex-grow: 0.25;
+    display: flex;
+    align-items: center;
+    column-gap: calc(15px + 0.3vw);
+}
+
+.page-section-options {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.page-section-options__item {
+    padding: calc(5px + 0.3vw) calc(10px + 0.3vw);
+    border: 1px solid #e3e3e3;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.page-section-options > * {
+    border-right: 0;
+}
+
+.page-section-options :first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.page-section-options :last-child {
+    border-right: 1px solid #e3e3e3;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.page-section-options__item_active {
+    font-family: 'Montserrat-SemiBold';
+    background-color: #f1f1f1;
+}
+
+.page-section__inpt-search {
+    height: 100%;
+    flex-grow: 1;
+    padding-left: calc(5px + 0.3vw);
+    outline: none;
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+}
+
+.page-section-main {
+    flex-grow: 1;
+}
+
+/* Общий стиль находится в файле IcButton.js */
+
+/* Блок "Фильтры" */
+
+.page-section__filters {
+    align-self: center;
+    position: relative;
+}
+
+.page-section__filters_active {
+    flex-grow: 1;
+    overflow: hidden;
+}

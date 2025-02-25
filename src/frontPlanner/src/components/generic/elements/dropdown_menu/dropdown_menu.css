@@ -1,0 +1,111 @@
+/* Общие стили для выпадающих списков */
+
+.dropdown-menu {
+    position: relative;
+}
+
+.dropdown-menu-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.3vw;
+    position: absolute;
+    border-radius: 5px;
+    background-color: #e3e3e3;
+    z-index: 11;
+}
+
+.dropdown-menu-list-item {
+    padding: 0.5vw 0.8vw;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Контейнеры */
+
+/* с выпадающем меню "ПодОтделы" */
+
+.dropdown-menu__subsections {
+    flex-grow: 1;
+}
+
+/* с выпадающем меню "Сервисы" */
+
+.dropdown-menu__services {
+    width: 100%;
+    font-family: 'Montserrat-SemiBold';
+    color: #666666;
+}
+
+/* Выпадающее меню "Статус" */
+
+.span_ic_btn.stage {
+    border-radius: 5px;
+    padding: 0.3vw;
+}
+
+.dropdown-menu-list__stage {
+    margin-top: 0.3vw;
+    width: max-content;
+    background-color: #fff;
+}
+
+.dropdown-menu-list-item__stage {
+    padding: 0.3vw;
+    width: max-content;
+}
+
+/* Выпадающее меню "Цвет" */
+
+.dropdown-menu-list__color {
+    padding: 0.3vw;
+    align-items: flex-end;
+    border-radius: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #f1f1f1;
+}
+
+.dropdown-menu-list__color > * {
+    padding: 0;
+    border-radius: 0;
+}
+
+.dropdown-menu-list-item__color {
+    width: 1.25vw;
+    height: 1.25vw;
+    border-radius: 50%;
+}
+
+/* Выпадающее меню "Услуги" */
+
+.dropdown-menu-list__services {
+    margin-top: 0.3vw;
+}
+
+/* Выпадающее меню "Группа" */
+
+.dropdown-menu-list__group {
+    width: max-content;
+    background-color: #e3e3e3;
+}
+
+.dropdown-menu-list-item__group {
+    padding: 0.3vw;
+    width: max-content;
+}
+
+/* Выпадающее меню "Отделы" */
+
+.dropdown-menu-list__departments {
+    border: 1px solid #e7e7e7;
+    background-color: #ffffff;
+}
+
+/* Выпадающее меню "Автомобиль" */
+
+.dropdown-menu-list__cars {
+    width: max-content;
+    background-color: #e3e3e3;
+}

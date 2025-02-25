@@ -1,0 +1,48 @@
+.popup__calendaryymm {
+    padding: calc(10px + 0.3vw) calc(15px + 0.3vw) calc(10px + 0.3vw) calc(15px + 0.3vw);
+    width: max-content;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    column-gap: 1vw;
+    top: 0;
+    left: 0;
+    transform: translate(0);
+    font-size: calc(8px + 4 * (100vw - 320px) / 1600);
+}
+
+.popup__calendaryymm .popup__btn-close-popup {
+    padding: 0;
+    width: max-content;
+    align-self: flex-end;
+}
+
+.popup__calendaryymm-content {
+    display: flex;
+    align-items: start;
+}
+
+.popup__calendar-years,
+.popup__calendar-months {
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(5px + 0.3vw);
+}
+
+.popup__calendar-years > *,
+.popup__calendar-months > * {
+    cursor: pointer;
+}
+
+.popup__calendar-years {
+    flex-direction: column-reverse;
+}
+
+.popup__calendar-year_active,
+.popup__calendar-month-item_active {
+    font-family: 'Montserrat-SemiBold';
+}
+
+.popup__calendar-year-dash-span {
+    margin: 0 calc(15px + 0.3vw);
+}

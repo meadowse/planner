@@ -1,0 +1,260 @@
+[
+    {
+        "id": 1,
+        "label": "Отдел Обследования",
+        "relationship": "Отдел",
+        "values": {
+            "title": "Обследование",
+            "responsible": {
+                "fullName": "Николай Солоха",
+                "photo": "/img/user.svg"
+            },
+            "stage": {
+                "title": "Идут работы",
+                "color": "#E3AA74"
+            },
+            "term": "26.02.24"
+        },
+        "children": [
+            {
+                "id": 11,
+                "label": "Группа Ганиев",
+                "relationship": "Группа",
+                "values": {
+                    "title": "Отчет",
+                    "responsible": {
+                        "fullName": "Ганиев",
+                        "photo": "/img/user.svg"
+                    },
+                    "stage": {
+                        "title": "Проверка",
+                        "color": "#E2CF6B"
+                    },
+                    "term": "26.02.24"
+                },
+                "children": [
+                    {
+                        "id": 111,
+                        "values": {
+                            "title": "Сделать графику",
+                            "responsible": {
+                                "fullName": "Кто-то 1",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": true,
+                            "term": "26.02.24"
+                        }
+                    },
+                    {
+                        "id": 112,
+                        "values": {
+                            "title": "Выезд",
+                            "responsible": {
+                                "fullName": "Кто-то 2",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": false,
+                            "term": "26.02.24"
+                        }
+                    },
+                    {
+                        "id": 113,
+                        "values": {
+                            "title": "Сделать графику",
+                            "responsible": {
+                                "fullName": "Кто-то 3",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": false,
+                            "term": "26.02.24"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": 12,
+                "label": "Группа Лайпанов",
+                "relationship": "Группа",
+                "values": {
+                    "title": "Расчет",
+                    "responsible": {
+                        "fullName": "Лайпанов",
+                        "photo": "/img/user.svg"
+                    },
+                    "stage": {
+                        "title": "Завершено",
+                        "color": "#92CA77"
+                    },
+                    "term": "23.02.24"
+                },
+                "children": [
+                    {
+                        "id": 121,
+                        "values": {
+                            "title": "Выезд",
+                            "responsible": {
+                                "fullName": "Кто-то 1",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": true,
+                            "term": "22.02.24"
+                        }
+                    },
+                    {
+                        "id": 122,
+                        "values": {
+                            "title": "Выезд",
+                            "responsible": {
+                                "fullName": "Кто-то 2",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": true,
+                            "term": "21.02.24"
+                        }
+                    },
+                    {
+                        "id": 123,
+                        "values": {
+                            "title": "Сделать графику",
+                            "responsible": {
+                                "fullName": "Кто-то 3",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": true,
+                            "term": "22.02.24"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "label": "Отдел Проектирования",
+        "relationship": "Отдел",
+        "values": {
+            "title": "Проектирование",
+            "responsible": {
+                "fullName": "Николай Солоха",
+                "photo": "/img/user.svg"
+            },
+            "stage": {
+                "title": "Правки",
+                "color": "#DADF9E"
+            },
+            "term": "26.02.24"
+        },
+        "children": [
+            {
+                "id": 21,
+                "label": "Группа Первая",
+                "relationship": "Группа",
+                "values": {
+                    "title": "Расчет",
+                    "responsible": {
+                        "fullName": "Лайпанов",
+                        "photo": "/img/user.svg"
+                    },
+                    "stage": {
+                        "title": "Завершено",
+                        "color": "#92CA77"
+                    },
+                    "term": "23.02.24"
+                },
+                "children": [
+                    {
+                        "id": 211,
+                        "values": {
+                            "title": "Выезд",
+                            "responsible": {
+                                "fullName": "Кто-то 1",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": false,
+                            "term": "22.02.24"
+                        }
+                    },
+                    {
+                        "id": 212,
+                        "values": {
+                            "title": "Выезд",
+                            "responsible": {
+                                "fullName": "Кто-то 2",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": true,
+                            "term": "21.02.24"
+                        }
+                    },
+                    {
+                        "id": 213,
+                        "values": {
+                            "title": "Сделать графику",
+                            "responsible": {
+                                "fullName": "Кто-то 3",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": true,
+                            "term": "22.02.24"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": 22,
+                "label": "Группа Вторая",
+                "relationship": "Группа",
+                "values": {
+                    "title": "Отчет",
+                    "responsible": {
+                        "fullName": "Ганиев",
+                        "photo": "/img/user.svg"
+                    },
+                    "stage": {
+                        "title": "Распределение",
+                        "color": "#D69A9A"
+                    },
+                    "term": "26.02.24"
+                },
+                "children": [
+                    {
+                        "id": 221,
+                        "values": {
+                            "title": "Сделать графику",
+                            "responsible": {
+                                "fullName": "Кто-то 1",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": false,
+                            "term": "26.02.24"
+                        }
+                    },
+                    {
+                        "id": 222,
+                        "values": {
+                            "title": "Выезд",
+                            "responsible": {
+                                "fullName": "Кто-то 2",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": false,
+                            "term": "26.02.24"
+                        }
+                    },
+                    {
+                        "id": 223,
+                        "values": {
+                            "title": "Сделать графику",
+                            "responsible": {
+                                "fullName": "Кто-то 3",
+                                "photo": "/img/user.svg"
+                            },
+                            "checkbox": true,
+                            "term": "26.02.24"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
