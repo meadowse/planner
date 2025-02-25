@@ -1,6 +1,6 @@
 services:
-  backPlanner:
-    image: back_planner
+  backplanner:
+    image: backplanner
     build: "./src/backPlanner"
 #    ports:
 #      - 8888:8000
