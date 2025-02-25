@@ -29,7 +29,7 @@ from .DJANGO_SECRET_KEY import SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.199.2.112', '10.199.2.118', '127.0.0.1', 'planner_backPlanner_1', 'localhost', '0.0.0.0', '10.199.2.118', '10.199.2.144', '10.199.254.28']
+ALLOWED_HOSTS = ['10.199.2.112', '10.199.2.118', '127.0.0.1', 'backplanner', 'localhost', '0.0.0.0', '10.199.2.118', '10.199.2.144', '10.199.254.28']
 
 
 # Application definition
