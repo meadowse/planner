@@ -90,11 +90,7 @@ Thumbs.db
 *.fig
 *.pdf
 *.bmp
-*.jpeg
-*.jpg
 *.gif
-*.png
-*.svg
 *.ico
 *temp.html
 *temp.css
