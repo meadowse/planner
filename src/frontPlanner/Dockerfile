@@ -1,4 +1,4 @@
-FROM node:20-alpine3.19 as build
+FROM node as build
 WORKDIR /usr/src/app
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 RUN npm install && mv node_modules ../
