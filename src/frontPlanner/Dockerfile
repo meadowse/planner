@@ -29,4 +29,4 @@ COPY --from=build /usr/src/app/nginx.conf /etc/nginx/conf.d/nginx.conf
 EXPOSE 80
 USER meadowse
 ENTRYPOINT ["/docker-entrypoint.sh", "nginx", "-g", "daemon off;"]
-HEALTHCHECK --interval=5m --timeout=3s CMD curl -f http://localhost || exit 1
+HEALTHCHECK --interval=5m --timeout=30s CMD curl -f http://localhost || exit 1
