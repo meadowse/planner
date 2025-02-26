@@ -178,6 +178,7 @@ const COLUMNS = [
         sortBy: 'value',
         Cell: props => {
             if (Object.keys(props).length !== 0) {
+                console.log(`dateOfEnding: ${JSON.stringify(props?.value, null, 4)}`);
                 if (props?.value?.value) return CELLS['text'](props?.value?.value, props?.value?.expired ? 'date_expired' : 'date')
             }
             return 'Нет данных';
