@@ -143,8 +143,14 @@
 } */
 
 .cell__depart-date_active {
-    border: 1.5px solid #dc3e3e;
+    padding: 0.3vw;
+    width: max-content;
+    border: 1px solid #dc3e3e;
+    border-radius: 0.3125rem;
     color: #dc3e3e;
+    white-space: nowrap;
+    text-align: center;
+    font-size: calc(0.5625rem + 0.375 * (100vw - 20rem) / 100);
 }
 
 /* Ячейка "Путь к папке/файлу" */
