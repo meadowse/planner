@@ -472,7 +472,7 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => (
-                                            <CalendarMode testData={resolvedData} dataOperations={dataOperations} />
+                                            <CalendarMode partition={partition} testData={resolvedData} dataOperations={dataOperations} />
                                         )}
                                     </Await>
                                 </Suspense>

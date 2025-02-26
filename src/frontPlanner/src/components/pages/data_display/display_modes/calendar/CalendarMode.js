@@ -140,7 +140,7 @@ function Calendar(props) {
 
 // Всплывающая область с карточками
 function SideSectionCards(props) {
-    const { selectedDate, cardsData, dataOperations, setCards, setSelectedDate, setSideSection } = props;
+    const {partition, selectedDate, cardsData, dataOperations, setCards, setSelectedDate, setSideSection } = props;
 
     function onCloseSideSection() {
         setCards([]);
@@ -167,7 +167,7 @@ function SideSectionCards(props) {
                         {cardsData.map(card => {
                             return (
                                 <li key={card?.contractNum}>
-                                    <Card data={card} dataOperations={dataOperations} />
+                                    <Card partition={partition} data={card} dataOperations={dataOperations} />
                                 </li>
                             );
                         })}
@@ -178,7 +178,7 @@ function SideSectionCards(props) {
     );
 }
 
-export default function CalendarMode({ testData, dataOperations }) {
+export default function CalendarMode({ partition, testData, dataOperations }) {
     // console.log(`testData: ${JSON.stringify(testData, null, 4)}`);
 
     const [stateCalendarPopup, setStateCalendarPopup] = useState(false);
@@ -237,6 +237,7 @@ export default function CalendarMode({ testData, dataOperations }) {
                 />
                 {sideSection && (
                     <SideSectionCards
+                        partition={partition}
                         selectedDate={selectedDate}
                         cardsData={cards}
                         dataOperations={dataOperations}
