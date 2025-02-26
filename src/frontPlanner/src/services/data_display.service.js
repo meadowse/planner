@@ -99,7 +99,7 @@ const loadData = async partition => {
         company: async () => {
             return {
                 structure: await dataLoader(`${window.location.origin}/structure_company.json`),
-                employees: formData(await dataLoader('api/employee/'), partition, 'employees')
+                employees: formData(await dataLoader(`${window.location.origin}/api/employee/`), partition, 'employees')
                 // employees: formData(EMPLOYEES, partition, 'employees')
             };
         }

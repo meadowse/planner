@@ -67,7 +67,7 @@ export default function UsersPopupWindow(props) {
     }
 
     async function loadData() {
-        await axios.get('api/employee/').then(response => {
+        await axios.get(`${window.location.origin}/api/employee/`).then(response => {
             if (response?.status === 200) {
                 if (response?.data && response?.data.length !== 0) {
                     const sortedData = response.data.sort((a, b) => a?.fullName.localeCompare(b.fullName));

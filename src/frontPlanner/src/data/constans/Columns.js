@@ -177,7 +177,14 @@ const COLUMNS = [
         sortable: true,
         sortBy: 'value',
         Cell: props => {
-            return Object.keys(props).length !== 0 ? CELLS['text'](props?.value?.value, 'date') : 'Нет данных';
+            if (Object.keys(props).length !== 0) {
+                if (props?.value?.value) {
+                    return !props?.value?.expired
+                        ? CELLS['text'](props?.value?.value, 'date')
+                        : CELLS['text'](props?.value?.value, 'date_expired');
+                }
+            }
+            return 'Нет данных';
         }
     },
     {

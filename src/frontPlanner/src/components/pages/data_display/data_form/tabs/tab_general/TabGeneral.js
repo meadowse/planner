@@ -996,7 +996,7 @@ export default function TabGeneral(props) {
                 // Логика для обновления данных
                 resultData = { contractId: data?.id, ...values };
                 if (resultData && Object.keys(resultData).length !== 0) {
-                    axios.post('api/corParticipants', resultData).then(response => {
+                    axios.post(`${window.location.origin}/api/corParticipants`, resultData).then(response => {
                         if (response && response?.status === 200) navigate('../../department');
                     });
                 }

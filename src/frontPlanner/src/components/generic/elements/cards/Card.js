@@ -276,7 +276,7 @@ export default function Card({ partition, data, dataOperations }) {
     // console.log(`cardData: ${JSON.stringify(cardData, null, 4)}`);
 
     async function onShowInfoCard(operationVal) {
-        await axios.post('api/getAgreement', { contractId: cardData?.id }).then(response => {
+        await axios.post(`${window.location.origin}/api/getAgreement`, { contractId: cardData?.id }).then(response => {
             if (response?.status === 200) {
                 const navigationArg = {
                     state: {

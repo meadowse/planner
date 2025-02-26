@@ -452,13 +452,14 @@ export default function DataDisplayPage({ partition }) {
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => (
                                             <ListMode
+                                                partition={partition}
                                                 keys={valsToDisplay}
                                                 testData={filterData(
                                                     resolvedData,
                                                     simplifyData(extractSampleData(resolvedData, valsToDisplay)),
                                                     searchElem
                                                 )}
-                                                searchElem={searchElem}
+                                                dataOperations={dataOperations}
                                             />
                                         )}
                                     </Await>

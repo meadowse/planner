@@ -281,7 +281,7 @@ function TaskRow(props) {
     }
 
     async function onShowInfoCard(id, operationVal) {
-        await axios.post('api/getAgreement', { contractId: id }).then(response => {
+        await axios.post(`${window.location.origin}/api/getAgreement`, { contractId: id }).then(response => {
             // console.log(`response: ${JSON.stringify(response, null, 4)}`);
             if (response.status === 200) {
                 const navigationArg = {
