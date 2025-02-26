@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from time import perf_counter
 from django.views.decorators.csrf import csrf_exempt
 from .config import *
+from datetime import datetime
 
 
 def getAgreements(request):
@@ -50,8 +51,10 @@ def getAgreements(request):
             {col: value for col, value in zip(columns, row)}
             for row in result
         ]  # Создаем список словарей с сериализацией значений
+        today = datetime.today().strftime('%Y-%m-%d')
         for obj in json_result:
-            stage = {'stage': {'title': obj.get('stage')}}
+            status = obj.get('stage')
+            stage = {'stage': {'title': status}}
             obj.update(stage)
             services = {'services': [{'title': obj.get('services')}]}
             obj.update(services)
@@ -71,7 +74,13 @@ def getAgreements(request):
             obj.update(responsible)
             dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
             obj.update(dateOfStart)
-            dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding')}}
+            dateOfEnding = obj.get('dateOfEnding')
+            if status == 'В работе' and dateOfEnding < today:
+                dateOfEnding = {
+                    'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': True}}
+            else:
+                dateOfEnding = {
+                    'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': False}}
             obj.update(dateOfEnding)
             Str = obj.get('contacts')
             contacts = {'contacts': []}
