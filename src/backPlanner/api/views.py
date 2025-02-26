@@ -51,7 +51,7 @@ def getAgreements(request):
             {col: value for col, value in zip(columns, row)}
             for row in result
         ]  # Создаем список словарей с сериализацией значений
-        today = datetime.today().strftime('%Y-%m-%d')
+        today = datetime.today()
         for obj in json_result:
             status = obj.get('stage')
             stage = {'stage': {'title': status}}
