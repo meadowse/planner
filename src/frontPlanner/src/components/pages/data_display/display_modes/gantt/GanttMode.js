@@ -555,7 +555,7 @@ function GanttChart(props) {
     ) : null;
 }
 
-export default function GanttMode(prpos) {
+export default function GanttMode(props) {
     const { partition, data, modeOption, searchElem, dataOperations } = props;
     const [selectedItemInd, setSelectedItemInd] = useState(0);
     // Состояние текущей даты
