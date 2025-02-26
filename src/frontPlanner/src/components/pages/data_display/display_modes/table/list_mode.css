@@ -142,7 +142,7 @@
     font-size: calc(0.5625rem + 0.375 * (100vw - 20rem) / 100);
 } */
 
-.cell__depart-date_active {
+.cell__date_expired {
     padding: 0.3vw;
     width: max-content;
     border: 1px solid #dc3e3e;
