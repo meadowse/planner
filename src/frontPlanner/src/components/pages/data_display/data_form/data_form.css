@@ -21,6 +21,8 @@
 }
 
 .section__dataform-header-left {
+    height: 100%;
+    flex-grow: 0.5;
     column-gap: calc(0.9375rem + 0.3vw);
 }
 
@@ -29,14 +31,20 @@
 }
 
 .section__dataform-header-title {
+    width: 100%;
+    height: 100%;
+    position: relative;
     white-space: nowrap;
     overflow-x: auto;
-    text-overflow: ellipsis;
+    scrollbar-width: none;
     font-family: 'Montserrat-SemiBold';
     font-size: calc(0.75rem + 8 * (100vw - 320px) / 1600);
 }
 
 .section__dataform-header-title span {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .section__dataform-header-img {

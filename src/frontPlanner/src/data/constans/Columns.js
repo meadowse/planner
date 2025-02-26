@@ -25,8 +25,8 @@ const CELLS = {
 
 const COLUMNS = [
     {
-        Header: '№',
-        accessor: 'id',
+        Header: 'Номер договора',
+        accessor: 'contractNum',
         sortable: false,
         sortBy: undefined,
         Cell: props => {
@@ -178,7 +178,6 @@ const COLUMNS = [
         sortBy: 'value',
         Cell: props => {
             if (Object.keys(props).length !== 0) {
-                console.log(`dateOfEnding: ${JSON.stringify(props?.value, null, 4)}`);
                 if (props?.value?.value) return CELLS['text'](props?.value?.value, props?.value?.expired ? 'date_expired' : 'date')
             }
             return 'Нет данных';
@@ -305,7 +304,7 @@ const COLUMNS = [
     }
 ];
 
-export default function getSampleColumns(keys) {
+export default function getSampleColumns(keys, partition) {
     const filteredData = COLUMNS.filter(column => keys.indexOf(column.accessor) >= 0);
     const data = new Array(keys.length).fill({});
 

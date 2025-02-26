@@ -48,17 +48,17 @@ export const DATA_CONVERSION_MAP = {
     responsible: responsible => {
         return responsible && Object.keys(responsible).length !== 0
             ? {
-                  ...responsible,
-                  photo: '/img/user.svg',
-                  post: null
-              }
+                ...responsible,
+                photo: '/img/user.svg',
+                post: null
+            }
             : null;
     },
     participants: participants => {
         return participants && participants.length !== 0
             ? participants.map(participant => {
-                  return { ...participant, photo: '/img/user.svg', post: null };
-              })
+                return { ...participant, photo: '/img/user.svg', post: null };
+            })
             : null;
     }
 };
@@ -165,7 +165,7 @@ export const DEPARTMENT_DATA_CONF = [
                         mode: 'Список',
                         keyMode: 'listmode',
                         modeOptions: [],
-                        keys: ['id', 'address', 'services', 'stage', 'dateOfEnding', 'responsible', 'pathToFolder']
+                        keys: ['contractNum', 'address', 'services', 'stage', 'dateOfEnding', 'responsible', 'pathToFolder']
                     },
                     {
                         mode: 'Календарь',

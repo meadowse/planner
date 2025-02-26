@@ -25,9 +25,15 @@ const CompanyStructure = lazy(() => import('./display_modes/structure/CompanyStr
 // Отфильтровать данные
 function filterData(data, simplifiedData, filter) {
     const indexesItems = [];
+    let newItem;
+
+    // simplifiedData?.forEach((item, indItem) => {
+    //     if (item.includes(filter)) indexesItems.push(indItem);
+    // });
 
     simplifiedData?.forEach((item, indItem) => {
-        if (item.includes(filter)) indexesItems.push(indItem);
+        newItem = JSON.stringify(item).replace(/[\[\]']+/g, '');
+        if (newItem.includes(filter)) indexesItems.push(indItem);
     });
 
     if (indexesItems && indexesItems.length !== 0) {
@@ -64,8 +70,8 @@ function DisplayModes(props) {
         <ul className="page-section-options">
             {displayModes && displayModes.length !== 0
                 ? displayModes?.map(item => (
-                      <Option key={item?.value} optionVal={mode?.value} item={item} onSelectOption={onSelectMode} />
-                  ))
+                    <Option key={item?.value} optionVal={mode?.value} item={item} onSelectOption={onSelectMode} />
+                ))
                 : null}
         </ul>
     );
@@ -79,13 +85,13 @@ function ModeOptions(props) {
         <ul className="page-section-options">
             {modeOptions && modeOptions.length !== 0
                 ? modeOptions.map(item => (
-                      <Option
-                          key={item?.value}
-                          optionVal={modeOption?.value}
-                          item={item}
-                          onSelectOption={onSelectOption}
-                      />
-                  ))
+                    <Option
+                        key={item?.value}
+                        optionVal={modeOption?.value}
+                        item={item}
+                        onSelectOption={onSelectOption}
+                    />
+                ))
                 : null}
         </ul>
     );
@@ -196,7 +202,7 @@ function HeaderBottom(props) {
                             type="text"
                             placeholder="Поиск по приборам"
                             value={searchElem}
-                            // onChange={e => setSearchElem(e.target.value)}
+                        // onChange={e => setSearchElem(e.target.value)}
                         />
                         <DisplayModes
                             displayModes={displayModes}
@@ -230,7 +236,7 @@ function HeaderBottom(props) {
                             type="text"
                             placeholder="Поиск по ..."
                             value={searchElem}
-                            // onChange={e => setSearchElem(e.target.value)}
+                        // onChange={e => setSearchElem(e.target.value)}
                         />
                         <DisplayModes
                             displayModes={displayModes}
@@ -243,7 +249,7 @@ function HeaderBottom(props) {
                         nameClass="icon-btn__create icon-btn"
                         text="Создать"
                         icon="plus.svg"
-                        // onClick={() => onCreate(mode)}
+                    // onClick={() => onCreate(mode)}
                     />
                 </div>
             );

@@ -12,6 +12,7 @@
 
 #
 .env
+./prettierrc.json
 
 # misc
 .DS_Store

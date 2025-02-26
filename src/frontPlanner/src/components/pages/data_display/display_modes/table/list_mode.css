@@ -80,6 +80,14 @@
 .table-mode__tbody-td {
 }
 
+/* Ячейкa "Номер договора" */
+
+.cell__num {
+    width: max-content;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 /* Ячейкa "Группа / Ответственный" */
 
 .cell__group {

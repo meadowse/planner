@@ -20,6 +20,22 @@ import getSampleColumns from '@data/constans/Columns';
 // Импорт стилей
 import './list_mode.css';
 
+// Ячейка таблицы
+function Cell({ args, onClickCell }) {
+    return <td
+        className="table-mode__tbody-td"
+        {...args?.cell.getCellProps()}
+        width={
+            args?.indCell === 0
+                ? 'max-content'
+                : `${Math.ceil((1 / (args?.row.cells.length - 1)) * 100)}%`
+        }
+        onClick={() => onClickCell("update", args?.indRow)}
+    >
+        {args?.cell.render('Cell')}
+    </td>
+}
+
 export default function ListMode(props) {
     const { partition, keys, testData, dataOperations } = props;
     // console.log(`keys: ${JSON.stringify(keys, null, 4)}\ntestData: ${JSON.stringify(testData, null, 4)}`);
@@ -27,11 +43,21 @@ export default function ListMode(props) {
     const columns = useMemo(() => getSampleColumns(keys), [testData]);
     console.log(`columns: ${JSON.stringify(columns, null, 4)}`);
 
-    const [data, setData] = useState(testData);
+    const [data, setData] = useState(testData.sort((a, b) => parseInt(b?.id) - parseInt(a?.id)));
     const [order, setOrder] = useState('ASC');
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
     const { sortData } = useListMode(testData, setData);
+
+    // Конфигурация по ячейкам таблицы
+    const CELL_CONF = {
+        contractNum: (args) => {
+            return <Cell args={args} onClickCell={onShowInfoCard} />
+        },
+        default: (args) => {
+            return <Cell args={args} />
+        }
+    }
 
     async function onShowInfoCard(operationVal, indElem) {
         await axios
@@ -88,28 +114,21 @@ export default function ListMode(props) {
                 <tbody className="table-mode__tbody" {...getTableBodyProps()}>
                     {data &&
                         data.length !== 0 &&
-                        rows.map((row, index) => {
+                        rows.map((row, rowInd) => {
                             prepareRow(row);
                             return (
                                 <tr
                                     className="table-mode__tbody-tr"
                                     {...row.getRowProps()}
-                                    onClick={() => onShowInfoCard('update', index)}
                                 >
-                                    {row.cells.map((cell, index) => {
-                                        return (
-                                            <td
-                                                className="table-mode__tbody-td"
-                                                {...cell.getCellProps()}
-                                                width={
-                                                    index === 0
-                                                        ? 'max-content'
-                                                        : `${Math.ceil((1 / (row.cells.length - 1)) * 100)}%`
-                                                }
-                                            >
-                                                {cell.render('Cell')}
-                                            </td>
-                                        );
+                                    {row.cells.map((cell, cellInd) => {
+                                        const cellArgs = {
+                                            indRow: rowInd,
+                                            indCell: cellInd,
+                                            row: row,
+                                            cell: cell,
+                                        }
+                                        return CELL_CONF[cell.column.id] ? CELL_CONF[cell.column.id](cellArgs) : CELL_CONF.default(cellArgs)
                                     })}
                                 </tr>
                             );

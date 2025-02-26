@@ -18,31 +18,31 @@ const formData = (data, partition, key) => {
         department: () => {
             return data && data.length !== 0
                 ? data?.map(item => {
-                      const newItem = {};
-                      Object.keys(item).map(key => {
-                          newItem[key] = DATA_CONVERSION_MAP[key] ? DATA_CONVERSION_MAP[key](item[key]) : item[key];
-                      });
-                      return newItem;
-                  })
+                    const newItem = {};
+                    Object.keys(item).map(key => {
+                        newItem[key] = DATA_CONVERSION_MAP[key] ? DATA_CONVERSION_MAP[key](item[key]) : item[key];
+                    });
+                    return newItem;
+                })
                 : [];
         },
         // Оборудование
         equipment: () => {
             return data && data.length !== 0
                 ? data?.map(item => {
-                      const newItem = {};
-                      Object.keys(item).map(key => {
-                          newItem[key] = DATA_CONVERSION_MAP[key] ? DATA_CONVERSION_MAP[key](item[key]) : item[key];
-                      });
-                      return newItem;
-                  })
+                    const newItem = {};
+                    Object.keys(item).map(key => {
+                        newItem[key] = DATA_CONVERSION_MAP[key] ? DATA_CONVERSION_MAP[key](item[key]) : item[key];
+                    });
+                    return newItem;
+                })
                 : [];
         },
         // Компания
         company: () => {
             const COMPANY_CONF = {
                 // Структура компании
-                structure: () => {},
+                structure: () => { },
                 // Сотрудники компании
                 employees: () => {
                     let newItem, newData;
@@ -439,9 +439,9 @@ const getDataOperations = (partition, section, subsection) => {
             }
         },
         // Оборудование
-        equipment: () => {},
+        equipment: () => { },
         // Компания
-        company: () => {}
+        company: () => { }
     };
     return partition ? PARTITION_CONF[partition]() : [];
 };
