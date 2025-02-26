@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from time import perf_counter
 from django.views.decorators.csrf import csrf_exempt
 from .config import *
-from datetime import datetime
+import datetime
 
 
 def getAgreements(request):
@@ -51,7 +51,7 @@ def getAgreements(request):
             {col: value for col, value in zip(columns, row)}
             for row in result
         ]  # Создаем список словарей с сериализацией значений
-        today = datetime.today()
+        today = datetime.date.today()
         for obj in json_result:
             status = obj.get('stage')
             stage = {'stage': {'title': status}}
@@ -75,8 +75,6 @@ def getAgreements(request):
             dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
             obj.update(dateOfStart)
             dateOfEnding = obj.get('dateOfEnding')
-            print('dateOfEnding: ' + str(type(dateOfEnding)))
-            print('today: ' + str(type(today)))
             if status == 'В работе' and dateOfEnding < today:
                 dateOfEnding = {
                     'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': True}}
