@@ -555,7 +555,8 @@ function GanttChart(props) {
     ) : null;
 }
 
-export default function GanttMode({ data, modeOption, searchElem, dataOperations }) {
+export default function GanttMode(prpos) {
+    const { partition, data, modeOption, searchElem, dataOperations } = props;
     const [selectedItemInd, setSelectedItemInd] = useState(0);
     // Состояние текущей даты
     const [dateState] = useState({ year: new Date().getFullYear(), month: new Date().getMonth() });
@@ -568,6 +569,7 @@ export default function GanttMode({ data, modeOption, searchElem, dataOperations
     return ganttConfig && ganttConfig.length !== 0 ? (
         <div className="gantt-mode">
             <GanttChart
+                partition={partition}
                 data={data}
                 dateState={dateState}
                 selectedItem={ganttConfig[selectedItemInd]}
