@@ -280,6 +280,7 @@ export default function Card({ partition, data, dataOperations }) {
             if (response?.status === 200) {
                 const navigationArg = {
                     state: {
+                        partition:partition,
                         data: response?.data[0],
                         dataOperation: findNestedObj(dataOperations, 'key', operationVal)
                     }

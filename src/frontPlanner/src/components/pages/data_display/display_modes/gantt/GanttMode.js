@@ -259,6 +259,7 @@ function TotalTaskRow(props) {
 // Отображение задач
 function TaskRow(props) {
     const {
+        partition,
         tasks,
         dateState,
         indexTask,
@@ -286,6 +287,7 @@ function TaskRow(props) {
             if (response.status === 200) {
                 const navigationArg = {
                     state: {
+                        partition:partition,
                         data: response?.data[0],
                         dataOperation: findNestedObj(dataOperations, 'key', operationVal)
                     }
@@ -399,6 +401,7 @@ function TaskRow(props) {
                       {/* Отображение подзадач */}
                       {task?.visibleSubtasks && task?.subTasks && task?.subTasks.length !== 0 ? (
                           <TaskRow
+                              partition={partition}
                               tasks={task?.subTasks}
                               dateState={dateState}
                               indexTask={indTask}
@@ -416,7 +419,7 @@ function TaskRow(props) {
 }
 
 function GanttChart(props) {
-    const { data, dateState, selectedItem, modeOption, dataOperations } = props;
+    const {partition, data, dateState, selectedItem, modeOption, dataOperations } = props;
 
     const [ganttData, setGanttData] = useState({});
     const [showTasks, setShowTasks] = useState(true);
@@ -534,6 +537,7 @@ function GanttChart(props) {
                     {/* Отображение задач */}
                     {showTasks ? (
                         <TaskRow
+                            partition={partition}
                             tasks={ganttData?.tasks}
                             dateState={dateState}
                             config={{ subTasks: false, indTask: 0, indent: 10 }}

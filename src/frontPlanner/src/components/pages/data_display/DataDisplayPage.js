@@ -485,6 +485,7 @@ export default function DataDisplayPage({ partition }) {
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => (
                                             <GanttMode
+                                                partition={partition}
                                                 data={filterData(
                                                     resolvedData,
                                                     simplifyData(extractSampleData(resolvedData, valsToDisplay)),
