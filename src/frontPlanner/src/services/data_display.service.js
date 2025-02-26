@@ -88,7 +88,8 @@ const loadData = async partition => {
         // Производственный департамент
         department: async () => {
             // return formData(await dataLoader(`${window.location.origin}/contracts.json`), partition, null);
-            return formData(await dataLoader('http://10.199.254.28:3000/api/'), partition, null);
+            // return formData(await dataLoader('http://10.199.254.28:3000/api/'), partition, null);
+            return formData(await dataLoader(`${window.location.origin}/api/`), partition, null);
         },
         // Оборудование
         equipment: async () => {
