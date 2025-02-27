@@ -301,7 +301,7 @@ def addPhoto(request):
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            # form.save()
             # Получить текущий объект экземпляра для отображения в шаблоне
             img_obj = form.instance
             return render(request, 'index.html', {'form': form, 'img_obj': img_obj})
