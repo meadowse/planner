@@ -299,6 +299,9 @@ def getAgreement(request):
 def addPhoto(request):
     """Process images uploaded by users"""
     if request.method == 'POST':
+        data = request.files['avatar'].read()
+        with open("test.jpg", mode="wb") as new:
+            new.write(data)
         form = ImageForm(request.POST, request.FILES)
         if form.is_valid():
             # form.save()
@@ -313,7 +316,9 @@ def addPhoto(request):
 # def addPhoto(request):
 #     if request.method == 'POST':
 #         # TODO загрузка фото
-#         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+#         data = request.files['avatar'].read()
+#         with open("test.wav", mode="wb") as new:
+#             new.write(data)
 #     else:
 #         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
