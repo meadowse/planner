@@ -165,7 +165,7 @@ export const DEPARTMENT_DATA_CONF = [
                         mode: 'Список',
                         keyMode: 'listmode',
                         modeOptions: [],
-                        keys: ['contractNum', 'address', 'services', 'stage', 'dateOfEnding', 'responsible', 'pathToFolder']
+                        keys: ['contractNum', 'address', "company", 'services', 'stage', 'dateOfEnding', 'responsible', 'pathToFolder']
                     },
                     {
                         mode: 'Календарь',

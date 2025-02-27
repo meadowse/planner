@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import classNames from 'classnames';
 
 // Импорт доп.функционала
@@ -39,11 +40,24 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
+            const refCell = useRef();
             return (
-                <p className="cell__address cell">
+                <p className="cell__address cell" ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
                     <span>{Object.keys(props).length !== 0 && props.value ? props?.value : 'Нет данных'}</span>
                 </p>
             );
+        }
+    },
+    {
+        Header: 'Заказчик',
+        accessor: 'company',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            const refCell = useRef();
+            return <p className="cell__company cell" ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
+                <span>{Object.keys(props).length !== 0 && props.value ? props?.value : 'Нет данных'}</span>
+            </p>
         }
     },
     {
@@ -189,10 +203,11 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
+            const refCell = useRef();
             return (
                 Object.keys(props).length !== 0 && (
                     <div className="cell__path-to-folder cell">
-                        <p>{props?.value || 'Нет данных'}</p>
+                        <p ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>{props?.value || 'Нет данных'}</p>
                         <button className="cell__btn-copy-path">
                             <img src="/img/copy.svg" alt="" />
                         </button>

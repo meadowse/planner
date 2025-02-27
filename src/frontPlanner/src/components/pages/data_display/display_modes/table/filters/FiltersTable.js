@@ -30,9 +30,9 @@ const FILTERS_CONF = {
     car: (_, toggleState, onChange) => {
         return <InputTextFilter id="car" placeholder={'Марка'} toggle={toggleState} onChange={onChange} />;
     },
-    responsible: (_, toggleState, onChange) => {
-        return <InputTextFilter id="responsible" placeholder={'Сотрудник'} toggle={toggleState} onChange={onChange} />;
-    },
+    // responsible: (_, toggleState, onChange) => {
+    //     return <InputTextFilter id="responsible" placeholder={'Сотрудник'} toggle={toggleState} onChange={onChange} />;
+    // },
     subsection: (_, toggleState, onChange) => {
         return (
             <InputTextFilter id="subsection" placeholder={'Подразделение'} toggle={toggleState} onChange={onChange} />
@@ -58,6 +58,17 @@ const FILTERS_CONF = {
     status: (options, toggleState, onChange) => {
         return (
             <DropDownFilter id="status" defaultVal="Все" options={options} toggle={toggleState} onChange={onChange} />
+        );
+    },
+    responsible: (options, toggleState, onChange) => {
+        return (
+            <DropDownFilter
+                id="responsible"
+                defaultVal="Все"
+                options={options}
+                toggle={toggleState}
+                onChange={onChange}
+            />
         );
     },
     participants: (options, toggleState, onChange) => {
@@ -181,6 +192,16 @@ export default function FiltersTable(props) {
         },
         stage: data => {
             return Array.from(new Set(data.map(item => item?.stage?.title)));
+        },
+        responsible: (data) => {
+            let newData = [];
+            let tempData = Array.from(new Set(data.map(item => item.responsible?.fullName)));
+
+            tempData.map(item => {
+                if (item) newData.push(item);
+            })
+
+            return newData;
         }
     };
 

@@ -3,6 +3,8 @@
     height: 100%;
     position: relative;
     overflow-y: auto;
+    scrollbar-color: #ced4da #f8f9fa;
+    scrollbar-width: thin;
 }
 
 .table-mode__wrapper::-webkit-scrollbar {
@@ -24,6 +26,7 @@
 
 .table-mode {
     width: 100%;
+    table-layout: fixed;
     height: max-content;
     position: absolute;
     inset: 0;
@@ -80,23 +83,40 @@
 .table-mode__tbody-td {
 }
 
+/* Ячейкa "Адрес" */
+
+.cell__address {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.cell__address:hover {
+    text-overflow: clip;
+    cursor: default;
+}
+
+/*  */
+
+.cell__company {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.cell__company:hover {
+    text-overflow: clip;
+    cursor: default;
+}
+
 /* Ячейкa "Номер договора" */
 
 .cell__num {
     width: max-content;
     cursor: pointer;
     text-decoration: underline;
-}
-
-/* Ячейкa "Группа / Ответственный" */
-
-.cell__group {
-    width: max-content;
-    padding: 0.3vw;
-    font-family: 'Montserrat-SemiBold';
-    border-radius: 0.3125rem;
-    background-color: #6d6d6d;
-    color: #fff;
 }
 
 /* Ячейки "Кем создан и Кто выполняет" */
@@ -167,6 +187,18 @@
     display: flex;
     align-items: center;
     column-gap: 0.5rem;
+}
+
+.cell__path-to-folder p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.cell__path-to-folder p:hover {
+    text-overflow: clip;
+    cursor: default;
 }
 
 .cell__btn-copy-path {

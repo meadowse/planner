@@ -25,12 +25,7 @@ function Cell({ args, onClickCell }) {
     return <td
         className="table-mode__tbody-td"
         {...args?.cell.getCellProps()}
-        width={
-            args?.indCell === 0
-                ? 'max-content'
-                : `${Math.ceil((1 / (args?.row.cells.length - 1)) * 100)}%`
-        }
-        onClick={() => onClickCell("update", args?.indRow)}
+        onClick={onClickCell ? () => onClickCell("update", args?.indRow) : null}
     >
         {args?.cell.render('Cell')}
     </td>

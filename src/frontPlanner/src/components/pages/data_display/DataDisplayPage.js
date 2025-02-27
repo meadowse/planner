@@ -33,7 +33,7 @@ function filterData(data, simplifiedData, filter) {
 
     simplifiedData?.forEach((item, indItem) => {
         newItem = JSON.stringify(item).replace(/[\[\]']+/g, '');
-        if (newItem.includes(filter)) indexesItems.push(indItem);
+        if (newItem.toLowerCase().includes(filter.toLowerCase())) indexesItems.push(indItem);
     });
 
     if (indexesItems && indexesItems.length !== 0) {
