@@ -299,7 +299,7 @@ def getAgreement(request):
 def addPhoto(request):
     """Process images uploaded by users"""
     if request.method == 'POST':
-        data = request.files['avatar'].read()
+        data = request.FILES['avatar'].read()
         with open("test.jpg", mode="wb") as new:
             new.write(data)
         form = ImageForm(request.POST, request.FILES)
