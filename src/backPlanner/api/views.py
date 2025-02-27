@@ -292,3 +292,41 @@ def getAgreement(request):
             end = perf_counter()
             print(end - start)
             return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+
+@csrf_exempt
+def addPhoto(request):
+    if request.method == 'POST':
+        # TODO загрузка фото
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+@csrf_exempt
+def getTypesWork(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        contractId = obj.get('contractId')
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+            cur = con.cursor()
+            try:
+                sql = f"""SELECT 
+                F4601 AS NUM, 
+                F4600 AS TYPE_OF_WORK, 
+                F4597 AS TERM, 
+                F4607 AS DONE, 
+                F4608 AS DATE_OF_DONE 
+                FROM T214 WHERE F4606 = {contractId}"""
+                cur.execute(sql)
+                result = cur.fetchall()
+                columns = ('number', 'typeWork', 'deadline', 'done', 'dateDone')
+                json_result = [
+                    {col: value for col, value in zip(columns, row)}
+                    for row in result
+                ]  # Создаем список словарей с сериализацией значений
+                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+            except Exception as ex:
+                print(f"НЕ удалось получить работы договора {ex}")
+                result = None
+                return result
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
