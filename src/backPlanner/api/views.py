@@ -295,6 +295,7 @@ def getAgreement(request):
             print(end - start)
             return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
+@csrf_exempt
 def addPhoto(request):
     """Process images uploaded by users"""
     if request.method == 'POST':
