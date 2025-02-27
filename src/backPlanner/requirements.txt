@@ -25,6 +25,7 @@ mdurl==0.1.2
 mmpy_bot==2.2.0
 multidict==6.0.5
 packaging==24.1
+pillow==11.1.0
 propcache==0.2.1
 psycopg==3.2.1
 psycopg2-binary==2.9.10
