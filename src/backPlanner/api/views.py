@@ -5,6 +5,8 @@ from time import perf_counter
 from django.views.decorators.csrf import csrf_exempt
 from .config import *
 import datetime
+from django.shortcuts import render
+from .forms import ImageForm
 
 
 def getAgreements(request):
@@ -293,13 +295,26 @@ def getAgreement(request):
             print(end - start)
             return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
-@csrf_exempt
 def addPhoto(request):
+    """Process images uploaded by users"""
     if request.method == 'POST':
-        # TODO загрузка фото
-        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            # Получить текущий объект экземпляра для отображения в шаблоне
+            img_obj = form.instance
+            return render(request, 'index.html', {'form': form, 'img_obj': img_obj})
     else:
-        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+        form = ImageForm()
+        return render(request, 'index.html', {'form': form})
+
+# @csrf_exempt
+# def addPhoto(request):
+#     if request.method == 'POST':
+#         # TODO загрузка фото
+#         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+#     else:
+#         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
 def getTypesWork(request):
