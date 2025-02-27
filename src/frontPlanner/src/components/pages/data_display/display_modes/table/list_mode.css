@@ -26,7 +26,6 @@
 
 .table-mode {
     width: 100%;
-    table-layout: fixed;
     height: max-content;
     position: absolute;
     inset: 0;

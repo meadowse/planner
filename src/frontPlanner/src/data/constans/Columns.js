@@ -26,6 +26,15 @@ const CELLS = {
 
 const COLUMNS = [
     {
+        Header: '№',
+        accessor: 'id',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            return Object.keys(props).length !== 0 && props.value ? CELLS['text'](props.value, 'id') : 'Нет данных';
+        }
+    },
+    {
         Header: 'Номер договора',
         accessor: 'contractNum',
         sortable: false,

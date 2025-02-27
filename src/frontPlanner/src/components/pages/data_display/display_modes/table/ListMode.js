@@ -26,6 +26,7 @@ function Cell({ args, onClickCell }) {
         className="table-mode__tbody-td"
         {...args?.cell.getCellProps()}
         onClick={onClickCell ? () => onClickCell("update", args?.indRow) : null}
+        style={{ maxWidth: `${args?.width}px` }}
     >
         {args?.cell.render('Cell')}
     </td>
@@ -122,6 +123,7 @@ export default function ListMode(props) {
                                             indCell: cellInd,
                                             row: row,
                                             cell: cell,
+                                            width: Math.ceil(window.screen.width / columns.length)
                                         }
                                         return CELL_CONF[cell.column.id] ? CELL_CONF[cell.column.id](cellArgs) : CELL_CONF.default(cellArgs)
                                     })}

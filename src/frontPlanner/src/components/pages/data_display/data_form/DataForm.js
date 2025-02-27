@@ -7,7 +7,8 @@ import IconButton from '@generic/elements/buttons/IcButton';
 import DropdownMenu from '@generic/elements/dropdown_menu/DropdownMenu';
 
 import TabGeneral from './tabs/tab_general/TabGeneral';
-import TabWork from './tabs/tab_work/TabWork';
+// import TabWork from './tabs/tab_work/TabWork';
+import TabWorkNew from "./tabs/tab_work/TabWorkNew";
 import TabDepartures from './tabs/tab_departures/TabDepartures';
 import TabContractors from './tabs/tab_contractors/TabContractors';
 import TabDocuments from './tabs/tab_documents/TabDocuments';
@@ -22,7 +23,7 @@ import './data_form.css';
 function FormHeader({ title }) {
     const navigate = useNavigate();
 
-    function onSelectAction(value) {}
+    function onSelectAction(value) { }
 
     function onCancelAction() {
         startTransition(() => {
@@ -76,16 +77,16 @@ function TabsHeader(props) {
         <ul className="section__dataform-tabs-header">
             {tabs && tabs.length !== 0
                 ? tabs.map((item, index) => (
-                      <li
-                          key={index}
-                          className={classNames('section__dataform-tab-btn', {
-                              'section__dataform-tab-btn_active': item.key === tab.key
-                          })}
-                          onClick={() => onTabClick(item)}
-                      >
-                          {item.title}
-                      </li>
-                  ))
+                    <li
+                        key={index}
+                        className={classNames('section__dataform-tab-btn', {
+                            'section__dataform-tab-btn_active': item.key === tab.key
+                        })}
+                        onClick={() => onTabClick(item)}
+                    >
+                        {item.title}
+                    </li>
+                ))
                 : null}
         </ul>
     );
@@ -100,7 +101,8 @@ function TabsContent(props) {
 
     const TABS = {
         'general': <TabGeneral idCard={idCard} data={data} dataOperation={dataOperation} />,
-        'work': <TabWork options={options} />,
+        'work': <TabWorkNew idContract={data?.id} />,
+        // 'work': <TabWork options={options} />,
         // 'departures': <TabDepartures subsection={findNestedObj(data, 'title', 'Выезды')} />,
         'contractors': <TabContractors />,
         'documents': <TabDocuments />,

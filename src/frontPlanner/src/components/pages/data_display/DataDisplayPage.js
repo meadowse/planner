@@ -429,7 +429,7 @@ export default function DataDisplayPage({ partition }) {
             <div className="page-section-main">
                 {mode && Object.keys(mode).length !== 0 ? (
                     <Routes>
-                        <Route index element={<Navigate to={NAVIGATE_CONF[mode?.key]} replace />} />
+                        {/* <Route index element={<Navigate to={NAVIGATE_CONF[mode?.key]} replace />} /> */}
                         <Route
                             path="kanban"
                             element={
