@@ -133,15 +133,6 @@ const COLUMNS = [
         }
     },
     {
-        Header: 'Даты выездов',
-        accessor: 'departure',
-        sortable: true,
-        sortBy: undefined,
-        Cell: props => {
-            return Object.keys(props).length !== 0 ? CELLS['text'](props?.value, 'depart-date') : 'Нет данных';
-        }
-    },
-    {
         Header: 'Контакт для связи',
         accessor: 'contacts',
         sortable: false,
@@ -325,7 +316,91 @@ const COLUMNS = [
                 </div>
             ) : null;
         }
-    }
+    },
+    // 
+    {
+        Header: 'Номер',
+        accessor: 'number',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            return Object.keys(props).length !== 0 && props.value ? CELLS['text'](props.value, 'num') : 'Нет данных';
+        }
+    },
+    {
+        Header: 'Вид работы',
+        accessor: 'typeWork',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            const refCell = useRef();
+            return (
+                <p className="cell__typework cell" ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
+                    <span>{Object.keys(props).length !== 0 && props.value ? props?.value : 'Нет данных'}</span>
+                </p>
+            );
+        }
+    },
+    {
+        Header: 'Срок',
+        accessor: 'deadline',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            return Object.keys(props).length !== 0 ? CELLS['text'](`${props?.value} дней`, 'deadline') : 'Нет данных';
+        }
+    },
+    {
+        Header: 'Дата выполнения',
+        accessor: 'dateDone',
+        sortable: true,
+        sortBy: 'value',
+        Cell: props => {
+            return Object.keys(props).length !== 0 ? CELLS['text'](props?.value, 'date') : 'Нет данных';
+        }
+    },
+    {
+        Header: 'Заверешно',
+        accessor: 'done',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            return Object.keys(props).length !== 0 ? <div className="cell__checkmark cell">
+            </div> : 'Нет данных';
+        }
+    },
+    //
+    {
+        Header: 'Задача',
+        accessor: 'task',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            return Object.keys(props).length !== 0 ? CELLS['text'](props?.value, 'task') : 'Нет данных';
+        }
+    },
+    {
+        Header: 'Заказчик',
+        accessor: 'director',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            if (Object.keys(props).length !== 0) {
+                return props?.value && Object.keys(props?.value).length !== 0 ? CELLS['user'](props?.value, 'person') : 'Нет данных';
+            }
+        }
+    },
+    {
+        Header: 'Исполнитель',
+        accessor: 'executor',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            if (Object.keys(props).length !== 0) {
+                return props?.value && Object.keys(props?.value).length !== 0 ? CELLS['user'](props?.value, 'person') : 'Нет данных';
+            }
+        }
+    },
 ];
 
 export default function getSampleColumns(keys, partition) {
