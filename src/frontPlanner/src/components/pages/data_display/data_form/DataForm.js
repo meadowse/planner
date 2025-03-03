@@ -4,7 +4,6 @@ import classNames from 'classnames';
 
 // Импорт компонетов
 import IconButton from '@generic/elements/buttons/IcButton';
-import DropdownMenu from '@generic/elements/dropdown_menu/DropdownMenu';
 
 import TabGeneral from './tabs/tab_general/TabGeneral';
 import TabWork from './tabs/tab_work/TabWork';
@@ -23,7 +22,7 @@ import './data_form.css';
 function FormHeader({ title }) {
     const navigate = useNavigate();
 
-    function onSelectAction(value) { }
+    function onSelectAction(value) {}
 
     function onCancelAction() {
         startTransition(() => {
@@ -40,13 +39,6 @@ function FormHeader({ title }) {
                 <img className="section__dataform-header-img" src="/img/edit.svg" alt="Edit" />
             </div>
             <div className="section__dataform-header-right">
-                {/* <DropdownMenu
-                    additClass="action"
-                    icon="arrow_down_sm.svg"
-                    keyMenu="actions"
-                    nameMenu="Действие"
-                    onItemClick={onSelectAction}
-                /> */}
                 <IconButton
                     nameClass="icon-btn__save icon-btn"
                     type="submit"
@@ -77,16 +69,16 @@ function TabsHeader(props) {
         <ul className="section__dataform-tabs-header">
             {tabs && tabs.length !== 0
                 ? tabs.map((item, index) => (
-                    <li
-                        key={index}
-                        className={classNames('section__dataform-tab-btn', {
-                            'section__dataform-tab-btn_active': item.key === tab.key
-                        })}
-                        onClick={() => onTabClick(item)}
-                    >
-                        {item.title}
-                    </li>
-                ))
+                      <li
+                          key={index}
+                          className={classNames('section__dataform-tab-btn', {
+                              'section__dataform-tab-btn_active': item.key === tab.key
+                          })}
+                          onClick={() => onTabClick(item)}
+                      >
+                          {item.title}
+                      </li>
+                  ))
                 : null}
         </ul>
     );
@@ -99,17 +91,27 @@ function TabsContent(props) {
     // console.log(`idCard: ${idCard}\nsubsectionData: ${JSON.stringify(subsectionData, null, 4)}`);
     console.log(`cardData: ${JSON.stringify(data, null, 4)}`);
 
-    const TABS = {
-        'general': <TabGeneral idCard={idCard} data={data} dataOperation={dataOperation} />,
-        'works': <TabWorkNew tab={tab?.key} />,
-        // 'work': <TabWork options={options} />,
-        // 'departures': <TabDepartures subsection={findNestedObj(data, 'title', 'Выезды')} />,
-        'contractors': <TabContractors />,
-        'documents': <TabDocuments />,
-        'equipment': <TabEquipment />
+    const TABS_NEW = {
+        // Производство
+        department: {
+            general: <TabGeneral idCard={idCard} data={data} dataOperation={dataOperation} />,
+            works: <TabWorkNew idContract={data?.id} partition={partition} tab={tab?.key} />,
+            contractors: <TabContractors />,
+            documents: <TabDocuments />,
+            default: <p>Нет данных</p>
+        },
+        //
+        equipment: {
+            default: <TabEquipment />
+        },
+        default: <p>Нет данных</p>
     };
 
-    return <div className="section__dataform-tabs-content">{partition ? TABS[partition] : TABS[tab.key]}</div>;
+    if (TABS_NEW[partition]) {
+        if (TABS_NEW[partition][tab?.key]) {
+            return <div className="section__dataform-tabs-content">{TABS_NEW[partition][tab?.key]}</div>;
+        } else return TABS_NEW[partition].default;
+    } else return TABS_NEW.default;
 }
 
 function Tabs(props) {
@@ -119,16 +121,9 @@ function Tabs(props) {
     console.log(`partition: ${partition}`);
 
     const PARTITION_CONF = {
-        department: () => {
-            return (
-                <>
-                    <TabsHeader tabs={tabs} tab={tab} tabClick={setTab} />
-                    <TabsContent idCard={id} tab={tab} data={data} options={options} dataOperation={dataOperation} />
-                </>
-            );
-        },
-        equipment: () => {
-            return (
+        department: (
+            <>
+                <TabsHeader tabs={tabs} tab={tab} tabClick={setTab} />
                 <TabsContent
                     idCard={id}
                     partition={partition}
@@ -137,20 +132,30 @@ function Tabs(props) {
                     options={options}
                     dataOperation={dataOperation}
                 />
-            );
-        }
+            </>
+        ),
+        equipment: (
+            <TabsContent
+                idCard={id}
+                partition={partition}
+                tab={tab}
+                data={data}
+                options={options}
+                dataOperation={dataOperation}
+            />
+        )
     };
 
-    return <div className="section__dataform-tabs">{partition ? PARTITION_CONF[partition]() : null}</div>;
+    return <div className="section__dataform-tabs">{partition ? PARTITION_CONF[partition] : null}</div>;
 }
 
 export default function DataForm() {
     const { state } = useLocation();
     const options = useLoaderData();
+
     // console.log(`Loader options: ${JSON.stringify(options, null, 4)}`);
     // const { idCard } = state && Object.keys(state).length !== 0 ? state : { idCard: null };
-
-    console.log(`state: ${JSON.stringify(state, null, 4)}`);
+    // console.log(`state: ${JSON.stringify(state, null, 4)}`);
 
     return (
         <section className="section__dataform">

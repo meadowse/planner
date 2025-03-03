@@ -1,8 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTable } from 'react-table';
-import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
-import axios from 'axios';
 
 // Импорт компонетов
 import IconButton from '@generic/elements/buttons/IcButton.js';
@@ -20,57 +18,46 @@ import getSampleColumns from '@data/constans/Columns';
 // Импорт стилей
 import './list_mode.css';
 
-// Ячейка таблицы
-function Cell({ args, onClickCell }) {
-    return <td
-        className="table-mode__tbody-td"
-        {...args?.cell.getCellProps()}
-        onClick={onClickCell ? () => onClickCell("update", args?.indRow) : null}
-        style={{ maxWidth: `${args?.width}px` }}
-    >
-        {args?.cell.render('Cell')}
-    </td>
+function Cell({ cellData, cellConfig }) {
+    return (
+        <td
+            className="table-mode__tbody-td"
+            style={{ maxWidth: `${cellData?.width}px` }}
+            {...cellData?.cell.getCellProps()}
+        >
+            {cellData?.cell.render('Cell', {
+                config: { ...cellConfig }
+            })}
+        </td>
+    );
 }
 
 export default function ListMode(props) {
     const { partition, keys, testData, dataOperations } = props;
     // console.log(`keys: ${JSON.stringify(keys, null, 4)}\ntestData: ${JSON.stringify(testData, null, 4)}`);
-    const navigate = useNavigate();
     const columns = useMemo(() => getSampleColumns(keys), [testData]);
-    console.log(`columns: ${JSON.stringify(columns, null, 4)}`);
+    // console.log(`columns: ${JSON.stringify(columns, null, 4)}`);
 
-    const [data, setData] = useState(testData.sort((a, b) => parseInt(b?.id) - parseInt(a?.id)));
+    // const [data, setData] = useState(testData.sort((a, b) => parseInt(b?.id) - parseInt(a?.id)));
+    const [data, setData] = useState(testData);
     const [order, setOrder] = useState('ASC');
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
     const { sortData } = useListMode(testData, setData);
 
-    // Конфигурация по ячейкам таблицы
     const CELL_CONF = {
-        contractNum: (args) => {
-            return <Cell args={args} onClickCell={onShowInfoCard} />
+        contractNum: data => {
+            const config = {
+                partition: partition,
+                contractId: testData[data?.indRow]?.id,
+                dataOperation: findNestedObj(dataOperations, 'key', 'update')
+            };
+            return <Cell cellData={data} cellConfig={config} />;
         },
-        default: (args) => {
-            return <Cell args={args} />
+        default: data => {
+            return <Cell cellData={data} />;
         }
-    }
-
-    async function onShowInfoCard(operationVal, indElem) {
-        await axios
-            .post(`${window.location.origin}/api/getAgreement`, { contractId: testData[indElem]?.id })
-            .then(response => {
-                if (response?.status === 200) {
-                    const navigationArg = {
-                        state: {
-                            partition: partition,
-                            data: response?.data[0],
-                            dataOperation: findNestedObj(dataOperations, 'key', operationVal)
-                        }
-                    };
-                    navigate('../../dataform/', navigationArg);
-                }
-            });
-    }
+    };
 
     return (
         <div className={classNames('table-mode__wrapper', { 'table-mode__wrapper_empty': !data || data.length === 0 })}>
@@ -87,7 +74,7 @@ export default function ListMode(props) {
                                         {column.sortable && (
                                             <IconButton
                                                 nameClass={classNames('ic_btn', 'sorting')}
-                                                icon='sort.svg'
+                                                icon={'sort.svg'}
                                                 onClick={() =>
                                                     column?.sortable &&
                                                     sortData(
@@ -113,19 +100,18 @@ export default function ListMode(props) {
                         rows.map((row, rowInd) => {
                             prepareRow(row);
                             return (
-                                <tr
-                                    className="table-mode__tbody-tr"
-                                    {...row.getRowProps()}
-                                >
+                                <tr className="table-mode__tbody-tr" {...row.getRowProps()}>
                                     {row.cells.map((cell, cellInd) => {
-                                        const cellArgs = {
+                                        const cellData = {
                                             indRow: rowInd,
                                             indCell: cellInd,
                                             row: row,
                                             cell: cell,
                                             width: Math.ceil(window.screen.width / columns.length)
-                                        }
-                                        return CELL_CONF[cell.column.id] ? CELL_CONF[cell.column.id](cellArgs) : CELL_CONF.default(cellArgs)
+                                        };
+                                        return CELL_CONF[cell.column.id]
+                                            ? CELL_CONF[cell.column.id](cellData)
+                                            : CELL_CONF.default(cellData);
                                     })}
                                 </tr>
                             );

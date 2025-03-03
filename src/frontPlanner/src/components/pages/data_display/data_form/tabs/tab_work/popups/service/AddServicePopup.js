@@ -4,7 +4,6 @@ import { createPortal } from 'react-dom';
 // Импорт компонетов
 import BgFillText from '@generic/elements/text/BgFillText';
 import IconButton from '@generic/elements/buttons/IcButton';
-import DropdownMenu from '@generic/elements/dropdown_menu/DropdownMenu';
 
 import CalendarWindow from '@generic/elements/calendar/CalendarWindow';
 import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
@@ -16,80 +15,53 @@ import { getDateInFormatDDMMYY } from '@helpers/calendar';
 // Импорт стилей
 import './add_service_popup.css';
 
-// Отдел
-function Department(props) {
-    const { sections, section } = props;
-
-    const dataSource = sections.map(item => ({ ['title']: item.title }));
-
-    function onClickItemDepartment(value) {}
-
-    return (
-        <li className="popup__content-depart-selection popup-content-item">
-            <h2>Отдел</h2>
-            <DropdownMenu
-                additClass="department"
-                icon="arrow_down_sm.svg"
-                nameMenu="Отдел"
-                specifiedVal={section}
-                dataSource={dataSource}
-                onItemClick={onClickItemDepartment}
-            />
-        </li>
-    );
-}
-
-// Ответственный
-function Responsible() {
+// Исполнитель
+function Executor() {
     const [statePopup, setStatePopup] = useState(false);
-    const [responsible, setResponsible] = useState(null);
+    const [executor, setExecutor] = useState(null);
 
-    function onSelectResponsible(user) {
-        setResponsible(user);
+    function onSelectExecutor(user) {
+        setExecutor(user);
     }
 
     return (
-        <li className="popup__content-responsible popup-content-item">
-            <h2>Ответственный</h2>
-            <div className="popup__responsible-persons">
+        <li className="popup__content-executor popup-content-item">
+            <h2>Исполнитель</h2>
+            <div className="popup__executor-persons">
                 {statePopup
                     ? createPortal(
                           <UsersPopupWindow
                               additClass="add_user"
                               statePopup={statePopup}
                               setStatePopup={setStatePopup}
-                              selectUser={onSelectResponsible}
+                              selectUser={onSelectExecutor}
                           />,
                           document.getElementById('root')
                       )
                     : null}
-                <div className="popup__content-responsible">
-                    {responsible && Object.keys(responsible).length !== 0 ? (
-                        <ul className="popup__responsible-list">
-                            <li className="popup__responsible-list-item">
-                                <BgFillText type="p" text={responsible.fullName} bgColor="#f1f1f1" />
+                <div className="popup__content-executor">
+                    {executor && Object.keys(executor).length !== 0 ? (
+                        <ul className="popup__executor-list">
+                            <li className="popup__executor-list-item">
+                                <BgFillText type="p" text={executor.fullName} bgColor="#f1f1f1" />
                             </li>
                         </ul>
                     ) : (
                         <BgFillText type="p" text="Добавить" bgColor="#f1f1f1" />
                     )}
                 </div>
-                <IconButton
-                    nameClass="icon-btn__add-responsible"
-                    icon="plus_gr.svg"
-                    onClick={() => setStatePopup(true)}
-                />
+                <IconButton nameClass="icon-btn__add-executor" icon="plus_gr.svg" onClick={() => setStatePopup(true)} />
             </div>
         </li>
     );
 }
 
-// Название
-function TitleService() {
+// Задача
+function Task() {
     return (
         <li className="popup__content-name-service popup-content-item">
-            <h2>Название</h2>
-            <textarea className="txt-area" name="title-service"></textarea>
+            <h2>Задача</h2>
+            <textarea className="txt-area" name="title-task"></textarea>
         </li>
     );
 }
@@ -166,9 +138,7 @@ function Comment() {
 }
 
 export default function AddServicePopup(props) {
-    const { title, additClass, options, addServiceState, setAddServiceState } = props;
-
-    const [section, setSection] = useState(options?.sections[0]);
+    const { title, additClass, addServiceState, setAddServiceState } = props;
 
     return (
         <InputDataPopup
@@ -180,9 +150,8 @@ export default function AddServicePopup(props) {
         >
             <div className="popup__content-add-service popup-content">
                 <ul className="popup__content-add-service-left">
-                    <Department sections={options?.sections} section={section} />
-                    <Responsible />
-                    <TitleService />
+                    <Executor />
+                    <Task />
                     <Deadlines />
                 </ul>
                 <div className="popup__content-add-service-right">

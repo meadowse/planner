@@ -32,8 +32,10 @@ function filterData(data, simplifiedData, filter) {
     // });
 
     simplifiedData?.forEach((item, indItem) => {
-        newItem = JSON.stringify(item).replace(/[\[\]']+/g, '');
-        if (newItem.toLowerCase().includes(filter.toLowerCase())) indexesItems.push(indItem);
+        newItem = JSON.stringify(item)
+            .replace(/[\[\]"',]+/g, '')
+            .toLowerCase();
+        if (newItem.includes(filter.toLowerCase())) indexesItems.push(indItem);
     });
 
     if (indexesItems && indexesItems.length !== 0) {
@@ -41,7 +43,7 @@ function filterData(data, simplifiedData, filter) {
 
         indexesItems.map(index => filteredData.push(data[index]));
 
-        console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}\nfilteredData len: ${filteredData.length}`);
+        // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}\nfilteredData len: ${filteredData.length}`);
 
         return filteredData;
     } else return data;
@@ -70,8 +72,8 @@ function DisplayModes(props) {
         <ul className="page-section-options">
             {displayModes && displayModes.length !== 0
                 ? displayModes?.map(item => (
-                    <Option key={item?.value} optionVal={mode?.value} item={item} onSelectOption={onSelectMode} />
-                ))
+                      <Option key={item?.value} optionVal={mode?.value} item={item} onSelectOption={onSelectMode} />
+                  ))
                 : null}
         </ul>
     );
@@ -85,13 +87,13 @@ function ModeOptions(props) {
         <ul className="page-section-options">
             {modeOptions && modeOptions.length !== 0
                 ? modeOptions.map(item => (
-                    <Option
-                        key={item?.value}
-                        optionVal={modeOption?.value}
-                        item={item}
-                        onSelectOption={onSelectOption}
-                    />
-                ))
+                      <Option
+                          key={item?.value}
+                          optionVal={modeOption?.value}
+                          item={item}
+                          onSelectOption={onSelectOption}
+                      />
+                  ))
                 : null}
         </ul>
     );
@@ -202,7 +204,7 @@ function HeaderBottom(props) {
                             type="text"
                             placeholder="Поиск по приборам"
                             value={searchElem}
-                        // onChange={e => setSearchElem(e.target.value)}
+                            // onChange={e => setSearchElem(e.target.value)}
                         />
                         <DisplayModes
                             displayModes={displayModes}
@@ -236,7 +238,7 @@ function HeaderBottom(props) {
                             type="text"
                             placeholder="Поиск по ..."
                             value={searchElem}
-                        // onChange={e => setSearchElem(e.target.value)}
+                            // onChange={e => setSearchElem(e.target.value)}
                         />
                         <DisplayModes
                             displayModes={displayModes}
@@ -249,7 +251,7 @@ function HeaderBottom(props) {
                         nameClass="icon-btn__create icon-btn"
                         text="Создать"
                         icon="plus.svg"
-                    // onClick={() => onCreate(mode)}
+                        // onClick={() => onCreate(mode)}
                     />
                 </div>
             );
@@ -478,7 +480,7 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => (
-                                            <CalendarMode partition={partition} testData={resolvedData} dataOperations={dataOperations} />
+                                            <CalendarMode testData={resolvedData} dataOperations={dataOperations} />
                                         )}
                                     </Await>
                                 </Suspense>
@@ -491,7 +493,6 @@ export default function DataDisplayPage({ partition }) {
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => (
                                             <GanttMode
-                                                partition={partition}
                                                 data={filterData(
                                                     resolvedData,
                                                     simplifyData(extractSampleData(resolvedData, valsToDisplay)),

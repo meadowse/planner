@@ -299,6 +299,26 @@
     inset: 0;
 }
 
+/* Ячейка "Вид работы" */
+
+/* .cell__typework {
+    display: flex;
+    align-items: center;
+    column-gap: 0.9375rem;
+}
+
+.cell__typework-btn {
+    padding: 0.3125rem 0.625rem;
+    position: relative;
+    border-radius: 0.3125rem;
+    font-size: calc(1.25rem + 4 * (100vw - 320px) / 1600);
+    cursor: pointer;
+    color: #fff;
+    background-color: #99ad60;
+} */
+
+/* Ячейка "Завершено" */
+
 .cell__checkmark {
     width: 2rem;
     height: 2rem;
@@ -308,7 +328,7 @@
     background-color: #f1f1f1;
 }
 
-.cell__checkmark::before {
+.cell__checkmark_completed::before {
     content: '';
     width: 70%;
     height: 70%;

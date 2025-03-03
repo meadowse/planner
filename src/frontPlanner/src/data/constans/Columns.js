@@ -1,5 +1,11 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
+import axios from 'axios';
 import classNames from 'classnames';
+
+//
+import AddServicePopup from '@components/pages/data_display/data_form/tabs/tab_work/popups/service/AddServicePopup';
 
 // Импорт доп.функционала
 import { isObject, isArray } from '@helpers/helper';
@@ -31,7 +37,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 && props.value ? CELLS['text'](props.value, 'id') : 'Нет данных';
+            return props.value ? CELLS['text'](props.value, 'id') : 'Нет данных';
         }
     },
     {
@@ -40,7 +46,32 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 && props.value ? CELLS['text'](props.value, 'num') : 'Нет данных';
+            const navigate = useNavigate();
+
+            async function onShowInfoCard() {
+                await axios
+                    .post(`${window.location.origin}/api/getAgreement`, { contractId: props?.config?.contractId })
+                    .then(response => {
+                        if (response?.status === 200) {
+                            const navigationArg = {
+                                state: {
+                                    partition: props?.config?.partition,
+                                    data: response?.data[0],
+                                    dataOperation: props?.config?.dataOperation
+                                }
+                            };
+                            navigate('../../dataform/', navigationArg);
+                        }
+                    });
+            }
+
+            return props.value ? (
+                <p className="cell__num" onClick={onShowInfoCard}>
+                    {props.value ? props.value : 'Нет данных'}
+                </p>
+            ) : (
+                'Нет данных'
+            );
         }
     },
     {
@@ -52,7 +83,7 @@ const COLUMNS = [
             const refCell = useRef();
             return (
                 <p className="cell__address cell" ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
-                    <span>{Object.keys(props).length !== 0 && props.value ? props?.value : 'Нет данных'}</span>
+                    <span>{props.value ? props?.value : 'Нет данных'}</span>
                 </p>
             );
         }
@@ -63,10 +94,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            const refCell = useRef();
-            return <p className="cell__company cell" ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
-                <span>{Object.keys(props).length !== 0 && props.value ? props?.value : 'Нет данных'}</span>
-            </p>
+            return props.value ? CELLS['text'](props.value, 'company') : 'Нет данных';
         }
     },
     {
@@ -75,11 +103,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return (
-                <p className="cell__group cell">
-                    {Object.keys(props).length !== 0 && props.value ? props?.value : 'Нет данных'}
-                </p>
-            );
+            return <p className="cell__group cell">{props.value ? props?.value : 'Нет данных'}</p>;
         }
     },
     {
@@ -108,7 +132,7 @@ const COLUMNS = [
         sortable: true,
         sortBy: 'title',
         Cell: props => {
-            return Object.keys(props).length !== 0 && props?.value ? (
+            return props?.value ? (
                 <p className="cell__stage cell" style={{ backgroundColor: props?.value?.color }}>
                     {props?.value?.title}
                 </p>
@@ -123,7 +147,7 @@ const COLUMNS = [
         sortable: true,
         sortBy: 'title',
         Cell: props => {
-            return Object.keys(props).length !== 0 && props?.value ? (
+            return props?.value ? (
                 <p className="cell__stage cell" style={{ backgroundColor: props?.value?.color }}>
                     {props?.value?.title}
                 </p>
@@ -138,7 +162,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 ? (
+            return (
                 <div className="cell__contacts cell">
                     {props.value &&
                         props.value.length !== 0 &&
@@ -150,8 +174,6 @@ const COLUMNS = [
                         ))}
                     {!props.value || (props.value.length === 0 && <p>Нет данных</p>)}
                 </div>
-            ) : (
-                'Нет данных'
             );
         }
     },
@@ -161,7 +183,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 && props?.value ? (
+            return props?.value ? (
                 <>
                     {Object.keys(props.value).length !== 0 ? (
                         <p className="cell__car cell">
@@ -182,7 +204,7 @@ const COLUMNS = [
         sortable: true,
         sortBy: 'title',
         Cell: props => {
-            return Object.keys(props).length !== 0 ? CELLS['text'](props?.value?.title, 'services') : 'Нет данных';
+            return CELLS['text'](props?.value?.title, 'services');
         }
     },
     {
@@ -191,11 +213,16 @@ const COLUMNS = [
         sortable: true,
         sortBy: 'value',
         Cell: props => {
-            if (Object.keys(props).length !== 0) {
-                if (props?.value?.value) return CELLS['text'](props?.value?.value, props?.value?.expired ? 'date_expired' : 'date')
+            if (props?.value?.value) {
+                return !props?.value?.expired
+                    ? CELLS['text'](props?.value?.value, 'date')
+                    : CELLS['text'](props?.value?.value, 'date_expired');
             }
             return 'Нет данных';
         }
+        // Cell: props => {
+        //     return  ? CELLS['text'](props?.value?.value, 'date') : 'Нет данных';
+        // }
     },
     {
         Header: 'Путь к папке',
@@ -205,14 +232,14 @@ const COLUMNS = [
         Cell: props => {
             const refCell = useRef();
             return (
-                Object.keys(props).length !== 0 && (
-                    <div className="cell__path-to-folder cell">
-                        <p ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>{props?.value || 'Нет данных'}</p>
-                        <button className="cell__btn-copy-path">
-                            <img src="/img/copy.svg" alt="" />
-                        </button>
-                    </div>
-                )
+                <div className="cell__path-to-folder cell">
+                    <p ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
+                        <span>{props?.value || 'Нет данных'}</span>
+                    </p>
+                    <button className="cell__btn-copy-path">
+                        <img src="/img/copy.svg" alt="" />
+                    </button>
+                </div>
             );
         }
     },
@@ -222,7 +249,7 @@ const COLUMNS = [
         sortable: true,
         sortBy: 'fullName',
         Cell: props => {
-            return props?.value && Object.keys(props).length !== 0 && Object.keys(props?.value).length !== 0
+            return props?.value && Object.keys(props?.value).length !== 0
                 ? CELLS['user'](props?.value, 'person')
                 : 'Нет данных';
         }
@@ -233,7 +260,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 ? CELLS['text'](props?.value, 'subsection') : 'Нет данных';
+            return CELLS['text'](props?.value, 'subsection');
         }
     },
     {
@@ -242,7 +269,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 ? CELLS['text'](props?.value, 'phone') : 'Нет данных';
+            return CELLS['text'](props?.value, 'phone');
         }
     },
     {
@@ -251,7 +278,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 ? CELLS['text'](props?.value, 'email') : 'Нет данных';
+            return CELLS['text'](props?.value, 'email');
         }
     },
     {
@@ -260,7 +287,7 @@ const COLUMNS = [
         sortable: true,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 ? (
+            return (
                 <div className="cell__equipment cell">
                     <img className="cell__equipment-image" src={props?.value?.image} alt="" />
                     <p className="cell__equipment-text">
@@ -268,8 +295,6 @@ const COLUMNS = [
                         <span>{props?.value?.model}</span>
                     </p>
                 </div>
-            ) : (
-                'Нет данных'
             );
         }
     },
@@ -317,14 +342,14 @@ const COLUMNS = [
             ) : null;
         }
     },
-    // 
+    //
     {
         Header: 'Номер',
         accessor: 'number',
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 && props.value ? CELLS['text'](props.value, 'num') : 'Нет данных';
+            return props.value ? CELLS['text'](props.value, 'number') : 'Нет данных';
         }
     },
     {
@@ -335,8 +360,12 @@ const COLUMNS = [
         Cell: props => {
             const refCell = useRef();
             return (
-                <p className="cell__typework cell" ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
-                    <span>{Object.keys(props).length !== 0 && props.value ? props?.value : 'Нет данных'}</span>
+                <p
+                    className="cell__typework-text cell"
+                    ref={refCell}
+                    onMouseLeave={() => refCell?.current.scrollTo(0, 0)}
+                >
+                    <span>{props.value ? props?.value : 'Нет данных'}</span>
                 </p>
             );
         }
@@ -347,7 +376,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 ? CELLS['text'](`${props?.value} дней`, 'deadline') : 'Нет данных';
+            return CELLS['text'](`${props?.value} дней`, 'deadline');
         }
     },
     {
@@ -356,7 +385,7 @@ const COLUMNS = [
         sortable: true,
         sortBy: 'value',
         Cell: props => {
-            return Object.keys(props).length !== 0 ? CELLS['text'](props?.value, 'date') : 'Нет данных';
+            return CELLS['text'](props?.value, 'date');
         }
     },
     {
@@ -365,8 +394,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 ? <div className="cell__checkmark cell">
-            </div> : 'Нет данных';
+            return <div className={`cell__checkmark cell__checkmark${props?.value ? '_completed' : ''} cell`}></div>;
         }
     },
     //
@@ -376,7 +404,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return Object.keys(props).length !== 0 ? CELLS['text'](props?.value, 'task') : 'Нет данных';
+            return CELLS['text'](props?.value, 'task');
         }
     },
     {
@@ -385,9 +413,9 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            if (Object.keys(props).length !== 0) {
-                return props?.value && Object.keys(props?.value).length !== 0 ? CELLS['user'](props?.value, 'person') : 'Нет данных';
-            }
+            return props?.value && Object.keys(props?.value).length !== 0
+                ? CELLS['user'](props?.value, 'person')
+                : 'Нет данных';
         }
     },
     {
@@ -396,14 +424,23 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            if (Object.keys(props).length !== 0) {
-                return props?.value && Object.keys(props?.value).length !== 0 ? CELLS['user'](props?.value, 'person') : 'Нет данных';
-            }
+            return props?.value && Object.keys(props?.value).length !== 0
+                ? CELLS['user'](props?.value, 'person')
+                : 'Нет данных';
         }
     },
+    {
+        Header: 'Дедлайн',
+        accessor: 'deadlineTask',
+        sortable: true,
+        sortBy: 'value',
+        Cell: props => {
+            return CELLS['text'](props?.value, 'date');
+        }
+    }
 ];
 
-export default function getSampleColumns(keys, partition) {
+export default function getSampleColumns(keys) {
     const filteredData = COLUMNS.filter(column => keys.indexOf(column.accessor) >= 0);
     const data = new Array(keys.length).fill({});
 
