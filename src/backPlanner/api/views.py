@@ -352,6 +352,7 @@ def getTypesWork(request):
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
+@csrf_exempt
 def getTasksContracts(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
