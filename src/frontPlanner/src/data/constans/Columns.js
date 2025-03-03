@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
@@ -13,6 +13,15 @@ import { isObject, isArray } from '@helpers/helper';
 const CELLS = {
     text: (value, additClass) => {
         return <p className={`cell__${additClass}`}>{value ? value : 'Нет данных'}</p>;
+    },
+    longtext: (value, additClass, refCell) => {
+        return value ? (
+            <p className={`cell__${additClass}`} ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
+                <span>{value}</span>
+            </p>
+        ) : (
+            'Нет данных'
+        );
     },
     user: (value, additClass) => {
         return (
@@ -81,11 +90,7 @@ const COLUMNS = [
         sortBy: undefined,
         Cell: props => {
             const refCell = useRef();
-            return (
-                <p className="cell__address cell" ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
-                    <span>{props.value ? props?.value : 'Нет данных'}</span>
-                </p>
-            );
+            return CELLS?.longtext(props?.value, 'address', refCell);
         }
     },
     {
@@ -233,9 +238,7 @@ const COLUMNS = [
             const refCell = useRef();
             return (
                 <div className="cell__path-to-folder cell">
-                    <p ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
-                        <span>{props?.value || 'Нет данных'}</span>
-                    </p>
+                    {CELLS?.longtext(props?.value, 'cell__path-to-folder', refCell)}
                     <button className="cell__btn-copy-path">
                         <img src="/img/copy.svg" alt="" />
                     </button>
@@ -359,15 +362,7 @@ const COLUMNS = [
         sortBy: undefined,
         Cell: props => {
             const refCell = useRef();
-            return (
-                <p
-                    className="cell__typework-text cell"
-                    ref={refCell}
-                    onMouseLeave={() => refCell?.current.scrollTo(0, 0)}
-                >
-                    <span>{props.value ? props?.value : 'Нет данных'}</span>
-                </p>
-            );
+            return CELLS?.longtext(props?.value, 'cell__typework-text', refCell);
         }
     },
     {
@@ -394,7 +389,11 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return <div className={`cell__checkmark cell__checkmark${props?.value ? '_completed' : ''} cell`}></div>;
+            return (
+                <div
+                    className={classNames('cell__checkmark cell', { 'cell__checkmark_completed': props?.value })}
+                ></div>
+            );
         }
     },
     //
@@ -404,7 +403,36 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return CELLS['text'](props?.value, 'task');
+            const refCell = useRef();
+            const navigate = useNavigate();
+
+            async function onShowInfoCard() {
+                // await axios
+                //     .post(`${window.location.origin}/api/getAgreement`, { contractId: props?.config?.contractId })
+                //     .then(response => {
+                //         if (response?.status === 200) {
+                //             const navigationArg = {
+                //                 state: {
+                //                     partition: props?.config?.partition,
+                //                     data: response?.data[0],
+                //                     dataOperation: props?.config?.dataOperation
+                //                 }
+                //             };
+                //             navigate('../../dataform/', navigationArg);
+                //         }
+                //     });
+            }
+
+            return (
+                <p
+                    className="cell__task"
+                    ref={refCell}
+                    onMouseLeave={() => refCell?.current.scrollTo(0, 0)}
+                    onClick={onShowInfoCard}
+                >
+                    <span>{props?.value}</span>
+                </p>
+            );
         }
     },
     {

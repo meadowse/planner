@@ -33,17 +33,41 @@ const loadData = (tab, payload) => {
             let worksData = [],
                 tasksData = [];
 
-            await axios.post(`${window.location.origin}/api/getTypesWork`, payload).then(response => {
-                if (response?.status === 200) {
-                    if (response?.data && response?.data.length !== 0) worksData = response?.data;
-                }
-            });
+            await axios
+                .post(`${window.location.origin}/api/getTypesWork`, payload)
+                .then(response => {
+                    if (response?.status === 200) {
+                        if (response?.data && response?.data.length !== 0) worksData = response?.data;
+                    }
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.log(error.response);
+                        console.log('server responded');
+                    } else if (error.request) {
+                        console.log('network error');
+                    } else {
+                        console.log(error);
+                    }
+                });
 
-            await axios.post(`${window.location.origin}/api/getTasksContracts`, payload).then(response => {
-                if (response?.status === 200) {
-                    if (response?.data && response?.data.length !== 0) tasksData = formData(response?.data, tab);
-                }
-            });
+            await axios
+                .post(`${window.location.origin}/api/getTasksContracts`, payload)
+                .then(response => {
+                    if (response?.status === 200) {
+                        if (response?.data && response?.data.length !== 0) tasksData = formData(response?.data, tab);
+                    }
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.log(error.response);
+                        console.log('server responded');
+                    } else if (error.request) {
+                        console.log('network error');
+                    } else {
+                        console.log(error);
+                    }
+                });
 
             return {
                 works: worksData || [],
@@ -62,13 +86,6 @@ const getOptions = key => {
 const DataFormService = { loadData, getOptions };
 
 export default DataFormService;
-
-// const data = {
-//     works: await axios.post(`${window.location.origin}/api/getTypesWork`, payload)?.data
-//     // tasks: formData(await axios.post(`${window.location.origin}/api/getTasksContracts`, payload))
-//     // works: WORKS_DATA,
-//     // tasks: formData(TASKS_DATA, tab)
-// };
 
 // const WORKS_DATA = [
 //     {

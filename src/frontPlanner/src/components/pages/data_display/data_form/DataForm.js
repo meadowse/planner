@@ -61,7 +61,7 @@ function TabsHeader(props) {
     const { tabs, tab, tabClick } = props;
 
     function onTabClick(item) {
-        localStorage.setItem('selectedTab', JSON.stringify(item));
+        // localStorage.setItem('selectedTab', JSON.stringify(item));
         tabClick(item);
     }
 
@@ -89,7 +89,7 @@ function TabsContent(props) {
 
     console.log(`tab: ${JSON.stringify(tab, null, 4)}`);
     // console.log(`idCard: ${idCard}\nsubsectionData: ${JSON.stringify(subsectionData, null, 4)}`);
-    console.log(`cardData: ${JSON.stringify(data, null, 4)}`);
+    // console.log(`cardData: ${JSON.stringify(data, null, 4)}`);
 
     const TABS_NEW = {
         // Производство
@@ -100,7 +100,7 @@ function TabsContent(props) {
             documents: <TabDocuments />,
             default: <p>Нет данных</p>
         },
-        //
+        // Оборудование
         equipment: {
             default: <TabEquipment />
         },
@@ -111,12 +111,14 @@ function TabsContent(props) {
         if (TABS_NEW[partition][tab?.key]) {
             return <div className="section__dataform-tabs-content">{TABS_NEW[partition][tab?.key]}</div>;
         } else return TABS_NEW[partition].default;
-    } else return TABS_NEW.default;
+    }
+    return TABS_NEW.default;
 }
 
 function Tabs(props) {
     const { id, partition, tabs, data, options, dataOperation } = props;
-    const [tab, setTab] = useState(JSON.parse(localStorage.getItem('selectedTab')) || tabs[0]);
+    // const [tab, setTab] = useState(JSON.parse(localStorage.getItem('selectedTab')) || tabs[0]);
+    const [tab, setTab] = useState(tabs[0]);
 
     console.log(`partition: ${partition}`);
 

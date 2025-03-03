@@ -14,33 +14,18 @@ export default function TabWorkNew({ idContract, partition, tab }) {
     const [works, setWorks] = useState([]);
     const [tasks, setTasks] = useState([]);
 
-    // async function loadData() {
-    //     await axios.post(`${window.location.origin}/api/getTypesWork`, { contractId: idContract }).then(response => {
-    //         if (response?.status === 200) {
-    //             if (response?.data && response?.data.length !== 0) setWorks(response?.data);
-    //         }
-    //     });
-
-    //     await axios
-    //         .post(`${window.location.origin}/api/getTasksContracts`, { contractId: idContract })
-    //         .then(response => {
-    //             if (response?.status === 200) {
-    //                 if (response?.data && response?.data.length !== 0) setTasks(response?.data);
-    //             }
-    //         });
-    // }
-
-    // useEffect(() => {
-    //     loadData();
-    // }, []);
-
-    useEffect(async () => {
+    // Загрузка данных
+    async function loadData() {
         const data = await DataFormService.loadData(tab, { contractId: idContract });
         console.log(`data: ${JSON.stringify(data, null, 4)}`);
         if (data && Object.keys(data).length !== 0) {
             if (data?.works && data?.works.length !== 0) setWorks(data?.works);
             if (data?.tasks && data?.tasks.length !== 0) setTasks(data?.tasks);
         }
+    }
+
+    useEffect(() => {
+        loadData();
     }, []);
 
     return (

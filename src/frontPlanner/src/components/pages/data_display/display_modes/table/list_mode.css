@@ -82,10 +82,11 @@
 .table-mode__tbody-td {
 }
 
-/* Ячейки "Адрес", "Вид работы" */
+/* Ячейки "Адрес", "Вид работы", "Задача" */
 
 .cell__address,
-.cell__typework {
+.cell__typework,
+.cell__task {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow-x: auto;
@@ -93,12 +94,13 @@
 }
 
 .cell__address:hover,
-.cell__typework:hover {
+.cell__typework:hover,
+.cell__task:hover {
     text-overflow: clip;
     cursor: default;
 }
 
-/*  */
+/* Ячейкa "Компания" */
 
 .cell__company {
     text-overflow: ellipsis;
@@ -340,3 +342,5 @@
     background-size: contain;
     background-repeat: no-repeat;
 }
+
+/* Ячейка "Задача" */

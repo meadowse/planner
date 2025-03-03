@@ -54,6 +54,14 @@ export default function ListMode(props) {
             };
             return <Cell cellData={data} cellConfig={config} />;
         },
+        task: data => {
+            const config = {
+                partition: partition,
+                contractId: testData[data?.indRow]?.id,
+                dataOperation: findNestedObj(dataOperations, 'key', 'update')
+            };
+            return <Cell cellData={data} cellConfig={config} />;
+        },
         default: data => {
             return <Cell cellData={data} />;
         }
