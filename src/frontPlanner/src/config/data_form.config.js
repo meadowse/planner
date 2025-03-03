@@ -1,3 +1,23 @@
+// Конфигурация по преобразованию данных
+export const DATA_CONVERSION_MAP = {
+    director: director => {
+        return director && Object.keys(director).length !== 0
+            ? {
+                ...director,
+                photo: '/img/user.svg'
+            }
+            : null;
+    },
+    executor: executor => {
+        return executor && Object.keys(executor).length !== 0
+            ? {
+                ...executor,
+                photo: '/img/user.svg'
+            }
+            : null;
+    },
+};
+
 export const DATA_FORM_CONF = {
     stages: [
         {
@@ -63,7 +83,7 @@ export const DATA_FORM_CONF = {
     ],
     tabs: [
         { key: 'general', title: 'Общие' },
-        { key: 'work', title: 'Работа' },
+        { key: 'works', title: 'Работа' },
         { key: 'departures', title: 'Выезды' },
         { key: 'contractors', title: 'Подрядчики' },
         { key: 'documents', title: 'Документы' }

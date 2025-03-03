@@ -1,42 +1,44 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 // Импорт компонентов
-import IconButton from '@components/generic/elements/buttons/IcButton';
-import DropdownMenu from '@generic/elements/dropdown_menu/DropdownMenu';
-import Preloader from '../../../../../auxiliary_pages/loader/Preloader';
+import ListMode from '../../../display_modes/table/ListMode';
+
+// Импорт сервиосв
+import DataFormService from '@services/data_form.service';
 
 // Импорт стилей
 import './tab_worknew.css';
 
-
-
-export default function TabWorkNew({ idContract }) {
+export default function TabWorkNew({ tab, partition }) {
     const [works, setWorks] = useState([]);
-    const [isLoading, setLoading] = useState(true);
-
-    async function loadData() {
-        await axios.post(`${window.location.origin}/api/getTypesWork`, { contractId: idContract }).then(response => {
-            if (response?.status === 200) {
-                if (response?.data && response?.data.length !== 0) {
-                    setWorks(response?.data);
-                    setLoading(false);
-                }
-            }
-        })
-    }
+    const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        loadData();
-        console.log(`works: ${JSON.stringify(works, null, 4)}`);
+        const data = DataFormService.loadData(tab, null);
+        // console.log(`tab: ${tab}\ndata: ${JSON.stringify(data, null, 4)}`)
+        if (data && Object.keys(data).length !== 0) {
+            setWorks(data?.works);
+            setTasks(data?.tasks);
+        }
     }, [])
 
 
     return <div className="tab-work section__tab">
-        {isLoading ? (
-            <Preloader />
-        ) : <p></p>}
+        <div className='tab-work__main'>
+            <ListMode
+                partition={partition}
+                keys={["number", "typeWork", "deadline", "dateDone", "done"]}
+                testData={works}
+                dataOperations={[]}
+            />
+            <ListMode
+                partition={partition}
+                keys={["task", "director", "executor", "dateDone",]}
+                testData={tasks}
+                dataOperations={[]}
+            />
+        </div>
     </div>;
 }

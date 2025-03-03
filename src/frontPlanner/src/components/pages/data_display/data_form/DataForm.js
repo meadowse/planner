@@ -7,8 +7,8 @@ import IconButton from '@generic/elements/buttons/IcButton';
 import DropdownMenu from '@generic/elements/dropdown_menu/DropdownMenu';
 
 import TabGeneral from './tabs/tab_general/TabGeneral';
-// import TabWork from './tabs/tab_work/TabWork';
-import TabWorkNew from "./tabs/tab_work/TabWorkNew";
+import TabWork from './tabs/tab_work/TabWork';
+import TabWorkNew from './tabs/tab_work/TabWorkNew';
 import TabDepartures from './tabs/tab_departures/TabDepartures';
 import TabContractors from './tabs/tab_contractors/TabContractors';
 import TabDocuments from './tabs/tab_documents/TabDocuments';
@@ -101,7 +101,7 @@ function TabsContent(props) {
 
     const TABS = {
         'general': <TabGeneral idCard={idCard} data={data} dataOperation={dataOperation} />,
-        'work': <TabWorkNew idContract={data?.id} />,
+        'works': <TabWorkNew tab={tab?.key} />,
         // 'work': <TabWork options={options} />,
         // 'departures': <TabDepartures subsection={findNestedObj(data, 'title', 'Выезды')} />,
         'contractors': <TabContractors />,
