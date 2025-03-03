@@ -351,3 +351,45 @@ def getTypesWork(request):
                 return result
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+def getTasksContracts(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        contractId = obj.get('contractId')
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+            cur = con.cursor()
+            try:
+                sql = f"""SELECT
+                T218.ID, 
+                T218.F4695 AS TASK,
+                T218.F5724 AS ID_OF_TYPE_OF_WORK,
+                T218.F4696 AS DEADLINE,
+                T218.F4693 AS ID_OF_DIRECTOR,
+                DIRECTOR.F4886 AS DIRECTOR_NAME,
+                T218.F4694 AS ID_OF_EXECUTOR,
+                EXECUTOR.F4886 AS EXECUTOR_NAME
+                FROM T218
+                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
+                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
+                WHERE T218.F4691 = {contractId}"""
+                cur.execute(sql)
+                result = cur.fetchall()
+                columns = ('id', 'task', 'idTypeWork', 'deadline', 'idDirector', 'directorFIO', 'idExecutor', 'executorFIO')
+                json_result = [
+                    {col: value for col, value in zip(columns, row)}
+                    for row in result
+                ]  # Создаем список словарей с сериализацией значений
+                for row in json_result:
+                    row.update({'director': {'id': row.get('idDirector'), 'fullName': row.get('directorFIO')}})
+                    row.update({'executor': {'id': row.get('idExecutor'), 'fullName': row.get('executorFIO')}})
+                    row.pop('idDirector')
+                    row.pop('idExecutor')
+                    row.pop('executorFIO')
+                    row.pop('directorFIO')
+                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+            except Exception as ex:
+                print(f"НЕ удалось получить задачи по договору {ex}")
+                result = None
+                return result
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)

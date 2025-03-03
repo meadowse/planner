@@ -26,4 +26,5 @@ urlpatterns = [
     path('corParticipants', corParticipants, name='corParticipants'),
     path('addPhoto', addPhoto, name='addPhoto'),
     path('getTypesWork', getTypesWork, name='getTypesWork'),
+    path('getTasksContracts', getTasksContracts, name='getTasksContracts'),
 ]
