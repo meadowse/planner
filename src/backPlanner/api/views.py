@@ -369,7 +369,7 @@ def getTasksContracts(request):
                 DIRECTOR.F4886 AS DIRECTOR_NAME,
                 T218.F4694 AS ID_OF_EXECUTOR,
                 EXECUTOR.F4886 AS EXECUTOR_NAME, 
-                T218.F4697 AS DONE,
+                T218.F4697 AS DONE
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
