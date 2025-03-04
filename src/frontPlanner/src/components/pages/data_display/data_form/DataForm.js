@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import IconButton from '@generic/elements/buttons/IcButton';
 
 import TabGeneral from './tabs/tab_general/TabGeneral';
-import TabWork from './tabs/tab_work/TabWork';
+// import TabWork from './tabs/tab_work/TabWork';
 import TabWorkNew from './tabs/tab_work/TabWorkNew';
 import TabDepartures from './tabs/tab_departures/TabDepartures';
 import TabContractors from './tabs/tab_contractors/TabContractors';

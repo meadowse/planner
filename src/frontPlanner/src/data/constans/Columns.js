@@ -4,8 +4,8 @@ import { createPortal } from 'react-dom';
 import axios from 'axios';
 import classNames from 'classnames';
 
-//
-import AddServicePopup from '@components/pages/data_display/data_form/tabs/tab_work/popups/service/AddServicePopup';
+// Импорт компонентов
+import TaskPopup from '@components/pages/data_display/data_form/tabs/tab_work/popups/task/TaskPopup';
 
 // Импорт доп.функционала
 import { isObject, isArray } from '@helpers/helper';
@@ -399,23 +399,23 @@ const COLUMNS = [
     //
     {
         Header: () => {
-            const [addServiceState, setAddServiceState] = useState(false);
+            const [addTaskState, setAddTaskState] = useState(false);
             return (
                 <>
                     <div className="cell__task">
                         Задача
-                        <button className="cell__task-btn" onClick={() => setAddServiceState(true)}>
+                        <button className="cell__task-btn" onClick={() => setAddTaskState(true)}>
                             +
                         </button>
                     </div>
-                    {addServiceState &&
+                    {addTaskState &&
                         createPortal(
-                            <AddServicePopup
+                            <TaskPopup
                                 title="Новая задача"
-                                additClass="add-service"
-                                options={[]}
-                                addServiceState={addServiceState}
-                                setAddServiceState={setAddServiceState}
+                                task={{}}
+                                additClass="add-task"
+                                addTaskState={addTaskState}
+                                setAddTaskState={setAddTaskState}
                             />,
                             document.getElementById('portal')
                         )}
@@ -427,34 +427,29 @@ const COLUMNS = [
         sortBy: undefined,
         Cell: props => {
             const refCell = useRef();
-            const navigate = useNavigate();
-
-            async function onShowInfoCard() {
-                // await axios
-                //     .post(`${window.location.origin}/api/getAgreement`, { contractId: props?.config?.contractId })
-                //     .then(response => {
-                //         if (response?.status === 200) {
-                //             const navigationArg = {
-                //                 state: {
-                //                     partition: props?.config?.partition,
-                //                     data: response?.data[0],
-                //                     dataOperation: props?.config?.dataOperation
-                //                 }
-                //             };
-                //             navigate('../../dataform/', navigationArg);
-                //         }
-                //     });
-            }
-
+            const [addTaskState, setAddTaskState] = useState(false);
             return (
-                <p
-                    className="cell__task"
-                    ref={refCell}
-                    onMouseLeave={() => refCell?.current.scrollTo(0, 0)}
-                    onClick={onShowInfoCard}
-                >
-                    <span>{props?.value}</span>
-                </p>
+                <>
+                    <p
+                        className="cell__task"
+                        ref={refCell}
+                        onMouseLeave={() => refCell?.current.scrollTo(0, 0)}
+                        onClick={() => setAddTaskState(true)}
+                    >
+                        <span>{props?.value}</span>
+                    </p>
+                    {addTaskState &&
+                        createPortal(
+                            <TaskPopup
+                                title="Редактирование задачи"
+                                task={props?.config?.task}
+                                additClass="add-task"
+                                addTaskState={addTaskState}
+                                setAddTaskState={setAddTaskState}
+                            />,
+                            document.getElementById('portal')
+                        )}
+                </>
             );
         }
     },

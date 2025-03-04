@@ -25,11 +25,12 @@ export const useInputDataPopup = params => {
     }
 
     useEffect(() => {
-        if (!statePopup) return;
-        document.addEventListener('mousedown', onClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', onClickOutside);
-        };
+        // Пересмортеть логику клика вне области окна
+        // if (!statePopup) return;
+        // document.addEventListener('mousedown', onClickOutside);
+        // return () => {
+        //     document.removeEventListener('mousedown', onClickOutside);
+        // };
     }, []);
 
     return { popupRef, onSaveData, onCancelClick, onItemClick };
