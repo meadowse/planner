@@ -384,7 +384,7 @@ const COLUMNS = [
         }
     },
     {
-        Header: 'Заверешно',
+        Header: 'Завершено',
         accessor: 'done',
         sortable: false,
         sortBy: undefined,
