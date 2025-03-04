@@ -398,7 +398,30 @@ const COLUMNS = [
     },
     //
     {
-        Header: 'Задача',
+        Header: () => {
+            const [addServiceState, setAddServiceState] = useState(false);
+            return (
+                <>
+                    <div className="cell__task">
+                        Задача
+                        <button className="cell__task-btn" onClick={() => setAddServiceState(true)}>
+                            +
+                        </button>
+                    </div>
+                    {addServiceState &&
+                        createPortal(
+                            <AddServicePopup
+                                title="Новая задача"
+                                additClass="add-service"
+                                options={[]}
+                                addServiceState={addServiceState}
+                                setAddServiceState={setAddServiceState}
+                            />,
+                            document.getElementById('portal')
+                        )}
+                </>
+            );
+        },
         accessor: 'task',
         sortable: false,
         sortBy: undefined,
@@ -436,7 +459,7 @@ const COLUMNS = [
         }
     },
     {
-        Header: 'Заказчик',
+        Header: 'Постановщик',
         accessor: 'director',
         sortable: false,
         sortBy: undefined,
