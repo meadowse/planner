@@ -395,3 +395,111 @@ def getTasksContracts(request):
                 return result
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+@csrf_exempt
+def addTask(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        contractId = obj.get('contractId')
+        task = obj.get('task')
+        comment = obj.get('comment')
+        typeWorkId = obj.get('typeWorkId')
+        dateStart = obj.get('dateStart')
+        deadline = obj.get('deadline')
+        directorId = obj.get('directorId')
+        executorId = obj.get('executorId')
+        with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                 charset=charset) as con:
+            cur = con.cursor()
+            cur.execute(f'SELECT GEN_ID(GEN_T218, 1) FROM RDB$DATABASE')
+            ID = cur.fetchonemap().get('GEN_ID', None)
+            # Подготовка значений для вставки
+            values = {
+                'id': ID,
+                'F4691': contractId,
+                'F4695': task,
+                'F4698': comment,
+                'F5724': typeWorkId,
+                'F5569': dateStart,
+                'F4696': deadline,
+                'F4693': directorId,  # должно быть ID пользователя
+                'F4694': executorId,
+            }
+
+            # Преобразование значений в SQL-формат
+            sql_values = []
+            for key, value in values.items():
+                if value is None:
+                    sql_values.append('NULL')
+                elif isinstance(value, (int, float)):  # Числовые значения
+                    sql_values.append(str(value))
+                elif isinstance(value, str):  # Строковые значения
+                    sql_values.append(f"'{value}'")
+                else:
+                    raise ValueError(f"Unsupported type for value: {value}")
+
+            # Формирование SQL-запроса
+            sql = f"""INSERT INTO T218 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
+
+            cur.execute(sql)
+            con.commit()
+        return JsonResponse({'status': 'Ok'}, status=200)
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+@csrf_exempt
+def editTask(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        taskId = obj.get('taskId')
+        contractId = obj.get('contractId')
+        task = obj.get('task')
+        comment = obj.get('comment')
+        typeWorkId = obj.get('typeWorkId')
+        dateStart = obj.get('dateStart')
+        deadline = obj.get('deadline')
+        directorId = obj.get('directorId')
+        executorId = obj.get('executorId')
+        done = obj.get('done')
+        with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                 charset=charset) as con:
+            cur = con.cursor()
+
+            # Подготовка значений для обновления
+            values = {
+                'F4691': contractId,
+                'F4695': task,
+                'F4698': comment,
+                'F5724': typeWorkId,
+                'F5569': dateStart,
+                'F4696': deadline,
+                'F4697': done,
+                'F4708': datetime.date.today(),
+                'F4693': directorId,  # должно быть ID пользователя
+                'F4694': executorId,
+            }
+
+            # Преобразование значений в SQL-формат
+            set_clause = []
+            for key, value in values.items():
+                if value is None:
+                    set_clause.append(f"{key} = NULL")
+                elif isinstance(value, (int, float)):  # Числовые значения
+                    set_clause.append(f"{key} = {value}")
+                elif isinstance(value, str):  # Строковые значения
+                    set_clause.append(f"{key} = '{value}'")
+                else:
+                    raise ValueError(f"Unsupported type for value: {value}")
+
+            # Формирование SQL-запроса
+            sql = f"""
+            UPDATE T218
+            SET {', '.join(set_clause)}
+            WHERE id = {taskId}
+            """
+
+            cur.execute(sql)
+            con.commit()
+        return JsonResponse({'status': 'Ok'}, status=200)
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
