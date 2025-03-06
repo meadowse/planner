@@ -18,6 +18,14 @@ import getSampleColumns from '@data/constans/Columns';
 // Импорт стилей
 import './list_mode.css';
 
+// Ячейка шапки таблицы
+function HeadCell({ cellData, cellConfig }) {
+    return cellData?.column.render('Header', {
+        config: { ...cellConfig }
+    });
+}
+
+// Ячейка тела таблицы
 function Cell({ cellData, cellConfig }) {
     return (
         <td
@@ -33,30 +41,44 @@ function Cell({ cellData, cellConfig }) {
 }
 
 export default function ListMode(props) {
-    const { partition, keys, testData, dataOperations } = props;
+    const { testData, modeConfig } = props;
     // console.log(`keys: ${JSON.stringify(keys, null, 4)}\ntestData: ${JSON.stringify(testData, null, 4)}`);
-    const columns = useMemo(() => getSampleColumns(keys), [testData]);
+    const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
     // console.log(`columns: ${JSON.stringify(columns, null, 4)}`);
 
-    // const [data, setData] = useState(testData.sort((a, b) => parseInt(b?.id) - parseInt(a?.id)));
-    const [data, setData] = useState(testData);
+    const [data, setData] = useState(testData.sort((a, b) => parseInt(b?.id) - parseInt(a?.id)));
     const [order, setOrder] = useState('ASC');
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
     const { sortData } = useListMode(testData, setData);
 
+    // Конфигурация по заголовкам таблицы
+    const HEAD_CELL_CONF = {
+        task: data => {
+            const config = {
+                idContract: modeConfig?.idContract
+            };
+            return <HeadCell cellData={data} cellConfig={config} />;
+        },
+        default: data => {
+            return <HeadCell cellData={data} />;
+        }
+    };
+
+    // Конфигурация по ячейкам таблицы
     const CELL_CONF = {
         contractNum: data => {
             const config = {
-                partition: partition,
+                partition: modeConfig?.partition,
                 contractId: testData[data?.indRow]?.id,
-                dataOperation: findNestedObj(dataOperations, 'key', 'update')
+                dataOperation: findNestedObj(modeConfig?.dataOperations, 'key', 'update')
             };
             return <Cell cellData={data} cellConfig={config} />;
         },
         task: data => {
             const config = {
-                task: testData[data?.indRow]
+                idContract: testData[data?.indRow]?.id,
+                task: testData[data?.indRow] || {}
             };
             return <Cell cellData={data} cellConfig={config} />;
         },
@@ -70,33 +92,43 @@ export default function ListMode(props) {
             {!data || (data.length === 0 && <p className="table-mode__info-message">Данные отсутствуют</p>)}
             <table className="table-mode" {...getTableProps()}>
                 <thead className="table-mode__thead">
-                    {keys && keys.length !== 0 ? <FiltersTable keys={keys} data={testData} setData={setData} /> : null}
+                    {modeConfig?.keys && modeConfig?.keys.length !== 0 ? (
+                        <FiltersTable keys={modeConfig?.keys} data={testData} setData={setData} />
+                    ) : null}
                     {headerGroups.map(headerGroup => (
                         <tr className="table-mode__thead-tr" {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => (
-                                <th className="table-mode__thead-th" {...column.getHeaderProps()}>
-                                    <div className="table-mode__thead-th-inner">
-                                        {column.render('Header')}
-                                        {column.sortable && (
-                                            <IconButton
-                                                nameClass={classNames('ic_btn', 'sorting')}
-                                                icon={'sort.svg'}
-                                                onClick={() =>
-                                                    column?.sortable &&
-                                                    sortData(
-                                                        testData,
-                                                        column.id,
-                                                        column.sortBy,
-                                                        order,
-                                                        setOrder,
-                                                        setData
-                                                    )
-                                                }
-                                            />
-                                        )}
-                                    </div>
-                                </th>
-                            ))}
+                            {headerGroup.headers.map(column => {
+                                const cellData = {
+                                    column: column
+                                };
+                                return (
+                                    <th className="table-mode__thead-th" {...column.getHeaderProps()}>
+                                        <div className="table-mode__thead-th-inner">
+                                            {/* Генерация ячеек шапки таблицы */}
+                                            {HEAD_CELL_CONF[column.id]
+                                                ? HEAD_CELL_CONF[column.id](cellData)
+                                                : HEAD_CELL_CONF.default(cellData)}
+                                            {column.sortable && (
+                                                <IconButton
+                                                    nameClass={classNames('ic_btn', 'sorting')}
+                                                    icon={'sort.svg'}
+                                                    onClick={() =>
+                                                        column?.sortable &&
+                                                        sortData(
+                                                            testData,
+                                                            column.id,
+                                                            column.sortBy,
+                                                            order,
+                                                            setOrder,
+                                                            setData
+                                                        )
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+                                    </th>
+                                );
+                            })}
                         </tr>
                     ))}
                 </thead>
@@ -115,6 +147,7 @@ export default function ListMode(props) {
                                             cell: cell,
                                             width: Math.ceil(window.screen.width / columns.length)
                                         };
+                                        // Генерация ячеек тела таблицы
                                         return CELL_CONF[cell.column.id]
                                             ? CELL_CONF[cell.column.id](cellData)
                                             : CELL_CONF.default(cellData);

@@ -3,15 +3,14 @@ import { useLoaderData, useLocation, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 
 // Импорт компонетов
-import IconButton from '@generic/elements/buttons/IcButton';
-
 import TabGeneral from './tabs/tab_general/TabGeneral';
-// import TabWork from './tabs/tab_work/TabWork';
 import TabWorkNew from './tabs/tab_work/TabWorkNew';
 import TabDepartures from './tabs/tab_departures/TabDepartures';
 import TabContractors from './tabs/tab_contractors/TabContractors';
 import TabDocuments from './tabs/tab_documents/TabDocuments';
 import TabEquipment from './tabs/tab_equipment/TabEquipment';
+
+import IconButton from '@generic/elements/buttons/IcButton';
 
 // Импорт сервисов
 import DataFormService from '@services/data_form.service';
@@ -41,13 +40,14 @@ function FormHeader({ title }) {
             <div className="section__dataform-header-right">
                 <IconButton
                     nameClass="icon-btn__save icon-btn"
-                    type="submit"
                     idForm="general_form"
+                    type="submit"
                     text="Сохранить"
                     icon="check_mark.svg"
                 />
                 <IconButton
                     nameClass="icon-btn__cancel icon-btn"
+                    type="button"
                     text="Отменить"
                     icon="cancel_bl.svg"
                     onClick={onCancelAction}
@@ -61,7 +61,7 @@ function TabsHeader(props) {
     const { tabs, tab, tabClick } = props;
 
     function onTabClick(item) {
-        // localStorage.setItem('selectedTab', JSON.stringify(item));
+        localStorage.setItem('selectedTab', JSON.stringify(item));
         tabClick(item);
     }
 
@@ -85,7 +85,7 @@ function TabsHeader(props) {
 }
 
 function TabsContent(props) {
-    const { idCard, partition, tab, data, options, dataOperation } = props;
+    const { idCard, partition, tab, data, dataOperation } = props;
 
     console.log(`tab: ${JSON.stringify(tab, null, 4)}`);
     // console.log(`idCard: ${idCard}\nsubsectionData: ${JSON.stringify(subsectionData, null, 4)}`);
@@ -111,16 +111,14 @@ function TabsContent(props) {
         if (TABS_NEW[partition][tab?.key]) {
             return <div className="section__dataform-tabs-content">{TABS_NEW[partition][tab?.key]}</div>;
         } else return TABS_NEW[partition].default;
-    }
-    return TABS_NEW.default;
+    } else return TABS_NEW.default;
 }
 
 function Tabs(props) {
     const { id, partition, tabs, data, options, dataOperation } = props;
-    // const [tab, setTab] = useState(JSON.parse(localStorage.getItem('selectedTab')) || tabs[0]);
-    const [tab, setTab] = useState(tabs[0]);
+    const [tab, setTab] = useState(JSON.parse(localStorage.getItem('selectedTab')) || tabs[0]);
 
-    console.log(`partition: ${partition}`);
+    // console.log(`partition: ${partition}`);
 
     const PARTITION_CONF = {
         department: (

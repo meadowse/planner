@@ -109,3 +109,16 @@
     width: max-content;
     background-color: #e3e3e3;
 }
+
+/* Выпадающее меню "Вид работы" */
+
+.dropdown-menu__type-work {
+    height: 100%;
+    flex-grow: 1;
+}
+
+.dropdown-menu-list-item__type-work {
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}

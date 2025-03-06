@@ -972,7 +972,15 @@ function MiddleColTab(props) {
 }
 
 function RightColTab() {
-    return <div className="tab-general__right-rows tab-general__column">В разработке...</div>;
+    return (
+        <div className="tab-general__right-rows tab-general__column">
+            <iframe
+                title="Mattermost"
+                src="https://mm-mpk.ru/mosproektkompleks/"
+                style={{ width: '100%', height: '100%', border: 'none' }}
+            ></iframe>
+        </div>
+    );
 }
 
 export default function TabGeneral(props) {

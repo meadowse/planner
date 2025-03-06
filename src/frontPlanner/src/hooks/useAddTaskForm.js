@@ -21,7 +21,22 @@ export const useTaskForm = (initialData, disabledFields) => {
     let config = Object.assign({}, getTaskConfig(initialData, disabledFields));
     let dataForm = Object.assign({}, values);
 
+    const validate = () => {};
+
+    const onChange = e => {
+        dataForm = { ...values, [e.target.name]: e.target.value };
+        setValues(dataForm);
+    };
+
+    const onClick = (key, value) => {
+        dataForm = { ...values, [key]: value };
+        // console.info(value);
+        setValues(dataForm);
+    };
+
     return {
-        values
+        values,
+        onChange,
+        onClick
     };
 };

@@ -43,7 +43,7 @@ export default function DropdownMenu(props) {
                             style={{ backgroundColor: item.color === undefined ? '' : item.color }}
                             onClick={() => onItemMenuClick(item)}
                         >
-                            {item.title}
+                            <span>{item.title}</span>
                         </li>
                     ))}
                 </ul>

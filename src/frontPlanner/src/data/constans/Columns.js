@@ -398,7 +398,7 @@ const COLUMNS = [
     },
     //
     {
-        Header: () => {
+        Header: props => {
             const [addTaskState, setAddTaskState] = useState(false);
             return (
                 <>
@@ -411,9 +411,10 @@ const COLUMNS = [
                     {addTaskState &&
                         createPortal(
                             <TaskPopup
-                                title="Новая задача"
-                                task={{}}
                                 additClass="add-task"
+                                title="Новая задача"
+                                data={{ idContract: props?.config?.idContract, task: props?.config?.task }}
+                                operation="creation"
                                 addTaskState={addTaskState}
                                 setAddTaskState={setAddTaskState}
                             />,
@@ -441,9 +442,10 @@ const COLUMNS = [
                     {addTaskState &&
                         createPortal(
                             <TaskPopup
-                                title="Редактирование задачи"
-                                task={props?.config?.task}
                                 additClass="add-task"
+                                title="Редактирование задачи"
+                                data={{ idContract: props?.config?.idContract, task: props?.config?.task }}
+                                operation="update"
                                 addTaskState={addTaskState}
                                 setAddTaskState={setAddTaskState}
                             />,

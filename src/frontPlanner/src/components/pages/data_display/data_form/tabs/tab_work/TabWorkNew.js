@@ -10,7 +10,9 @@ import DataFormService from '@services/data_form.service';
 // Импорт стилей
 import './tab_worknew.css';
 
-export default function TabWorkNew({ idContract, partition, tab }) {
+export default function TabWorkNew(props) {
+    const { idContract, partition, tab } = props;
+
     const [works, setWorks] = useState([]);
     const [tasks, setTasks] = useState([]);
 
@@ -32,16 +34,22 @@ export default function TabWorkNew({ idContract, partition, tab }) {
         <div className="tab-work section__tab">
             <div className="tab-work__main">
                 <ListMode
-                    partition={partition}
-                    keys={['number', 'typeWork', 'deadline', 'dateDone', 'done']}
                     testData={works}
-                    dataOperations={[]}
+                    modeConfig={{
+                        keys: ['number', 'typeWork', 'deadline', 'dateDone', 'done'],
+                        partition: partition,
+                        dataOperations: [],
+                        idContract: idContract
+                    }}
                 />
                 <ListMode
-                    partition={partition}
-                    keys={['task', 'director', 'executor', 'deadlineTask', 'done']}
                     testData={tasks}
-                    dataOperations={[]}
+                    modeConfig={{
+                        keys: ['task', 'director', 'executor', 'deadlineTask', 'done'],
+                        partition: partition,
+                        dataOperations: [],
+                        idContract: idContract
+                    }}
                 />
             </div>
         </div>

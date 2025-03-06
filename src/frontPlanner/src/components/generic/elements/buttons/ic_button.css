@@ -1,7 +1,7 @@
 /* Общий стиль для кнопки с иконкой */
 
 .icon-btn {
-    /* padding: 0.625rem 0.9375rem; */
+    padding: 0.625rem 0.9375rem;
     display: flex;
     justify-content: space-between;
     column-gap: 0.5vw;
@@ -271,4 +271,43 @@
 .ic_btn.sorting {
     width: 10px;
     height: 10px;
+}
+
+/* Стили кнопки "Вид работы" */
+
+.icon-btn__type-work {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+.icon-btn__type-work .icon-btn__text {
+    width: 100%;
+    height: 100%;
+    white-space: nowrap;
+    position: relative;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.icon-btn__type-work .icon-btn__text .icon-btn__span {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Стили кнопки "Добавить пользователя" */
+
+.icon-btn__add-user .icon-btn__image {
+    cursor: pointer;
+}
+
+/* Стили кнопки "Удалить пользователя", "Удалить дату" */
+
+.icon-btn__delete-type .icon-btn__image,
+.icon-btn__delete-user .icon-btn__image,
+.icon-btn__delete-date .icon-btn__image {
+    width: calc(16px + 0.24vw);
+    height: calc(16px + 0.24vw);
+    cursor: pointer;
 }
