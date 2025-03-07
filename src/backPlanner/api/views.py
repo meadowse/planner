@@ -77,9 +77,13 @@ def getAgreements(request):
             dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
             obj.update(dateOfStart)
             dateOfEnding = obj.get('dateOfEnding')
-            if status == 'В работе' and dateOfEnding < today:
-                dateOfEnding = {
-                    'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': True}}
+            if dateOfEnding is not None:
+                if status == 'В работе' and dateOfEnding < today:
+                    dateOfEnding = {
+                        'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': True}}
+                else:
+                    dateOfEnding = {
+                        'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': False}}
             else:
                 dateOfEnding = {
                     'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': False}}
