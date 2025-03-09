@@ -1,34 +1,26 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useLocation, useLoaderData, useOutletContext } from 'react-router-dom';
 
 // Импорт компонентов
-import ListMode from '../../../display_modes/table/ListMode';
-
-// Импорт сервиосв
-import DataFormService from '@services/data_form.service';
+import ListMode from '@components/pages/data_display/display_modes/table/ListMode';
 
 // Импорт стилей
 import './tab_worknew.css';
 
-export default function TabWorkNew(props) {
-    const { idContract, partition, tab } = props;
+export default function TabWorkNew() {
+    const { idContract, partition } = useOutletContext();
+    const { uploadedData } = useLoaderData();
 
     const [works, setWorks] = useState([]);
     const [tasks, setTasks] = useState([]);
 
-    // Загрузка данных
-    async function loadData() {
-        const data = await DataFormService.loadData(tab, { contractId: idContract });
-        console.log(`data: ${JSON.stringify(data, null, 4)}`);
-        if (data && Object.keys(data).length !== 0) {
-            if (data?.works && data?.works.length !== 0) setWorks(data?.works);
-            if (data?.tasks && data?.tasks.length !== 0) setTasks(data?.tasks);
-        }
-    }
-
     useEffect(() => {
-        loadData();
-    }, []);
+        // console.log(`loaded data: ${JSON.stringify(uploadedData, null, 4)}`);
+        if (uploadedData && Object.keys(uploadedData).length !== 0) {
+            setWorks(uploadedData?.works);
+            setTasks(uploadedData?.tasks);
+        }
+    }, [uploadedData]);
 
     return (
         <div className="tab-work section__tab">

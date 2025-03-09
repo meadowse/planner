@@ -41,6 +41,7 @@
     left: 0;
     text-align: left;
     background-color: transparent;
+    z-index: 3;
 }
 
 .table-mode__thead-tr {
@@ -327,19 +328,25 @@
     background-repeat: no-repeat;
 }
 
-/* Ячейка "Задача" */
+/* Заголовк "Задача" */
 
-.cell__task {
+.cell__task-title {
     display: flex;
     align-items: center;
     column-gap: 0.9375rem;
 }
 
-.cell__task-btn {
+.cell__task-title-btn {
     padding: 0 0.3125rem;
     border-radius: 0.3125rem;
     font-size: calc(1.25rem + 4 * (100vw - 320px) / 1600);
     cursor: pointer;
     color: #fff;
     background-color: #99ad60;
+}
+
+/*  */
+.cell__task {
+    cursor: pointer;
+    text-decoration: underline;
 }

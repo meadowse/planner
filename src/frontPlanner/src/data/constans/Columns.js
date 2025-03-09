@@ -402,9 +402,9 @@ const COLUMNS = [
             const [addTaskState, setAddTaskState] = useState(false);
             return (
                 <>
-                    <div className="cell__task">
+                    <div className="cell__task-title">
                         Задача
-                        <button className="cell__task-btn" onClick={() => setAddTaskState(true)}>
+                        <button className="cell__task-title-btn" onClick={() => setAddTaskState(true)}>
                             +
                         </button>
                     </div>

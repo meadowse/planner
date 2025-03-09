@@ -246,8 +246,9 @@ function FooterCard({ data }) {
     ) : null;
 }
 
-export default function Card({ partition, data, dataOperations }) {
+export default function Card(props) {
     // console.log(`card data: ${JSON.stringify(data, null, 4)}`);
+    const { partition, data, dataOperations } = props;
     const navigate = useNavigate();
 
     const cardData = {
@@ -275,19 +276,18 @@ export default function Card({ partition, data, dataOperations }) {
 
     // console.log(`cardData: ${JSON.stringify(cardData, null, 4)}`);
 
-    async function onShowInfoCard(operationVal) {
-        await axios.post(`${window.location.origin}/api/getAgreement`, { contractId: cardData?.id }).then(response => {
-            if (response?.status === 200) {
-                const navigationArg = {
-                    state: {
-                        partition:partition,
-                        data: response?.data[0],
-                        dataOperation: findNestedObj(dataOperations, 'key', operationVal)
-                    }
-                };
-                navigate('../../dataform/', navigationArg);
+    function onShowInfoCard(operationVal) {
+        const navigationArg = {
+            state: {
+                partition: partition,
+                dataOperation: findNestedObj(dataOperations, 'key', operationVal)
             }
-        });
+        };
+        localStorage.setItem('idContract', JSON.stringify(data?.id));
+        navigate('../../dataform/general/', navigationArg);
+        // await axios.post(`${window.location.origin}/api/getAgreement`, { contractId: cardData?.id }).then(response => {
+        //     if (response?.status === 200) {}
+        // });
     }
 
     return (

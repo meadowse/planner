@@ -25,7 +25,7 @@ const formData = (data, tab) => {
 };
 
 const loadData = (tab, payload) => {
-    console.log(`tab:${tab}\npayload: ${JSON.stringify(payload, null, 4)}`);
+    // console.log(`tab:${tab}\npayload: ${JSON.stringify(payload, null, 4)}`);
 
     const TAB_CONF = {
         // Работы

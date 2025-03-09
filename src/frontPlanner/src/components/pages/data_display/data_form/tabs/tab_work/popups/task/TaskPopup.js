@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
 
@@ -22,9 +23,11 @@ import { getDateInSpecificFormat } from '@helpers/calendar';
 
 // Импорт стилей
 import './task_popup.css';
+import classNames from 'classnames';
 
 // Вид работы
-function TypeWork({ config, idContract, onSelect }) {
+function TypeWork(props) {
+    const { idContract, presetValue, config, onSelect } = props;
     const [typeWork, setTypeWork] = useState({});
     const [typesWork, setTypesWork] = useState([]);
 
@@ -41,12 +44,15 @@ function TypeWork({ config, idContract, onSelect }) {
     // Загрузка видов работ
     async function loadData() {
         await axios
-            .post(`${window.location.origin}/api/getTypesWork`, { contractId: idContract })
+            .post(`${window.location.origin}/api/getTypesWork`, {
+                contractId: JSON.parse(localStorage.getItem('idContract'))
+            })
             .then(response => {
                 if (response?.status === 200) {
+                    console.log(`id: ${JSON.parse(localStorage.getItem('idContract'))}`);
                     if (response?.data && response?.data.length !== 0) {
                         const newData = response?.data?.map(item => {
-                            return { typeWorkId: item?.number, title: item?.typeWork };
+                            return { id: item?.number, title: item?.typeWork };
                         });
                         if (newData.length !== 0) setTypesWork(newData);
                     }
@@ -55,16 +61,7 @@ function TypeWork({ config, idContract, onSelect }) {
             .catch(error => {
                 if (error.response) {
                     console.log('server responded');
-                    setTypesWork([
-                        {
-                            id: 1,
-                            title: 'Досудебное обследование Объекта, на соответствие градостроительным, строительным, противопожарным, санитарным нормам и правилам с подготовкой дефектной ведомости'
-                        },
-                        {
-                            id: 2,
-                            title: 'Подготовка технического плана Объекта и его электронная подача в Росреестр'
-                        }
-                    ]);
+                    setTypesWork([]);
                 } else if (error.request) {
                     console.log('network error');
                 } else {
@@ -103,9 +100,11 @@ function TypeWork({ config, idContract, onSelect }) {
 }
 
 // Постановщик
-function Director({ config, onSelect }) {
+function Director(props) {
+    const { presetValue, config, onSelect } = props;
+
     const [statePopup, setStatePopup] = useState(false);
-    const [director, setDirector] = useState(null);
+    const [director, setDirector] = useState(presetValue ? presetValue : {});
 
     // Выбор пользователя
     function onSelectDirector(user) {
@@ -164,9 +163,11 @@ function Director({ config, onSelect }) {
 }
 
 // Исполнитель
-function Executor({ config, onSelect }) {
+function Executor(props) {
+    const { presetValue, config, onSelect } = props;
+
     const [statePopup, setStatePopup] = useState(false);
-    const [executor, setExecutor] = useState(null);
+    const [executor, setExecutor] = useState(presetValue ? presetValue : {});
 
     // Выбор пользователя
     function onSelectExecutor(user) {
@@ -225,18 +226,20 @@ function Executor({ config, onSelect }) {
 }
 
 // Завершенность
-function Completeness({ config, onSelect }) {
-    const [checked, setChecked] = useState(false);
+function Completeness(props) {
+    const { presetValue, config, onSelect } = props;
+    const [checked, setChecked] = useState(presetValue ? presetValue : 0);
 
     function onChange() {
         setChecked(!checked);
+        onSelect('done', !checked);
     }
 
     return !config?.hidden ? (
         <li className="popup__content-completeness popup-content-item">
             <h2 className="popup-content-title">Завершено</h2>
             <div className="popup__checkbox-wrapper">
-                <input className="popup__inpt-checkbox" type="checkbox" onChange={() => onChange()} />
+                <input className="popup__inpt-checkbox" type="checkbox" checked={checked} onChange={() => onChange()} />
                 <span className="popup__custom-checkbox"></span>
             </div>
         </li>
@@ -244,8 +247,10 @@ function Completeness({ config, onSelect }) {
 }
 
 // Задача
-function TaskName({ config, onChange }) {
-    const [taskName, setTaskName] = useState('');
+function TaskName(props) {
+    const { presetValue, config, onChange } = props;
+
+    const [taskName, setTaskName] = useState(presetValue ? presetValue : '');
 
     function onChangeTaskName(e) {
         setTaskName(e.target.value);
@@ -266,7 +271,9 @@ function TaskName({ config, onChange }) {
 }
 
 // Дата начала
-function CommencementDate({ config, onSelect }) {
+function CommencementDate(props) {
+    const { presetValue, config, onSelect } = props;
+
     let dateYYYYMMDD;
     let currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
         format: 'YYYYMMDD',
@@ -274,7 +281,7 @@ function CommencementDate({ config, onSelect }) {
     });
 
     const [calendarState, setCalendarState] = useState(false);
-    const [startDate, setStartDate] = useState(currDateYYYYMMDD);
+    const [startDate, setStartDate] = useState(presetValue ? presetValue : currDateYYYYMMDD);
 
     // Удаление даты
     function onDeleteDate() {
@@ -338,11 +345,12 @@ function CommencementDate({ config, onSelect }) {
 }
 
 // Дедлайн
-function DeadlineTask({ config, onSelect }) {
+function DeadlineTask(props) {
+    const { presetValue, config, onSelect } = props;
     let dateYYYYMMDD;
 
     const [calendarState, setCalendarState] = useState(false);
-    const [deadline, setDeadline] = useState();
+    const [deadline, setDeadline] = useState(presetValue ? presetValue : '');
 
     // Удаление даты
     function onDeleteDate() {
@@ -407,8 +415,9 @@ function DeadlineTask({ config, onSelect }) {
 }
 
 // Комментарий
-function Comment({ config, onChange }) {
-    const [comment, setComment] = useState('');
+function Comment(props) {
+    const { presetValue, config, onChange } = props;
+    const [comment, setComment] = useState(presetValue ? presetValue : '');
 
     function onChangeTaskName(e) {
         setComment(e.target.value);
@@ -436,18 +445,32 @@ export default function TaskPopup(props) {
         TaskService.getTaskData(data?.task, dataOperation?.disabledFields),
         dataOperation?.disabledFields
     );
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     // console.log(`dataOperation: ${JSON.stringify(dataOperation, null, 4)}`);
-    // console.log(`values: ${JSON.stringify(values, null, 4)}`);
+    console.log(`values: ${JSON.stringify(values, null, 4)}`);
     console.log(`data: ${JSON.stringify(data, null, 4)}`);
+
+    // async function loadData() {
+    //     await axios
+    //         .post(`${window.location.origin}/api/getAgreement`, { contractId: data?.idContract })
+    //         .then(response => {
+    //             if (response?.status === 200) setContactData(response?.data[0]);
+    //         });
+    // }
+
+    // useEffect(() => {
+    //     loadData();
+    // }, []);
 
     function onOnSubmitData(e) {
         e.preventDefault();
+        const idContract = JSON.parse(localStorage.getItem('idContract'));
+        // Создание новой задачи
         if (!data?.task || Object.keys(data?.task).length === 0) {
             const resultData = {
                 typeWorkId: values?.typeWork?.id,
-                contractId: data?.idContract,
+                contractId: idContract,
                 directorId: values?.director?.id,
                 executorId: values?.executor?.id,
                 dateStart: values?.dateStart,
@@ -455,10 +478,29 @@ export default function TaskPopup(props) {
                 task: values?.task,
                 comment: values?.comment
             };
+            // setAddTaskState(false);
+            // const navigationArg = {
+            //     state: {
+            //         partition: 'department',
+            //         data: contractData,
+            //         dataOperation: dataOperation
+            //     }
+            // };
+            // // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
+            // navigate(`../../dataform/works/${data?.idContract}`, navigationArg);
+            // alert(`contractId: ${data?.idContract}`);
             axios
                 .post(`${window.location.origin}/api/addTask`, resultData)
                 .then(response => {
-                    if (response.status === 200) setAddTaskState(false);
+                    if (response.status === 200) {
+                        setAddTaskState(false);
+                        const navigationArg = {
+                            partition: 'department',
+                            dataOperation: dataOperation
+                        };
+                        // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
+                        navigate(`../../dataform/works/${idContract}`, { state: navigationArg });
+                    }
                 })
                 .catch(error => {
                     if (error.response) {
@@ -470,8 +512,43 @@ export default function TaskPopup(props) {
                         console.log(error);
                     }
                 });
-
-            // alert(`submit data: ${JSON.stringify(resultData, null, 4)}`);
+        } else {
+            const resultData = {
+                typeWorkId: values?.typeWork?.id,
+                contractId: JSON.parse(localStorage.getItem('idContract')),
+                directorId: values?.director?.id,
+                executorId: values?.executor?.id,
+                dateStart: values?.dateStart,
+                deadline: values?.deadlineTask,
+                done: +values?.done,
+                task: values?.task,
+                taskId: data?.task?.id,
+                comment: values?.comment
+            };
+            axios
+                .post(`${window.location.origin}/api/editTask`, resultData)
+                .then(response => {
+                    if (response.status === 200) {
+                        setAddTaskState(false);
+                        const navigationArg = {
+                            partition: 'department',
+                            dataOperation: dataOperation
+                        };
+                        // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
+                        navigate(`../../dataform/works/${idContract}`, { state: navigationArg });
+                    }
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.log(error.response);
+                        console.log('server responded');
+                    } else if (error.request) {
+                        console.log('network error');
+                    } else {
+                        console.log(error);
+                    }
+                });
+            // console.log(`edit task: ${JSON.stringify(resultData, null, 4)}`);
         }
     }
 
@@ -491,37 +568,45 @@ export default function TaskPopup(props) {
             >
                 <ul className="popup__content-add-task-left">
                     <TypeWork
-                        config={{ hidden: dataOperation?.hiddenFields?.typeWork ? true : false }}
                         idContract={data?.idContract}
+                        presetValue={null}
+                        config={{ hidden: dataOperation?.hiddenFields?.typeWork ? true : false }}
                         onSelect={onClick}
                     />
                     <Director
+                        presetValue={data?.task?.director}
                         config={{ hidden: dataOperation?.hiddenFields?.director ? true : false }}
                         onSelect={onClick}
                     />
                     <Executor
+                        presetValue={data?.task?.executor}
                         config={{ hidden: dataOperation?.hiddenFields?.executor ? true : false }}
                         onSelect={onClick}
                     />
                     <TaskName
+                        presetValue={data?.task?.task}
                         config={{ hidden: dataOperation?.hiddenFields?.task ? true : false }}
                         onChange={onChange}
                     />
                     <CommencementDate
+                        presetValue={data?.task?.dateStart}
                         config={{ hidden: dataOperation?.hiddenFields?.dateStart ? true : false }}
                         onSelect={onClick}
                     />
                     <DeadlineTask
+                        presetValue={data?.task?.deadlineTask}
                         config={{ hidden: dataOperation?.hiddenFields?.deadlineTask ? true : false }}
                         onSelect={onClick}
                     />
                     <Completeness
+                        presetValue={data?.task?.done}
                         config={{ hidden: dataOperation?.hiddenFields?.done ? true : false }}
-                        onClick={null}
+                        onSelect={onClick}
                     />
                 </ul>
                 <div className="popup__content-add-task-right">
                     <Comment
+                        presetValue={null}
                         config={{ hidden: dataOperation?.hiddenFields?.comment ? true : false }}
                         onChange={onChange}
                     />

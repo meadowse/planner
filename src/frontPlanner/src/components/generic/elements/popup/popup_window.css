@@ -20,6 +20,12 @@
     z-index: 20;
 }
 
+.popup__wrapper {
+    display: flex;
+    flex-direction: column;
+    /* row-gap: 0.5vw; */
+}
+
 .popup__filters,
 .popup__works,
 .popup__add-user,
@@ -52,12 +58,6 @@
 
 .popup__deadline-selection-calendar {
     top: 2.5rem;
-}
-
-.popup__wrapper {
-    display: flex;
-    flex-direction: column;
-    row-gap: 0.5vw;
 }
 
 .popup__btn-close-popup {

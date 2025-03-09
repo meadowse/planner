@@ -180,7 +180,7 @@ export default function FiltersTable(props) {
     const { keys, data, setData } = props;
     const [toggleState, setToggleState] = useState(false);
 
-    console.log(`keys: ${JSON.stringify(keys, null, 4)}`);
+    // console.log(`keys: ${JSON.stringify(keys, null, 4)}`);
 
     const OPTIONS_FILTER_MAP = {
         services: data => {
@@ -193,13 +193,13 @@ export default function FiltersTable(props) {
         stage: data => {
             return Array.from(new Set(data.map(item => item?.stage?.title)));
         },
-        responsible: (data) => {
+        responsible: data => {
             let newData = [];
             let tempData = Array.from(new Set(data.map(item => item.responsible?.fullName)));
 
             tempData.map(item => {
                 if (item) newData.push(item);
-            })
+            });
 
             return newData;
         }

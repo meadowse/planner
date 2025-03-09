@@ -479,7 +479,7 @@ def editTask(request):
                 'F5569': dateStart,
                 'F4696': deadline,
                 'F4697': done,
-                'F4708': datetime.date.today(),
+                'F4708': datetime.date.today().strftime('%Y-%m-%d'),
                 'F4693': directorId,  # должно быть ID пользователя
                 'F4694': executorId,
             }
@@ -502,6 +502,7 @@ def editTask(request):
             SET {', '.join(set_clause)}
             WHERE id = {taskId}
             """
+            print(sql)
 
             cur.execute(sql)
             con.commit()

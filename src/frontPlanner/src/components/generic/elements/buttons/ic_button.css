@@ -1,7 +1,7 @@
 /* Общий стиль для кнопки с иконкой */
 
 .icon-btn {
-    padding: 0.625rem 0.9375rem;
+    /* padding: 0.625rem 0.9375rem; */
     display: flex;
     justify-content: space-between;
     column-gap: 0.5vw;

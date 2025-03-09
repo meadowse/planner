@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, defer } from 'react-router-dom';
+import axios from 'axios';
 
 // Импорт компонетов
 import ProtectedRoute from './ProtectedRoute';
@@ -10,11 +11,16 @@ import Preloader from '@components/auxiliary_pages/loader/Preloader';
 
 // Импорт сервисов
 import DataDisplayService from '@services/data_display.service';
+import DataFormService from '@services/data_form.service';
 
 const DataDisplayPage = lazy(() => import('@components/pages/data_display/DataDisplayPage'));
 const DataForm = lazy(() => import('@components/pages/data_display/data_form/DataForm'));
+const DataFormNew = lazy(() => import('@components/pages/data_display/data_form/DataFormNew'));
 const TasksPage = lazy(() => import('@components/pages/tasks/TasksPage'));
 const ChatPage = lazy(() => import('@components/pages/chat/ChatPage'));
+//
+const TabGeneral = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_general/TabGeneral'));
+const TabWorkNew = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_work/TabWorkNew'));
 
 // Маршруты для пользователей, которые не зарегестрированы
 const ROUTES_FOR_NOT_AUTH = [
@@ -76,12 +82,6 @@ const ROUTES_FOR_AUTH = [
                     },
                     {
                         path: 'company/*',
-                        // loader: () => {
-                        //     return defer({
-                        //         structure: CompanyService.loadData('structure'),
-                        //         employees: CompanyService.loadData('employees')
-                        //     });
-                        // },
                         loader: () => {
                             return defer({ uploadedData: DataDisplayService.loadData('company') });
                         },
@@ -118,20 +118,64 @@ const ROUTES_FOR_AUTH = [
                         )
                     },
                     {
-                        path: 'dataform/',
-                        loader: () => {
-                            const sections = DataDisplayService.getSections();
-                            const subsections = DataDisplayService.getSubsections(sections[0]);
-                            return defer({
-                                sections: sections,
-                                subsections: subsections
-                            });
-                        },
+                        path: 'dataform/*',
+                        // element: (
+                        //     <Suspense fallback={<Preloader />}>
+                        //         <DataForm />
+                        //     </Suspense>
+                        // )
                         element: (
                             <Suspense fallback={<Preloader />}>
-                                <DataForm />
+                                <DataFormNew />
                             </Suspense>
-                        )
+                        ),
+                        loader: async () => {
+                            let resolvedData = {};
+                            await axios
+                                .post(`${window.location.origin}/api/getAgreement`, {
+                                    contractId: JSON.parse(localStorage.getItem('idContract'))
+                                })
+                                .then(response => {
+                                    if (response?.status === 200) resolvedData = response?.data[0];
+                                })
+                                .catch(error => {
+                                    if (error.response) {
+                                        console.log('server responded');
+                                    } else if (error.request) {
+                                        console.log('network error');
+                                    } else {
+                                        console.log(error);
+                                    }
+                                });
+                            return resolvedData && Object.keys(resolvedData).length !== 0 ? resolvedData : {};
+                        },
+                        children: [
+                            {
+                                path: 'general/',
+                                element: (
+                                    <Suspense fallback={<Preloader />}>
+                                        <TabGeneral />
+                                        {/* <p>TabGeneral</p> */}
+                                    </Suspense>
+                                )
+                            },
+                            {
+                                path: 'works/:id',
+                                loader: async ({ params }) => {
+                                    const { id } = params;
+                                    // console.log(`works and tasks loader: ${id}`);
+                                    return defer({
+                                        uploadedData: await DataFormService.loadData('works', { contractId: id })
+                                    });
+                                },
+                                element: (
+                                    <Suspense fallback={<Preloader />}>
+                                        <TabWorkNew />
+                                        {/* <p>TabWork</p> */}
+                                    </Suspense>
+                                )
+                            }
+                        ]
                     }
                 ]
             }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
 import classNames from 'classnames';
@@ -974,17 +974,17 @@ function MiddleColTab(props) {
 function RightColTab() {
     return (
         <div className="tab-general__right-rows tab-general__column">
-            <iframe
+            {/* <iframe
                 title="Mattermost"
                 src="https://mm-mpk.ru/mosproektkompleks/"
                 style={{ width: '100%', height: '100%', border: 'none' }}
-            ></iframe>
+            ></iframe> */}
         </div>
     );
 }
 
-export default function TabGeneral(props) {
-    const { data, dataOperation } = props;
+export default function TabGeneral() {
+    const { data, dataOperation } = useOutletContext();
     let resultData;
 
     const { values, onClick, onChange, onСhangeByIndex, checkData, errorsInfo } = useGeneralForm(
@@ -993,7 +993,9 @@ export default function TabGeneral(props) {
     );
     const navigate = useNavigate();
 
-    // console.log(`data: ${JSON.stringify(data, null, 4)}\ndataOperation: ${JSON.stringify(dataOperation, null, 4)}`);
+    console.log(
+        `TabGeneral data: ${JSON.stringify(data, null, 4)}\ndataOperation: ${JSON.stringify(dataOperation, null, 4)}`
+    );
 
     // getGeneralDataNew(cardData, dataOperation?.disabledFields);
 
