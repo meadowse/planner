@@ -42,7 +42,7 @@ def getAgreements(request):
         LEFT JOIN T3 participants ON T253.F5022 = participants.ID 
         LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID 
         LEFT JOIN T218 ON T218.F4691 = T212.ID 
-        WHERE T212.ID > 2300 
+        WHERE T212.ID > 2500 
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
@@ -217,29 +217,29 @@ def getAgreement(request):
         ) as con:
             cur = con.cursor()
             sql = f"""
-            SELECT T212.ID AS id, 
-            T212.F4538 AS contractNum, 
-            T212.F4544 AS stage, 
-            T212.F4946 AS address, 
-            T237.F4890 AS services, 
-            T212.F4648 AS path, 
-            T212.F4610 AS dateOfStart, 
-            T212.F4566 AS dateOfEnding, 
-            T205.F4332 AS company, 
-            LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts, 
-            LIST(DISTINCT participants.ID || ';' || participants.F4886) AS participants, 
-            responsible.F4886 AS responsible, 
-            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696, '*') AS tasks 
-            FROM T212 
-            LEFT JOIN T237 ON T212.F4948 = T237.ID 
-            LEFT JOIN T205 ON T212.F4540 = T205.ID 
-            LEFT JOIN T233 ON T233.F4963 = T212.ID 
-            LEFT JOIN T206 ON T233.F4870 = T206.ID 
-            LEFT JOIN T253 ON T212.ID = T253.F5024 
-            LEFT JOIN T3 participants ON T253.F5022 = participants.ID 
-            LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID 
-            LEFT JOIN T218 ON T218.F4691 = T212.ID 
-            WHERE T212.ID = {contractId} 
+            SELECT T212.ID AS id,
+            T212.F4538 AS contractNum,
+            T212.F4544 AS stage,
+            T212.F4946 AS address,
+            T237.F4890 AS services,
+            T212.F4648 AS path,
+            T212.F4610 AS dateOfStart,
+            T212.F4566 AS dateOfEnding,
+            T205.F4332 AS company,
+            LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
+            LIST(DISTINCT participants.ID || ';' || participants.F4886) AS participants,
+            responsible.F4886 AS responsible,
+            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696, '*') AS tasks
+            FROM T212
+            LEFT JOIN T237 ON T212.F4948 = T237.ID
+            LEFT JOIN T205 ON T212.F4540 = T205.ID
+            LEFT JOIN T233 ON T233.F4963 = T212.ID
+            LEFT JOIN T206 ON T233.F4870 = T206.ID
+            LEFT JOIN T253 ON T212.ID = T253.F5024
+            LEFT JOIN T3 participants ON T253.F5022 = participants.ID
+            LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
+            LEFT JOIN T218 ON T218.F4691 = T212.ID
+            WHERE T212.ID = {contractId}
             GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12
             """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
             cur.execute(sql)
