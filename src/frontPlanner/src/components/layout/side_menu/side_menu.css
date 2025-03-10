@@ -5,10 +5,6 @@
     row-gap: 1.875rem;
 }
 
-.side-menu__item:nth-child(3) {
-    flex-grow: 1;
-}
-
 .side-menu__item-box {
     padding: 0.625rem;
     border-radius: 0.3125rem;
@@ -19,7 +15,7 @@
     background-color: #d9d9d9;
 }
 
-.side-menu__item-image{
+.side-menu__item-image {
     width: calc(24px + 0.25vw);
     height: calc(24px + 0.25vw);
     display: block;

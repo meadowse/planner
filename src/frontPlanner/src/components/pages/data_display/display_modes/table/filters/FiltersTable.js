@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 // Импорт конфигураций
 import { FILTER_HANDLERS_CONF } from '@config/filterstable.config';
 
+// Импорт доп.функционала
+import { getDateFromString } from '@helpers/calendar';
+
 // Импорт стилей
 import './filters_table.css';
 
@@ -16,9 +19,9 @@ const FILTERS_CONF = {
     group: (_, toggleState, onChange) => {
         return <InputTextFilter id="group" placeholder={'Группа'} toggle={toggleState} onChange={onChange} />;
     },
-    dateOfEnding: (_, toggleState, onChange) => {
-        return <InputTextFilter id="dateOfEnding" placeholder={'00.00.00'} toggle={toggleState} onChange={onChange} />;
-    },
+    // dateOfEnding: (_, toggleState, onChange) => {
+    //     return <InputTextFilter id="dateOfEnding" placeholder={'00.00.00'} toggle={toggleState} onChange={onChange} />;
+    // },
     departure: (_, toggleState, onChange) => {
         return <InputTextFilter id="departure" placeholder={'00.00.00'} toggle={toggleState} onChange={onChange} />;
     },
@@ -58,6 +61,17 @@ const FILTERS_CONF = {
     status: (options, toggleState, onChange) => {
         return (
             <DropDownFilter id="status" defaultVal="Все" options={options} toggle={toggleState} onChange={onChange} />
+        );
+    },
+    dateOfEnding: (options, toggleState, onChange) => {
+        return (
+            <DropDownFilter
+                id="dateOfEnding"
+                defaultVal="Все"
+                options={options}
+                toggle={toggleState}
+                onChange={onChange}
+            />
         );
     },
     responsible: (options, toggleState, onChange) => {
@@ -192,6 +206,29 @@ export default function FiltersTable(props) {
         },
         stage: data => {
             return Array.from(new Set(data.map(item => item?.stage?.title)));
+        },
+        dateOfEnding: data => {
+            let currDate = new Date();
+            let newData = [];
+            let tempData = Array.from(
+                new Set(
+                    data.map(item => {
+                        if (item?.dateOfEnding && Object.keys(item?.dateOfEnding).length !== 0) {
+                            if (!item?.dateOfEnding?.value) return 'Без даты';
+                            else {
+                                let deadline = getDateFromString(item?.dateOfEnding?.value);
+                                if (currDate > deadline) return 'Просроченные';
+                            }
+                        }
+                    })
+                )
+            );
+
+            tempData.map(item => {
+                if (item) newData.push(item);
+            });
+
+            return newData;
         },
         responsible: data => {
             let newData = [];

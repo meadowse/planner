@@ -719,7 +719,7 @@ function LeftColTab(props) {
             <div className="tab-general__left-rows tab-general-rows">
                 <HeaderLeftCol
                     additClass="header_left_col"
-                    presetValue={{ condition: presetValues?.condition, imgBuilding: presetValues?.imgBuilding }}
+                    presetValue={{ condition: presetValues?.stage, imgBuilding: presetValues?.imgBuilding }}
                     dataOperation={dataOperation}
                     error={errors.condition}
                     onClick={onClick}

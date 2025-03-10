@@ -483,7 +483,7 @@ const COLUMNS = [
 ];
 
 export default function getSampleColumns(keys) {
-    const filteredData = COLUMNS.filter(column => keys.indexOf(column.accessor) >= 0);
+    const filteredData = COLUMNS.filter(column => keys?.indexOf(column.accessor) >= 0);
     const data = new Array(keys.length).fill({});
 
     for (let i = 0; i < keys.length; i++) {

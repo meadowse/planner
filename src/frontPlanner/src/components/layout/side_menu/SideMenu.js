@@ -1,4 +1,4 @@
-import { startTransition } from 'react';
+import { startTransition, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -36,10 +36,8 @@ function ItemSideMenu(props) {
     );
 }
 
-export default function SideMenu({ items, itemSideMenu, setItemSideMenu }) {
-    // const [itemSideMenu, setItemSideMenu] = useState(
-    //     JSON.parse(localStorage.getItem('itemSideMenu')) || menuItems[0].title
-    // );
+export default function SideMenu(props) {
+    const { items, itemSideMenu, setItemSideMenu } = props;
     const navigate = useNavigate();
 
     return (

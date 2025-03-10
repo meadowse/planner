@@ -426,7 +426,14 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => (
-                                            <ListMode testData={resolvedData?.employees} keys={valsToDisplay} />
+                                            <ListMode
+                                                testData={resolvedData?.employees}
+                                                modeConfig={{
+                                                    keys: valsToDisplay,
+                                                    partition: partition,
+                                                    dataOperations: dataOperations
+                                                }}
+                                            />
                                         )}
                                     </Await>
                                 </Suspense>
