@@ -48,233 +48,185 @@ export const DATA_CONVERSION_MAP = {
     responsible: responsible => {
         return responsible && Object.keys(responsible).length !== 0
             ? {
-                ...responsible,
-                photo: '/img/user.svg',
-                post: null
-            }
+                  ...responsible,
+                  photo: '/img/user.svg',
+                  post: null
+              }
             : null;
     },
     participants: participants => {
         return participants && participants.length !== 0
             ? participants.map(participant => {
-                return { ...participant, photo: '/img/user.svg', post: null };
-            })
+                  return { ...participant, photo: '/img/user.svg', post: null };
+              })
             : null;
     }
 };
 
 // Конфигурация по разделу "Компания"
-export const COMPANY_DATA_CONF = [
-    {
-        title: 'Компания',
-        subsections: [],
-        displayModes: [
-            {
-                mode: 'Структура компании',
-                keyMode: 'structure',
-                keys: []
-            },
-            {
-                mode: 'Сотрудники',
-                keyMode: 'employees',
-                keys: ['id', 'responsible', 'subsection', 'phone', 'email']
-            }
-        ]
-    }
-];
+export const COMPANY_DATA_CONF = {
+    title: 'Компания',
+    displayModes: [
+        {
+            mode: 'Структура компании',
+            keyMode: 'structure',
+            keys: []
+        },
+        {
+            mode: 'Сотрудники',
+            keyMode: 'employees',
+            keys: ['id', 'responsible', 'subsection', 'phone', 'email']
+        }
+    ],
+    dataOperations: [
+        {
+            key: 'creation',
+            disabledFields: {}
+        },
+        {
+            key: 'update',
+            disabledFields: {}
+        }
+    ]
+};
 
 // Конфигурация по разделу "Оборудование"
-export const EQUIPMENT_DATA_CONF = [
-    {
-        title: 'Оборудование',
-        subsections: [],
-        displayModes: [
-            {
-                mode: 'Канбан',
-                keyMode: 'kanban',
-                modeOptions: [
-                    { value: 'Статусы', key: 'status', uniqueness: 'title' },
-                    { value: 'Люди', key: 'responsible', uniqueness: 'fullName' }
-                ],
-                keys: []
-            },
-            {
-                mode: 'Список',
-                keyMode: 'listmode',
-                modeOptions: [],
-                keys: ['id', 'equipment', 'status', 'dates', 'responsible', 'location']
-            },
-            {
-                mode: 'Календарь',
-                modeOptions: [],
-                keyMode: 'calendar',
-                keys: []
-            },
-            {
-                mode: 'Гант',
-                keyMode: 'gant',
-                modeOptions: [
-                    { value: 'Оборудование', key: 'equipment', uniqueness: '_' },
-                    { value: 'Поверка', key: 'verification', uniqueness: '_' }
-                ],
-                keys: []
-            }
-        ],
-        dataOperations: [
-            {
-                key: 'creation',
-                disabledFields: {}
-            },
-            {
-                key: 'update',
-                disabledFields: {}
-            }
-        ]
-    }
-];
+export const EQUIPMENT_DATA_CONF = {
+    title: 'Оборудование',
+    displayModes: [
+        {
+            mode: 'Канбан',
+            keyMode: 'kanban',
+            modeOptions: [
+                { value: 'Статусы', key: 'status', uniqueness: 'title' },
+                { value: 'Люди', key: 'responsible', uniqueness: 'fullName' }
+            ],
+            keys: []
+        },
+        {
+            mode: 'Список',
+            keyMode: 'listmode',
+            modeOptions: [],
+            keys: ['id', 'equipment', 'status', 'dates', 'responsible', 'location']
+        },
+        {
+            mode: 'Календарь',
+            modeOptions: [],
+            keyMode: 'calendar',
+            keys: []
+        },
+        {
+            mode: 'Гант',
+            keyMode: 'gant',
+            modeOptions: [
+                { value: 'Оборудование', key: 'equipment', uniqueness: '_' },
+                { value: 'Поверка', key: 'verification', uniqueness: '_' }
+            ],
+            keys: []
+        }
+    ],
+    dataOperations: [
+        {
+            key: 'creation',
+            disabledFields: {}
+        },
+        {
+            key: 'update',
+            disabledFields: {}
+        }
+    ]
+};
 
 // Конфигурация по разделу "Производственный департамент"
-export const DEPARTMENT_DATA_CONF = [
-    {
-        title: 'Комплексное проектирование',
-        subsections: [
-            {
-                title: 'Все менеджеры',
-                displayModes: [
-                    {
-                        mode: 'Канбан',
-                        keyMode: 'kanban',
-                        modeOptions: [
-                            { value: 'Услуги', key: 'services', uniqueness: 'title' },
-                            { value: 'Стадии', key: 'stage', uniqueness: 'title' },
-                            { value: 'Дни', key: 'date', uniqueness: 'value' }
-                        ],
-                        keys: [
-                            'id',
-                            'contractNum',
-                            'stage',
-                            'services',
-                            'pathToFolder',
-                            'company',
-                            'contacts',
-                            'dateOfEnding',
-                            'responsible'
-                        ]
-                    },
-                    {
-                        mode: 'Список',
-                        keyMode: 'listmode',
-                        modeOptions: [],
-                        keys: ['contractNum', 'address', "company", 'services', 'stage', 'dateOfEnding', 'responsible', 'pathToFolder']
-                    },
-                    {
-                        mode: 'Календарь',
-                        modeOptions: [],
-                        keyMode: 'calendar'
-                    },
-                    {
-                        mode: 'Гант',
-                        keyMode: 'gant',
-                        modeOptions: [
-                            { value: 'Услуги', key: 'services', uniqueness: 'title' },
-                            { value: 'Люди', key: 'participants', uniqueness: 'fullName' }
-                        ],
-                        keys: [
-                            'id',
-                            'contractNum',
-                            'company',
-                            'address',
-                            'services',
-                            'dateOfStart',
-                            'dateOfEnding',
-                            'tasks',
-                            'participants'
-                        ]
-                    }
-                ],
-                dataOperations: [
-                    {
-                        key: 'creation',
-                        disabledFields: {}
-                    },
-                    {
-                        key: 'update',
-                        disabledFields: {
-                            id: true,
-                            condition: true,
-                            imgBuilding: true,
-                            manager: true,
-                            responsible: true,
-                            participants: false,
-                            company: true,
-                            address: true,
-                            pathToFolder: true,
-                            dateOfCreation: true,
-                            dateOfStart: true,
-                            dateOfEnding: true,
-                            contractNum: true,
-                            contacts: true,
-                            deadlines: true,
-                            services: true,
-                            comment: true
-                        }
-                    }
-                ]
+export const DEPARTMENT_DATA_CONF = {
+    title: 'Производство',
+    displayModes: [
+        {
+            mode: 'Канбан',
+            keyMode: 'kanban',
+            modeOptions: [
+                { value: 'Услуги', key: 'services', uniqueness: 'title' },
+                { value: 'Стадии', key: 'stage', uniqueness: 'title' },
+                { value: 'Дни', key: 'date', uniqueness: 'value' }
+            ],
+            keys: [
+                'id',
+                'contractNum',
+                'stage',
+                'services',
+                'pathToFolder',
+                'company',
+                'contacts',
+                'dateOfEnding',
+                'responsible'
+            ]
+        },
+        {
+            mode: 'Список',
+            keyMode: 'listmode',
+            modeOptions: [],
+            keys: [
+                'contractNum',
+                'address',
+                'company',
+                'services',
+                'stage',
+                'dateOfEnding',
+                'responsible',
+                'pathToFolder'
+            ]
+        },
+        {
+            mode: 'Календарь',
+            modeOptions: [],
+            keyMode: 'calendar'
+        },
+        {
+            mode: 'Гант',
+            keyMode: 'gant',
+            modeOptions: [
+                { value: 'Услуги', key: 'services', uniqueness: 'title' },
+                { value: 'Люди', key: 'participants', uniqueness: 'fullName' }
+            ],
+            keys: [
+                'id',
+                'contractNum',
+                'company',
+                'address',
+                'services',
+                'dateOfStart',
+                'dateOfEnding',
+                'tasks',
+                'participants'
+            ]
+        }
+    ],
+    dataOperations: [
+        {
+            key: 'creation',
+            disabledFields: {}
+        },
+        {
+            key: 'update',
+            disabledFields: {
+                id: true,
+                condition: true,
+                imgBuilding: true,
+                manager: true,
+                responsible: true,
+                participants: false,
+                company: true,
+                address: true,
+                pathToFolder: true,
+                dateOfCreation: true,
+                dateOfStart: true,
+                dateOfEnding: true,
+                contractNum: true,
+                contacts: true,
+                deadlines: true,
+                services: true,
+                comment: true
             }
-        ]
-    },
-    {
-        title: 'Выезды',
-        subsections: [
-            {
-                title: 'Все менеджеры',
-                displayModes: [
-                    {
-                        mode: 'Канбан',
-                        keyMode: 'kanban',
-                        modeOptions: [
-                            { value: 'Статусы', key: 'status', uniqueness: 'title' },
-                            { value: 'Группы', key: 'group', uniqueness: null },
-                            { value: 'Дни', key: 'date', uniqueness: null },
-                            { value: 'Люди', key: 'responsible', uniqueness: 'fullName' },
-                            { value: 'Автомобили', key: 'car', uniqueness: 'stamp' }
-                        ]
-                    },
-                    {
-                        mode: 'Список',
-                        keyMode: 'listmode',
-                        keys: ['id', 'address', 'group', 'participants', 'status', 'date', 'contacts', 'car']
-                    },
-                    {
-                        mode: 'Календарь',
-                        keyMode: 'calendar'
-                    },
-                    {
-                        mode: 'Гант',
-                        keyMode: 'gant',
-                        modeOptions: [
-                            { value: 'Объекты', key: 'address', uniqueness: null },
-                            { value: 'Люди', key: 'responsible', uniqueness: 'fullName' },
-                            { value: 'Автомобили', key: 'car', uniqueness: 'stamp' }
-                        ]
-                    }
-                ],
-                dataOperations: [
-                    {
-                        key: 'creation',
-                        disabledFields: {}
-                    },
-                    {
-                        key: 'update',
-                        disabledFields: {}
-                    }
-                ]
-            },
-            {
-                title: 'Менеджер1',
-                displayModes: [],
-                dataOperations: []
-            }
-        ]
-    }
-];
+        }
+    ]
+};

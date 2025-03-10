@@ -1,10 +1,8 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
-import { Routes, Route, Navigate, Await, useOutletContext, useNavigate, useLoaderData } from 'react-router-dom';
+import { Routes, Route, Await, useOutletContext, useNavigate, useLoaderData } from 'react-router-dom';
 import classNames from 'classnames';
 
 // Импорт компонетов
-import IconButton from '@generic/elements/buttons/IcButton';
-import DropdownMenu from '@generic/elements/dropdown_menu/DropdownMenu';
 import Preloader from '@components/auxiliary_pages/loader/Preloader';
 
 // Импорт сервисов
@@ -99,33 +97,10 @@ function ModeOptions(props) {
     );
 }
 
-function HeaderTop(props) {
-    const { itemSideMenu, sections, section, setSection } = props;
-
-    // console.log(`section: ${JSON.stringify(section, null, 4)}`);
-    // console.log(`sections: ${JSON.stringify(sections, null, 4)}\nsectionData: ${JSON.stringify(section, null, 4)}`);
-
-    function onSelectSection(section) {
-        setSection(section);
-        DataDisplayService.setSection(section);
-    }
-
+function HeaderTop({ itemSideMenu }) {
     return (
         <div className="page-section-header__top">
-            {sections && sections.length !== 0 ? (
-                sections.length === 1 ? (
-                    <h2 className="page-section-header__top-title">{itemSideMenu}</h2>
-                ) : (
-                    <DropdownMenu
-                        additClass="sections"
-                        icon="arrow_down_gr.svg"
-                        nameMenu={itemSideMenu}
-                        specifiedVal={section ? section : { 'title': null }}
-                        dataSource={sections}
-                        onItemClick={onSelectSection}
-                    />
-                )
-            ) : null}
+            <h2 className="page-section-header__top-title">{itemSideMenu}</h2>
             <hr className="page-section-header__hr-line" />
         </div>
     );
@@ -135,15 +110,12 @@ function HeaderBottom(props) {
     const {
         partition,
         searchElem,
-        subsections,
-        subsection,
         displayModes,
         mode,
         modeOptions,
         modeOption,
         navigate,
         setMode,
-        setSubsection,
         setOption,
         setSearchElem
     } = props;
@@ -152,16 +124,13 @@ function HeaderBottom(props) {
         department: () => {
             return (
                 <div className="page-section-header__bottom">
-                    {subsections && subsections.length !== 0 ? (
-                        <DropdownMenu
-                            additClass="subsections"
-                            icon="arrow_down_gr.svg"
-                            nameMenu="Разделы"
-                            specifiedVal={subsection ? subsection : { 'title': null }}
-                            dataSource={subsections}
-                            onItemClick={onSelectDepartament}
-                        />
-                    ) : null}
+                    <input
+                        className="page-section__inpt-search"
+                        type="text"
+                        placeholder="Поиск по карточкам"
+                        value={searchElem}
+                        onChange={e => setSearchElem(e.target.value)}
+                    />
                     {displayModes && displayModes.length !== 0 ? (
                         <DisplayModes
                             displayModes={displayModes}
@@ -179,19 +148,12 @@ function HeaderBottom(props) {
                             onSelectOption={onSelectModeOption}
                         />
                     ) : null}
-                    <input
-                        className="page-section__inpt-search"
-                        type="text"
-                        placeholder="Поиск по карточкам"
-                        value={searchElem}
-                        onChange={e => setSearchElem(e.target.value)}
-                    />
-                    <IconButton
+                    {/* <IconButton
                         nameClass="icon-btn__create icon-btn"
                         text="Создать"
                         icon="plus.svg"
                         onClick={() => onCreate(mode)}
-                    />
+                    /> */}
                 </div>
             );
         },
@@ -220,12 +182,12 @@ function HeaderBottom(props) {
                             onSelectOption={onSelectModeOption}
                         />
                     </div>
-                    <IconButton
+                    {/* <IconButton
                         nameClass="icon-btn__create icon-btn"
                         text="Создать"
                         icon="plus.svg"
                         onClick={() => onCreate(mode)}
-                    />
+                    /> */}
                 </div>
             );
         },
@@ -236,7 +198,7 @@ function HeaderBottom(props) {
                         <input
                             className="page-section__inpt-search"
                             type="text"
-                            placeholder="Поиск по ..."
+                            placeholder="Поиск по компании"
                             value={searchElem}
                             // onChange={e => setSearchElem(e.target.value)}
                         />
@@ -247,22 +209,16 @@ function HeaderBottom(props) {
                             onSelectOption={onSelectMode}
                         />
                     </div>
-                    <IconButton
+                    {/* <IconButton
                         nameClass="icon-btn__create icon-btn"
                         text="Создать"
                         icon="plus.svg"
                         // onClick={() => onCreate(mode)}
-                    />
+                    /> */}
                 </div>
             );
         }
     };
-
-    // Выбор подраздела
-    function onSelectDepartament(subsection) {
-        setSubsection(subsection);
-        DataDisplayService.setSubsection(subsection);
-    }
 
     // Выбор режима отображения
     function onSelectMode(value) {
@@ -299,20 +255,12 @@ function HeaderBottom(props) {
 }
 
 export default function DataDisplayPage({ partition }) {
-    const navigate = useNavigate();
     const data = useLoaderData();
     const itemSideMenu = useOutletContext();
+    const navigate = useNavigate();
+
+    // Элемент поиска
     const [searchElem, setSearchElem] = useState('');
-
-    // Отделы
-    const [sections, setSections] = useState([]);
-    // Отдел
-    const [section, setSection] = useState({});
-
-    // Подотделы
-    const [subsections, setSubsections] = useState([]);
-    // Подотдел
-    const [subsection, setSubsection] = useState({});
 
     // Режимы отображения
     const [displayModes, setDisplayModes] = useState([]);
@@ -325,19 +273,12 @@ export default function DataDisplayPage({ partition }) {
     const [modeOption, setOption] = useState({});
 
     // Данные для отображения
-    const valsToDisplay = DataDisplayService.getValuesToDisplay(partition, section, subsection, mode) || [];
+    const valsToDisplay = DataDisplayService.getValuesToDisplay(partition, mode) || [];
     // Операции которые можно совершать с данными
-    const dataOperations = DataDisplayService.getDataOperations(partition, section, subsection, mode) || [];
-
-    const NAVIGATE_CONF = {
-        'kanban': 'kanban',
-        'listmode': 'listmode',
-        'calendar': 'calendar/',
-        'gant': 'gant'
-    };
+    const dataOperations = DataDisplayService.getDataOperations(partition) || [];
 
     useEffect(() => {
-        const dataModeOptions = DataDisplayService.getModeOptions(partition, section, subsection, mode);
+        const dataModeOptions = DataDisplayService.getModeOptions(partition, mode);
 
         setModeOptions(dataModeOptions);
 
@@ -349,47 +290,14 @@ export default function DataDisplayPage({ partition }) {
         else setOption({ keyMode: mode?.key, value: null, key: null });
 
         setSearchElem('');
-    }, [mode, subsection]);
+    }, [mode]);
 
     useEffect(() => {
-        if (Object.keys(section).length !== 0) {
-            const dataSubsections = DataDisplayService.getSubsections(partition, section);
-            const dataDisplayModes = DataDisplayService.getDisplayModes(partition, section, subsection)?.map(item => {
-                return { key: item?.keyMode, value: item?.mode };
-            });
-
-            setSubsections(dataSubsections);
-            setSubsection(dataSubsections[0]);
-            setDisplayModes(dataDisplayModes);
-
-            DataDisplayService.setSubsection(dataSubsections[0]);
-        }
-        setSearchElem('');
-    }, [section]);
-
-    useEffect(() => {
-        const dataSections = DataDisplayService.getSections(partition);
-        const dataSubsections = DataDisplayService.getSubsections(partition, dataSections[0]);
-        const dataDisplayModes = DataDisplayService.getDisplayModes(
-            partition,
-            dataSections[0],
-            dataSubsections[0]
-        )?.map(item => {
+        const dataDisplayModes = DataDisplayService.getDisplayModes(partition)?.map(item => {
             return { key: item?.keyMode, value: item?.mode };
         });
         const displayMode = JSON.parse(localStorage.getItem(`mode_${partition}`)) || dataDisplayModes[0];
-        const dataModeOptions = DataDisplayService.getModeOptions(
-            partition,
-            dataSections[0],
-            dataSubsections[0],
-            displayMode
-        );
-
-        setSections(dataSections);
-        setSection(dataSections[0]);
-
-        setSubsections(dataSubsections);
-        setSubsection(dataSubsections[0]);
+        const dataModeOptions = DataDisplayService.getModeOptions(partition, displayMode);
 
         setDisplayModes(dataDisplayModes);
         setMode(displayMode);
@@ -406,23 +314,16 @@ export default function DataDisplayPage({ partition }) {
     return (
         <section className="page__section-department page-section">
             <div className="page-section-header">
-                <HeaderTop
-                    itemSideMenu={itemSideMenu.title}
-                    sections={sections}
-                    section={section}
-                    setSection={setSection}
-                />
+                <HeaderTop itemSideMenu={itemSideMenu.title} />
                 <HeaderBottom
+                    itemSideMenu={itemSideMenu.title}
                     partition={partition}
                     searchElem={searchElem}
-                    subsections={subsections}
-                    subsection={subsection}
                     displayModes={displayModes}
                     mode={mode}
                     modeOptions={modeOptions}
                     modeOption={modeOption}
                     navigate={navigate}
-                    setSubsection={setSubsection}
                     setMode={setMode}
                     setOption={setOption}
                     setSearchElem={setSearchElem}

@@ -57,21 +57,15 @@ const COLUMNS = [
         Cell: props => {
             const navigate = useNavigate();
 
-            async function onShowInfoCard() {
-                await axios
-                    .post(`${window.location.origin}/api/getAgreement`, { contractId: props?.config?.contractId })
-                    .then(response => {
-                        if (response?.status === 200) {
-                            const navigationArg = {
-                                state: {
-                                    partition: props?.config?.partition,
-                                    data: response?.data[0],
-                                    dataOperation: props?.config?.dataOperation
-                                }
-                            };
-                            navigate('../../dataform/', navigationArg);
-                        }
-                    });
+            function onShowInfoCard() {
+                const navigationArg = {
+                    state: {
+                        partition: props?.config?.partition,
+                        dataOperation: props?.config?.dataOperation
+                    }
+                };
+                localStorage.setItem('idContract', JSON.stringify(props?.config?.contractId));
+                navigate('../../dataform/general/', navigationArg);
             }
 
             return props.value ? (

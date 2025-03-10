@@ -322,14 +322,17 @@ function CommencementDate(props) {
                         // disabled={disabledElem}
                         onClick={() => setCalendarState(true)}
                     />
-                    {calendarState && (
-                        <CalendarWindow
-                            additClass="tab-general-calendar"
-                            stateCalendar={calendarState}
-                            setStateCalendar={setCalendarState}
-                            onClickDate={onSelectStartDate}
-                        />
-                    )}
+                    {calendarState
+                        ? createPortal(
+                              <CalendarWindow
+                                  additClass="task-calendar"
+                                  stateCalendar={calendarState}
+                                  setStateCalendar={setCalendarState}
+                                  onClickDate={onSelectStartDate}
+                              />,
+                              document.getElementById('portal')
+                          )
+                        : null}
                 </div>
                 {startDate ? (
                     <IconButton
@@ -392,14 +395,17 @@ function DeadlineTask(props) {
                         // disabled={disabledElem}
                         onClick={() => setCalendarState(true)}
                     />
-                    {calendarState && (
-                        <CalendarWindow
-                            additClass="tab-general-calendar"
-                            stateCalendar={calendarState}
-                            setStateCalendar={setCalendarState}
-                            onClickDate={onSelectDeadline}
-                        />
-                    )}
+                    {calendarState
+                        ? createPortal(
+                              <CalendarWindow
+                                  additClass="task-calendar"
+                                  stateCalendar={calendarState}
+                                  setStateCalendar={setCalendarState}
+                                  onClickDate={onSelectDeadline}
+                              />,
+                              document.getElementById('portal')
+                          )
+                        : null}
                 </div>
                 {deadline ? (
                     <IconButton
@@ -518,11 +524,11 @@ export default function TaskPopup(props) {
                 contractId: JSON.parse(localStorage.getItem('idContract')),
                 directorId: values?.director?.id,
                 executorId: values?.executor?.id,
+                taskId: data?.task?.id,
                 dateStart: values?.dateStart,
                 deadline: values?.deadlineTask,
                 done: +values?.done,
                 task: values?.task,
-                taskId: data?.task?.id,
                 comment: values?.comment
             };
             axios

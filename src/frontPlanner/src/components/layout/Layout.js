@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
 // Импорт компонетов
-import Header from './header/Header';
 import SideMenu from './side_menu/SideMenu';
 
 // Импорт данных
@@ -19,9 +18,14 @@ export default function Layout() {
             <img class="logo" src="/img/logo.svg" alt="Logo" />
             <div className="app__left-column">
                 <SideMenu items={menuItems} itemSideMenu={itemSideMenu} setItemSideMenu={setItemSideMenu} />
+                <figure className="app__user">
+                    <img src="/img/user.svg" alt="#" />
+                </figure>
+                {/* <button onClick={onExitAccount}>Выйти</button> */}
+                {/* <div className="user_image" onClick={() => navigate('users/17')}></div> */}
+                {/* <button onClick={onRetrieveUser}>Получить пользователя</button> */}
             </div>
             <div className="app__right-column">
-                <Header />
                 <main className="main">
                     <div id="portal"></div>
                     <Outlet context={itemSideMenu} />

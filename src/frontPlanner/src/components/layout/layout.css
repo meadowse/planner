@@ -14,9 +14,52 @@
     column-gap: calc(20px + 0.9vw);
 }
 
+/* Левый столбец приложения */
+
 .app__left-column {
-    padding-top: calc(45px + 1vw);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: calc(30px + 1vw);
 }
+
+/* Пользователь */
+
+.app__user {
+    padding: 0.3125rem;
+    width: 100%;
+    position: relative;
+    border-radius: 50%;
+    background-color: #ced4da;
+    cursor: pointer;
+}
+
+.app__user-profile {
+    padding: 0.3125rem 0.625rem;
+    width: max-content;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    border-radius: 0.3125rem;
+    background-color: #ced4da;
+    z-index: 20;
+}
+
+.app__user-info {
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.3125rem;
+}
+
+.app__user-fullname {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(10px + 8 * (100vw - 320px) / 1600);
+    color: #666666;
+}
+
+/* Правый столбец приложения */
 
 .app__right-column {
     flex: 1;
