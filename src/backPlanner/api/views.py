@@ -42,7 +42,7 @@ def getAgreements(request):
         LEFT JOIN T3 participants ON T253.F5022 = participants.ID 
         LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID 
         LEFT JOIN T218 ON T218.F4691 = T212.ID 
-        T212.ID > 2300 
+        WHERE T212.ID > 2300 
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
