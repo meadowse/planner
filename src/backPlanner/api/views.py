@@ -320,15 +320,15 @@ def addPhoto(request):
         form = ImageForm()
         return render(request, 'index.html', {'form': form})
 
-# @csrf_exempt
-# def addPhoto(request):
-#     if request.method == 'POST':
-#         # TODO загрузка фото
-#         data = request.files['avatar'].read()
-#         with open("test.wav", mode="wb") as new:
-#             new.write(data)
-#     else:
-#         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+@csrf_exempt
+def addPhoto(request):
+    if request.method == 'POST':
+        # TODO загрузка фото
+        data = request.files['avatar'].read()
+        with open("test.wav", mode="wb") as new:
+            new.write(data)
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
 def getTypesWork(request):
