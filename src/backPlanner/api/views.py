@@ -263,7 +263,11 @@ def getAgreement(request):
                         data2 = participant.split(';')
                         data.get('participants').append({'participantId': int(data2[0]), 'fullName': data2[1].strip()})
                     obj.update(data)
-                responsible = {'responsible': {'fullName': obj.get('responsible').strip()}}
+                responsible = obj.get('responsible')
+                if responsible is not None:
+                    responsible = {'responsible': {'fullName': obj.get('responsible').strip()}}
+                else:
+                    responsible = {'responsible': {'fullName': obj.get('responsible')}}
                 obj.update(responsible)
                 dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
                 obj.update(dateOfStart)
