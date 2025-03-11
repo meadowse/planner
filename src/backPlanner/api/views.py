@@ -42,7 +42,7 @@ def getAgreements(request):
         LEFT JOIN T3 participants ON T253.F5022 = participants.ID 
         LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID 
         LEFT JOIN T218 ON T218.F4691 = T212.ID 
-        WHERE T212.ID > 2500 
+        WHERE T212.ID > 2600 
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
@@ -308,27 +308,29 @@ def addPhoto(request):
     """Process images uploaded by users"""
     if request.method == 'POST':
         data = request.FILES.get('image').read()
-        with open("test.jpg", mode="wb") as new:
+        with open(f"images/{request.POST.get('title')}.{request.FILES.get('image').name.split('.')[1]}", mode="wb") as new:
             new.write(data)
-        form = ImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            # form.save()
-            # Получить текущий объект экземпляра для отображения в шаблоне
-            img_obj = form.instance
-            return render(request, 'index.html', {'form': form, 'img_obj': img_obj})
+        # form = ImageForm(request.POST, request.FILES)
+        # print(form)
+        # if form.is_valid():
+        #     form.save()
+        #     # Получить текущий объект экземпляра для отображения в шаблоне
+        #     img_obj = form.instance
+        #     return render(request, 'index.html', {'form': form, 'img_obj': img_obj})
+        return JsonResponse({'ok': True})
     else:
         form = ImageForm()
         return render(request, 'index.html', {'form': form})
 
-@csrf_exempt
-def addPhoto(request):
-    if request.method == 'POST':
-        # TODO загрузка фото
-        data = request.files['avatar'].read()
-        with open("test.wav", mode="wb") as new:
-            new.write(data)
-    else:
-        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+# @csrf_exempt
+# def addPhoto(request):
+#     if request.method == 'POST':
+#         # TODO загрузка фото
+#         data = request.files['avatar'].read()
+#         with open("test.wav", mode="wb") as new:
+#             new.write(data)
+#     else:
+#         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
 def getTypesWork(request):

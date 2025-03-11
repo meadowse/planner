@@ -4,6 +4,8 @@ services:
     build: "./src/backPlanner"
 #    ports:
 #      - 8888:8000
+    volumes:
+      - /mnt/work/6. Технологии/11. Изображения для карточек договоров:/app/images
   frontPlanner:
     image: front_planner
     build: "./src/frontPlanner"
