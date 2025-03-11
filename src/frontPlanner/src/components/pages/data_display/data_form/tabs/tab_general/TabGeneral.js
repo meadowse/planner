@@ -19,7 +19,7 @@ import { getUniqueData } from '@helpers/helper';
 import { getDateInSpecificFormat } from '@helpers/calendar';
 
 // Импорт сервисов
-import TabGeneralService from '@services/tab_general.service';
+import TabGeneralService from '@services/tabs/tab_general.service';
 
 // Импорт кастомных хуков
 import { useGeneralForm } from '@hooks/useGeneralForm';
@@ -782,6 +782,24 @@ function LeftColTab(props) {
                     disabledElem={dataOperation?.disabledFields?.contractNum}
                     onChange={onChange}
                 />
+                <Deadlines
+                    additClass="deadlines"
+                    presetValue={{
+                        beginDeadline: presetValues?.dateOfStart?.value,
+                        endDeadline: presetValues?.dateOfEnding?.value
+                    }}
+                    deadlinesError={{ dateOfStartError: errors?.dateOfStart, dateOfEndingError: errors?.dateOfEnding }}
+                    dataOperation={dataOperation}
+                    onClick={onClick}
+                />
+                <Service
+                    additClass="services"
+                    presetValue={presetValues?.services[0]}
+                    serviceError={errors?.services}
+                    disabledElem={dataOperation?.disabledFields?.services}
+                    onClick={onClick}
+                />
+                <Comment additClass="comment" presetValue={presetValues?.comment} onChange={onChange} />
                 <Contacts
                     additClass="contacts"
                     presetValue={presetValues?.contacts}
@@ -817,13 +835,14 @@ function Deadline(props) {
         <li className="tab-general-row__list-item">
             <h3 className="tab-general-row__subtitle">{title}</h3>
             <div
-                className="tab-general-row__wrapper"
+                className="tab-general-row__wrapper tab-general-row-date"
                 data-error={deadlineError && Object.keys(deadlineError).length !== 0 ? deadlineError.message : null}
             >
-                <input
-                    className="tab-general-row__deadline"
-                    type="text"
-                    value={date || null}
+                <input className="tab-general-row__deadline" type="text" value={date || null} disabled={disabledElem} />
+                <IconButton
+                    nameClass="tab-general-row__ic-btn icon-btn"
+                    type="button"
+                    icon="calendar.svg"
                     disabled={disabledElem}
                     onClick={() => setCalendarState(true)}
                 />
@@ -899,28 +918,18 @@ function Service(props) {
     }
 
     return (
-        <div className="tab-general-row__service">
-            <DropdownMenu
-                additClass={additClass}
-                icon="plus_gr.svg"
-                keyMenu="services"
-                nameMenu="Услуга"
-                option={true}
-                disabledElem={disabledElem}
-                onItemClick={onAddService}
-            />
-            <div data-error={serviceError ? serviceError.message : null}></div>
-            <div className="tab-general-row-item__services">
-                {services && Object.keys(services).length !== 0 ? (
-                    <ul className="tab-general__services">
-                        <li className="tab-general__service">
-                            <p className="tab-general__service-val">{services?.title}</p>
-                            <button className="tab-general__btn-del-service" disabled={disabledElem}>
-                                <img src="/img/cancel_bl.svg" alt="" />
-                            </button>
-                        </li>
-                    </ul>
-                ) : null}
+        <div className="tab-general-row__service tab-general-row">
+            <h2 className="tab-general-row__title">Услуга</h2>
+            <div className="tab-general-row__wrapper">
+                <DropdownMenu
+                    additClass={additClass}
+                    icon="arrow_down_sm.svg"
+                    keyMenu="services"
+                    nameMenu="Выбрать услугу"
+                    option={true}
+                    disabledElem={disabledElem}
+                    onItemClick={onAddService}
+                />
             </div>
         </div>
     );
@@ -931,7 +940,7 @@ function Comment(props) {
     const { additClass, presetValue, onChange } = props;
 
     return (
-        <div className="tab-general-row__comment">
+        <div className="tab-general-row__comment tab-general-row">
             <h2 className="tab-general-row__title">Комментарий</h2>
             <textarea
                 className="tab-general-row__txt-area"
@@ -939,34 +948,6 @@ function Comment(props) {
                 value={presetValue}
                 onChange={e => onChange(e)}
             />
-        </div>
-    );
-}
-
-// Cтолбец по середине
-function MiddleColTab(props) {
-    const { presetValues, dataOperation, errors, onClick, onChange } = props;
-
-    return (
-        <div className="tab-general__middle-rows tab-general__column">
-            <Deadlines
-                additClass="deadlines"
-                presetValue={{
-                    beginDeadline: presetValues?.dateOfStart?.value,
-                    endDeadline: presetValues?.dateOfEnding?.value
-                }}
-                deadlinesError={{ dateOfStartError: errors?.dateOfStart, dateOfEndingError: errors?.dateOfEnding }}
-                dataOperation={dataOperation}
-                onClick={onClick}
-            />
-            <Service
-                additClass="services"
-                presetValue={presetValues?.services[0]}
-                serviceError={errors?.services}
-                disabledElem={dataOperation?.disabledFields?.services}
-                onClick={onClick}
-            />
-            <Comment additClass="comment" presetValue={presetValues?.comment} onChange={onChange} />
         </div>
     );
 }
@@ -1028,13 +1009,6 @@ export default function TabGeneral() {
                 onClick={onClick}
                 onChange={onChange}
                 onChangeByInd={onСhangeByIndex}
-            />
-            <MiddleColTab
-                presetValues={data}
-                dataOperation={dataOperation}
-                errors={errorsInfo}
-                onClick={onClick}
-                onChange={onChange}
             />
             <RightColTab />
         </form>

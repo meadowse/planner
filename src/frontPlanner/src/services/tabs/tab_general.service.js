@@ -1,4 +1,4 @@
-import { TAB_GENERAL_CONF } from '../config/tab_general.config';
+import { TAB_GENERAL_CONF } from '@config/tabs/tab_general.config';
 
 const getOptions = key => {
     return TAB_GENERAL_CONF[key];

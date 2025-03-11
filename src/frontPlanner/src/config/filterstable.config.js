@@ -1,3 +1,7 @@
+export const DEFAULT_ACTIVE_FILTERS = {
+    stage: 'В работе'
+};
+
 export const FILTER_HANDLERS_CONF = new Map([
     ['address', (filterVal, address) => address?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['group', (filterVal, group) => group?.toLowerCase().includes(filterVal?.toLowerCase())],
@@ -32,13 +36,16 @@ export const FILTER_HANDLERS_CONF = new Map([
     [
         'dateOfEnding',
         (filterVal, date) => {
-            console.log(`filterVal: ${filterVal}\ndate: ${JSON.stringify(date, null, 4)}`);
+            // console.log(`filterVal: ${filterVal}\ndate: ${JSON.stringify(date, null, 4)}`);
             if (filterVal?.includes('Все')) return Object.values({ value: filterVal })?.includes(filterVal);
             else {
                 if (date && Object.keys(date).length !== 0) {
                     if (!date?.value) return Object.values({ value: 'Без даты' })?.includes(filterVal);
-                    if (date?.value && date?.expired)
-                        return Object.values({ value: 'Просроченные' })?.includes(filterVal);
+                    else {
+                        if (date?.value && date?.expired)
+                            return Object.values({ value: 'Просроченные' })?.includes(filterVal);
+                        else return Object.values({ value: 'Непросроченные' })?.includes(filterVal);
+                    }
                 }
             }
         }

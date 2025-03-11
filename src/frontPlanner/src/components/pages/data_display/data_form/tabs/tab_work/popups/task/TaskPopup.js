@@ -16,14 +16,13 @@ import InputDataPopup from '@generic/elements/popup/InputDataPopup';
 import { useTaskForm } from '@hooks/useAddTaskForm';
 
 // Импорт сервисов
-import TaskService from '@services/tab_task.service';
+import TaskService from '@services/tabs/tab_task.service';
 
 // Импорт доп.функционала
 import { getDateInSpecificFormat } from '@helpers/calendar';
 
 // Импорт стилей
 import './task_popup.css';
-import classNames from 'classnames';
 
 // Вид работы
 function TypeWork(props) {

@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 
 // Импорт конфигураций
-import { FILTER_HANDLERS_CONF } from '@config/filterstable.config';
+import { DEFAULT_ACTIVE_FILTERS, FILTER_HANDLERS_CONF } from '@config/filterstable.config';
 
 // Импорт доп.функционала
 import { getDateFromString } from '@helpers/calendar';
 
 // Импорт стилей
 import './filters_table.css';
-
-const activeFilters = {};
 
 const FILTERS_CONF = {
     // Текстовые поля
@@ -50,7 +48,13 @@ const FILTERS_CONF = {
     // Выпадающие списки
     stage: (options, toggleState, onChange) => {
         return (
-            <DropDownFilter id="stage" defaultVal="Все" options={options} toggle={toggleState} onChange={onChange} />
+            <DropDownFilter
+                id="stage"
+                defaultVal="В работе"
+                options={options}
+                toggle={toggleState}
+                onChange={onChange}
+            />
         );
     },
     services: (options, toggleState, onChange) => {
@@ -138,19 +142,19 @@ function InputTextFilter(props) {
 // Компонент выпадающего списка
 function DropDownFilter(props) {
     const { id, defaultVal, options, toggle, onChange } = props;
-    const [selected, setSelected] = useState(defaultVal);
+    const [selectedItem, setSelectedItem] = useState(defaultVal);
 
     function onSelectOption(e) {
         onChange(e);
-        setSelected(e.target.value);
+        setSelectedItem(e.target.value);
     }
 
     useEffect(() => {
-        setSelected(defaultVal);
+        setSelectedItem(defaultVal);
     }, [toggle]);
 
     return (
-        <select id={id} className="dropdown_filter" value={selected} onChange={e => onSelectOption(e)}>
+        <select id={id} className="dropdown_filter" value={selectedItem} onChange={onSelectOption}>
             <option key={defaultVal} value={defaultVal}>
                 {defaultVal}
             </option>
@@ -175,7 +179,7 @@ const applyFilters = (data, filters) => {
         })
     );
 
-    console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
+    // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
 
     return filteredData;
 };
@@ -192,8 +196,11 @@ function Cell(props) {
 
 export default function FiltersTable(props) {
     const { keys, data, setData } = props;
+    // const activeFilters = Object.assign({}, DEFAULT_FILTERS);
+    const [activeFilters, setActiveFilters] = useState({});
     const [toggleState, setToggleState] = useState(false);
 
+    // console.log(`activeFilters: ${JSON.stringify(activeFilters, null, 4)}`);
     // console.log(`keys: ${JSON.stringify(keys, null, 4)}`);
 
     const OPTIONS_FILTER_MAP = {
@@ -205,10 +212,9 @@ export default function FiltersTable(props) {
             );
         },
         stage: data => {
-            return Array.from(new Set(data.map(item => item?.stage?.title)));
+            return ['Все', ...Array.from(new Set(data.map(item => item?.stage?.title)))];
         },
         dateOfEnding: data => {
-            let currDate = new Date();
             let newData = [];
             let tempData = Array.from(
                 new Set(
@@ -216,8 +222,8 @@ export default function FiltersTable(props) {
                         if (item?.dateOfEnding && Object.keys(item?.dateOfEnding).length !== 0) {
                             if (!item?.dateOfEnding?.value) return 'Без даты';
                             else {
-                                let deadline = getDateFromString(item?.dateOfEnding?.value);
-                                if (currDate > deadline) return 'Просроченные';
+                                if (item?.dateOfEnding?.expired) return 'Просроченные';
+                                else return 'Непросроченные';
                             }
                         }
                     })
@@ -242,18 +248,37 @@ export default function FiltersTable(props) {
         }
     };
 
+    // Сброс фильтров
     function onResetFilters() {
         setToggleState(!toggleState);
-        setData(data);
-        // Очищение объекта
-        Object.keys(activeFilters).map(key => delete activeFilters[key]);
+        setData([...applyFilters(data, DEFAULT_ACTIVE_FILTERS)]);
     }
 
+    // Изменение фильтров
     function onChangeFilter(e) {
         activeFilters[e.target.id] = e.target.value;
-        // console.log(`activeFilters: ${JSON.stringify(activeFilters, null, 4)}`);
+        console.log(`activeFilters: ${JSON.stringify(activeFilters, null, 4)}`);
         setData([...applyFilters(data, activeFilters)]);
     }
+
+    useEffect(() => {
+        const defaultActiveFilters = Object.assign({}, DEFAULT_ACTIVE_FILTERS);
+        setActiveFilters(defaultActiveFilters);
+
+        const filteredData = applyFilters(data, DEFAULT_ACTIVE_FILTERS);
+        if (!filteredData || filteredData.length === 0) setData(data);
+        else {
+            setTimeout(() => {
+                setData(filteredData);
+            }, 100);
+        }
+
+        // setTimeout(() => {
+        //     const filteredData = applyFilters(data, DEFAULT_ACTIVE_FILTERS);
+        //     if (!filteredData || filteredData.length === 0) setData(data);
+        //     else setData(filteredData);
+        // }, 100);
+    }, []);
 
     return (
         <>

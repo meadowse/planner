@@ -83,10 +83,10 @@ export const DATA_FORM_CONF = {
     ],
     tabs: [
         { key: 'general', title: 'Общие' },
-        { key: 'works', title: 'Работа и задачи' },
-        { key: 'departures', title: 'Выезды' },
-        { key: 'contractors', title: 'Подрядчики' },
-        { key: 'documents', title: 'Документы' }
+        { key: 'works', title: 'Работа и задачи' }
+        // { key: 'departures', title: 'Выезды' },
+        // { key: 'contractors', title: 'Подрядчики' },
+        // { key: 'documents', title: 'Документы' }
     ],
     actions: [{ title: 'В архив' }, { title: 'Удалить' }]
 };
