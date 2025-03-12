@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 // Импорт доп.функционала
 import { getDateFromString } from '@helpers/calendar.js';
 import { isString, isDate, isObject, isArray } from '@helpers/helper';
@@ -57,10 +55,6 @@ const sortData = (data, key, sortBy, order, setOrder, setData) => {
     setOrder(order === 'ASC' ? 'DESC' : 'ASC');
 };
 
-export const useListMode = (data, setData) => {
-    useEffect(() => {
-        setData([...data]);
-    }, [data]);
-
+export const useListMode = () => {
     return { sortData };
 };

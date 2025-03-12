@@ -2,8 +2,12 @@
 export const STAGES_CONF_MAP = {
     'Без стадии': '#e9ecef',
     'В работе': '#E3AA74',
+    'Доработка': '#ffa200',
+    'Доработка завершена': '#ff7b00',
+    'Работа приостановлена': '#8d99ae',
     'Работа завершена': '#d4e09b',
     'Успех': '#8ac926',
+    'Отменена': '#fb4b4e',
     'Аннулировано': '#e63946'
 };
 
@@ -211,7 +215,7 @@ export const DEPARTMENT_DATA_CONF = {
             disabledFields: {
                 id: true,
                 condition: true,
-                imgBuilding: true,
+                imgBuilding: false,
                 manager: true,
                 responsible: true,
                 participants: false,

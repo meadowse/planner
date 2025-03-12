@@ -83,8 +83,23 @@ function ImageBuilding({ presetValue, disabledElem }) {
 
     // Загрузка изображения
     function onDownloadImage(event) {
-        let file = event.target.files[0];
-        setImage(URL.createObjectURL(file));
+        if (event.target.files && event.target.files[0]) {
+            let file = event.target.files[0];
+            let formData = new FormData();
+
+            formData.append('image', file);
+            formData.append('title', presetValue?.contractNum);
+            axios({
+                url: `${window.location.origin}/api/addPhoto`,
+                method: 'POST',
+                headers: {},
+                data: formData
+            })
+                .then(response => {
+                    if (response.status === 200) setImage(URL.createObjectURL(file));
+                }) // Handle the response from backend here
+                .catch(err => {}); // Catch errors if any
+        }
     }
 
     // Удаление изображения
@@ -94,7 +109,7 @@ function ImageBuilding({ presetValue, disabledElem }) {
 
     return (
         <div className="tab-general__image">
-            {image ? (
+            {image && Object.keys(image).length !== 0 ? (
                 <img className="tab-general__img" src={image} alt="Building" />
             ) : (
                 <p className="tab-general__image-message">No image</p>
@@ -141,7 +156,7 @@ function HeaderLeftCol(props) {
             <div className="tab-general__building tab-general-row-item">
                 <ImageBuilding
                     additClass="building"
-                    presetValue={presetValue.imgBuilding}
+                    presetValue={{ contractNum: presetValue.contractNum, imgBuilding: presetValue.imgBuilding }}
                     disabledElem={dataOperation?.disabledFields?.imgBuilding}
                 />
                 <ColorCard
@@ -179,11 +194,15 @@ function Manager(props) {
                 <div className="tab-general__manager tab-general-row-item">
                     <ul className="tab-general-row__item-managers">
                         {manager && Object.keys(manager)?.length !== 0 ? (
-                            <li
-                                className="tab-general-row__item-manager tab-general-row-item__user"
-                                onClick={onDeleteUser}
-                            >
+                            <li className="tab-general-row__item-manager tab-general-row-item__user" onClick={null}>
                                 {manager?.fullName}
+                                <IconButton
+                                    nameClass="tab-general-row__ic-btn icon-btn"
+                                    type="button"
+                                    icon="cancel_bl.svg"
+                                    disabled={disabledElem}
+                                    onClick={onDeleteUser}
+                                />
                             </li>
                         ) : (
                             <li>
@@ -240,11 +259,15 @@ function Responsible(props) {
                 <div className="tab-general__manager tab-general-row-item">
                     <ul className="tab-general-row__item-managers">
                         {responsible && Object.keys(responsible)?.length !== 0 ? (
-                            <li
-                                className="tab-general-row__item-manager tab-general-row-item__user"
-                                onClick={onDeleteUser}
-                            >
+                            <li className="tab-general-row__item-manager tab-general-row-item__user" onClick={null}>
                                 {responsible?.fullName}
+                                <IconButton
+                                    nameClass="tab-general-row__ic-btn icon-btn"
+                                    type="button"
+                                    icon="cancel_bl.svg"
+                                    disabled={disabledElem}
+                                    onClick={onDeleteUser}
+                                />
                             </li>
                         ) : (
                             <li>
@@ -313,9 +336,16 @@ function Participants(props) {
                                 <li
                                     key={index}
                                     className="tab-general-row-item__participant tab-general-row-item__user"
-                                    onClick={() => onDeleteUser(index)}
+                                    onClick={null}
                                 >
                                     {participant?.fullName}
+                                    <IconButton
+                                        nameClass="tab-general-row__ic-btn icon-btn"
+                                        type="button"
+                                        icon="cancel_bl.svg"
+                                        disabled={disabledElem}
+                                        onClick={() => onDeleteUser(index)}
+                                    />
                                 </li>
                             ))
                         ) : (
@@ -719,7 +749,11 @@ function LeftColTab(props) {
             <div className="tab-general__left-rows tab-general-rows">
                 <HeaderLeftCol
                     additClass="header_left_col"
-                    presetValue={{ condition: presetValues?.stage, imgBuilding: presetValues?.imgBuilding }}
+                    presetValue={{
+                        contractNum: presetValues?.contractNum,
+                        condition: presetValues?.stage,
+                        imgBuilding: presetValues?.imgBuilding
+                    }}
                     dataOperation={dataOperation}
                     error={errors.condition}
                     onClick={onClick}
@@ -954,7 +988,7 @@ function Comment(props) {
 
 function RightColTab() {
     return (
-        <div className="tab-general__right-rows tab-general__column">
+        <div className="tab-general__right tab-general__column">
             <iframe
                 title="Mattermost"
                 src="https://mm-mpk.ru/mosproektkompleks/"

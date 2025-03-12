@@ -25,24 +25,28 @@ export default function TabWorkNew() {
     return (
         <div className="tab-work section__tab">
             <div className="tab-work__main">
-                <ListMode
-                    testData={works}
-                    modeConfig={{
-                        keys: ['number', 'typeWork', 'deadline', 'dateDone', 'done'],
-                        partition: partition,
-                        dataOperations: [],
-                        idContract: idContract
-                    }}
-                />
-                <ListMode
-                    testData={tasks}
-                    modeConfig={{
-                        keys: ['task', 'director', 'executor', 'deadlineTask', 'done'],
-                        partition: partition,
-                        dataOperations: [],
-                        idContract: idContract
-                    }}
-                />
+                {works && works.length !== 0 ? (
+                    <ListMode
+                        testData={works}
+                        modeConfig={{
+                            keys: ['number', 'typeWork', 'deadline', 'dateDone', 'done'],
+                            partition: partition,
+                            dataOperations: [],
+                            idContract: idContract
+                        }}
+                    />
+                ) : null}
+                {tasks && tasks.length !== 0 ? (
+                    <ListMode
+                        testData={tasks}
+                        modeConfig={{
+                            keys: ['task', 'director', 'executor', 'deadlineTask', 'done'],
+                            partition: partition,
+                            dataOperations: [],
+                            idContract: idContract
+                        }}
+                    />
+                ) : null}
             </div>
         </div>
     );

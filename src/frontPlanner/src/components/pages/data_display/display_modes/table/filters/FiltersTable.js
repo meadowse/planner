@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 
-// Импорт конфигураций
-import { DEFAULT_ACTIVE_FILTERS, FILTER_HANDLERS_CONF } from '@config/filterstable.config';
-
-// Импорт доп.функционала
-import { getDateFromString } from '@helpers/calendar';
+// Импорт кастомных хуков
+import { useFiltersTable } from '@hooks/useFiltersTable';
 
 // Импорт стилей
 import './filters_table.css';
@@ -169,21 +166,6 @@ function DropDownFilter(props) {
     );
 }
 
-const applyFilters = (data, filters) => {
-    // console.log(`filters: ${JSON.stringify(filters, null, 4)}\nfilters table data: ${JSON.stringify(data, null, 4)}`);
-
-    const filteredData = data.filter(item =>
-        Object.keys(filters).every(key => {
-            const handler = FILTER_HANDLERS_CONF.get(key);
-            return !handler || handler(filters[key], item[key]);
-        })
-    );
-
-    // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
-
-    return filteredData;
-};
-
 function Cell(props) {
     const { keyVal, options, toggleState, onChangeFilter } = props;
 
@@ -196,89 +178,17 @@ function Cell(props) {
 
 export default function FiltersTable(props) {
     const { keys, data, setData } = props;
-    // const activeFilters = Object.assign({}, DEFAULT_FILTERS);
-    const [activeFilters, setActiveFilters] = useState({});
     const [toggleState, setToggleState] = useState(false);
 
     // console.log(`activeFilters: ${JSON.stringify(activeFilters, null, 4)}`);
     // console.log(`keys: ${JSON.stringify(keys, null, 4)}`);
 
-    const OPTIONS_FILTER_MAP = {
-        services: data => {
-            return Array.from(
-                new Set(
-                    data.map(item => item.services && Object.keys(item.services).length !== 0 && item.services?.title)
-                )
-            );
-        },
-        stage: data => {
-            return ['Все', ...Array.from(new Set(data.map(item => item?.stage?.title)))];
-        },
-        dateOfEnding: data => {
-            let newData = [];
-            let tempData = Array.from(
-                new Set(
-                    data.map(item => {
-                        if (item?.dateOfEnding && Object.keys(item?.dateOfEnding).length !== 0) {
-                            if (!item?.dateOfEnding?.value) return 'Без даты';
-                            else {
-                                if (item?.dateOfEnding?.expired) return 'Просроченные';
-                                else return 'Непросроченные';
-                            }
-                        }
-                    })
-                )
-            );
-
-            tempData.map(item => {
-                if (item) newData.push(item);
-            });
-
-            return newData;
-        },
-        responsible: data => {
-            let newData = [];
-            let tempData = Array.from(new Set(data.map(item => item.responsible?.fullName)));
-
-            tempData.map(item => {
-                if (item) newData.push(item);
-            });
-
-            return newData;
-        }
-    };
-
-    // Сброс фильтров
-    function onResetFilters() {
-        setToggleState(!toggleState);
-        setData([...applyFilters(data, DEFAULT_ACTIVE_FILTERS)]);
-    }
-
-    // Изменение фильтров
-    function onChangeFilter(e) {
-        activeFilters[e.target.id] = e.target.value;
-        console.log(`activeFilters: ${JSON.stringify(activeFilters, null, 4)}`);
-        setData([...applyFilters(data, activeFilters)]);
-    }
-
-    useEffect(() => {
-        const defaultActiveFilters = Object.assign({}, DEFAULT_ACTIVE_FILTERS);
-        setActiveFilters(defaultActiveFilters);
-
-        const filteredData = applyFilters(data, DEFAULT_ACTIVE_FILTERS);
-        if (!filteredData || filteredData.length === 0) setData(data);
-        else {
-            setTimeout(() => {
-                setData(filteredData);
-            }, 100);
-        }
-
-        // setTimeout(() => {
-        //     const filteredData = applyFilters(data, DEFAULT_ACTIVE_FILTERS);
-        //     if (!filteredData || filteredData.length === 0) setData(data);
-        //     else setData(filteredData);
-        // }, 100);
-    }, []);
+    const { OPTIONS_FILTER_MAP, onChangeFilter, onResetFilters } = useFiltersTable(
+        data,
+        toggleState,
+        setToggleState,
+        setData
+    );
 
     return (
         <>
@@ -299,13 +209,6 @@ export default function FiltersTable(props) {
                             onChangeFilter={onChangeFilter}
                         />
                     );
-                    // return FILTERS_CONF[key] ? (
-                    //     <td key={key} className="table-mode__thead-td">
-                    //         {FILTERS_CONF[key](options, toggleState, onChangeFilter)}
-                    //     </td>
-                    // ) : (
-                    //     <td key={key} className="table-mode__thead-td"></td>
-                    // );
                 })}
             </tr>
         </>

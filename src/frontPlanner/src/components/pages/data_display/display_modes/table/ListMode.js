@@ -42,48 +42,50 @@ function Cell({ cellData, cellConfig }) {
 
 export default function ListMode(props) {
     const { testData, modeConfig } = props;
-    // console.log(`keys: ${JSON.stringify(keys, null, 4)}\ntestData: ${JSON.stringify(testData, null, 4)}`);
     const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
-    // console.log(`columns: ${JSON.stringify(columns, null, 4)}`);
 
     const [data, setData] = useState(testData.sort((a, b) => parseInt(b?.id) - parseInt(a?.id)));
     const [order, setOrder] = useState('ASC');
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
-    const { sortData } = useListMode(testData, setData);
+    const { sortData } = useListMode(data);
+
+    // console.log(`keys: ${JSON.stringify(keys, null, 4)}\ntestData: ${JSON.stringify(testData, null, 4)}`);
+    // console.log(`columns: ${JSON.stringify(columns, null, 4)}`);
 
     // Конфигурация по заголовкам таблицы
     const HEAD_CELL_CONF = {
-        task: data => {
+        task: headData => {
             const config = {
-                idContract: modeConfig?.idContract
+                idContract: modeConfig?.idContract,
+                task: {}
             };
-            return <HeadCell cellData={data} cellConfig={config} />;
+            return <HeadCell cellData={headData} cellConfig={config} />;
         },
-        default: data => {
-            return <HeadCell cellData={data} />;
+        default: headData => {
+            return <HeadCell cellData={headData} />;
         }
     };
 
     // Конфигурация по ячейкам таблицы
     const CELL_CONF = {
-        contractNum: data => {
+        contractNum: cellData => {
             const config = {
                 partition: modeConfig?.partition,
-                contractId: testData[data?.indRow]?.id,
+                idContract: data[cellData?.indRow]?.id,
                 dataOperation: findNestedObj(modeConfig?.dataOperations, 'key', 'update')
             };
-            return <Cell cellData={data} cellConfig={config} />;
+            return <Cell cellData={cellData} cellConfig={config} />;
         },
-        task: data => {
+        task: cellData => {
             const config = {
-                idContract: testData[data?.indRow]?.id,
-                task: testData[data?.indRow] || {}
+                idContract: testData[cellData?.indRow]?.id,
+                task: testData[cellData?.indRow] || {}
             };
-            return <Cell cellData={data} cellConfig={config} />;
+            return <Cell cellData={cellData} cellConfig={config} />;
         },
-        default: data => {
-            return <Cell cellData={data} />;
+        default: cellData => {
+            return <Cell cellData={cellData} />;
         }
     };
 
@@ -115,7 +117,7 @@ export default function ListMode(props) {
                                                     onClick={() =>
                                                         column?.sortable &&
                                                         sortData(
-                                                            testData,
+                                                            data,
                                                             column.id,
                                                             column.sortBy,
                                                             order,

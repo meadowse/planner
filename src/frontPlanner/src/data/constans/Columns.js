@@ -64,7 +64,7 @@ const COLUMNS = [
                         dataOperation: props?.config?.dataOperation
                     }
                 };
-                localStorage.setItem('idContract', JSON.stringify(props?.config?.contractId));
+                localStorage.setItem('idContract', JSON.stringify(props?.config?.idContract));
                 navigate('../../dataform/general/', navigationArg);
             }
 

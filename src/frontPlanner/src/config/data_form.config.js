@@ -21,6 +21,10 @@ export const DATA_CONVERSION_MAP = {
 export const DATA_FORM_CONF = {
     stages: [
         {
+            title: 'Без стадии',
+            color: '#E9ECEF'
+        },
+        {
             title: 'Распределение',
             color: '#D69A9A'
         },
@@ -36,10 +40,35 @@ export const DATA_FORM_CONF = {
             title: 'Правки',
             color: '#DADF9E'
         },
+        ,
         {
-            title: 'Завершено',
-            color: '#92CA77'
+            title: 'Доработка',
+            color: '#ffa200'
+        },
+        {
+            title: 'Доработка завершена',
+            color: '#ff7b00'
+        },
+        {
+            title: 'Работа приостановлена',
+            color: '#8d99ae'
+        },
+        {
+            title: 'Работа завершена',
+            color: '#d4e09b'
+        },
+        {
+            title: 'Отменена',
+            color: '#fb4b4e'
+        },
+        {
+            title: 'Аннулировано',
+            color: '#E63946'
         }
+        // {
+        //     title: 'Завершено',
+        //     color: '#92CA77'
+        // }
     ],
     statuses: [
         {
