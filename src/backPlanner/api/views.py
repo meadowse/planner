@@ -5,8 +5,6 @@ from time import perf_counter
 from django.views.decorators.csrf import csrf_exempt
 from .config import *
 import datetime
-from django.shortcuts import render
-from .forms import ImageForm
 
 
 def getAgreements(request):
@@ -229,7 +227,8 @@ def getAgreement(request):
             LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
             LIST(DISTINCT participants.ID || ';' || participants.F4886) AS participants,
             responsible.F4886 AS responsible,
-            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696, '*') AS tasks
+            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696, '*') AS tasks, 
+            T212.F4644 AS channelId
             FROM T212
             LEFT JOIN T237 ON T212.F4948 = T237.ID
             LEFT JOIN T205 ON T212.F4540 = T205.ID
@@ -240,12 +239,12 @@ def getAgreement(request):
             LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
             LEFT JOIN T218 ON T218.F4691 = T212.ID
             WHERE T212.ID = {contractId}
-            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12
+            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 14
             """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
             cur.execute(sql)
             result = cur.fetchall()
             # Преобразование результата в список словарей
-            columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'responsible', 'tasks')
+            columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'responsible', 'tasks', 'channelId')
             json_result = [
                 {col: value for col, value in zip(columns, row)}
                 for row in result
