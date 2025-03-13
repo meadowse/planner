@@ -986,12 +986,12 @@ function Comment(props) {
     );
 }
 
-function RightColTab() {
+function MattermostFrame({ channelId }) {
     return (
-        <div className="tab-general__right tab-general__column">
+        <div className="tab-general__mattermost tab-general__column">
             <iframe
                 title="Mattermost"
-                src="https://mm-mpk.ru/mosproektkompleks/channels/"
+                src={`https://mm-mpk.ru/mosproektkompleks/channels/${channelId}`}
                 style={{ width: '100%', height: '100%', border: 'none' }}
             ></iframe>
         </div>
@@ -1044,7 +1044,7 @@ export default function TabGeneral() {
                 onChange={onChange}
                 onChangeByInd={onСhangeByIndex}
             />
-            <RightColTab />
+            <MattermostFrame channelId={data?.channelId} />
         </form>
     );
 }
