@@ -991,7 +991,7 @@ function RightColTab() {
         <div className="tab-general__right tab-general__column">
             <iframe
                 title="Mattermost"
-                src="https://mm-mpk.ru/mosproektkompleks/"
+                src="https://mm-mpk.ru/mosproektkompleks/channels/"
                 style={{ width: '100%', height: '100%', border: 'none' }}
             ></iframe>
         </div>

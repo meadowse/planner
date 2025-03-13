@@ -310,27 +310,9 @@ def addPhoto(request):
         data = request.FILES.get('image').read()
         with open(f"images/{request.POST.get('title')}.{request.FILES.get('image').name.split('.')[1]}", mode="wb") as new:
             new.write(data)
-        # form = ImageForm(request.POST, request.FILES)
-        # print(form)
-        # if form.is_valid():
-        #     form.save()
-        #     # Получить текущий объект экземпляра для отображения в шаблоне
-        #     img_obj = form.instance
-        #     return render(request, 'index.html', {'form': form, 'img_obj': img_obj})
-        return JsonResponse({'ok': True})
+        return JsonResponse({'ok': True}, status=200)
     else:
-        form = ImageForm()
-        return render(request, 'index.html', {'form': form})
-
-# @csrf_exempt
-# def addPhoto(request):
-#     if request.method == 'POST':
-#         # TODO загрузка фото
-#         data = request.files['avatar'].read()
-#         with open("test.wav", mode="wb") as new:
-#             new.write(data)
-#     else:
-#         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
 def getTypesWork(request):
