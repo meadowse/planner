@@ -79,7 +79,8 @@ function ColorCard(props) {
 
 // Блок "Изображение объекта"
 function ImageBuilding({ presetValue, disabledElem }) {
-    const [image, setImage] = useState(presetValue ? presetValue : null);
+    const [image, setImage] = useState(presetValue.imgBuilding ? presetValue.imgBuilding : null);
+    // console.log(`image: ${JSON.stringify(presetValue, null, 4)}`);
 
     // Загрузка изображения
     function onDownloadImage(event) {
@@ -109,7 +110,7 @@ function ImageBuilding({ presetValue, disabledElem }) {
 
     return (
         <div className="tab-general__image">
-            {image && Object.keys(image).length !== 0 ? (
+            {image ? (
                 <img className="tab-general__img" src={image} alt="Building" />
             ) : (
                 <p className="tab-general__image-message">No image</p>
