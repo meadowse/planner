@@ -520,6 +520,6 @@ def auth(request):
             Id = response.json().get('id')
             return JsonResponse({'token': f'{token}', 'id': f'{Id}'}, status=200)
         else:
-            return JsonResponse({'Failed authentication': f'{response.status_code}, {response.text}'}, status=response.status_code)
+            return JsonResponse({'Failed authentication': f'{response.text}'}, status=response.status_code)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
