@@ -5,7 +5,7 @@ from time import perf_counter
 from django.views.decorators.csrf import csrf_exempt
 from .config import *
 import datetime
-
+import requests
 
 def getAgreements(request):
     start = perf_counter()
@@ -494,5 +494,32 @@ def editTask(request):
             cur.execute(sql)
             con.commit()
         return JsonResponse({'status': 'Ok'}, status=200)
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+def deleteTask(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        taskId = obj.get('taskId')
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+            cur = con.cursor()
+            sql = f"""DELETE FROM T218 WHERE ID = '{taskId}'"""
+            cur.execute(sql)
+            con.commit()
+        return JsonResponse({'status': 'Ok'}, status=200)
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+def auth(request):
+    if request.method == 'POST':
+        payload = json.loads(request.body)
+        url = f'{MATTERMOST_URL}/api/v4/users/login'
+        response = requests.post(url, json=payload)
+        if response.status_code == 200:
+            token = response.headers.get('Token')
+            Id = response.json().get('id')
+            return JsonResponse({'token': f'{token}', 'id': f'{Id}'}, status=200)
+        else:
+            return JsonResponse({'Failed authentication': f'{response.status_code}, {response.text}'}, status=response.status_code)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)

@@ -29,4 +29,5 @@ urlpatterns = [
     path('getTasksContracts', getTasksContracts, name='getTasksContracts'),
     path('addTask', addTask, name='addTask'),
     path('editTask', editTask, name='editTask'),
+    path('auth', auth, name='auth'),
 ]
