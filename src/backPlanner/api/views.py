@@ -497,6 +497,7 @@ def editTask(request):
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
+@csrf_exempt
 def deleteTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
@@ -510,6 +511,7 @@ def deleteTask(request):
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
+@csrf_exempt
 def auth(request):
     if request.method == 'POST':
         payload = json.loads(request.body)
