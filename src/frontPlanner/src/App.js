@@ -13,7 +13,7 @@ export default function App() {
     //     ...ROUTES_FOR_AUTH
     // ]);
 
-    // const router = createBrowserRouter([...(!authState.accessToken ? ROUTES_FOR_NOT_AUTH : []), ...ROUTES_FOR_AUTH]);
-    const router = createBrowserRouter([...ROUTES_FOR_AUTH]);
+    const router = createBrowserRouter([...(!authState.accessToken ? ROUTES_FOR_NOT_AUTH : []), ...ROUTES_FOR_AUTH]);
+    // const router = createBrowserRouter([...ROUTES_FOR_AUTH]);
     return <RouterProvider router={router} />;
 }

@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 import classNames from 'classnames';
 
 // Импорт доп.функционала
@@ -228,22 +230,26 @@ function SignInForm(props) {
     async function onSubmit(e) {
         e.preventDefault();
         const loginPayload = {
-            email: values.email,
+            login_id: values.email,
             password: values.password
         };
-        AuthService.login(loginPayload)
+        await axios
+            .post('https://mm-mpk.ru/api/v4/users/login', loginPayload)
             .then(response => {
                 if (response.status === 200) {
-                    console.log(`response: ${JSON.stringify(response, null, 4)}`);
+                    // const token = response.headers['MMAUTHTOKEN'];
+                    console.log(`response: ${JSON.stringify(response.headers, null, 4)}`);
+                    // const token = response.headers['MMAUTHTOKEN']; // Получаем токен из заголовков ответа
+                    // localStorage.setItem('mattermost_token', token); // Сохраняем токен в localStorage для последующих запросов
                     setAuthState({
-                        accessToken: TokenService.getAccessToken()
+                        accessToken: 123
                     });
                     navigate('../department');
                 }
             })
-            .catch(e => {
-                // console.log(`e.response: ${JSON.stringify(e.response, null, 4)}`)
-                // if (e.response.data.non_field_errors !== undefined) checkResponse(mode, e.response.data.message);
+            .catch(error => {
+                if (error.response) console.log(`error.response: ${JSON.stringify(error.response, null, 4)}`);
+                if (error.request) console.log(`error.request: ${JSON.stringify(error.request, null, 4)}`);
             });
     }
 
@@ -313,7 +319,7 @@ export default function Authentication() {
     // 1. Ситуция, когда логин пользователя не найден в системе.
 
     const AUTH_MODES = {
-        0: () => <SignUpForm mode={authMode} navigate={navigate} setAuthState={setAuthState} />,
+        // 0: () => <SignUpForm mode={authMode} navigate={navigate} setAuthState={setAuthState} />,
         1: () => <SignInForm mode={authMode} navigate={navigate} setAuthState={setAuthState} />
     };
 
@@ -335,14 +341,14 @@ export default function Authentication() {
             <div className="auth-page-col__right auth-page-col">
                 <div className="auth-page-col__panel">
                     <div className="auth-page-col__panel-header">
-                        <button
+                        {/* <button
                             className={classNames('auth-page-col__btn-registration', 'auth-page-col-btn', {
                                 'auth-page-col-btn_active': authMode === 0
                             })}
                             onClick={() => onSelectAuthMode(0)}
                         >
                             Регистрация
-                        </button>
+                        </button> */}
                         <button
                             className={classNames('auth-page-col__btn-login', 'auth-page-col-btn', {
                                 'auth-page-col-btn_active': authMode === 1

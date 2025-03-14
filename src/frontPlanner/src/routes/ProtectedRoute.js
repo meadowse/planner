@@ -6,6 +6,7 @@ import { authContext } from '../contexts/auth.context';
 
 export default function ProtectedRoute() {
     const { authState } = useContext(authContext);
-    return <Outlet />;
-    // return authState.accessToken ? <Outlet /> : <Navigate to="auth" />;
+    console.log(`authState: ${JSON.stringify(authState, null, 4)}`);
+    // return <Outlet />;
+    return authState.accessToken ? <Outlet /> : <Navigate to="auth" />;
 }

@@ -987,7 +987,7 @@ function Comment(props) {
     );
 }
 
-function MattermostFrame({ channelId }) {
+function MattermostIntegration({ channelId }) {
     return (
         <div className="tab-general__mattermost tab-general__column">
             <iframe
@@ -1045,7 +1045,7 @@ export default function TabGeneral() {
                 onChange={onChange}
                 onChangeByInd={onСhangeByIndex}
             />
-            <MattermostFrame channelId={data?.channelId} />
+            <MattermostIntegration channelId={data?.channelId} />
         </form>
     );
 }

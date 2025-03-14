@@ -36,10 +36,10 @@ const ROUTES_FOR_AUTH = [
         path: '/',
         element: <ProtectedRoute />,
         children: [
-            // {
-            //     path: '/auth',
-            //     element: <Authentication />
-            // },
+            {
+                path: '/auth',
+                element: <Authentication />
+            },
             {
                 path: '',
                 element: <Layout />,
