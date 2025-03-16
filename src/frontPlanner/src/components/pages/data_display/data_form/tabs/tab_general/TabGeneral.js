@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
 import classNames from 'classnames';
+import Cookies from 'js-cookie';
 
 // Импорт компонетов
 import IconButton from '@generic/elements/buttons/IcButton';

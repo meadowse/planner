@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -281,20 +281,15 @@ function TaskRow(props) {
         if (element) element.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
 
-    async function onShowInfoCard(id, operationVal) {
-        await axios.post(`${window.location.origin}/api/getAgreement`, { contractId: id }).then(response => {
-            // console.log(`response: ${JSON.stringify(response, null, 4)}`);
-            if (response.status === 200) {
-                const navigationArg = {
-                    state: {
-                        partition:partition,
-                        data: response?.data[0],
-                        dataOperation: findNestedObj(dataOperations, 'key', operationVal)
-                    }
-                };
-                navigate('../../dataform/', navigationArg);
+    function onShowInfoCard(id, operationVal) {
+        const navigationArg = {
+            state: {
+                partition: partition,
+                dataOperation: findNestedObj(dataOperations, 'key', operationVal)
             }
-        });
+        };
+        localStorage.setItem('idContract', JSON.stringify(id));
+        navigate('../../dataform/general/', navigationArg);
     }
 
     // console.log(`tasks: ${JSON.stringify(tasks, null, 4)}`);
@@ -419,12 +414,13 @@ function TaskRow(props) {
 }
 
 function GanttChart(props) {
-    const {partition, data, dateState, selectedItem, modeOption, dataOperations } = props;
+    const { partition, data, dateState, selectedItem, modeOption, dataOperations } = props;
 
     const [ganttData, setGanttData] = useState({});
     const [showTasks, setShowTasks] = useState(true);
     const [showSubtasks, setShowSubtasks] = useState(true);
     const [currTask, setCurrTask] = useState({});
+    const refCurrMonth = useRef(null);
 
     // Скрытие основных задач
     function onHideTasks() {
@@ -497,6 +493,10 @@ function GanttChart(props) {
     // console.log(`new Data: ${JSON.stringify(ganttData, null, 4)}`);
 
     useEffect(() => {
+        refCurrMonth?.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }, [ganttData]);
+
+    useEffect(() => {
         const ganttChartData = initGanttChart(data, selectedItem, modeOption);
         setGanttData(ganttChartData);
     }, [selectedItem, modeOption]);
@@ -509,8 +509,13 @@ function GanttChart(props) {
                         <div className="gantt-task-empty gantt-task-row"></div>
                         <div className="gantt-empty-row"></div>
                         <ul className="gantt-time-months gantt-time-period">
-                            {MONTHS.map(month => (
-                                <li className="gantt-time-period">{month}</li>
+                            {MONTHS.map((month, indMonth) => (
+                                <li
+                                    className="gantt-time-period"
+                                    ref={indMonth === new Date().getMonth() ? refCurrMonth : null}
+                                >
+                                    {month}
+                                </li>
                             ))}
                         </ul>
                     </div>

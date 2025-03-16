@@ -6,7 +6,7 @@ export const authContext = createContext();
 
 const AuthProvider = ({ children }) => {
     const [authState, setAuthState] = useState({
-        accessToken: Cookies.get('header_payload') || null
+        accessToken: Cookies.get('MMAUTHTOKEN') || null
     });
 
     const contextValue = {

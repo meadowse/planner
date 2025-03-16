@@ -456,18 +456,37 @@ export default function TaskPopup(props) {
     console.log(`values: ${JSON.stringify(values, null, 4)}`);
     console.log(`data: ${JSON.stringify(data, null, 4)}`);
 
-    // async function loadData() {
-    //     await axios
-    //         .post(`${window.location.origin}/api/getAgreement`, { contractId: data?.idContract })
-    //         .then(response => {
-    //             if (response?.status === 200) setContactData(response?.data[0]);
-    //         });
-    // }
+    // Удаление задачи
+    function onDeleteTask() {
+        const idContract = JSON.parse(localStorage.getItem('idContract'));
+        if (data?.task && Object.keys(data?.task).length !== 0) {
+            axios
+                .post(`${window.location.origin}/api/deleteTask`, {})
+                .then(response => {
+                    if (response.status === 200) {
+                        setAddTaskState(false);
+                        const navigationArg = {
+                            partition: 'department',
+                            dataOperation: dataOperation
+                        };
+                        // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
+                        navigate(`../../dataform/works/${idContract}`, { state: navigationArg });
+                    }
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.log(error.response);
+                        console.log('server responded');
+                    } else if (error.request) {
+                        console.log('network error');
+                    } else {
+                        console.log(error);
+                    }
+                });
+        }
+    }
 
-    // useEffect(() => {
-    //     loadData();
-    // }, []);
-
+    // Сохранение и редактирование задачи
     function onOnSubmitData(e) {
         e.preventDefault();
         const idContract = JSON.parse(localStorage.getItem('idContract'));
@@ -615,6 +634,11 @@ export default function TaskPopup(props) {
                         config={{ hidden: dataOperation?.hiddenFields?.comment ? true : false }}
                         onChange={onChange}
                     />
+                    {data?.task && Object.keys(data?.task).length !== 0 ? (
+                        <button className="popup__content-del-task" onClick={onDeleteTask}>
+                            Удалить
+                        </button>
+                    ) : null}
                 </div>
             </form>
         </InputDataPopup>

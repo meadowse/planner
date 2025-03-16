@@ -198,59 +198,34 @@ function SignInForm(props) {
         setFormData(data);
     }
 
-    // 1 версия
-    // function onSubmit(e) {
-    //     e.preventDefault();
-    //     const loginPayload = {
-    //         email: values.email,
-    //         password: values.password
-    //     };
-    //     if (checkData()) {
-    //         AuthService.login(loginPayload)
-    //             .then(response => {
-    //                 if (response.status === 200) {
-    //                     const { token, refreshToken } = response.data;
-    //                     console.log(`Auth token: ${token}\n RefreshToken: ${refreshToken}`);
-    //                     setAuthToken(token);
-    //                     navigate('../department');
-    //                 }
-    //             })
-    //             .catch(e => {
-    //                 if (e.response.data.errors !== undefined) {
-    //                     checkResponse(mode, e.response.data.errors);
-    //                 }
-    //                 if (e.response.data.error !== undefined) {
-    //                     checkResponse(mode, e.response.data.error);
-    //                 }
-    //             });
-    //     }
-    // }
-
-    // 3 версия
     async function onSubmit(e) {
         e.preventDefault();
         const loginPayload = {
-            login_id: values.email,
-            password: values.password
+            login_id: 'n.filippov',
+            password: 'AsdFGhjKL12345'
         };
+
         await axios
-            .post('https://mm-mpk.ru/api/v4/users/login', loginPayload)
-            .then(response => {
-                if (response.status === 200) {
-                    // const token = response.headers['MMAUTHTOKEN'];
-                    console.log(`response: ${JSON.stringify(response.headers, null, 4)}`);
-                    // const token = response.headers['MMAUTHTOKEN']; // Получаем токен из заголовков ответа
-                    // localStorage.setItem('mattermost_token', token); // Сохраняем токен в localStorage для последующих запросов
-                    setAuthState({
-                        accessToken: 123
-                    });
-                    navigate('../department');
-                }
-            })
-            .catch(error => {
-                if (error.response) console.log(`error.response: ${JSON.stringify(error.response, null, 4)}`);
-                if (error.request) console.log(`error.request: ${JSON.stringify(error.request, null, 4)}`);
-            });
+            .all([
+                await axios.post(`${window.location.origin}/api/auth`, loginPayload),
+                await axios.post('https://mm-mpk.ru/api/v4/users/login', loginPayload)
+            ])
+            .then(
+                axios.spread((authRes, loginRes) => {
+                    if (authRes.status === 200) {
+                        // Cookies.set('MMUSERID', authRes?.data?.id, { expires: 30, path: '/' });
+                        Cookies.set('MMAUTHTOKEN', authRes?.data?.token, { expires: 30, path: '/' });
+                    }
+                    if (loginRes.status === 200) {
+                        setAuthState({
+                            accessToken: authRes?.data?.token
+                        });
+                        navigate('../department');
+                    }
+                    // output of req.
+                    // console.log('authRes', authRes, 'loginRes', loginRes);
+                })
+            );
     }
 
     useEffect(() => console.log(`Authorization errors: ${JSON.stringify(errors, null, 4)}`), [errors]);

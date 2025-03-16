@@ -92,6 +92,7 @@
     white-space: nowrap;
     overflow: auto;
     scrollbar-width: none;
+    cursor: pointer;
     background-color: #f1f1f1;
     z-index: 3;
 }
