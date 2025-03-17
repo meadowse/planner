@@ -23,20 +23,24 @@ import './gantt_mode.css';
 function getHeadlinesGantt(data, modeOption) {
     console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
     if (data && data.length !== 0) {
+        const headlinesGantt = [];
         // Формирование заголовков по которым будут отфильтрованы данные для диаграммы Ганта
-        const headlinesGantt = getUniqueData(data, modeOption)?.map(item => {
+        const tempData = getUniqueData(data, modeOption)?.map(item => {
             if (modeOption && Object.keys(modeOption).length !== 0) {
                 if (item && item[modeOption?.key] && modeOption?.key) {
                     if (isObject(item[modeOption?.key]) && Object.keys(item[modeOption?.key]).length !== 0)
                         return item[modeOption?.key];
                     else if (isArray(item[modeOption?.key]) && item[modeOption?.key].length !== 0) {
-                        return item[modeOption?.key].map(subItem => {
-                            return subItem;
-                        });
-                    }
+                        if (item[modeOption?.key].length === 1) return item[modeOption?.key];
+                    } else return item[modeOption?.key];
+                    // return item[modeOption?.key].map(subItem => {
+                    //     return subItem;
+                    // });
+                    // } else return item[modeOption?.key];
                 }
             }
         });
+        if (tempData && tempData.length !== 0) tempData?.forEach(item => (item ? headlinesGantt.push(item) : null));
         console.log(`headlinesGantt: ${JSON.stringify(headlinesGantt, null, 4)}`);
         return headlinesGantt;
     }
@@ -633,10 +637,15 @@ export default function GanttMode(props) {
                     if (isArray(headline) && headline.length !== 0) {
                         return (
                             <option key={headline?.title} value={index}>
-                                {headline.map(item => {
+                                {headline.length === 1
+                                    ? isObject(headline[0]) && Object.keys(headline[0]).length !== 0
+                                        ? headline[0][modeOption?.uniqueness]
+                                        : null
+                                    : null}
+                                {/* {headline.map(item => {
                                     if (isObject(item) && Object.keys(item).length !== 0)
                                         return item[modeOption?.uniqueness] + String.fromCodePoint(8194);
-                                })}
+                                })} */}
                             </option>
                         );
                     }
