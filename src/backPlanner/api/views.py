@@ -30,7 +30,7 @@ def getAgreements(request):
         LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts, 
         LIST(DISTINCT participants.ID || ';' || participants.F4886) AS participants, 
         responsible.F4886 AS responsible, 
-        LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696, '*') AS tasks 
+        LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697, '*') AS tasks 
         FROM T212 
         LEFT JOIN T237 ON T212.F4948 = T237.ID 
         LEFT JOIN T205 ON T212.F4540 = T205.ID 
@@ -110,7 +110,7 @@ def getAgreements(request):
                     if list2[0] == '' and list2[1] == '' and list2[2] == '':
                         continue
                     else:
-                        tasks.get('tasks').append({'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2]})
+                        tasks.get('tasks').append({'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2], 'done': list2[3]})
             obj.update(tasks)
         end = perf_counter()
         print(end - start)
