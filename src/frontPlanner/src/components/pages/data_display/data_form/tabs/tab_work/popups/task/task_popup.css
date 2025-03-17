@@ -119,7 +119,7 @@
     position: absolute;
     opacity: 0;
     inset: 0;
-    z-index: -1;
+    z-index: 1;
 }
 
 .popup__custom-checkbox {
@@ -182,5 +182,6 @@
     width: max-content;
     border-radius: 0.3125rem;
     background-color: #d90429;
+    cursor: pointer;
     color: #fff;
 }

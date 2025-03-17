@@ -97,6 +97,10 @@
     z-index: 3;
 }
 
+.gantt-task-title_done {
+    text-decoration: line-through solid #8ac926;
+}
+
 .gantt-task-wrapper,
 .gantt-task-title-wrapper {
     padding: 0 0.625rem;

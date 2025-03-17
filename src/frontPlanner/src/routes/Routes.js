@@ -163,10 +163,13 @@ const ROUTES_FOR_AUTH = [
                                 path: 'works/:id',
                                 loader: async ({ params }) => {
                                     const { id } = params;
-                                    // console.log(`works and tasks loader: ${id}`);
-                                    return defer({
+                                    return {
                                         uploadedData: await DataFormService.loadData('works', { contractId: id })
-                                    });
+                                    };
+                                    // console.log(`works and tasks loader: ${id}`);
+                                    // return defer({
+                                    //     uploadedData: await DataFormService.loadData('works', { contractId: id })
+                                    // });
                                 },
                                 element: (
                                     <Suspense fallback={<Preloader />}>

@@ -347,6 +347,9 @@
 
 /*  */
 .cell__task {
-    cursor: pointer;
     text-decoration: underline;
+}
+
+.cell__task span {
+    cursor: pointer;
 }

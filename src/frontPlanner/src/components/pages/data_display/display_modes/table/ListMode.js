@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTable } from 'react-table';
 import classNames from 'classnames';
 
@@ -42,9 +42,10 @@ function Cell({ cellData, cellConfig }) {
 
 export default function ListMode(props) {
     const { testData, modeConfig } = props;
-    const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
+    // console.log(`ListMode testData: ${JSON.stringify(testData, null, 4)}`);
 
-    const [data, setData] = useState(testData.sort((a, b) => parseInt(b?.id) - parseInt(a?.id)));
+    const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
+    const [data, setData] = useState([]);
     const [order, setOrder] = useState('ASC');
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
@@ -88,6 +89,10 @@ export default function ListMode(props) {
             return <Cell cellData={cellData} />;
         }
     };
+
+    useEffect(() => {
+        setData(testData.sort((a, b) => parseInt(b?.id) - parseInt(a?.id)));
+    }, [modeConfig]);
 
     return (
         <div className={classNames('table-mode__wrapper', { 'table-mode__wrapper_empty': !data || data.length === 0 })}>

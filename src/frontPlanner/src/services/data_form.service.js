@@ -70,6 +70,7 @@ const loadData = (tab, payload) => {
                 });
 
             return {
+                dataCount: worksData.length + tasksData.length,
                 works: worksData || [],
                 tasks: tasksData || []
             };

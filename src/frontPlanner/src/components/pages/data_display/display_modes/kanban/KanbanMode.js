@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 // Импорт компонетов
 import Card from '@generic/elements/cards/Card';
-import ActionSelectionPopup from './popups/ActionSelectionPopup';
+import ActionSelectionPopup from '@generic/elements/popup/ActionSelectionPopup';
 
 // Импорт конфигураций
 import { FILTERS_CONF_MAP, DRAG_AND_DROP_CONF_MAP } from '@config/kanban.config';

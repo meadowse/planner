@@ -5,7 +5,7 @@ import Popup from '@generic/elements/popup/Popup';
 import './action_selection_popup.css';
 
 export default function ActionSelectionPopup(props) {
-    const { additClass, statePopup, functionRef, setStatePopup } = props;
+    const { additClass, title, statePopup, functionRef, setStatePopup } = props;
 
     function onConfirmAction() {
         if (functionRef.current) {
@@ -27,7 +27,7 @@ export default function ActionSelectionPopup(props) {
             icon={'cancel_bl.svg'}
         >
             <div className="popup__content-action-selection popup-content">
-                <h2 className="popup-content__title">Вы уверенны, что хотите внести изменения в выбранную карточку?</h2>
+                <h2 className="popup-content__title">{title}</h2>
                 <div className="popup-content__actions">
                     <button className="popup__btn-action-yes btn-action" onClick={onConfirmAction}>
                         Да

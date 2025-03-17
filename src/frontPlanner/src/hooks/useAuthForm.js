@@ -68,14 +68,8 @@ export const useAuthForm = (authMode, initialVal) => {
                     config.email = error;
                     setErrors(config);
                 } else {
-                    if (!regExp.test(value)) {
-                        error = { message: 'Некорректное значение!' };
-                        config.email = error;
-                        setErrors(config);
-                    } else {
-                        delete config.email;
-                        setErrors(config);
-                    }
+                    delete config.email;
+                    setErrors(config);
                 }
             },
             'phone': () => {

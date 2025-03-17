@@ -27,6 +27,7 @@ export default function TabWorkNew() {
             <div className="tab-work__main">
                 {works && works.length !== 0 ? (
                     <ListMode
+                        key={`${partition}-table-works`}
                         testData={works}
                         modeConfig={{
                             keys: ['number', 'typeWork', 'deadline', 'dateDone', 'done'],
@@ -38,6 +39,7 @@ export default function TabWorkNew() {
                 ) : null}
                 {tasks && tasks.length !== 0 ? (
                     <ListMode
+                        key={`${partition}-table-tasks`}
                         testData={tasks}
                         modeConfig={{
                             keys: ['task', 'director', 'executor', 'deadlineTask', 'done'],

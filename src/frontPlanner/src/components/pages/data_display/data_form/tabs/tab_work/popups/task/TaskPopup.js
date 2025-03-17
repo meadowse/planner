@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
@@ -11,6 +11,7 @@ import DropdownMenu from '@generic/elements/dropdown_menu/DropdownMenu';
 import CalendarWindow from '@generic/elements/calendar/CalendarWindow';
 import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
 import InputDataPopup from '@generic/elements/popup/InputDataPopup';
+import ActionSelectionPopup from '@generic/elements/popup/ActionSelectionPopup';
 
 // Импорт кастомных хуков
 import { useTaskForm } from '@hooks/useAddTaskForm';
@@ -229,7 +230,8 @@ function Completeness(props) {
     const { presetValue, config, onSelect } = props;
     const [checked, setChecked] = useState(presetValue ? presetValue : 0);
 
-    function onChange() {
+    function onChangeCompleteness() {
+        console.log(`res done ${!checked}`);
         setChecked(!checked);
         onSelect('done', !checked);
     }
@@ -238,7 +240,7 @@ function Completeness(props) {
         <li className="popup__content-completeness popup-content-item">
             <h2 className="popup-content-title">Завершено</h2>
             <div className="popup__checkbox-wrapper">
-                <input className="popup__inpt-checkbox" type="checkbox" checked={checked} onChange={() => onChange()} />
+                <input className="popup__inpt-checkbox" type="checkbox" onChange={onChangeCompleteness} />
                 <span className="popup__custom-checkbox"></span>
             </div>
         </li>
@@ -446,6 +448,8 @@ export default function TaskPopup(props) {
     const { additClass, title, data, operation, addTaskState, setAddTaskState } = props;
     const dataOperation = TaskService.getDataFormOperation(operation);
 
+    const [stateActionPopup, setStateActionPopup] = useState(false);
+
     const { values, onChange, onClick } = useTaskForm(
         TaskService.getTaskData(data?.task, dataOperation?.disabledFields),
         dataOperation?.disabledFields
@@ -461,7 +465,7 @@ export default function TaskPopup(props) {
         const idContract = JSON.parse(localStorage.getItem('idContract'));
         if (data?.task && Object.keys(data?.task).length !== 0) {
             axios
-                .post(`${window.location.origin}/api/deleteTask`, {})
+                .post(`${window.location.origin}/api/deleteTask`, { taskId: data?.task?.id })
                 .then(response => {
                     if (response.status === 200) {
                         setAddTaskState(false);
@@ -487,7 +491,7 @@ export default function TaskPopup(props) {
     }
 
     // Сохранение и редактирование задачи
-    function onOnSubmitData(e) {
+    async function onOnSubmitData(e) {
         e.preventDefault();
         const idContract = JSON.parse(localStorage.getItem('idContract'));
         // Создание новой задачи
@@ -502,18 +506,7 @@ export default function TaskPopup(props) {
                 task: values?.task,
                 comment: values?.comment
             };
-            // setAddTaskState(false);
-            // const navigationArg = {
-            //     state: {
-            //         partition: 'department',
-            //         data: contractData,
-            //         dataOperation: dataOperation
-            //     }
-            // };
-            // // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
-            // navigate(`../../dataform/works/${data?.idContract}`, navigationArg);
-            // alert(`contractId: ${data?.idContract}`);
-            axios
+            await axios
                 .post(`${window.location.origin}/api/addTask`, resultData)
                 .then(response => {
                     if (response.status === 200) {
@@ -549,7 +542,7 @@ export default function TaskPopup(props) {
                 task: values?.task,
                 comment: values?.comment
             };
-            axios
+            await axios
                 .post(`${window.location.origin}/api/editTask`, resultData)
                 .then(response => {
                     if (response.status === 200) {

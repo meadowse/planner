@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import classNames from 'classnames';
 
 // Импорт конфигураций
 import { MONTHS } from '@config/calendar.config';
@@ -160,6 +161,7 @@ function initGanttChart(data, selectedItem, modeOption) {
                           return {
                               title: task?.title || 'Нет данных',
                               contractNum: `${item?.contractNum}_${ind + 1}`,
+                              done: +task?.done,
                               dateOfStart:
                                   getDateFromString(task?.dateOfStart) > getDateFromString(task?.dateOfEnding)
                                       ? task?.dateOfEnding
@@ -300,7 +302,7 @@ function TaskRow(props) {
                   getDateFromString(task?.dateOfStart),
                   getDateFromString(task?.dateOfEnding)
               ).length;
-              //   console.log(`task: ${JSON.stringify(task, null, 4)}`);
+              console.log(`task done: ${JSON.stringify(task?.done, null, 4)}`);
               //   console.log(
               //       `title: ${task?.title}\ndateOfStart: ${task?.dateOfStart}\ndateOfEnding: ${task?.dateOfEnding}\ndaysDiff: ${daysDiff}`
               //   );
@@ -326,7 +328,11 @@ function TaskRow(props) {
                               </div>
                           ) : (
                               <div className="gantt-task-wrapper" style={{ paddingLeft: `${config.indent / 16}rem` }}>
-                                  <div className="gantt-task-title">
+                                  <div
+                                      className={classNames('gantt-task-title', {
+                                          'gantt-task-title_done': task?.done
+                                      })}
+                                  >
                                       <span>{task?.title}</span>
                                   </div>
                                   {task?.dateOfStart && task?.dateOfEnding ? (
