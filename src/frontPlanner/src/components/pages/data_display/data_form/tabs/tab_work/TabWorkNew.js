@@ -15,7 +15,7 @@ export default function TabWorkNew() {
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        // console.log(`loaded data: ${JSON.stringify(uploadedData, null, 4)}`);
+        console.log(`loaded data: ${JSON.stringify(uploadedData, null, 4)}`);
         if (uploadedData && Object.keys(uploadedData).length !== 0) {
             setWorks(uploadedData?.works);
             setTasks(uploadedData?.tasks);
@@ -28,7 +28,7 @@ export default function TabWorkNew() {
                 {works && works.length !== 0 ? (
                     <ListMode
                         key={`${partition}-table-works`}
-                        testData={works}
+                        testData={works.sort((a, b) => parseInt(b?.number) - parseInt(a?.number))}
                         modeConfig={{
                             keys: ['number', 'typeWork', 'deadline', 'dateDone', 'done'],
                             partition: partition,
@@ -40,7 +40,7 @@ export default function TabWorkNew() {
                 {tasks && tasks.length !== 0 ? (
                     <ListMode
                         key={`${partition}-table-tasks`}
-                        testData={tasks}
+                        testData={tasks.sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
                         modeConfig={{
                             keys: ['task', 'director', 'executor', 'deadlineTask', 'done'],
                             partition: partition,

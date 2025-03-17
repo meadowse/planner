@@ -345,7 +345,7 @@ export default function DataDisplayPage({ partition }) {
                                                     resolvedData,
                                                     simplifyData(extractSampleData(resolvedData, valsToDisplay)),
                                                     searchElem
-                                                )}
+                                                ).sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
                                                 modeOption={modeOption}
                                                 dataOperations={dataOperations}
                                             />
@@ -365,7 +365,7 @@ export default function DataDisplayPage({ partition }) {
                                                     resolvedData,
                                                     simplifyData(extractSampleData(resolvedData, valsToDisplay)),
                                                     searchElem
-                                                )}
+                                                ).sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
                                                 modeConfig={{
                                                     keys: valsToDisplay,
                                                     partition: partition,
@@ -400,7 +400,7 @@ export default function DataDisplayPage({ partition }) {
                                                     resolvedData,
                                                     simplifyData(extractSampleData(resolvedData, valsToDisplay)),
                                                     searchElem
-                                                )}
+                                                ).sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
                                                 modeOption={modeOption}
                                                 searchElem={searchElem}
                                                 dataOperations={dataOperations}

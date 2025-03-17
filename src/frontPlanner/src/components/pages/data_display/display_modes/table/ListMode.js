@@ -91,7 +91,8 @@ export default function ListMode(props) {
     };
 
     useEffect(() => {
-        setData(testData.sort((a, b) => parseInt(b?.id) - parseInt(a?.id)));
+        // setData(testData.sort((a, b) => parseInt(b?.id) - parseInt(a?.id)));
+        setData(testData);
     }, [modeConfig]);
 
     return (

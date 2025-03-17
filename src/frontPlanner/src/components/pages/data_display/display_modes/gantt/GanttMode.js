@@ -33,7 +33,7 @@ function getHeadlinesGantt(data, modeOption) {
                         return item[modeOption?.key].map(subItem => {
                             return subItem;
                         });
-                    } else return item[modeOption?.key];
+                    }
                 }
             }
         });
@@ -133,9 +133,9 @@ function initGanttChart(data, selectedItem, modeOption) {
             newItem.id = item?.id;
             //
             newItem.title =
-                (item?.address || 'Адрес отсутствует') +
-                ` ${String.fromCodePoint(8212)} ` +
                 (item?.contractNum || 'Номер договора отсутствует') +
+                ` ${String.fromCodePoint(8212)} ` +
+                (item?.address || 'Адрес отсутствует') +
                 ` ${String.fromCodePoint(8212)} ` +
                 (item?.company || 'Заказчик отсутствует');
             //
@@ -208,7 +208,7 @@ function DurationTask(props) {
 function TotalTaskRow(props) {
     const { totalTasks, selectedItem, dateState, modeOption, bgColorTask, onHideTasks } = props;
 
-    return totalTasks && totalTasks.length !== 0 ? (
+    return (
         <div className="gantt-grid__main-row">
             <div
                 className="gantt-task-main-title gantt-task-title"
@@ -255,7 +255,7 @@ function TotalTaskRow(props) {
                 })}
             </ul>
         </div>
-    ) : null;
+    );
 }
 
 // Отображение задач
@@ -267,11 +267,11 @@ function TaskRow(props) {
         indexTask,
         config,
         dataOperations,
-        onHideSubtasks,
-        onDragStartHandler,
-        onDragEndHandler,
-        onDragOverHandler,
-        onDropHandler
+        onHideSubtasks
+        // onDragStartHandler,
+        // onDragEndHandler,
+        // onDragOverHandler,
+        // onDropHandler
     } = props;
     const navigate = useNavigate();
     // console.log(`tasks: ${JSON.stringify(tasks, null, 4)}`);
@@ -332,6 +332,7 @@ function TaskRow(props) {
                                       className={classNames('gantt-task-title', {
                                           'gantt-task-title_done': task?.done
                                       })}
+                                      onClick={() => onShowInfoCard(task?.id, 'update')}
                                   >
                                       <span>{task?.title}</span>
                                   </div>
@@ -357,23 +358,23 @@ function TaskRow(props) {
                                       <li
                                           id={idTask}
                                           className="gantt-time-period-cell"
-                                          onDragOver={e => onDragOverHandler(e)}
-                                          onDrop={e => {
-                                              if (config?.subTasks)
-                                                  onDropHandler(e, {
-                                                      indTask: indexTask,
-                                                      indSubTask: indTask,
-                                                      dateOfStart: day,
-                                                      duration: daysDiff
-                                                  });
-                                              else
-                                                  onDropHandler(e, {
-                                                      indTask: indTask,
-                                                      indSubTask: -1,
-                                                      dateOfStart: day,
-                                                      duration: daysDiff
-                                                  });
-                                          }}
+                                          //   onDragOver={e => onDragOverHandler(e)}
+                                          //   onDrop={e => {
+                                          //       if (config?.subTasks)
+                                          //           onDropHandler(e, {
+                                          //               indTask: indexTask,
+                                          //               indSubTask: indTask,
+                                          //               dateOfStart: day,
+                                          //               duration: daysDiff
+                                          //           });
+                                          //       else
+                                          //           onDropHandler(e, {
+                                          //               indTask: indTask,
+                                          //               indSubTask: -1,
+                                          //               dateOfStart: day,
+                                          //               duration: daysDiff
+                                          //           });
+                                          //   }}
                                       >
                                           {task?.dateOfStart && task?.dateOfStart === dateVal ? (
                                               <DurationTask
@@ -389,9 +390,9 @@ function TaskRow(props) {
                                                       duration: daysDiff,
                                                       bgColorTask: task?.bgColorTask
                                                   }}
-                                                  draggable={true}
-                                                  onDragStartHandler={onDragStartHandler}
-                                                  onDragEndHandler={onDragEndHandler}
+                                                  //   draggable={true}
+                                                  //   onDragStartHandler={onDragStartHandler}
+                                                  //   onDragEndHandler={onDragEndHandler}
                                               />
                                           ) : null}
                                       </li>
@@ -407,10 +408,10 @@ function TaskRow(props) {
                               dateState={dateState}
                               indexTask={indTask}
                               config={{ subTasks: true, indent: config.indent * 2 }}
-                              onDragStartHandler={onDragStartHandler}
-                              onDragEndHandler={onDragEndHandler}
-                              onDragOverHandler={onDragOverHandler}
-                              onDropHandler={onDropHandler}
+                              //   onDragStartHandler={onDragStartHandler}
+                              //   onDragEndHandler={onDragEndHandler}
+                              //   onDragOverHandler={onDragOverHandler}
+                              //   onDropHandler={onDropHandler}
                           />
                       ) : null}
                   </>
@@ -427,6 +428,16 @@ function GanttChart(props) {
     const [showSubtasks, setShowSubtasks] = useState(true);
     const [currTask, setCurrTask] = useState({});
     const refCurrMonth = useRef(null);
+
+    const styleVrLine = {
+        width: 0,
+        height: `${(ganttData?.totalCount + 1) * 100}%`,
+        position: 'absolute',
+        border: '0.5px solid #ef233c',
+        top: '100%',
+        left: '0',
+        zIndex: '10'
+    };
 
     // Скрытие основных задач
     function onHideTasks() {
@@ -504,6 +515,10 @@ function GanttChart(props) {
 
     useEffect(() => {
         const ganttChartData = initGanttChart(data, selectedItem, modeOption);
+        ganttChartData.totalCount = ganttChartData.tasks.length;
+        ganttChartData.tasks.map(item => {
+            ganttChartData.totalCount = ganttChartData.totalCount + item?.subTasks?.length;
+        });
         setGanttData(ganttChartData);
     }, [selectedItem, modeOption]);
 
@@ -529,9 +544,28 @@ function GanttChart(props) {
                         <div className="gantt-task-empty gantt-task-row"></div>
                         <div className="gantt-empty-row"></div>
                         <ul className="gantt-time-year gantt-time-period">
-                            {getDaysYear(dateState).map(day => (
-                                <li className="gantt-time-period__day gantt-time-period">{day.getDate()}</li>
-                            ))}
+                            {getDaysYear(dateState).map(day => {
+                                let currDate = getDateInSpecificFormat(new Date(), {
+                                    format: 'YYYYMMDD',
+                                    separator: '-'
+                                });
+                                let date = getDateInSpecificFormat(day, {
+                                    format: 'YYYYMMDD',
+                                    separator: '-'
+                                });
+                                return (
+                                    <li
+                                        className={classNames('gantt-time-period__day gantt-time-period', {
+                                            'gantt-time-period__curr-day': currDate === date
+                                        })}
+                                    >
+                                        {day.getDate()}
+                                        {currDate === date ? (
+                                            <div className="gantt-time__vr-line" style={styleVrLine}></div>
+                                        ) : null}
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                 </div>
@@ -553,11 +587,11 @@ function GanttChart(props) {
                             dateState={dateState}
                             config={{ subTasks: false, indTask: 0, indent: 10 }}
                             dataOperations={dataOperations}
-                            onHideSubtasks={onHideSubtasks}
-                            onDragStartHandler={onDragStart}
-                            onDragEndHandler={onDragEnd}
-                            onDragOverHandler={onDragOver}
-                            onDropHandler={onDrop}
+                            // onHideSubtasks={onHideSubtasks}
+                            // onDragStartHandler={onDragStart}
+                            // onDragEndHandler={onDragEnd}
+                            // onDragOverHandler={onDragOver}
+                            // onDropHandler={onDrop}
                         />
                     ) : null}
                 </div>
