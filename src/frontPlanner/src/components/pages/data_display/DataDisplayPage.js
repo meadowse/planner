@@ -48,12 +48,13 @@ function filterData(data, simplifiedData, filter) {
 }
 
 function Option(props) {
-    const { optionVal, item, onSelectOption } = props;
+    const { keyVal, item, onSelectOption } = props;
+    // console.log(`keyVal: ${JSON.stringify(keyVal, null, 4)}\nitem: ${JSON.stringify(item, null, 4)}`);
 
     return (
         <li
             className={classNames('page-section-options__item', {
-                'page-section-options__item_active': optionVal === item?.value
+                'page-section-options__item_active': keyVal === item?.key
             })}
             onClick={() => onSelectOption(item)}
         >
@@ -70,7 +71,7 @@ function DisplayModes(props) {
         <ul className="page-section-options">
             {displayModes && displayModes.length !== 0
                 ? displayModes?.map(item => (
-                      <Option key={item?.value} optionVal={mode?.value} item={item} onSelectOption={onSelectMode} />
+                      <Option key={item?.value} keyVal={mode?.key} item={item} onSelectOption={onSelectMode} />
                   ))
                 : null}
         </ul>
@@ -80,17 +81,13 @@ function DisplayModes(props) {
 // Опции режима отображения
 function ModeOptions(props) {
     const { modeOptions, modeOption, onSelectOption } = props;
+    console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
 
     return (
         <ul className="page-section-options">
             {modeOptions && modeOptions.length !== 0
                 ? modeOptions.map(item => (
-                      <Option
-                          key={item?.value}
-                          optionVal={modeOption?.value}
-                          item={item}
-                          onSelectOption={onSelectOption}
-                      />
+                      <Option key={item?.value} keyVal={modeOption?.key} item={item} onSelectOption={onSelectOption} />
                   ))
                 : null}
         </ul>
@@ -148,12 +145,6 @@ function HeaderBottom(props) {
                             onSelectOption={onSelectModeOption}
                         />
                     ) : null}
-                    {/* <IconButton
-                        nameClass="icon-btn__create icon-btn"
-                        text="Создать"
-                        icon="plus.svg"
-                        onClick={() => onCreate(mode)}
-                    /> */}
                 </div>
             );
         },
@@ -182,12 +173,6 @@ function HeaderBottom(props) {
                             onSelectOption={onSelectModeOption}
                         />
                     </div>
-                    {/* <IconButton
-                        nameClass="icon-btn__create icon-btn"
-                        text="Создать"
-                        icon="plus.svg"
-                        onClick={() => onCreate(mode)}
-                    /> */}
                 </div>
             );
         },
@@ -209,12 +194,6 @@ function HeaderBottom(props) {
                             onSelectOption={onSelectMode}
                         />
                     </div>
-                    {/* <IconButton
-                        nameClass="icon-btn__create icon-btn"
-                        text="Создать"
-                        icon="plus.svg"
-                        // onClick={() => onCreate(mode)}
-                    /> */}
                 </div>
             );
         }
@@ -229,7 +208,11 @@ function HeaderBottom(props) {
 
     // Выбор опции режима отображения
     function onSelectModeOption(value) {
-        setOption({ keyMode: mode?.key, ...value });
+        let option = {
+            [mode?.key]: { keyMode: mode?.key, ...value }
+        };
+        setOption(option);
+        localStorage.setItem(`mode-option_${partition}`, JSON.stringify(option));
     }
 
     // Создание новых данных
@@ -258,8 +241,6 @@ export default function DataDisplayPage({ partition }) {
     const data = useLoaderData();
     const itemSideMenu = useOutletContext();
     const navigate = useNavigate();
-
-    // Элемент поиска
     const [searchElem, setSearchElem] = useState('');
 
     // Режимы отображения
@@ -270,7 +251,7 @@ export default function DataDisplayPage({ partition }) {
     // Опции режимов отображения
     const [modeOptions, setModeOptions] = useState([]);
     // Опция режима отображения
-    const [modeOption, setOption] = useState({});
+    const [modeOption, setOption] = useState(JSON.parse(localStorage.getItem(`mode-option_${partition}`)) || {});
 
     // Данные для отображения
     const valsToDisplay = DataDisplayService.getValuesToDisplay(partition, mode) || [];
@@ -279,17 +260,26 @@ export default function DataDisplayPage({ partition }) {
 
     useEffect(() => {
         const dataModeOptions = DataDisplayService.getModeOptions(partition, mode);
-
         setModeOptions(dataModeOptions);
+        setOption(() => {
+            let savedOption = JSON.parse(localStorage.getItem(`mode-option_${partition}`));
+            let option = {};
 
-        if (dataModeOptions && dataModeOptions.length !== 0)
-            setOption({
-                keyMode: mode?.key,
-                ...dataModeOptions[0]
-            });
-        else setOption({ keyMode: mode?.key, value: null, key: null });
+            if (savedOption && Object.keys(savedOption).length !== 0) {
+                if (mode?.key && mode?.key in savedOption) {
+                    option = savedOption ? savedOption : { [mode?.key]: { value: null, key: null } };
+                } else {
+                    option = { [mode?.key]: dataModeOptions[0] };
+                }
+            } else option = { [mode?.key]: dataModeOptions[0] };
 
-        setSearchElem('');
+            localStorage.setItem(`mode-option_${partition}`, JSON.stringify(option));
+
+            // console.log(`mode: ${JSON.stringify(mode, null, 4)}\nsavedOption: ${JSON.stringify(savedOption, null, 4)}`);
+            return option;
+        });
+
+        console.log(`mode: ${JSON.stringify(mode, null, 4)}`);
     }, [mode]);
 
     useEffect(() => {
@@ -300,12 +290,22 @@ export default function DataDisplayPage({ partition }) {
         const dataModeOptions = DataDisplayService.getModeOptions(partition, displayMode);
 
         setDisplayModes(dataDisplayModes);
-        setMode(displayMode);
+        setMode(() => {
+            localStorage.setItem(`mode_${partition}`, JSON.stringify(displayMode));
+            return displayMode;
+        });
 
         setModeOptions(dataModeOptions);
-        setOption({
-            keyMode: displayMode?.key,
-            ...dataModeOptions[0]
+        setOption(() => {
+            let option = {};
+            let savedOption = JSON.parse(localStorage.getItem(`mode-option_${partition}`));
+            if (!savedOption || Object.keys(savedOption).length === 0) {
+                option = {
+                    [displayMode?.key]: dataModeOptions[0]
+                };
+                localStorage.setItem(`mode-option_${partition}`, JSON.stringify(option));
+                return option;
+            } else return savedOption;
         });
 
         navigate(displayMode?.key);
@@ -322,7 +322,7 @@ export default function DataDisplayPage({ partition }) {
                     displayModes={displayModes}
                     mode={mode}
                     modeOptions={modeOptions}
-                    modeOption={modeOption}
+                    modeOption={modeOption[mode?.key]}
                     navigate={navigate}
                     setMode={setMode}
                     setOption={setOption}
@@ -346,7 +346,7 @@ export default function DataDisplayPage({ partition }) {
                                                     simplifyData(extractSampleData(resolvedData, valsToDisplay)),
                                                     searchElem
                                                 ).sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
-                                                modeOption={modeOption}
+                                                modeOption={modeOption[mode?.key]}
                                                 dataOperations={dataOperations}
                                             />
                                         )}
@@ -401,9 +401,10 @@ export default function DataDisplayPage({ partition }) {
                                                     simplifyData(extractSampleData(resolvedData, valsToDisplay)),
                                                     searchElem
                                                 ).sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
-                                                modeOption={modeOption}
-                                                searchElem={searchElem}
-                                                dataOperations={dataOperations}
+                                                modeConfig={{
+                                                    modeOption: modeOption[mode?.key],
+                                                    dataOperations: dataOperations
+                                                }}
                                             />
                                         )}
                                     </Await>

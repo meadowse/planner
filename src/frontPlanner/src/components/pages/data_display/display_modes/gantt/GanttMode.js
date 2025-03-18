@@ -604,53 +604,60 @@ function GanttChart(props) {
     ) : null;
 }
 
-export default function GanttMode(props) {
-    const { partition, data, modeOption, searchElem, dataOperations } = props;
-    const [selectedItemInd, setSelectedItemInd] = useState(0);
+export default function GanttMode({ data, modeConfig }) {
+    const [selectedItemInd, setSelectedItemInd] = useState(
+        +localStorage.getItem(`gantt-filter_${modeConfig?.modeOption?.key}`) || 0
+    );
     // Состояние текущей даты
     const [dateState] = useState({ year: new Date().getFullYear(), month: new Date().getMonth() });
+    const ganttConfig = getHeadlinesGantt(data, modeConfig?.modeOption);
+    // console.log(`ganttConfig: ${JSON.stringify(ganttConfig, null, 4)}`);
 
-    const ganttConfig = getHeadlinesGantt(data, modeOption);
-    console.log(`ganttConfig: ${JSON.stringify(ganttConfig, null, 4)}`);
+    function onSelectItem(e) {
+        setSelectedItemInd(e.target.value);
+        localStorage.setItem(`gantt-filter_${modeConfig?.modeOption?.key}`, e.target.value);
+    }
 
-    useEffect(() => setSelectedItemInd(0), [modeOption]);
+    useEffect(() => {
+        const ganttFilter = +localStorage.getItem(`gantt-filter_${modeConfig?.modeOption?.key}`);
+        // localStorage.setItem('gantt-filter', 0);
+        if (ganttFilter && ganttFilter !== -1) setSelectedItemInd(ganttFilter);
+        else {
+            localStorage.setItem(`gantt-filter_${modeConfig?.modeOption?.key}`, 0);
+            setSelectedItemInd(0);
+        }
+    }, [modeConfig]);
 
     return ganttConfig && ganttConfig.length !== 0 ? (
         <div className="gantt-mode">
-            <GanttChart
-                partition={partition}
-                data={data}
-                dateState={dateState}
-                selectedItem={ganttConfig[selectedItemInd]}
-                modeOption={modeOption}
-                dataOperations={dataOperations}
-            />
-            <select className="gantt-mode__select-list" onChange={e => setSelectedItemInd(e.target.value)}>
+            <select className="gantt-mode__select-list" onChange={onSelectItem}>
                 {ganttConfig?.map((headline, index) => {
                     if (isObject(headline) && Object.keys(headline).length !== 0) {
                         return (
-                            <option key={headline?.title} value={index}>
-                                {headline[modeOption?.uniqueness]}
+                            <option key={headline?.title} value={index} selected={selectedItemInd === index}>
+                                {headline[modeConfig?.modeOption?.uniqueness]}
                             </option>
                         );
                     }
                     if (isArray(headline) && headline.length !== 0) {
                         return (
-                            <option key={headline?.title} value={index}>
-                                {headline.length === 1
-                                    ? isObject(headline[0]) && Object.keys(headline[0]).length !== 0
-                                        ? headline[0][modeOption?.uniqueness]
-                                        : null
-                                    : null}
-                                {/* {headline.map(item => {
+                            <option key={headline?.title} value={index} selected={selectedItemInd === index}>
+                                {headline.map(item => {
                                     if (isObject(item) && Object.keys(item).length !== 0)
-                                        return item[modeOption?.uniqueness] + String.fromCodePoint(8194);
-                                })} */}
+                                        return item[modeConfig?.modeOption?.uniqueness] + String.fromCodePoint(8194);
+                                })}
                             </option>
                         );
                     }
                 })}
             </select>
+            <GanttChart
+                data={data}
+                dateState={dateState}
+                selectedItem={ganttConfig[selectedItemInd]}
+                modeOption={modeConfig?.modeOption}
+                dataOperations={modeConfig?.dataOperations}
+            />
         </div>
     ) : null;
 }

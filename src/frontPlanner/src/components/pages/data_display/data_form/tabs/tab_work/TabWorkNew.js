@@ -25,7 +25,27 @@ export default function TabWorkNew() {
     return (
         <div className="tab-work section__tab">
             <div className="tab-work__main">
-                {works && works.length !== 0 ? (
+                <ListMode
+                    key={`${partition}-table-works`}
+                    testData={works.sort((a, b) => parseInt(b?.number) - parseInt(a?.number))}
+                    modeConfig={{
+                        keys: ['number', 'typeWork', 'deadline', 'dateDone', 'done'],
+                        partition: partition,
+                        dataOperations: [],
+                        idContract: idContract
+                    }}
+                />
+                <ListMode
+                    key={`${partition}-table-tasks`}
+                    testData={tasks.sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
+                    modeConfig={{
+                        keys: ['task', 'director', 'executor', 'deadlineTask', 'done'],
+                        partition: partition,
+                        dataOperations: [],
+                        idContract: idContract
+                    }}
+                />
+                {/* {works && works.length !== 0 ? (
                     <ListMode
                         key={`${partition}-table-works`}
                         testData={works.sort((a, b) => parseInt(b?.number) - parseInt(a?.number))}
@@ -36,8 +56,8 @@ export default function TabWorkNew() {
                             idContract: idContract
                         }}
                     />
-                ) : null}
-                {tasks && tasks.length !== 0 ? (
+                ) : null} */}
+                {/* {tasks && tasks.length !== 0 ? (
                     <ListMode
                         key={`${partition}-table-tasks`}
                         testData={tasks.sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
@@ -48,7 +68,7 @@ export default function TabWorkNew() {
                             idContract: idContract
                         }}
                     />
-                ) : null}
+                ) : null} */}
             </div>
         </div>
     );
