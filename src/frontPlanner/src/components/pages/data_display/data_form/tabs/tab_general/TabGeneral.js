@@ -33,6 +33,8 @@ function Stage(props) {
     const { additClass, presetValue, disabledElem, stageError, onClick } = props;
     const [stage, setStage] = useState(presetValue ? presetValue : {});
 
+    console.log(`Stage presetValue: ${JSON.stringify(presetValue, null, 4)}`);
+
     // Выбор статуса
     function onClickItemStage(value) {
         console.log(`stage: ${JSON.stringify(value, null, 4)}`);
@@ -874,7 +876,12 @@ function Deadline(props) {
                 className="tab-general-row__wrapper tab-general-row-date"
                 data-error={deadlineError && Object.keys(deadlineError).length !== 0 ? deadlineError.message : null}
             >
-                <input className="tab-general-row__deadline" type="text" value={date || null} disabled={disabledElem} />
+                <input
+                    className="tab-general-row__deadline"
+                    type="text"
+                    value={date || '__ . __ . __'}
+                    disabled={disabledElem}
+                />
                 <IconButton
                     nameClass="tab-general-row__ic-btn icon-btn"
                     type="button"
@@ -932,7 +939,7 @@ function Deadlines(props) {
 // Блок "Услуга"
 function Service(props) {
     const { additClass, presetValue, serviceError, disabledElem, onClick } = props;
-    const [services, setServices] = useState(presetValue && Object.keys(presetValue).length !== 0 ? presetValue : {});
+    const [services, setServices] = useState(presetValue ? presetValue[0] : {});
 
     console.log(`presetValue: ${JSON.stringify(presetValue, null, 4)}`);
 
@@ -963,7 +970,8 @@ function Service(props) {
                     keyMenu="services"
                     nameMenu="Выбрать услугу"
                     option={true}
-                    disabledElem={disabledElem}
+                    // disabledElem={disabledElem}
+                    specifiedVal={presetValue}
                     onItemClick={onAddService}
                 />
             </div>

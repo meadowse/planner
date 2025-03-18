@@ -9,7 +9,7 @@ import { MONTHS } from '@config/calendar.config';
 // Импорт дополнительного функционала
 import {
     getDaysBetweenTwoDates,
-    getLastDayOfMonth,
+    getFirstDayOfMonth,
     getDateFromString,
     getDateInSpecificFormat,
     getDaysYear,
@@ -546,8 +546,10 @@ function GanttChart(props) {
                         <ul className="gantt-time-year gantt-time-period">
                             {getDaysYear(dateState).map(day => {
                                 let today = new Date();
+                                // Прибавить текущей дате еще один месяц
+                                today.setMonth(today.getMonth() + 1);
 
-                                let currDate = getDateInSpecificFormat(today, {
+                                let currDate = getDateInSpecificFormat(new Date(), {
                                     format: 'YYYYMMDD',
                                     separator: '-'
                                 });
@@ -555,7 +557,7 @@ function GanttChart(props) {
                                     format: 'YYYYMMDD',
                                     separator: '-'
                                 });
-
+                                // console.log(`lastDayOfCurrMonth: ${lastDayOfCurrMonth}`);
                                 return (
                                     <li
                                         className={classNames('gantt-time-period__day gantt-time-period', {
@@ -563,7 +565,7 @@ function GanttChart(props) {
                                         })}
                                         ref={
                                             today.getMonth() === day.getMonth()
-                                                ? getLastDayOfMonth(today) === getLastDayOfMonth(day)
+                                                ? getFirstDayOfMonth(today) === getFirstDayOfMonth(day)
                                                     ? refCurrMonth
                                                     : null
                                                 : null

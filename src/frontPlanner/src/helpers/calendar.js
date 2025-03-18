@@ -1,6 +1,10 @@
 // Импорт конфигураций
 import { MONTHS, DATE_FORMAT_CONFIG } from '@config/calendar.config';
 
+export function getFirstDayOfMonth(date) {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDate();
+}
+
 export function getLastDayOfMonth(date) {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }

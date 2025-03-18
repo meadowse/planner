@@ -18,7 +18,8 @@ export default function DropdownMenu(props) {
             <IconButton
                 nameClass={info.classes.icBtn}
                 type={'button'}
-                text={dropdownState ? nameMenu : option ? nameMenu : itemMenu.title}
+                // text={dropdownState ? nameMenu : option ? nameMenu : itemMenu.title}
+                text={dropdownState ? nameMenu : itemMenu.title}
                 icon={icon}
                 spanColor={
                     dropdownState
