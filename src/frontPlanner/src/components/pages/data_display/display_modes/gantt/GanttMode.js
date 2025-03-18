@@ -9,6 +9,7 @@ import { MONTHS } from '@config/calendar.config';
 // Импорт дополнительного функционала
 import {
     getDaysBetweenTwoDates,
+    getLastDayOfMonth,
     getDateFromString,
     getDateInSpecificFormat,
     getDaysYear,
@@ -535,12 +536,7 @@ function GanttChart(props) {
                         <div className="gantt-empty-row"></div>
                         <ul className="gantt-time-months gantt-time-period">
                             {MONTHS.map((month, indMonth) => (
-                                <li
-                                    className="gantt-time-period"
-                                    ref={indMonth === new Date().getMonth() ? refCurrMonth : null}
-                                >
-                                    {month}
-                                </li>
+                                <li className="gantt-time-period">{month}</li>
                             ))}
                         </ul>
                     </div>
@@ -549,7 +545,9 @@ function GanttChart(props) {
                         <div className="gantt-empty-row"></div>
                         <ul className="gantt-time-year gantt-time-period">
                             {getDaysYear(dateState).map(day => {
-                                let currDate = getDateInSpecificFormat(new Date(), {
+                                let today = new Date();
+
+                                let currDate = getDateInSpecificFormat(today, {
                                     format: 'YYYYMMDD',
                                     separator: '-'
                                 });
@@ -557,11 +555,19 @@ function GanttChart(props) {
                                     format: 'YYYYMMDD',
                                     separator: '-'
                                 });
+
                                 return (
                                     <li
                                         className={classNames('gantt-time-period__day gantt-time-period', {
                                             'gantt-time-period__curr-day': currDate === date
                                         })}
+                                        ref={
+                                            today.getMonth() === day.getMonth()
+                                                ? getLastDayOfMonth(today) === getLastDayOfMonth(day)
+                                                    ? refCurrMonth
+                                                    : null
+                                                : null
+                                        }
                                     >
                                         {day.getDate()}
                                         {currDate === date ? (

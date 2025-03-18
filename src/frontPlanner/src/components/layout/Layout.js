@@ -11,14 +11,13 @@ import menuItems from '@data/sideMenuData.json';
 import './layout.css';
 
 export default function Layout() {
-    // const [itemSideMenu, setItemSideMenu] = useState(JSON.parse(localStorage.getItem('itemSideMenu')) || menuItems[0]);
-    const [itemSideMenu, setItemSideMenu] = useState({});
+    const [itemSideMenu, setItemSideMenu] = useState(JSON.parse(localStorage.getItem('itemSideMenu')) || menuItems[0]);
 
-    useEffect(() => {
-        if (JSON.parse(localStorage.getItem('itemSideMenu'))) localStorage.removeItem('itemSideMenu');
-        setItemSideMenu(menuItems[0]);
-        localStorage.setItem('itemSideMenu', JSON.stringify(menuItems[0]));
-    }, []);
+    // useEffect(() => {
+    //     if (JSON.parse(localStorage.getItem('itemSideMenu'))) localStorage.removeItem('itemSideMenu');
+    //     setItemSideMenu(menuItems[0]);
+    //     localStorage.setItem('itemSideMenu', JSON.stringify(menuItems[0]));
+    // }, []);
 
     return (
         <div className="app">

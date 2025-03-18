@@ -25,7 +25,7 @@ export default function TabWorkNew() {
     return (
         <div className="tab-work section__tab">
             <div className="tab-work__main">
-                <ListMode
+                {/* <ListMode
                     key={`${partition}-table-works`}
                     testData={works.sort((a, b) => parseInt(b?.number) - parseInt(a?.number))}
                     modeConfig={{
@@ -44,8 +44,8 @@ export default function TabWorkNew() {
                         dataOperations: [],
                         idContract: idContract
                     }}
-                />
-                {/* {works && works.length !== 0 ? (
+                /> */}
+                {works && works.length !== 0 ? (
                     <ListMode
                         key={`${partition}-table-works`}
                         testData={works.sort((a, b) => parseInt(b?.number) - parseInt(a?.number))}
@@ -56,7 +56,17 @@ export default function TabWorkNew() {
                             idContract: idContract
                         }}
                     />
-                ) : null} */}
+                ) : null}
+                <ListMode
+                    key={`${partition}-table-tasks`}
+                    testData={tasks.sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
+                    modeConfig={{
+                        keys: ['task', 'director', 'executor', 'deadlineTask', 'done'],
+                        partition: partition,
+                        dataOperations: [],
+                        idContract: idContract
+                    }}
+                />
                 {/* {tasks && tasks.length !== 0 ? (
                     <ListMode
                         key={`${partition}-table-tasks`}
