@@ -47,16 +47,22 @@ export const DATA_CONVERSION_MAP = {
             : { title: 'Без статуса', color: STATUSES_CONF['Без статуса'] };
     },
     services: services => {
-        return services && services.length !== 0 ? services[0] : null;
+        if (services && services.length !== 0) {
+            if (services[0]?.title) return services[0];
+        }
+        return null;
     },
     responsible: responsible => {
-        return responsible && Object.keys(responsible).length !== 0
-            ? {
-                  ...responsible,
-                  photo: '/img/user.svg',
-                  post: null
-              }
-            : null;
+        if (responsible && Object.keys(responsible).length !== 0) {
+            if (responsible?.fullName) {
+                return {
+                    ...responsible,
+                    photo: '/img/user.svg',
+                    post: null
+                };
+            }
+        }
+        return null;
     },
     participants: participants => {
         return participants && participants.length !== 0
