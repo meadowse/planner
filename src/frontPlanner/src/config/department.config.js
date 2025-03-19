@@ -190,7 +190,9 @@ export const DEPARTMENT_DATA_CONF = {
             keyMode: 'gant',
             modeOptions: [
                 { value: 'Услуги', key: 'services', uniqueness: 'title' },
-                { value: 'Люди', key: 'participants', uniqueness: 'fullName' }
+                { value: 'Руководители отделов', key: 'responsible', uniqueness: 'fullName' }
+                // { value: 'Отделы', key: 'services', uniqueness: 'title' }
+                // { value: 'Люди', key: 'participants', uniqueness: 'fullName' }
             ],
             keys: [
                 'id',
@@ -201,7 +203,7 @@ export const DEPARTMENT_DATA_CONF = {
                 'dateOfStart',
                 'dateOfEnding',
                 'tasks',
-                'participants'
+                'responsible'
             ]
         }
     ],

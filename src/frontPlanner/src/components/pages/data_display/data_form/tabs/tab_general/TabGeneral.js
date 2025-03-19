@@ -970,7 +970,7 @@ function Service(props) {
                     keyMenu="services"
                     nameMenu="Выбрать услугу"
                     option={true}
-                    // disabledElem={disabledElem}
+                    disabledElem={disabledElem}
                     specifiedVal={presetValue}
                     onItemClick={onAddService}
                 />

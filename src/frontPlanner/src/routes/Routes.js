@@ -89,7 +89,6 @@ const ROUTES_FOR_AUTH = [
                         element: (
                             <Suspense fallback={<Preloader />}>
                                 <DataDisplayPage partition="company" additClass="company" />
-                                {/* <CompanyPage additClass="company" /> */}
                             </Suspense>
                         )
                     },
@@ -119,35 +118,15 @@ const ROUTES_FOR_AUTH = [
                     },
                     {
                         path: 'dataform/*',
-                        // element: (
-                        //     <Suspense fallback={<Preloader />}>
-                        //         <DataForm />
-                        //     </Suspense>
-                        // )
                         element: (
                             <Suspense fallback={<Preloader />}>
                                 <DataFormNew />
                             </Suspense>
                         ),
                         loader: async () => {
-                            let resolvedData = {};
-                            await axios
-                                .post(`${window.location.origin}/api/getAgreement`, {
-                                    contractId: JSON.parse(localStorage.getItem('idContract'))
-                                })
-                                .then(response => {
-                                    if (response?.status === 200) resolvedData = response?.data[0];
-                                })
-                                .catch(error => {
-                                    if (error.response) {
-                                        console.log('server responded');
-                                    } else if (error.request) {
-                                        console.log('network error');
-                                    } else {
-                                        console.log(error);
-                                    }
-                                });
-                            return resolvedData && Object.keys(resolvedData).length !== 0 ? resolvedData : {};
+                            return await DataFormService.loadData('general', {
+                                contractId: JSON.parse(localStorage.getItem('idContract'))
+                            });
                         },
                         children: [
                             {
@@ -155,7 +134,6 @@ const ROUTES_FOR_AUTH = [
                                 element: (
                                     <Suspense fallback={<Preloader />}>
                                         <TabGeneral />
-                                        {/* <p>TabGeneral</p> */}
                                     </Suspense>
                                 )
                             },
@@ -166,10 +144,6 @@ const ROUTES_FOR_AUTH = [
                                     return {
                                         uploadedData: await DataFormService.loadData('works', { contractId: id })
                                     };
-                                    // console.log(`works and tasks loader: ${id}`);
-                                    // return defer({
-                                    //     uploadedData: await DataFormService.loadData('works', { contractId: id })
-                                    // });
                                 },
                                 element: (
                                     <Suspense fallback={<Preloader />}>

@@ -279,6 +279,7 @@ export default function Card(props) {
     function onShowInfoCard(operationVal) {
         const navigationArg = {
             state: {
+                tabForm: { key: 'general', title: 'Общие' },
                 partition: partition,
                 dataOperation: findNestedObj(dataOperations, 'key', operationVal)
             }

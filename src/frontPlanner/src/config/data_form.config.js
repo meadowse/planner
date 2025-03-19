@@ -1,5 +1,23 @@
+// Конфигурация по стадиям
+export const STAGES_CONF_MAP = {
+    'Без стадии': '#e9ecef',
+    'В работе': '#E3AA74',
+    'Доработка': '#ffa200',
+    'Доработка завершена': '#ff7b00',
+    'Работа приостановлена': '#8d99ae',
+    'Работа завершена': '#d4e09b',
+    'Успех': '#8ac926',
+    'Отменена': '#fb4b4e',
+    'Аннулировано': '#e63946'
+};
+
 // Конфигурация по преобразованию данных
 export const DATA_CONVERSION_MAP = {
+    stage: stage => {
+        return Object.keys(stage).length !== 0 && stage?.title
+            ? { title: stage?.title, color: STAGES_CONF_MAP[stage.title] }
+            : { title: 'Без стадии', color: STAGES_CONF_MAP['Без стадии'] };
+    },
     director: director => {
         return director && Object.keys(director).length !== 0
             ? {

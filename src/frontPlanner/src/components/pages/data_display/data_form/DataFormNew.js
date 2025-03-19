@@ -98,16 +98,19 @@ function TabsHeader(props) {
 
 function Tabs(props) {
     const { tabs, config } = props;
-    const [tab, setTab] = useState(tabs[0]);
+    console.log(`config: ${JSON.stringify(config, null, 4)}`);
+    const [tab, setTab] = useState(
+        config?.tabForm && Object.keys(config?.tabForm).length !== 0 ? config?.tabForm : tabs[0]
+    );
     // const [tab, setTab] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        console.log(`tab: ${JSON.stringify(tab, null, 4)}`);
-        // navigate(`${tab?.key}/${config?.idContract}`, { state: { ...config } });
-        navigate(`${tab?.key}/`, { state: config });
-        // console.log(`config state: ${JSON.stringify(config, null, 4)}`);
-    }, []);
+    // useEffect(() => {
+    //     console.log(`tab: ${JSON.stringify(tab, null, 4)}`);
+    //     // navigate(`${tab?.key}/${config?.idContract}`, { state: { ...config } });
+    //     navigate(`${tab?.key}/`, { state: config });
+    //     // console.log(`config state: ${JSON.stringify(config, null, 4)}`);
+    // }, []);
 
     return (
         <div className="section__dataform-tabs">
@@ -125,6 +128,7 @@ export default function DataFormNew() {
         idContract: state?.data?.id,
         partition: state?.partition,
         dataOperation: state?.dataOperation,
+        tabForm: state?.tabForm,
         data: uploadedData
     };
     // console.log(`uploadedData: ${JSON.stringify(uploadedData, null, 4)}`);

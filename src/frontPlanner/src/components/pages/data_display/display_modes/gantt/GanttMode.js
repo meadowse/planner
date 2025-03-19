@@ -9,6 +9,7 @@ import { MONTHS } from '@config/calendar.config';
 // Импорт дополнительного функционала
 import {
     getDaysBetweenTwoDates,
+    getLastDayOfMonth,
     getFirstDayOfMonth,
     getDateFromString,
     getDateInSpecificFormat,
@@ -31,9 +32,10 @@ function getHeadlinesGantt(data, modeOption) {
                 if (item && item[modeOption?.key] && modeOption?.key) {
                     if (isObject(item[modeOption?.key]) && Object.keys(item[modeOption?.key]).length !== 0)
                         return item[modeOption?.key];
-                    else if (isArray(item[modeOption?.key]) && item[modeOption?.key].length !== 0) {
-                        if (item[modeOption?.key].length === 1) return item[modeOption?.key];
-                    } else return item[modeOption?.key];
+                    else return item[modeOption?.key];
+                    // else if (isArray(item[modeOption?.key]) && item[modeOption?.key].length !== 0) {
+                    //     if (item[modeOption?.key].length === 1) return item[modeOption?.key];
+                    // }
                     // return item[modeOption?.key].map(subItem => {
                     //     return subItem;
                     // });
@@ -53,6 +55,7 @@ function getFilteredData(data, selectedItem, modeOption) {
     const simplifiedData = simplifyData(data);
     // Индексы найденных элементов
     const indexes = [];
+
     // Элементы которые нужно найти
     let elemsToFind =
         isArray(selectedItem) && selectedItem.length !== 0
@@ -73,7 +76,8 @@ function getFilteredData(data, selectedItem, modeOption) {
         });
     } else {
         simplifiedData.forEach((item, indItem) => {
-            if (item.includes(selectedItem?.title)) indexes.push(indItem);
+            if (item.includes(selectedItem[modeOption?.uniqueness])) indexes.push(indItem);
+            // if (item.includes(selectedItem?.title)) indexes.push(indItem);
         });
     }
 
@@ -93,7 +97,7 @@ function initGanttChart(data, selectedItem, modeOption) {
     let newItem = {};
     let dateStart, dateEnd;
 
-    //
+    // Формирование массива данных всех задач
     filteredData.forEach(item => {
         dateStart = getDateFromString(item?.dateOfStart?.value);
         dateEnd = getDateFromString(item?.dateOfEnding?.value);
@@ -130,23 +134,26 @@ function initGanttChart(data, selectedItem, modeOption) {
         }
     });
 
+    // Все задачи
     newData.totalTasks = dateRanges;
+    // Задний фон
     newData.bgColorTask = '#E4E4E4';
 
     filteredData.forEach(item => {
         if (item && Object.keys(item).length !== 0) {
-            newItem.id = item?.id;
-            //
+            // id договора
+            newItem.contractId = item?.id;
+            // Заголовок задачи
             newItem.title =
                 (item?.contractNum || 'Номер договора отсутствует') +
                 ` ${String.fromCodePoint(8212)} ` +
                 (item?.address || 'Адрес отсутствует') +
                 ` ${String.fromCodePoint(8212)} ` +
                 (item?.company || 'Заказчик отсутствует');
-            //
+            // Номер договора
             newItem.contractNum = item?.contractNum;
 
-            //
+            // Формирование дат (Начало и Конец)
             if (getDateFromString(item?.dateOfStart?.value) > getDateFromString(item?.dateOfEnding?.value)) {
                 newItem.dateOfStart = item?.dateOfEnding?.value;
                 newItem.dateOfEnding = item?.dateOfStart?.value;
@@ -155,15 +162,16 @@ function initGanttChart(data, selectedItem, modeOption) {
                 newItem.dateOfEnding = item?.dateOfEnding?.value;
             }
 
-            //
+            // Задний фон
             newItem.bgColorTask = item?.stage?.color;
-            //
+            // Видимость подзадач
             newItem.visibleSubtasks = true;
-            //
+            // Формирование подзадач
             newItem.subTasks =
                 item?.tasks && item?.tasks.length !== 0
                     ? item?.tasks.map((task, ind) => {
                           return {
+                              contractId: item?.id,
                               title: task?.title || 'Нет данных',
                               contractNum: `${item?.contractNum}_${ind + 1}`,
                               done: +task?.done,
@@ -221,15 +229,7 @@ function TotalTaskRow(props) {
                 onClick={onHideTasks}
             >
                 <img src="/img/arrow_down_bl.png" alt="Arrow" />
-                {isArray(selectedItem) && selectedItem.length !== 0 ? (
-                    <ul className="gantt-task-titles">
-                        {selectedItem.map(item => (
-                            <li>{item[modeOption?.uniqueness]}</li>
-                        ))}
-                    </ul>
-                ) : (
-                    <span>{selectedItem?.title}</span>
-                )}
+                <span>{selectedItem[modeOption?.uniqueness]}</span>
             </div>
             <div className="gantt-empty-row"></div>
             <ul className="gantt-time-period">
@@ -288,9 +288,12 @@ function TaskRow(props) {
         if (element) element.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
 
+    // Просмотр подробной информации о договоре
     function onShowInfoCard(id, operationVal) {
+        // console.log(`Клик по договору`);
         const navigationArg = {
             state: {
+                tabForm: { key: 'general', title: 'Общие' },
                 partition: partition,
                 dataOperation: findNestedObj(dataOperations, 'key', operationVal)
             }
@@ -299,15 +302,30 @@ function TaskRow(props) {
         navigate('../../dataform/general/', navigationArg);
     }
 
+    // Просмотр подробной информации о задаче
+    function onShowInfoTask(id, operationVal) {
+        // console.log(`Клик по задаче`);
+        const navigationArg = {
+            state: {
+                tabForm: { key: 'works', title: 'Работа и задачи' },
+                partition: partition,
+                dataOperation: findNestedObj(dataOperations, 'key', operationVal)
+            }
+        };
+        localStorage.setItem('idContract', JSON.stringify(id));
+        navigate(`../../dataform/works/${id}`, navigationArg);
+    }
+
     // console.log(`tasks: ${JSON.stringify(tasks, null, 4)}`);
 
     return tasks && tasks.length !== 0
         ? tasks?.map((task, indTask) => {
+              const containSubtasks = 'subTasks' in task;
               let daysDiff = getDaysBetweenTwoDates(
                   getDateFromString(task?.dateOfStart),
                   getDateFromString(task?.dateOfEnding)
               ).length;
-              console.log(`task done: ${JSON.stringify(task?.done, null, 4)}`);
+              //   console.log(`task: ${JSON.stringify(task, null, 4)}`);
               //   console.log(
               //       `title: ${task?.title}\ndateOfStart: ${task?.dateOfStart}\ndateOfEnding: ${task?.dateOfEnding}\ndaysDiff: ${daysDiff}`
               //   );
@@ -315,9 +333,12 @@ function TaskRow(props) {
               return (
                   <>
                       <div className="gantt-grid__main-row">
-                          {task?.subTasks && task?.subTasks.length !== 0 ? (
+                          {containSubtasks ? (
                               <div className="gantt-task-title-wrapper">
-                                  <div className="gantt-task-title" onClick={() => onShowInfoCard(task?.id, 'update')}>
+                                  <div
+                                      className="gantt-task-title"
+                                      onClick={() => onShowInfoCard(task?.contractId, 'update')}
+                                  >
                                       <span>{task?.title}</span>
                                   </div>
                                   <div className="gantt-task-images">
@@ -337,7 +358,7 @@ function TaskRow(props) {
                                       className={classNames('gantt-task-title', {
                                           'gantt-task-title_done': task?.done
                                       })}
-                                      onClick={() => onShowInfoCard(task?.id, 'update')}
+                                      onClick={() => onShowInfoTask(task?.contractId, 'update')}
                                   >
                                       <span>{task?.title}</span>
                                   </div>
@@ -525,6 +546,8 @@ function GanttChart(props) {
             ganttChartData.totalCount = ganttChartData.totalCount + item?.subTasks?.length;
         });
         setGanttData(ganttChartData);
+
+        // console.log(`ganttChartData: ${JSON.stringify(ganttChartData, null, 4)}`);
     }, [selectedItem, modeOption]);
 
     return ganttData && Object.keys(ganttData).length !== 0 ? (
@@ -565,7 +588,7 @@ function GanttChart(props) {
                                         })}
                                         ref={
                                             today.getMonth() === day.getMonth()
-                                                ? getFirstDayOfMonth(today) === getFirstDayOfMonth(day)
+                                                ? getLastDayOfMonth(today) === getLastDayOfMonth(day)
                                                     ? refCurrMonth
                                                     : null
                                                 : null
@@ -599,7 +622,7 @@ function GanttChart(props) {
                             dateState={dateState}
                             config={{ subTasks: false, indTask: 0, indent: 10 }}
                             dataOperations={dataOperations}
-                            // onHideSubtasks={onHideSubtasks}
+                            onHideSubtasks={onHideSubtasks}
                             // onDragStartHandler={onDragStart}
                             // onDragEndHandler={onDragEnd}
                             // onDragOverHandler={onDragOver}
@@ -647,16 +670,16 @@ export default function GanttMode({ data, modeConfig }) {
                             </option>
                         );
                     }
-                    if (isArray(headline) && headline.length !== 0) {
-                        return (
-                            <option key={headline?.title} value={index} selected={selectedItemInd === index}>
-                                {headline.map(item => {
-                                    if (isObject(item) && Object.keys(item).length !== 0)
-                                        return item[modeConfig?.modeOption?.uniqueness] + String.fromCodePoint(8194);
-                                })}
-                            </option>
-                        );
-                    }
+                    // if (isArray(headline) && headline.length !== 0) {
+                    //     return (
+                    //         <option key={headline?.title} value={index} selected={selectedItemInd === index}>
+                    //             {headline.map(item => {
+                    //                 if (isObject(item) && Object.keys(item).length !== 0)
+                    //                     return item[modeConfig?.modeOption?.uniqueness] + String.fromCodePoint(8194);
+                    //             })}
+                    //         </option>
+                    //     );
+                    // }
                 })}
             </select>
             <GanttChart
