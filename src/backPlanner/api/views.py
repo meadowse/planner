@@ -538,13 +538,14 @@ def getAllDepartmentsStaffAndTasks(request):
             employeeId, 
             employeeName, 
             photo, 
-            LIST(contractNum || '$' || address || '$' || dateOfStart || '$' || dateOfEnding || '$' || contractStage || '$' || tasks, '^') AS contracts 
+            LIST(contractId || '$' || contractNum || '$' || address || '$' || dateOfStart || '$' || dateOfEnding || '$' || contractStage || '$' || CASE WHEN tasks IS NULL THEN '' ELSE tasks END, '^') AS contracts 
             FROM (SELECT
             T5.ID AS sectionId,
             T5.F26 AS sectionName,
             T3.ID AS employeeId,
             T3.F4886 AS employeeName,
             T3.F4887SRC as photo,
+            T212.ID AS contractId,
             T212.F4538 AS contractNum,
             T212.F4946 AS address,
             T212.F4610 AS dateOfStart,
@@ -557,7 +558,7 @@ def getAllDepartmentsStaffAndTasks(request):
             LEFT JOIN T212 ON T253.F5024 = T212.ID
             LEFT JOIN T218 ON T3.ID = T218.F4694 AND T212.ID = T218.F4691
             WHERE T3.F5383 = 1
-            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10) tasks GROUP BY 1, 2, 3, 4, 5
+            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) tasks GROUP BY 1, 2, 3, 4, 5
             """
             cur.execute(sql)
             result = cur.fetchall()
@@ -587,14 +588,15 @@ def getAllDepartmentsStaffAndTasks(request):
                     for contract in Contracts:
                         count += 1
                         data = contract.split('$')
-                        contracts.get('contracts').append({'contractNum': data[0],
-                                                           'address': data[1],
-                                                           'dateOfStart': {'title': '', 'value': data[2]},
-                                                           'dateOfEnding': {'title': 'Срок работы', 'value': data[3]},
-                                                           'stage': {'title': data[4]},
+                        contracts.get('contracts').append({'conractId': data[0],
+                                                           'contractNum': data[1],
+                                                           'address': data[2],
+                                                           'dateOfStart': {'title': '', 'value': data[3]},
+                                                           'dateOfEnding': {'title': 'Срок работы', 'value': data[4]},
+                                                           'stage': {'title': data[5]},
                                                            'tasks': []})
-                        Str = data[5]
-                        if Str is not None:
+                        Str = data[6]
+                        if Str != '':
                             List = Str.split('*')
                             for allData in List:
                                 list2 = allData.split(';')
