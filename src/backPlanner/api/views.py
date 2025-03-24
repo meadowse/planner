@@ -525,3 +525,77 @@ def auth(request):
             return JsonResponse({'Failed authentication': f'{response.text}'}, status=response.status_code)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+@csrf_exempt
+def getAllDepartmentsStaffAndTasks(request):
+    with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+        cur = con.cursor()
+        try:
+            sql = """
+            SELECT 
+            T5.ID AS sectionId, 
+            T5.F26 AS sectionName, 
+            T3.ID AS employeeId, 
+            T3.F4886 AS employeeName, 
+            T3.F4887SRC as photo, 
+            T212.F4538 AS contractNum, 
+            T212.F4946 AS address, 
+            T212.F4610 AS dateOfStart, 
+            T212.F4566 AS dateOfEnding, 
+            T212.F4544 AS contractStage, 
+            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697, '*') AS tasks  
+            FROM T5 
+            LEFT JOIN T3 ON T5.ID = T3.F27 
+            LEFT JOIN T253 ON T3.ID = T253.F5022 
+            LEFT JOIN T212 ON T253.F5024 = T212.ID 
+            LEFT JOIN T218 ON T3.ID = T218.F4694 AND T212.ID = T218.F4691 
+            WHERE T3.F5383 = 1 
+            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+            """
+            cur.execute(sql)
+            result = cur.fetchall()
+
+            columns = (
+            'sectionId', 'sectionName', 'employeeId', 'employeeName', 'photo', 'contractNum', 'address', 'dateOfStart', 'dateOfEnding',
+            'stage', 'tasks')
+            json_result = [
+                {col: value for col, value in zip(columns, row)}
+                for row in result
+            ]  # Создаем список словарей с сериализацией значений
+
+            # Для каждого отдела получаем информацию о сотрудниках, договорах и задачах
+            for obj in json_result:
+                section = {'section': {'title': obj.get('sectionName'), 'id': obj.get('sectionId')}}
+                obj.update(section)
+                obj.pop('sectionId')
+                obj.pop('sectionName')
+                employee = {'employee': {'fullName': obj.get('employeeName'), 'id': obj.get('employeeId'), 'photo': obj.get('photo')}}
+                obj.update(employee)
+                obj.pop('employeeName')
+                obj.pop('employeeId')
+                obj.pop('photo')
+                stage = {'stage': {'title': obj.get('stage')}}
+                obj.update(stage)
+                dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
+                obj.update(dateOfStart)
+                dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding')}}
+                obj.update(dateOfEnding)
+                Str = obj.get('tasks')
+                tasks = {'tasks': []}
+                if Str is not None:
+                    List = Str.split('*')
+                    for allData in List:
+                        list2 = allData.split(';')
+                        list2[0].strip()
+                        if list2[0] == '' and list2[1] == '' and list2[2] == '':
+                            continue
+                        else:
+                            tasks.get('tasks').append(
+                                {'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2],
+                                 'done': list2[3]})
+                obj.update(tasks)
+
+            return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+        except Exception as ex:
+            print(f"Не удалось получить данные по отделам и сотрудникам: {ex}")
+            return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})

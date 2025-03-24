@@ -31,4 +31,5 @@ urlpatterns = [
     path('editTask', editTask, name='editTask'),
     path('deleteTask', deleteTask, name='deleteTask'),
     path('auth', auth, name='auth'),
+    path('getAllDepartmentsStaffAndTasks', getAllDepartmentsStaffAndTasks, name='getAllDepartmentsStaffAndTasks'),
 ]
