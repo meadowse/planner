@@ -95,7 +95,7 @@ const loadData = async partition => {
                                     section: item?.section,
                                     employee: item?.employee,
                                     contracts: formData(item?.contracts, partition, null)?.sort(
-                                        (a, b) => +b?.contractId - +a?.contractId
+                                        (a, b) => +b?.id - +a?.id
                                     )
                                 };
                             }

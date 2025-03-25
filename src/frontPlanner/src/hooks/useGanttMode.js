@@ -146,7 +146,7 @@ export const useGanttMode = args => {
                 if (item?.contracts && item?.contracts.length !== 0) {
                     item?.contracts.forEach(contract => {
                         // id договора
-                        taskItem.contractId = contract?.id;
+                        taskItem.contractId = +contract?.id;
                         // Заголовок задачи
                         taskItem.title =
                             (contract?.contractNum || 'Номер договора отсутствует') +
@@ -176,7 +176,7 @@ export const useGanttMode = args => {
                             contract?.tasks && contract?.tasks.length !== 0
                                 ? contract?.tasks.map((task, ind) => {
                                       return {
-                                          contractId: contract?.id,
+                                          contractId: +contract?.id,
                                           title: task?.title || 'Нет данных',
                                           contractNum: `${contract?.contractNum}_${ind + 1}`,
                                           navKey: 'task',
