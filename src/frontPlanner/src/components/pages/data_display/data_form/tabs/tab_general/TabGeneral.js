@@ -856,9 +856,10 @@ function Deadline(props) {
     let dateYYYYMMDD;
 
     const [calendarState, setCalendarState] = useState(false);
-    const [date, setDate] = useState(
-        presetValue && Object.keys(presetValue).length !== 0 && presetValue?.value ? presetValue?.value : null
-    );
+    const [date, setDate] = useState(presetValue ? presetValue : null);
+    // const [date, setDate] = useState(
+    //     presetValue && Object.keys(presetValue).length !== 0 && presetValue?.value ? presetValue?.value : null
+    // );
 
     function onSelectDate(date) {
         dateYYYYMMDD = getDateInSpecificFormat(new Date(date.getFullYear(), date.getMonth(), date.getDate()), {
@@ -917,7 +918,7 @@ function Deadlines(props) {
                     <Deadline
                         title="с"
                         keyValidation="dateOfStart"
-                        presetValue={presetValue}
+                        presetValue={presetValue?.beginDeadline}
                         disabledElem={dataOperation?.disabledFields?.dateOfStart}
                         deadlineError={deadlinesError?.dateOfStartError}
                         onClick={onClick}
@@ -925,7 +926,7 @@ function Deadlines(props) {
                     <Deadline
                         title="по"
                         keyValidation="dateOfEnding"
-                        presetValue={presetValue}
+                        presetValue={presetValue?.endDeadline}
                         disabledElem={dataOperation?.disabledFields?.dateOfEnding}
                         deadlineError={deadlinesError?.dateOfEndingError}
                         onClick={onClick}

@@ -155,9 +155,9 @@ export const DEPARTMENT_DATA_CONF = {
             mode: 'Канбан',
             keyMode: 'kanban',
             modeOptions: [
-                { value: 'Услуги', key: 'services', uniqueness: 'title' },
-                { value: 'Стадии', key: 'stage', uniqueness: 'title' },
-                { value: 'Дни', key: 'date', uniqueness: 'value' }
+                { value: 'Услуги', key: 'services', keyData: 'contracts', uniqueness: 'title' },
+                { value: 'Стадии', key: 'stage', keyData: 'contracts', uniqueness: 'title' },
+                { value: 'Дни', key: 'date', keyData: 'contracts', uniqueness: 'value' }
             ],
             keys: [
                 'id',
@@ -188,29 +188,31 @@ export const DEPARTMENT_DATA_CONF = {
         },
         {
             mode: 'Календарь',
-            modeOptions: [],
-            keyMode: 'calendar'
+            keyMode: 'calendar',
+            modeOptions: []
         },
         {
             mode: 'Гант',
             keyMode: 'gant',
             modeOptions: [
-                { value: 'Услуги', key: 'services', uniqueness: 'title' },
-                { value: 'Руководители отделов', key: 'responsible', uniqueness: 'fullName' }
-                // { value: 'Отделы', key: 'services', uniqueness: 'title' }
-                // { value: 'Люди', key: 'participants', uniqueness: 'fullName' }
-            ],
-            keys: [
-                'id',
-                'contractNum',
-                'company',
-                'address',
-                'services',
-                'dateOfStart',
-                'dateOfEnding',
-                'tasks',
-                'responsible'
+                { value: 'Услуги', key: 'services', keyData: 'contracts', uniqueness: 'title' },
+                { value: 'Руководители отделов', key: 'responsible', keyData: 'contracts', uniqueness: 'fullName' },
+                { value: 'Отделы', key: 'section', keyData: 'sections', uniqueness: 'title' }
             ]
+            // keys: [
+            //     'id',
+            //     'stage',
+            //     'contractNum',
+            //     'company',
+            //     'section',
+            //     'address',
+            //     'services',
+            //     'dateOfStart',
+            //     'dateOfEnding',
+            //     'tasks',
+            //     'responsible',
+            //     'employee'
+            // ]
         }
     ],
     dataOperations: [

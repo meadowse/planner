@@ -95,6 +95,15 @@
     z-index: 10;
 }
 
+.gantt-time__vr-line {
+    width: 0;
+    position: absolute;
+    border: 0.5px solid #ef233c;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+}
+
 .gantt-task-main-title {
     padding: 0 0.625rem;
     display: flex;

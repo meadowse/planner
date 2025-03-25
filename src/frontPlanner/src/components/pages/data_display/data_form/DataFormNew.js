@@ -67,8 +67,10 @@ function TabsHeader(props) {
     function onTabClick(item) {
         localStorage.setItem('selectedTab', JSON.stringify(item));
         tabClick(item);
-        console.log(`item: ${JSON.stringify(item, null, 4)}`);
-        NAVIGATION_CONF[item?.key] ? NAVIGATION_CONF[item?.key](item) : NAVIGATION_CONF?.default(item);
+        // console.log(`config: ${JSON.stringify(config, null, 4)}`);
+        if (item?.key in NAVIGATION_CONF) NAVIGATION_CONF[item?.key](item);
+        else NAVIGATION_CONF?.default(item);
+        // NAVIGATION_CONF[item?.key] ? NAVIGATION_CONF[item?.key](item) : NAVIGATION_CONF?.default(item);
         // console.log(`click config: ${JSON.stringify(config, null, 4)}`);
         // navigate(`${item?.key}/${config?.idContract}`, { state: { ...config } });
     }
@@ -98,7 +100,7 @@ function TabsHeader(props) {
 
 function Tabs(props) {
     const { tabs, config } = props;
-    console.log(`config: ${JSON.stringify(config, null, 4)}`);
+    // console.log(`config: ${JSON.stringify(config, null, 4)}`);
     const [tab, setTab] = useState(
         config?.tabForm && Object.keys(config?.tabForm).length !== 0 ? config?.tabForm : tabs[0]
     );
@@ -125,13 +127,13 @@ export default function DataFormNew() {
     const { state } = useLocation();
 
     const configData = {
-        idContract: state?.data?.id,
+        idContract: state?.idContract,
         partition: state?.partition,
         dataOperation: state?.dataOperation,
         tabForm: state?.tabForm,
         data: uploadedData
     };
-    // console.log(`uploadedData: ${JSON.stringify(uploadedData, null, 4)}`);
+    console.log(`uploadedData: ${JSON.stringify(uploadedData, null, 4)}`);
 
     return (
         <section className="section__dataform">

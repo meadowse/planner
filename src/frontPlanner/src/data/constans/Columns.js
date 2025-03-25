@@ -60,6 +60,8 @@ const COLUMNS = [
             function onShowInfoCard() {
                 const navigationArg = {
                     state: {
+                        idContract: props?.config?.idContract,
+                        tabForm: { key: 'general', title: 'Общие' },
                         partition: props?.config?.partition,
                         dataOperation: props?.config?.dataOperation
                     }

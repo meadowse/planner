@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 // Импорт доп.функционала
 import { dataLoader, findNestedObj } from '@helpers/helper';
 
@@ -75,9 +77,36 @@ const loadData = async partition => {
     const PARTITION_CONF = {
         // Производственный департамент
         department: async () => {
+            const endpoints = [
+                `${window.location.origin}/api/`,
+                `${window.location.origin}/api/getAllDepartmentsStaffAndTasks`
+            ];
+            const resolvedData = {};
+            await axios.all(endpoints?.map(endpoint => dataLoader(endpoint))).then(
+                axios.spread((contractsData, sectionsData) => {
+                    if (contractsData && contractsData.length !== 0)
+                        resolvedData.contracts = formData(contractsData, partition, null)?.sort(
+                            (a, b) => b?.id - a?.id
+                        );
+                    if (sectionsData && sectionsData.length !== 0) {
+                        resolvedData.sections = sectionsData?.map(item => {
+                            if (item && Object.keys(item).length !== 0) {
+                                return {
+                                    section: item?.section,
+                                    employee: item?.employee,
+                                    contracts: formData(item?.contracts, partition, null)?.sort(
+                                        (a, b) => +b?.contractId - +a?.contractId
+                                    )
+                                };
+                            }
+                        });
+                    }
+                })
+            );
+            // console.log(`resolvedData: ${JSON.stringify(resolvedData, null, 4)}`);
             // return formData(await dataLoader(`${window.location.origin}/contracts.json`), partition, null);
             // return formData(await dataLoader('http://10.199.254.28:3000/api/'), partition, null);
-            return formData(await dataLoader(`${window.location.origin}/api/`), partition, null);
+            return resolvedData;
         },
         // Оборудование
         equipment: async () => {
@@ -85,11 +114,21 @@ const loadData = async partition => {
         },
         // Компания
         company: async () => {
-            return {
-                structure: await dataLoader(`${window.location.origin}/structure_company.json`),
-                employees: formData(await dataLoader(`${window.location.origin}/api/employee/`), partition, 'employees')
-                // employees: formData(EMPLOYEES, partition, 'employees')
-            };
+            const endpoints = [
+                `${window.location.origin}/structure_company.json`,
+                `${window.location.origin}/api/employee/`
+            ];
+            const resolvedData = {};
+
+            await axios.all(endpoints.map(endpoint => dataLoader(endpoint))).then(
+                axios.spread((structureData, employeesData) => {
+                    if (structureData && structureData.length !== 0) resolvedData.structure = structureData;
+                    if (employeesData && employeesData.length !== 0)
+                        resolvedData.employees = formData(employeesData, partition, 'employees');
+                })
+            );
+
+            return resolvedData;
         }
     };
 

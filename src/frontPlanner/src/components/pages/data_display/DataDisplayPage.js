@@ -338,18 +338,22 @@ export default function DataDisplayPage({ partition }) {
                             element={
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
-                                        {resolvedData => (
-                                            <KanbanMode
-                                                partition={partition}
-                                                data={filterData(
-                                                    resolvedData,
-                                                    simplifyData(extractSampleData(resolvedData, valsToDisplay)),
-                                                    searchElem
-                                                ).sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
-                                                modeOption={modeOption[mode?.key]}
-                                                dataOperations={dataOperations}
-                                            />
-                                        )}
+                                        {resolvedData => {
+                                            const keyData = modeOption[mode?.key]?.keyData;
+                                            const kanbanData = filterData(
+                                                resolvedData[keyData],
+                                                simplifyData(extractSampleData(resolvedData[keyData], valsToDisplay)),
+                                                searchElem
+                                            );
+                                            return (
+                                                <KanbanMode
+                                                    partition={partition}
+                                                    data={kanbanData}
+                                                    modeOption={modeOption[mode?.key]}
+                                                    dataOperations={dataOperations}
+                                                />
+                                            );
+                                        }}
                                     </Await>
                                 </Suspense>
                             }
@@ -359,20 +363,23 @@ export default function DataDisplayPage({ partition }) {
                             element={
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
-                                        {resolvedData => (
-                                            <ListMode
-                                                testData={filterData(
-                                                    resolvedData,
-                                                    simplifyData(extractSampleData(resolvedData, valsToDisplay)),
-                                                    searchElem
-                                                ).sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
-                                                modeConfig={{
-                                                    keys: valsToDisplay,
-                                                    partition: partition,
-                                                    dataOperations: dataOperations
-                                                }}
-                                            />
-                                        )}
+                                        {resolvedData => {
+                                            const tableData = filterData(
+                                                resolvedData?.contracts,
+                                                simplifyData(extractSampleData(resolvedData?.contracts, valsToDisplay)),
+                                                searchElem
+                                            );
+                                            return (
+                                                <ListMode
+                                                    testData={tableData}
+                                                    modeConfig={{
+                                                        keys: valsToDisplay,
+                                                        partition: partition,
+                                                        dataOperations: dataOperations
+                                                    }}
+                                                />
+                                            );
+                                        }}
                                     </Await>
                                 </Suspense>
                             }
@@ -383,7 +390,10 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => (
-                                            <CalendarMode testData={resolvedData} dataOperations={dataOperations} />
+                                            <CalendarMode
+                                                testData={resolvedData?.contracts}
+                                                dataOperations={dataOperations}
+                                            />
                                         )}
                                     </Await>
                                 </Suspense>
@@ -394,19 +404,22 @@ export default function DataDisplayPage({ partition }) {
                             element={
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
-                                        {resolvedData => (
-                                            <GanttMode
-                                                data={filterData(
-                                                    resolvedData,
-                                                    simplifyData(extractSampleData(resolvedData, valsToDisplay)),
-                                                    searchElem
-                                                ).sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
-                                                modeConfig={{
-                                                    modeOption: modeOption[mode?.key],
-                                                    dataOperations: dataOperations
-                                                }}
-                                            />
-                                        )}
+                                        {resolvedData => {
+                                            const keyData = modeOption[mode?.key]?.keyData;
+                                            // const ganttData = extractSampleData(
+                                            //     resolvedData[keyData],
+                                            //     valsToDisplay
+                                            // )?.sort((a, b) => b?.id - a?.id);
+                                            return (
+                                                <GanttMode
+                                                    data={resolvedData[keyData]}
+                                                    modeConfig={{
+                                                        modeOption: modeOption[mode?.key],
+                                                        dataOperations: dataOperations
+                                                    }}
+                                                />
+                                            );
+                                        }}
                                     </Await>
                                 </Suspense>
                             }

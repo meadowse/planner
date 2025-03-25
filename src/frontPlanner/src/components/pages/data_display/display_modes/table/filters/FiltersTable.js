@@ -45,13 +45,7 @@ const FILTERS_CONF = {
     // Выпадающие списки
     stage: (options, toggleState, onChange) => {
         return (
-            <DropDownFilter
-                id="stage"
-                defaultVal="В работе"
-                options={options}
-                toggle={toggleState}
-                onChange={onChange}
-            />
+            <DropDownFilter id="stage" defaultVal="Все" options={options} toggle={toggleState} onChange={onChange} />
         );
     },
     services: (options, toggleState, onChange) => {
