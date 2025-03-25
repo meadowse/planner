@@ -367,7 +367,9 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return CELLS['text'](`${props?.value} дней`, 'deadline');
+            return props?.value
+                ? CELLS['text'](`${props?.value} дней`, 'deadline')
+                : CELLS['text']('Нет данных', 'deadline');
         }
     },
     {

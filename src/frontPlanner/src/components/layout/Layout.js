@@ -11,8 +11,16 @@ import menuItems from '@data/sideMenuData.json';
 import './layout.css';
 
 export default function Layout() {
-    const [itemSideMenu, setItemSideMenu] = useState(JSON.parse(localStorage.getItem('itemSideMenu')) || menuItems[0]);
+    // const [itemSideMenu, setItemSideMenu] = useState(JSON.parse(localStorage.getItem('itemSideMenu')) || menuItems[0]);
+    const [itemSideMenu, setItemSideMenu] = useState({});
 
+    useEffect(() => {
+        const savedMenu = JSON.parse(localStorage.getItem('itemSideMenu'));
+        if (!savedMenu || Object.keys(savedMenu).length === 0) {
+            setItemSideMenu(menuItems[0]);
+            localStorage.setItem('itemSideMenu', JSON.stringify(menuItems[0]));
+        } else setItemSideMenu(savedMenu);
+    }, []);
     // useEffect(() => {
     //     if (JSON.parse(localStorage.getItem('itemSideMenu'))) localStorage.removeItem('itemSideMenu');
     //     setItemSideMenu(menuItems[0]);

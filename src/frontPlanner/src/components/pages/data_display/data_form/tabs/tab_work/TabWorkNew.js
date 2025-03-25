@@ -33,7 +33,7 @@ export default function TabWorkNew() {
                 <div className="tab-work__main">
                     <ListMode
                         key={`${partition}-table-works`}
-                        testData={works}
+                        testData={works.sort((a, b) => parseInt(a?.number) - parseInt(b?.number))}
                         modeConfig={{
                             keys: ['number', 'typeWork', 'deadline', 'dateDone', 'done'],
                             partition: partition,
