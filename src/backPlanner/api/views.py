@@ -588,7 +588,7 @@ def getAllDepartmentsStaffAndTasks(request):
                     for contract in Contracts:
                         count += 1
                         data = contract.split('$')
-                        contracts.get('contracts').append({'contractId': data[0],
+                        contracts.get('contracts').append({'id': data[0],
                                                            'contractNum': data[1],
                                                            'address': data[2],
                                                            'dateOfStart': {'title': '', 'value': data[3]},
