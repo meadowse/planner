@@ -42,7 +42,7 @@ function DurationTask(props) {
 
 // Отображение суммы всех задач
 function TotalTaskRow(props) {
-    const { totalTasks, selectedItem, dateState, modeOption, bgColorTask, onHideTasks } = props;
+    const { timeLine, totalTasks, selectedItem, dateState, modeOption, bgColorTask, onHideTasks } = props;
 
     return (
         <div className="gantt-grid__main-row">
@@ -61,31 +61,29 @@ function TotalTaskRow(props) {
             </div>
             <div className="gantt-empty-row"></div>
             <ul className="gantt-time-period">
-                {getDaysYear(dateState).map(day => {
-                    let dateVal = getDateInSpecificFormat(day, {
-                        format: 'YYYYMMDD',
-                        separator: '-'
-                    });
-                    return (
-                        <li className="gantt-time-period-cell">
-                            {totalTasks.map(totalTask => {
-                                return totalTask && totalTask.length !== 0 ? (
-                                    totalTask[0] === dateVal ? (
-                                        <DurationTask
-                                            additClass="gantt-time-period-cell__total-task"
-                                            data={{
-                                                dateOfStart: getDayInYear(getDateFromString(totalTask[0])),
-                                                duration: totalTask.length,
-                                                bgColorTask: bgColorTask
-                                            }}
-                                            draggable={false}
-                                        />
-                                    ) : null
-                                ) : null;
-                            })}
-                        </li>
-                    );
-                })}
+                {timeLine && Object.keys(timeLine).length !== 0
+                    ? timeLine?.data?.map(day => {
+                          return (
+                              <li className="gantt-time-period-cell">
+                                  {totalTasks.map(totalTask => {
+                                      return totalTask && totalTask.length !== 0 ? (
+                                          totalTask[0] === day ? (
+                                              <DurationTask
+                                                  additClass="gantt-time-period-cell__total-task"
+                                                  data={{
+                                                      dateOfStart: getDayInYear(getDateFromString(totalTask[0])),
+                                                      duration: totalTask.length,
+                                                      bgColorTask: bgColorTask
+                                                  }}
+                                                  draggable={false}
+                                              />
+                                          ) : null
+                                      ) : null;
+                                  })}
+                              </li>
+                          );
+                      })
+                    : null}
             </ul>
         </div>
     );
@@ -93,18 +91,7 @@ function TotalTaskRow(props) {
 
 // Отображение задач
 function TaskRow(props) {
-    const {
-        partition,
-        task,
-        dateState,
-        config,
-        dataOperations
-        // onHideSubtasks
-        // onDragStartHandler,
-        // onDragEndHandler,
-        // onDragOverHandler,
-        // onDropHandler
-    } = props;
+    const { timeLine, partition, task, dateState, config, dataOperations } = props;
 
     const containTasks = task && Object.keys(task).length !== 0 ? 'tasks' in task : false;
     let daysDiff = getDaysBetweenTwoDates(
@@ -197,33 +184,33 @@ function TaskRow(props) {
                 )}
                 <div className="gantt-empty-row"></div>
                 <ul className="gantt-time-period">
-                    {getDaysYear(dateState).map(day => {
-                        let dateVal = getDateInSpecificFormat(day, {
-                            format: 'YYYYMMDD',
-                            separator: '-'
-                        });
-                        const idTask = task?.dateOfEnding && task?.dateOfEnding === dateVal ? task?.contractNum : null;
-                        return (
-                            <li id={idTask} className="gantt-time-period-cell">
-                                {task?.dateOfStart && task?.dateOfStart === dateVal ? (
-                                    <DurationTask
-                                        additClass="gantt-time-period-cell__task"
-                                        data={{
-                                            dateOfStart: getDayInYear(getDateFromString(task?.dateOfStart)),
-                                            duration: daysDiff,
-                                            bgColorTask: task?.bgColorTask
-                                        }}
-                                    />
-                                ) : null}
-                            </li>
-                        );
-                    })}
+                    {timeLine && Object.keys(timeLine).length !== 0
+                        ? timeLine?.data?.map(day => {
+                              const idTask =
+                                  task?.dateOfEnding && task?.dateOfEnding === day ? task?.contractNum : null;
+                              return (
+                                  <li id={idTask} className="gantt-time-period-cell">
+                                      {task?.dateOfStart && task?.dateOfStart === day ? (
+                                          <DurationTask
+                                              additClass="gantt-time-period-cell__task"
+                                              data={{
+                                                  dateOfStart: timeLine?.data?.indexOf(task?.dateOfStart),
+                                                  duration: daysDiff,
+                                                  bgColorTask: task?.bgColorTask
+                                              }}
+                                          />
+                                      ) : null}
+                                  </li>
+                              );
+                          })
+                        : null}
                 </ul>
             </div>
             {/* Отображение подзадач */}
             {showTasks && task?.tasks && task?.tasks.length !== 0
                 ? task?.tasks.map(task => (
                       <TaskRow
+                          timeLine={timeLine}
                           partition={partition}
                           task={task}
                           dateState={dateState}
@@ -237,7 +224,7 @@ function TaskRow(props) {
 }
 
 function GanttChart(props) {
-    const { partition, ganttData, dateState, selectedItem, modeOption, dataOperations } = props;
+    const { timeLine, partition, ganttData, dateState, selectedItem, modeOption, dataOperations } = props;
 
     const [showTasks, setShowTasks] = useState(true);
     // const [currTask, setCurrTask] = useState({});
@@ -278,58 +265,65 @@ function GanttChart(props) {
                         <div className="gantt-task-empty gantt-task-row"></div>
                         <div className="gantt-empty-row"></div>
                         <ul className="gantt-time-months gantt-time-period">
-                            {MONTHS.map(month => (
-                                <li className="gantt-time-period">{month}</li>
-                            ))}
+                            {timeLine && Object.keys(timeLine).length !== 0
+                                ? timeLine?.years?.map(year => {
+                                      return MONTHS.map(month => (
+                                          <li className="gantt-time-period">
+                                              {month}&ensp;&mdash;&ensp;{year}
+                                          </li>
+                                      ));
+                                  })
+                                : null}
                         </ul>
                     </div>
                     <div className="gantt-grid__header-row">
                         <div className="gantt-task-empty gantt-task-row"></div>
                         <div className="gantt-empty-row"></div>
                         <ul className="gantt-time-year gantt-time-period">
-                            {getDaysYear(dateState).map(day => {
-                                let today = new Date();
-                                // Прибавить текущей дате еще один месяц
-                                today.setMonth(today.getMonth() + 1);
+                            {timeLine && Object.keys(timeLine).length !== 0
+                                ? timeLine?.data.map(day => {
+                                      let today = new Date();
+                                      today.setMonth(today.getMonth() + 1);
 
-                                let currDate = getDateInSpecificFormat(new Date(), {
-                                    format: 'YYYYMMDD',
-                                    separator: '-'
-                                });
-                                let date = getDateInSpecificFormat(day, {
-                                    format: 'YYYYMMDD',
-                                    separator: '-'
-                                });
-                                // console.log(`lastDayOfCurrMonth: ${lastDayOfCurrMonth}`);
-                                return (
-                                    <li
-                                        className={classNames('gantt-time-period__day gantt-time-period', {
-                                            'gantt-time-period__curr-day': currDate === date
-                                        })}
-                                        ref={
-                                            today.getMonth() === day.getMonth()
-                                                ? getLastDayOfMonth(today) === getLastDayOfMonth(day)
-                                                    ? refCurrMonth
-                                                    : null
-                                                : null
-                                        }
-                                    >
-                                        {day.getDate()}
-                                        {currDate === date ? (
-                                            <div
-                                                className="gantt-time__vr-line"
-                                                style={{ height: `${(ganttData?.totalCount + 1) * 100}%` }}
-                                            ></div>
-                                        ) : null}
-                                    </li>
-                                );
-                            })}
+                                      let currDate = getDateInSpecificFormat(new Date(), {
+                                          format: 'YYYYMMDD',
+                                          separator: '-'
+                                      });
+                                      let date = day;
+                                      return (
+                                          <li
+                                              className={classNames('gantt-time-period__day gantt-time-period', {
+                                                  'gantt-time-period__curr-day': currDate === date
+                                              })}
+                                              ref={
+                                                  today.getMonth() === getDateFromString(day).getMonth()
+                                                      ? getLastDayOfMonth(today) ===
+                                                        getLastDayOfMonth(getDateFromString(day))
+                                                          ? refCurrMonth
+                                                          : null
+                                                      : null
+                                              }
+                                          >
+                                              {getDateFromString(day).getDate()}
+                                              {currDate === date ? (
+                                                  <div
+                                                      className="gantt-time__vr-line"
+                                                      style={{
+                                                          height: `${(ganttData?.totalCount + 1) * 100}%`
+                                                      }}
+                                                  ></div>
+                                              ) : null}
+                                          </li>
+                                      );
+                                  })
+                                : null}
                         </ul>
                     </div>
                 </div>
                 <div className="gantt-grid__main">
                     {/* Отображение суммы всех задач */}
                     <TotalTaskRow
+                        timeLine={timeLine}
                         totalTasks={ganttData?.totalTasks}
                         selectedItem={selectedItem}
                         dateState={dateState}
@@ -341,6 +335,7 @@ function GanttChart(props) {
                     {ganttData?.tasks?.length !== 0
                         ? ganttData?.tasks?.map(task => (
                               <TaskRow
+                                  timeLine={timeLine}
                                   partition={partition}
                                   task={task}
                                   dateState={dateState}
@@ -365,7 +360,7 @@ export default function GanttMode({ data, modeConfig }) {
     // Данные для диаграммы Ганта
     const [ganttData, setGanttData] = useState({});
 
-    const { ganttConfig, formData } = useGanttMode({
+    const { timeLine, ganttConfig, formData } = useGanttMode({
         data,
         selectedItemInd,
         modeOption: modeConfig?.modeOption
@@ -407,6 +402,7 @@ export default function GanttMode({ data, modeConfig }) {
                 })}
             </select>
             <GanttChart
+                timeLine={timeLine}
                 ganttData={ganttData}
                 dateState={dateState}
                 selectedItem={ganttConfig[selectedItemInd]}

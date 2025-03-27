@@ -73,6 +73,44 @@ export const DATA_CONVERSION_MAP = {
     }
 };
 
+// Конфигурация по разделу "Задачи"
+export const TASKS_DATA_CONF = {
+    title: 'Задачи',
+    displayModes: [
+        {
+            mode: 'Список задач',
+            keyMode: 'listTasks',
+            modeOptions: [],
+            keys: ['task', 'director', 'executor', 'deadlineTask', 'done']
+        },
+        {
+            mode: 'Список договоров',
+            keyMode: 'listContracts',
+            modeOptions: [],
+            keys: [
+                'contractNum',
+                'address',
+                'company',
+                'services',
+                'stage',
+                'dateOfEnding',
+                'responsible',
+                'pathToFolder'
+            ]
+        }
+    ],
+    dataOperations: [
+        {
+            key: 'creation',
+            disabledFields: {}
+        },
+        {
+            key: 'update',
+            disabledFields: {}
+        }
+    ]
+};
+
 // Конфигурация по разделу "Компания"
 export const COMPANY_DATA_CONF = {
     title: 'Компания',
@@ -197,7 +235,7 @@ export const DEPARTMENT_DATA_CONF = {
             modeOptions: [
                 { value: 'Услуги', key: 'services', keyData: 'contracts', uniqueness: 'title' },
                 { value: 'Руководители отделов', key: 'responsible', keyData: 'contracts', uniqueness: 'fullName' },
-                { value: 'Отделы', key: 'section', keyData: 'sections', uniqueness: 'title' }
+                { value: 'Сотрудники отделов', key: 'section', keyData: 'sections', uniqueness: 'title' }
             ]
             // keys: [
             //     'id',

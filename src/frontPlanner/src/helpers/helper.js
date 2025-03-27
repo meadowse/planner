@@ -182,7 +182,15 @@ export const dataLoader = async path => {
             'Content-Type': 'application/json'
         }
     };
-    const response = await axios.get(path, config);
+    const response = await axios.get(path, config).catch(error => {
+        if (error.response) {
+            console.log('server responded');
+        } else if (error.request) {
+            console.log('network error');
+        } else {
+            console.log(error);
+        }
+    });
     return response.data;
 };
 

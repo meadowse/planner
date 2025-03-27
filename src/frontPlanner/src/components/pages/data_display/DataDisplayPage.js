@@ -118,6 +118,7 @@ function HeaderBottom(props) {
     } = props;
 
     const PARTITION_CONF = {
+        // Производство
         department: () => {
             return (
                 <div className="page-section-header__bottom">
@@ -148,6 +149,7 @@ function HeaderBottom(props) {
                 </div>
             );
         },
+        // Оборудование
         equipment: () => {
             return (
                 <div className="page-section-header__bottom">
@@ -176,6 +178,7 @@ function HeaderBottom(props) {
                 </div>
             );
         },
+        // Компания
         company: () => {
             return (
                 <div className="page-section-header__bottom">
@@ -184,6 +187,28 @@ function HeaderBottom(props) {
                             className="page-section__inpt-search"
                             type="text"
                             placeholder="Поиск по компании"
+                            value={searchElem}
+                            // onChange={e => setSearchElem(e.target.value)}
+                        />
+                        <DisplayModes
+                            displayModes={displayModes}
+                            mode={mode}
+                            onSelectMode={onSelectMode}
+                            onSelectOption={onSelectMode}
+                        />
+                    </div>
+                </div>
+            );
+        },
+        // Задачи
+        tasks: () => {
+            return (
+                <div className="page-section-header__bottom">
+                    <div className="page-section-header__bottom-left">
+                        <input
+                            className="page-section__inpt-search"
+                            type="text"
+                            placeholder="Поиск по задачам"
                             value={searchElem}
                             // onChange={e => setSearchElem(e.target.value)}
                         />
@@ -442,6 +467,44 @@ export default function DataDisplayPage({ partition }) {
                                         {resolvedData => (
                                             <ListMode
                                                 testData={resolvedData?.employees}
+                                                modeConfig={{
+                                                    keys: valsToDisplay,
+                                                    partition: partition,
+                                                    dataOperations: dataOperations
+                                                }}
+                                            />
+                                        )}
+                                    </Await>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="listTasks"
+                            element={
+                                <Suspense fallback={<Preloader />}>
+                                    <Await resolve={data?.uploadedData}>
+                                        {resolvedData => (
+                                            <ListMode
+                                                testData={resolvedData?.tasks}
+                                                modeConfig={{
+                                                    keys: valsToDisplay,
+                                                    partition: partition,
+                                                    dataOperations: dataOperations
+                                                }}
+                                            />
+                                        )}
+                                    </Await>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="listContracts"
+                            element={
+                                <Suspense fallback={<Preloader />}>
+                                    <Await resolve={data?.uploadedData}>
+                                        {resolvedData => (
+                                            <ListMode
+                                                testData={resolvedData?.contracts}
                                                 modeConfig={{
                                                     keys: valsToDisplay,
                                                     partition: partition,

@@ -8,38 +8,15 @@ import {
     DATA_CONVERSION_MAP,
     DEPARTMENT_DATA_CONF,
     EQUIPMENT_DATA_CONF,
-    COMPANY_DATA_CONF
+    COMPANY_DATA_CONF,
+    TASKS_DATA_CONF
 } from '@config/department.config';
 
-//
+// Импорт данных
 import EMPLOYEES from '@data/usersData.json';
 
 const formData = (data, partition, key) => {
     const PARTITION_CONF = {
-        // Производственный департамент
-        department: () => {
-            return data && data.length !== 0
-                ? data?.map(item => {
-                      const newItem = {};
-                      Object.keys(item).map(key => {
-                          newItem[key] = DATA_CONVERSION_MAP[key] ? DATA_CONVERSION_MAP[key](item[key]) : item[key];
-                      });
-                      return newItem;
-                  })
-                : [];
-        },
-        // Оборудование
-        equipment: () => {
-            return data && data.length !== 0
-                ? data?.map(item => {
-                      const newItem = {};
-                      Object.keys(item).map(key => {
-                          newItem[key] = DATA_CONVERSION_MAP[key] ? DATA_CONVERSION_MAP[key](item[key]) : item[key];
-                      });
-                      return newItem;
-                  })
-                : [];
-        },
         // Компания
         company: () => {
             const COMPANY_CONF = {
@@ -68,9 +45,20 @@ const formData = (data, partition, key) => {
                 }
             };
             return key ? COMPANY_CONF[key]() : [];
+        },
+        default: () => {
+            return data && data.length !== 0
+                ? data?.map(item => {
+                      const newItem = {};
+                      Object.keys(item).map(key => {
+                          newItem[key] = DATA_CONVERSION_MAP[key] ? DATA_CONVERSION_MAP[key](item[key]) : item[key];
+                      });
+                      return newItem;
+                  })
+                : [];
         }
     };
-    return partition ? PARTITION_CONF[partition]() : [];
+    return PARTITION_CONF[partition] ? PARTITION_CONF[partition]() : PARTITION_CONF.default();
 };
 
 const loadData = async partition => {
@@ -82,27 +70,38 @@ const loadData = async partition => {
                 `${window.location.origin}/api/getAllDepartmentsStaffAndTasks`
             ];
             const resolvedData = {};
-            await axios.all(endpoints?.map(endpoint => dataLoader(endpoint))).then(
-                axios.spread((contractsData, sectionsData) => {
-                    if (contractsData && contractsData.length !== 0)
-                        resolvedData.contracts = formData(contractsData, partition, null)?.sort(
-                            (a, b) => b?.id - a?.id
-                        );
-                    if (sectionsData && sectionsData.length !== 0) {
-                        resolvedData.sections = sectionsData?.map(item => {
-                            if (item && Object.keys(item).length !== 0) {
-                                return {
-                                    section: item?.section,
-                                    employee: item?.employee,
-                                    contracts: formData(item?.contracts, partition, null)?.sort(
-                                        (a, b) => +b?.id - +a?.id
-                                    )
-                                };
-                            }
-                        });
+            await axios
+                .all(endpoints?.map(endpoint => dataLoader(endpoint)))
+                .then(
+                    axios.spread((contractsData, sectionsData) => {
+                        if (contractsData && contractsData.length !== 0)
+                            resolvedData.contracts = formData(contractsData, partition, null)?.sort(
+                                (a, b) => b?.id - a?.id
+                            );
+                        if (sectionsData && sectionsData.length !== 0) {
+                            resolvedData.sections = sectionsData?.map(item => {
+                                if (item && Object.keys(item).length !== 0) {
+                                    return {
+                                        section: item?.section,
+                                        employee: item?.employee,
+                                        contracts: formData(item?.contracts, partition, null)?.sort(
+                                            (a, b) => +b?.id - +a?.id
+                                        )
+                                    };
+                                }
+                            });
+                        }
+                    })
+                )
+                .catch(error => {
+                    if (error.response) {
+                        console.log('server responded');
+                    } else if (error.request) {
+                        console.log('network error');
+                    } else {
+                        console.log(error);
                     }
-                })
-            );
+                });
             // console.log(`resolvedData: ${JSON.stringify(resolvedData, null, 4)}`);
             // return formData(await dataLoader(`${window.location.origin}/contracts.json`), partition, null);
             // return formData(await dataLoader('http://10.199.254.28:3000/api/'), partition, null);
@@ -120,15 +119,35 @@ const loadData = async partition => {
             ];
             const resolvedData = {};
 
-            await axios.all(endpoints.map(endpoint => dataLoader(endpoint))).then(
-                axios.spread((structureData, employeesData) => {
-                    if (structureData && structureData.length !== 0) resolvedData.structure = structureData;
-                    if (employeesData && employeesData.length !== 0)
-                        resolvedData.employees = formData(employeesData, partition, 'employees');
-                })
-            );
+            await axios
+                .all(endpoints.map(endpoint => dataLoader(endpoint)))
+                .then(
+                    axios.spread((structureData, employeesData) => {
+                        if (structureData && structureData.length !== 0) resolvedData.structure = structureData;
+                        if (employeesData && employeesData.length !== 0)
+                            resolvedData.employees = formData(employeesData, partition, 'employees');
+                    })
+                )
+                .catch(error => {
+                    if (error.response) {
+                        console.log('server responded');
+                    } else if (error.request) {
+                        console.log('network error');
+                    } else {
+                        console.log(error);
+                    }
+                });
 
             return resolvedData;
+        },
+        // Задачи
+        tasks: async () => {
+            return {
+                tasks: [],
+                contracts: formData(await dataLoader(`${window.location.origin}/api/`), partition, null)?.sort(
+                    (a, b) => b?.id - a?.id
+                )
+            };
         }
     };
 
@@ -151,6 +170,11 @@ const getDisplayModes = partition => {
         // Компания
         company: () => {
             const displayModes = COMPANY_DATA_CONF?.displayModes;
+            return displayModes && displayModes.length !== 0 ? displayModes : [];
+        },
+        // Задачи
+        tasks: () => {
+            const displayModes = TASKS_DATA_CONF?.displayModes;
             return displayModes && displayModes.length !== 0 ? displayModes : [];
         }
     };
@@ -203,6 +227,11 @@ const getDataOperations = partition => {
         // Компания
         company: () => {
             const dataOperations = COMPANY_DATA_CONF?.dataOperations;
+            return dataOperations && dataOperations.length !== 0 ? dataOperations : [];
+        },
+        // Задачи
+        tasks: () => {
+            const dataOperations = TASKS_DATA_CONF?.dataOperations;
             return dataOperations && dataOperations.length !== 0 ? dataOperations : [];
         }
     };

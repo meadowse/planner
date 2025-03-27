@@ -1,9 +1,10 @@
-import { getDaysBetweenTwoDates, getDateFromString, getDateInSpecificFormat } from '@helpers/calendar';
-import { isObject, isArray, getUniqueData, simplifyData } from '@helpers/helper';
+import { getDaysYear, getDaysBetweenTwoDates, getDateFromString, getDateInSpecificFormat } from '@helpers/calendar';
+import { isObject, isArray, getUniqueData, extractSampleData, simplifyData } from '@helpers/helper';
 
 export const useGanttMode = args => {
     const { data, selectedItemInd, modeOption } = args;
 
+    // Получение заголовков Ганта
     const getHeadlinesGantt = () => {
         console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
         if (data && data.length !== 0) {
@@ -62,6 +63,61 @@ export const useGanttMode = args => {
         return indexes.map(item => data[item]);
     };
 
+    // Формирование временной шкалы
+    function formTimeline() {
+        const timeLine = [];
+        let years = [];
+
+        const DATA_CONF = {
+            contracts: () => {
+                return extractSampleData(data, ['dateOfStart', 'dateOfEnding']);
+            },
+            sections: () => {
+                const contracts = [];
+
+                data?.forEach(item => {
+                    if (item && Object.keys(item).length !== 0) {
+                        if (item?.contracts && item?.contracts.length !== 0) {
+                            extractSampleData(item?.contracts, ['dateOfStart', 'dateOfEnding']).forEach(elem => {
+                                contracts.push(elem);
+                            });
+                        }
+                    }
+                });
+                return extractSampleData(contracts, ['dateOfStart', 'dateOfEnding']);
+            }
+        };
+
+        if (modeOption?.keyData in DATA_CONF) {
+            DATA_CONF[modeOption?.keyData]().forEach(item => {
+                if (item && Object.keys(item).length !== 0) {
+                    if (item?.dateOfStart && Object.keys(item?.dateOfStart).length !== 0 && item?.dateOfStart.value)
+                        years.push(getDateFromString(item?.dateOfStart.value)?.getFullYear());
+                    if (item?.dateOfEnding && Object.keys(item?.dateOfEnding).length !== 0 && item?.dateOfEnding.value)
+                        years.push(getDateFromString(item?.dateOfEnding.value)?.getFullYear());
+                }
+            });
+        }
+
+        years = Array.from(new Set(years)).sort((a, b) => a - b);
+
+        years.forEach(year => {
+            const beginDate = { year, month: 0, day: 1 };
+            getDaysYear(beginDate).forEach(date => {
+                let dateVal = getDateInSpecificFormat(date, {
+                    format: 'YYYYMMDD',
+                    separator: '-'
+                });
+                timeLine.push(dateVal);
+            });
+        });
+
+        return {
+            years: years,
+            data: timeLine
+        };
+    }
+
     // Инициализация данных
     const formData = () => {
         const newData = {};
@@ -90,18 +146,13 @@ export const useGanttMode = args => {
                 // Номер договора
                 newItem.contractNum = item?.contractNum;
 
-                // Формирование дат (Начало и Конец)
-                if (getDateFromString(item?.dateOfStart?.value) > getDateFromString(item?.dateOfEnding?.value)) {
-                    newItem.dateOfStart = item?.dateOfEnding?.value;
-                    newItem.dateOfEnding = item?.dateOfStart?.value;
-                } else {
-                    newItem.dateOfStart = item?.dateOfStart?.value;
-                    newItem.dateOfEnding = item?.dateOfEnding?.value;
-                }
+                // Даты (Начало и Конец)
+                newItem.dateOfStart = item?.dateOfStart?.value;
+                newItem.dateOfEnding = item?.dateOfEnding?.value;
 
                 // Задний фон
                 newItem.bgColorTask = item?.stage?.color;
-                //
+                // Навигация
                 newItem.navKey = 'contract';
                 // Формирование задач
                 newItem.tasks =
@@ -113,14 +164,8 @@ export const useGanttMode = args => {
                                   contractNum: `${item?.contractNum}_${ind + 1}`,
                                   navKey: 'task',
                                   done: +task?.done,
-                                  dateOfStart:
-                                      getDateFromString(task?.dateOfStart) > getDateFromString(task?.dateOfEnding)
-                                          ? task?.dateOfEnding
-                                          : task?.dateOfStart,
-                                  dateOfEnding:
-                                      getDateFromString(task?.dateOfEnding) > getDateFromString(task?.dateOfStart)
-                                          ? task?.dateOfEnding
-                                          : task?.dateOfStart,
+                                  dateOfStart: task?.dateOfStart,
+                                  dateOfEnding: task?.dateOfEnding,
                                   bgColorTask: item?.stage?.color
                               };
                           })
@@ -161,16 +206,9 @@ export const useGanttMode = args => {
                         // Задний фон
                         taskItem.bgColorTask = contract?.stage?.color;
 
-                        if (
-                            getDateFromString(contract?.dateOfStart?.value) >
-                            getDateFromString(contract?.dateOfEnding?.value)
-                        ) {
-                            taskItem.dateOfStart = contract?.dateOfEnding?.value;
-                            taskItem.dateOfEnding = contract?.dateOfStart?.value;
-                        } else {
-                            taskItem.dateOfStart = contract?.dateOfStart?.value;
-                            taskItem.dateOfEnding = contract?.dateOfEnding?.value;
-                        }
+                        // Даты (Начало и Конец)
+                        taskItem.dateOfStart = contract?.dateOfStart?.value;
+                        taskItem.dateOfEnding = contract?.dateOfEnding?.value;
 
                         taskItem.tasks =
                             contract?.tasks && contract?.tasks.length !== 0
@@ -180,16 +218,8 @@ export const useGanttMode = args => {
                                           title: task?.title || 'Нет данных',
                                           contractNum: `${contract?.contractNum}_${ind + 1}`,
                                           navKey: 'task',
-                                          dateOfStart:
-                                              getDateFromString(task?.dateOfStart) >
-                                              getDateFromString(task?.dateOfEnding)
-                                                  ? task?.dateOfEnding
-                                                  : task?.dateOfStart,
-                                          dateOfEnding:
-                                              getDateFromString(task?.dateOfEnding) >
-                                              getDateFromString(task?.dateOfStart)
-                                                  ? task?.dateOfEnding
-                                                  : task?.dateOfStart,
+                                          dateOfStart: task?.dateOfStart,
+                                          dateOfEnding: task?.dateOfEnding,
                                           bgColorTask: contract?.stage?.color
                                       };
                                   })
@@ -219,15 +249,9 @@ export const useGanttMode = args => {
             dateStart = getDateFromString(item?.dateOfStart?.value);
             dateEnd = getDateFromString(item?.dateOfEnding?.value);
 
-            if (dateStart > dateEnd) {
-                daysBetweenTwoDate = getDaysBetweenTwoDates(dateEnd, dateStart).map(date =>
-                    getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
-                );
-            } else {
-                daysBetweenTwoDate = getDaysBetweenTwoDates(dateStart, dateEnd).map(date =>
-                    getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
-                );
-            }
+            daysBetweenTwoDate = getDaysBetweenTwoDates(dateStart, dateEnd).map(date =>
+                getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
+            );
 
             if (daysBetweenTwoDate && daysBetweenTwoDate.length !== 0) dateRanges.push(daysBetweenTwoDate);
 
@@ -236,15 +260,9 @@ export const useGanttMode = args => {
                     dateStart = getDateFromString(task?.dateOfStart);
                     dateEnd = getDateFromString(task?.dateOfEnding);
 
-                    if (dateStart > dateEnd) {
-                        daysBetweenTwoDate = getDaysBetweenTwoDates(dateEnd, dateStart).map(date =>
-                            getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
-                        );
-                    } else {
-                        daysBetweenTwoDate = getDaysBetweenTwoDates(dateStart, dateEnd).map(date =>
-                            getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
-                        );
-                    }
+                    daysBetweenTwoDate = getDaysBetweenTwoDates(dateStart, dateEnd).map(date =>
+                        getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
+                    );
 
                     if (daysBetweenTwoDate && daysBetweenTwoDate.length !== 0) dateRanges.push(daysBetweenTwoDate);
                 });
@@ -270,6 +288,7 @@ export const useGanttMode = args => {
     };
 
     return {
+        timeLine: formTimeline(),
         ganttConfig: getHeadlinesGantt(),
         formData
     };
