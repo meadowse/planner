@@ -612,3 +612,41 @@ def getAllDepartmentsStaffAndTasks(request):
         except Exception as ex:
             print(f"Не удалось получить данные по отделам и сотрудникам: {ex}")
             return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+
+def getTasksEmployee(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        employeeId = obj.get('employeeId')
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+            cur = con.cursor()
+            try:
+                sql = f"""SELECT 
+                T218.ID, 
+                T218.F4695 AS TASK,
+                T218.F4698 AS COMMENT,
+                T218.F5569 AS START_DATE,
+                T218.F4696 AS DEADLINE_DATE,
+                T218.F5476 AS DEADLINE_TIME,
+                T218.F4697 AS DONE,
+                T218.F4708 AS DATE_OF_DONE,
+                T218.F4693 AS ID_OF_DIRECTOR,
+                DIRECTOR.F4886 AS DIRECTOR_NAME,
+                T218.F4694 AS ID_OF_EXECUTOR,
+                EXECUTOR.F4886 AS EXECUTOR_NAME
+                FROM T218
+                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
+                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
+                WHERE T218.F4693 = {employeeId} OR T218.F4694 = {employeeId}"""
+                cur.execute(sql)
+                result = cur.fetchall()
+                columns = ('id', 'task', 'comment', 'startDate', 'deadlineDate', 'deadlineTime', 'done', 'dateDone', 'idDirector', 'directorName', 'idExecutor', 'executorName')
+                json_result = [
+                    {col: value for col, value in zip(columns, row)}
+                    for row in result
+                ]  # Создаем список словарей с сериализацией значений
+                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+            except Exception as ex:
+                print(f"НЕ удалось получить задачи по договору {ex}")
+                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
