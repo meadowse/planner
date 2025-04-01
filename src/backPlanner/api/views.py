@@ -636,7 +636,7 @@ def getTasksEmployee(request):
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                WHERE T218.F4693 = {employeeId} OR T218.F4694 = {employeeId}"""
+                WHERE EXECUTOR.F16 = {employeeId} OR DIRECTOR.F16 = {employeeId}"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = ('id', 'task', 'comment', 'startDate', 'deadlineDate', 'deadlineTime', 'done', 'dateDone', 'idDirector', 'directorName', 'idExecutor', 'executorName')
