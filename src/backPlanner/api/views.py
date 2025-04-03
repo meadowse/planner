@@ -630,9 +630,9 @@ def getTasksEmployee(request):
                 T218.F5476 AS DEADLINE_TIME,
                 T218.F4697 AS DONE,
                 T218.F4708 AS DATE_OF_DONE,
-                T218.F4693 AS ID_OF_DIRECTOR,
+                DIRECTOR.F16 AS ID_OF_DIRECTOR,
                 DIRECTOR.F4886 AS DIRECTOR_NAME,
-                T218.F4694 AS ID_OF_EXECUTOR,
+                EXECUTOR.F16 AS ID_OF_EXECUTOR,
                 EXECUTOR.F4886 AS EXECUTOR_NAME
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
