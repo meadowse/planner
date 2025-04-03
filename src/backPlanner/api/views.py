@@ -645,7 +645,15 @@ def getTasksEmployee(request):
                     {col: value for col, value in zip(columns, row)}
                     for row in result
                 ]  # Создаем список словарей с сериализацией значений
-                director = {'director': {}}
+                for task in json_result:
+                    director = {'director': {'idDirector': task.get('idDirector'), 'directorName': task.get('directorName')}}
+                    executor = {'executor': {'idExecutor': task.get('idExecutor'), 'executorName': task.get('executorName')}}
+                    task.update(director)
+                    task.update(executor)
+                    task.pop('idDirector')
+                    task.pop('idExecutor')
+                    task.pop('directorName')
+                    task.pop('executorName')
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")
