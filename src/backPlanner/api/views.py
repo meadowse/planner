@@ -613,6 +613,7 @@ def getAllDepartmentsStaffAndTasks(request):
             print(f"Не удалось получить данные по отделам и сотрудникам: {ex}")
             return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
+@csrf_exempt
 def getTasksEmployee(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
