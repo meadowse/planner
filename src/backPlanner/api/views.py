@@ -640,11 +640,12 @@ def getTasksEmployee(request):
                 WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = ('id', 'task', 'comment', 'startDate', 'deadlineDate', 'deadlineTime', 'done', 'dateDone', 'idDirector', 'directorName', 'idExecutor', 'executorName')
+                columns = ('id', 'task', 'comment', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'idDirector', 'directorName', 'idExecutor', 'executorName')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
                 ]  # Создаем список словарей с сериализацией значений
+                director = {'director': {}}
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")
