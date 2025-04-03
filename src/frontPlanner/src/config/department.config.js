@@ -64,6 +64,24 @@ export const DATA_CONVERSION_MAP = {
         }
         return null;
     },
+    director: director => {
+        return director && Object.keys(director).length !== 0
+            ? {
+                  id: director.idDirector,
+                  fullName: director.fullName || director.directorName,
+                  photo: '/img/user.svg'
+              }
+            : null;
+    },
+    executor: executor => {
+        return executor && Object.keys(executor).length !== 0
+            ? {
+                  id: executor.idExecutor,
+                  fullName: director.fullName || director.executorName,
+                  photo: '/img/user.svg'
+              }
+            : null;
+    },
     participants: participants => {
         return participants && participants.length !== 0
             ? participants.map(participant => {
@@ -80,13 +98,19 @@ export const TASKS_DATA_CONF = {
         {
             mode: 'Список задач',
             keyMode: 'listTasks',
-            modeOptions: [],
+            modeOptions: [
+                { value: 'Исполнитель', key: 'executor', uniqueness: 'fullName' },
+                { value: 'Постановщик', key: 'director', uniqueness: 'fullName' }
+            ],
             keys: ['task', 'director', 'executor', 'deadlineTask', 'done']
         },
         {
             mode: 'Список договоров',
             keyMode: 'listContracts',
-            modeOptions: [],
+            modeOptions: [
+                { value: 'Руководитель отдела', key: 'responsible', uniqueness: 'fullName' },
+                { value: 'Исполнитель', key: 'executor', uniqueness: 'fullName' }
+            ],
             keys: [
                 'contractNum',
                 'address',

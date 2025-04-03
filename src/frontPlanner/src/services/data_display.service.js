@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 // Импорт доп.функционала
 import { dataLoader, findNestedObj } from '@helpers/helper';
@@ -142,12 +143,53 @@ const loadData = async partition => {
         },
         // Задачи
         tasks: async () => {
-            return {
-                tasks: [],
-                contracts: formData(await dataLoader(`${window.location.origin}/api/`), partition, null)?.sort(
-                    (a, b) => b?.id - a?.id
+            const resolvedData = {};
+            const endPoints = [`${window.location.origin}/api/getTasksEmployee`];
+
+            await axios
+                .all(endPoints.map(endpoint => axios.post(endpoint, { employeeId: 'qdtqwr4uhif68kagmofq48j58c' })))
+                .then(
+                    axios.spread((tasks, contracts) => {
+                        resolvedData.tasks = tasks?.data || [];
+                        resolvedData.contracts = contracts || [];
+                        // if (tasks?.data && tasks?.data.length !== 0) resolvedData.tasks = tasks?.data;
+                        // if (contracts && contracts.length !== 0) resolvedData.contracts = contracts;
+                    })
                 )
-            };
+                .catch(error => {
+                    if (error.response) {
+                        console.log('server responded');
+                        resolvedData.tasks = [];
+                        // resolvedData.contracts = [];
+                    } else if (error.request) {
+                        console.log('network error');
+                        resolvedData.tasks = [];
+                        // resolvedData.contracts = [];
+                    } else {
+                        console.log(error);
+                        resolvedData.tasks = [];
+                        // resolvedData.contracts = [];
+                    }
+                });
+            return resolvedData;
+            // return {
+            //     tasks: await axios
+            //         .post(`${window.location.origin}/getTasksEmployee`, {
+            //             employeeId: Cookies.get('MMUSERID')
+            //         })
+            //         .catch(error => {
+            //             if (error.response) {
+            //                 console.log('server responded');
+            //             } else if (error.request) {
+            //                 console.log('network error');
+            //             } else {
+            //                 console.log(error);
+            //             }
+            //         }),
+            //     contracts: formData(await dataLoader(`${window.location.origin}/api/`), partition, null)?.sort(
+            //         (a, b) => b?.id - a?.id
+            //     )
+            // };
         }
     };
 

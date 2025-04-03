@@ -42,7 +42,7 @@ function Cell({ cellData, cellConfig }) {
 
 export default function ListMode(props) {
     const { testData, modeConfig } = props;
-    // console.log(`ListMode testData: ${JSON.stringify(testData, null, 4)}`);
+    console.log(`ListMode testData: ${JSON.stringify(testData, null, 4)}`);
 
     const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
     const [data, setData] = useState([]);

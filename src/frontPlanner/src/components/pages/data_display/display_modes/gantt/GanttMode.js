@@ -3,11 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import classNames from 'classnames';
 
+// Импорт компонентов
+import FiltersGantt from './filters/FiltersGantt';
+
 // Импорт конфигураций
 import { MONTHS } from '@config/calendar.config';
 
-// Импорт дополнительного функционала
+// Импорт кастомных хуков
 import { useGanttMode } from '@hooks/useGanttMode';
+import { useFiltersGantt } from '@hooks/useFiltersGantt';
+
+// Импорт дополнительного функционала
 import {
     getDaysBetweenTwoDates,
     getLastDayOfMonth,
@@ -42,7 +48,17 @@ function DurationTask(props) {
 
 // Отображение суммы всех задач
 function TotalTaskRow(props) {
-    const { timeLine, totalTasks, selectedItem, dateState, modeOption, bgColorTask, onHideTasks } = props;
+    const {
+        timeLine,
+        totalTasks,
+        selectedItemInd,
+        dateState,
+        modeConfig,
+        ganttConfig,
+        bgColorTask,
+        onHideTasks,
+        onSelectItem
+    } = props;
 
     return (
         <div className="gantt-grid__main-row">
@@ -51,13 +67,17 @@ function TotalTaskRow(props) {
                 style={{ backgroundColor: `${bgColorTask}` }}
                 onClick={onHideTasks}
             >
-                <img src="/img/arrow_down_bl.png" alt="Arrow" />
-                <span>
-                    {selectedItem && Object.keys(selectedItem).length !== 0
-                        ? selectedItem[modeOption?.uniqueness]
-                        : 'Нет данных'}
-                </span>
-                {/* <span>{selectedItem[modeOption?.uniqueness]}</span> */}
+                <select className="gantt-mode__select-list" onChange={onSelectItem}>
+                    {ganttConfig?.map((headline, index) => {
+                        if (isObject(headline) && Object.keys(headline).length !== 0) {
+                            return (
+                                <option key={headline?.title} value={index} selected={selectedItemInd === index}>
+                                    {headline[modeConfig?.modeOption?.uniqueness]}
+                                </option>
+                            );
+                        }
+                    })}
+                </select>
             </div>
             <div className="gantt-empty-row"></div>
             <ul className="gantt-time-period">
@@ -224,7 +244,7 @@ function TaskRow(props) {
 }
 
 function GanttChart(props) {
-    const { timeLine, partition, ganttData, dateState, selectedItem, modeOption, dataOperations } = props;
+    const { timeLine, partition, gantt, dateState, selectedItemInd, modeConfig, onSelectItem } = props;
 
     const [showTasks, setShowTasks] = useState(true);
     // const [currTask, setCurrTask] = useState({});
@@ -255,9 +275,9 @@ function GanttChart(props) {
 
     useEffect(() => {
         refCurrMonth?.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    }, [ganttData]);
+    }, [gantt?.data]);
 
-    return ganttData && Object.keys(ganttData).length !== 0 ? (
+    return gantt?.data && Object.keys(gantt?.data).length !== 0 ? (
         <div className="gantt-grid-wrapper">
             <div className="gantt-grid">
                 <div className="gantt-grid__header">
@@ -309,7 +329,7 @@ function GanttChart(props) {
                                                   <div
                                                       className="gantt-time__vr-line"
                                                       style={{
-                                                          height: `${(ganttData?.totalCount + 1) * 100}%`
+                                                          height: `${(gantt?.data?.totalCount + 1) * 100}%`
                                                       }}
                                                   ></div>
                                               ) : null}
@@ -324,23 +344,25 @@ function GanttChart(props) {
                     {/* Отображение суммы всех задач */}
                     <TotalTaskRow
                         timeLine={timeLine}
-                        totalTasks={ganttData?.totalTasks}
-                        selectedItem={selectedItem}
+                        totalTasks={gantt?.data?.totalTasks}
+                        selectedItemInd={selectedItemInd}
                         dateState={dateState}
-                        modeOption={modeOption}
-                        bgColorTask={ganttData?.bgColorTask}
+                        modeConfig={modeConfig}
+                        ganttConfig={gantt?.config}
+                        bgColorTask={gantt?.data?.bgColorTask}
                         onHideTasks={onHideTasks}
+                        onSelectItem={onSelectItem}
                     />
                     {/* Отображение задач */}
-                    {ganttData?.tasks?.length !== 0
-                        ? ganttData?.tasks?.map(task => (
+                    {gantt?.data?.tasks?.length !== 0
+                        ? gantt?.data?.tasks?.map(task => (
                               <TaskRow
                                   timeLine={timeLine}
                                   partition={partition}
                                   task={task}
                                   dateState={dateState}
                                   config={{ indent: 10 }}
-                                  dataOperations={dataOperations}
+                                  dataOperations={modeConfig?.dataOperations}
                               />
                           ))
                         : null}
@@ -351,63 +373,73 @@ function GanttChart(props) {
 }
 
 export default function GanttMode({ data, modeConfig }) {
-    // Выбранный элемент выпадающего списка
-    const [selectedItemInd, setSelectedItemInd] = useState(
-        +localStorage.getItem(`gantt-filter_${modeConfig?.modeOption?.key}`) || 0
+    // Сохраненные значения выпадающего списка
+    const [ganttFilters, setGanttFilters] = useState(
+        JSON.parse(localStorage.getItem('gantt-filters')) || {
+            responsible: 0,
+            section: 0,
+            services: 0
+        }
     );
+    const { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter } = useFiltersGantt(
+        modeConfig?.modeOption,
+        data
+    );
+    const { timeLine, ganttConfig, formData } = useGanttMode({
+        data: filteredData,
+        selectedItemInd: ganttFilters[modeConfig?.modeOption?.key],
+        modeOption: modeConfig?.modeOption
+    });
+
     // Состояние текущей даты
     const [dateState] = useState({ year: new Date().getFullYear(), month: new Date().getMonth() });
     // Данные для диаграммы Ганта
     const [ganttData, setGanttData] = useState({});
 
-    const { timeLine, ganttConfig, formData } = useGanttMode({
-        data,
-        selectedItemInd,
-        modeOption: modeConfig?.modeOption
-    });
-    // console.log(`ganttConfig: ${JSON.stringify(ganttConfig, null, 4)}`);
-
     function onSelectItem(e) {
-        setSelectedItemInd(e.target.value);
-        localStorage.setItem(`gantt-filter_${modeConfig?.modeOption?.key}`, e.target.value);
+        const tempGanttFilters = Object.assign({}, ganttFilters);
+        tempGanttFilters[modeConfig?.modeOption?.key] = +e.target.value;
+
+        setGanttFilters(tempGanttFilters);
+        localStorage.setItem('gantt-filters', JSON.stringify(tempGanttFilters));
     }
 
     useEffect(() => {
-        const ganttChartData = formData(data, ganttConfig[selectedItemInd], modeConfig?.modeOption);
-        setGanttData(ganttChartData);
-        console.log(`ganttChartData: ${JSON.stringify(ganttChartData, null, 4)}`);
-    }, [selectedItemInd, modeConfig?.modeOption]);
+        const oldStorageData = [
+            'gantt-filter',
+            'gantt-filter_undefined',
+            'gantt-filter_responsible',
+            'gantt-filter_section',
+            'gantt-filter_services',
+            'gantt-filter_participants',
+            'gantt-filter_status'
+        ];
+        oldStorageData.forEach(item => localStorage.removeItem(item));
+    }, []);
 
     useEffect(() => {
-        const ganttFilter = +localStorage.getItem(`gantt-filter_${modeConfig?.modeOption?.key}`);
-        // localStorage.setItem('gantt-filter', 0);
-        if (ganttFilter && ganttFilter !== -1) setSelectedItemInd(ganttFilter);
-        else {
-            localStorage.setItem(`gantt-filter_${modeConfig?.modeOption?.key}`, 0);
-            setSelectedItemInd(0);
-        }
-    }, [modeConfig]);
+        setGanttData(formData());
+    }, [activeFilters, filteredData]);
+
+    useEffect(() => {
+        setGanttData(formData());
+    }, [ganttFilters[modeConfig?.modeOption?.key], modeConfig?.modeOption]);
 
     return ganttConfig && ganttConfig.length !== 0 ? (
         <div className="gantt-mode">
-            <select className="gantt-mode__select-list" onChange={onSelectItem}>
-                {ganttConfig?.map((headline, index) => {
-                    if (isObject(headline) && Object.keys(headline).length !== 0) {
-                        return (
-                            <option key={headline?.title} value={index} selected={selectedItemInd === index}>
-                                {headline[modeConfig?.modeOption?.uniqueness]}
-                            </option>
-                        );
-                    }
-                })}
-            </select>
+            <FiltersGantt
+                activeFilters={activeFilters}
+                optionsFilter={OPTIONS_FILTER_CONF}
+                keys={['stage']}
+                onChangeFilter={onChangeFilter}
+            />
             <GanttChart
                 timeLine={timeLine}
-                ganttData={ganttData}
+                gantt={{ config: ganttConfig, data: ganttData }}
                 dateState={dateState}
-                selectedItem={ganttConfig[selectedItemInd]}
-                modeOption={modeConfig?.modeOption}
-                dataOperations={modeConfig?.dataOperations}
+                selectedItemInd={ganttFilters[modeConfig?.modeOption?.key]}
+                modeConfig={modeConfig}
+                onSelectItem={onSelectItem}
             />
         </div>
     ) : null;
