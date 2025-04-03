@@ -218,6 +218,13 @@ function HeaderBottom(props) {
                             onSelectMode={onSelectMode}
                             onSelectOption={onSelectMode}
                         />
+                        <ModeOptions
+                            mode={mode}
+                            modeOptions={modeOptions}
+                            modeOption={modeOption}
+                            setOption={setOption}
+                            onSelectOption={onSelectModeOption}
+                        />
                     </div>
                 </div>
             );
@@ -279,33 +286,9 @@ export default function DataDisplayPage({ partition }) {
     const [modeOption, setOption] = useState(JSON.parse(localStorage.getItem(`mode-option_${partition}`)) || {});
 
     // Данные для отображения
-    const valsToDisplay = DataDisplayService.getValuesToDisplay(partition, mode) || [];
+    const valsToDisplay = DataDisplayService.getValuesToDisplay(partition, mode, modeOption[mode?.key]) || [];
     // Операции которые можно совершать с данными
     const dataOperations = DataDisplayService.getDataOperations(partition) || [];
-
-    useEffect(() => {
-        const dataModeOptions = DataDisplayService.getModeOptions(partition, mode);
-        setModeOptions(dataModeOptions);
-        setOption(() => {
-            let savedOption = JSON.parse(localStorage.getItem(`mode-option_${partition}`));
-            let option = {};
-
-            if (savedOption && Object.keys(savedOption).length !== 0) {
-                if (mode?.key && mode?.key in savedOption) {
-                    option = savedOption ? savedOption : { [mode?.key]: { value: null, key: null } };
-                } else {
-                    option = { [mode?.key]: dataModeOptions[0] };
-                }
-            } else option = { [mode?.key]: dataModeOptions[0] };
-
-            localStorage.setItem(`mode-option_${partition}`, JSON.stringify(option));
-
-            // console.log(`mode: ${JSON.stringify(mode, null, 4)}\nsavedOption: ${JSON.stringify(savedOption, null, 4)}`);
-            return option;
-        });
-
-        console.log(`mode: ${JSON.stringify(mode, null, 4)}`);
-    }, [mode]);
 
     useEffect(() => {
         const dataDisplayModes = DataDisplayService.getDisplayModes(partition)?.map(item => {
@@ -335,6 +318,32 @@ export default function DataDisplayPage({ partition }) {
 
         navigate(displayMode?.key);
     }, [itemSideMenu]);
+
+    useEffect(() => {
+        const dataModeOptions = DataDisplayService.getModeOptions(partition, mode);
+        setModeOptions(dataModeOptions);
+        setOption(() => {
+            let savedOption = JSON.parse(localStorage.getItem(`mode-option_${partition}`));
+            let option = {};
+
+            if (savedOption && Object.keys(savedOption).length !== 0) {
+                if (mode?.key && mode?.key in savedOption) {
+                    option = savedOption ? savedOption : { [mode?.key]: { value: null, key: null } };
+                } else {
+                    option = { [mode?.key]: dataModeOptions[0] };
+                }
+            } else option = { [mode?.key]: dataModeOptions[0] };
+
+            localStorage.setItem(`mode-option_${partition}`, JSON.stringify(option));
+
+            // console.log(`mode: ${JSON.stringify(mode, null, 4)}\nsavedOption: ${JSON.stringify(savedOption, null, 4)}`);
+            return option;
+        });
+
+        console.log(`mode: ${JSON.stringify(mode, null, 4)}`);
+    }, [mode]);
+
+    useEffect(() => {}, [modeOption]);
 
     return (
         <section className="page__section-department page-section">
@@ -483,16 +492,23 @@ export default function DataDisplayPage({ partition }) {
                             element={
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
-                                        {resolvedData => (
-                                            <ListMode
-                                                testData={resolvedData?.tasks}
-                                                modeConfig={{
-                                                    keys: valsToDisplay,
-                                                    partition: partition,
-                                                    dataOperations: dataOperations
-                                                }}
-                                            />
-                                        )}
+                                        {resolvedData => {
+                                            const tableData = filterData(
+                                                resolvedData?.tasks,
+                                                simplifyData(extractSampleData(resolvedData?.tasks, valsToDisplay)),
+                                                'qdtqwr4uhif68kagmofq48j58c'
+                                            );
+                                            return (
+                                                <ListMode
+                                                    testData={tableData}
+                                                    modeConfig={{
+                                                        keys: valsToDisplay,
+                                                        partition: partition,
+                                                        dataOperations: dataOperations
+                                                    }}
+                                                />
+                                            );
+                                        }}
                                     </Await>
                                 </Suspense>
                             }

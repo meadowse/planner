@@ -77,7 +77,7 @@ export const DATA_CONVERSION_MAP = {
         return executor && Object.keys(executor).length !== 0
             ? {
                   id: executor.idExecutor,
-                  fullName: director.fullName || director.executorName,
+                  fullName: executor.fullName || executor.executorName,
                   photo: '/img/user.svg'
               }
             : null;
@@ -102,7 +102,11 @@ export const TASKS_DATA_CONF = {
                 { value: 'Исполнитель', key: 'executor', uniqueness: 'fullName' },
                 { value: 'Постановщик', key: 'director', uniqueness: 'fullName' }
             ],
-            keys: ['task', 'director', 'executor', 'deadlineTask', 'done']
+            keys: {
+                executor: ['task', 'executor', 'deadlineTask', 'done'],
+                director: ['task', 'director', 'deadlineTask', 'done']
+            }
+            // keys: ['task', 'director', 'executor', 'deadlineTask', 'done']
         },
         {
             mode: 'Список договоров',
