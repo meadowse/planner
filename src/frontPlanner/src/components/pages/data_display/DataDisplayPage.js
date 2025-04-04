@@ -448,6 +448,8 @@ export default function DataDisplayPage({ partition }) {
                                                 <GanttMode
                                                     data={resolvedData[keyData]}
                                                     modeConfig={{
+                                                        resolvedData: resolvedData,
+                                                        modeOptions: modeOptions,
                                                         modeOption: modeOption[mode?.key],
                                                         dataOperations: dataOperations
                                                     }}

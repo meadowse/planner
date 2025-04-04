@@ -2,7 +2,7 @@ import { getDaysYear, getDaysBetweenTwoDates, getDateFromString, getDateInSpecif
 import { isObject, isArray, getUniqueData, extractSampleData, simplifyData } from '@helpers/helper';
 
 export const useGanttMode = args => {
-    const { data, selectedItemInd, modeOption } = args;
+    const { data, filteredData, selectedItemInd, modeOption } = args;
 
     // Получение заголовков Ганта
     const getHeadlinesGantt = () => {
@@ -28,7 +28,8 @@ export const useGanttMode = args => {
 
     // Функция фильтрации данных
     const getFilteredData = () => {
-        const simplifiedData = simplifyData(data);
+        // const simplifiedData = simplifyData(data);
+        const simplifiedData = simplifyData(filteredData);
         // Индексы найденных элементов
         const indexes = [];
         //
@@ -60,7 +61,7 @@ export const useGanttMode = args => {
             });
         }
 
-        return indexes.map(item => data[item]);
+        return indexes.map(item => filteredData[item]);
     };
 
     // Формирование временной шкалы

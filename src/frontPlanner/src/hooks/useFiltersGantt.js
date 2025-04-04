@@ -48,7 +48,7 @@ function applyFilters(keyData, data, filters) {
 }
 
 export const useFiltersGantt = (modeOption, data) => {
-    const [activeFilters, setActiveFilters] = useState(Object.assign(INITIAL_FILTERS));
+    const [activeFilters, setActiveFilters] = useState(Object.assign({}, INITIAL_FILTERS));
     const [filteredData, setFilteredData] = useState(applyFilters(modeOption?.keyData, data, activeFilters) || []);
 
     const OPTIONS_FILTER_CONF = {

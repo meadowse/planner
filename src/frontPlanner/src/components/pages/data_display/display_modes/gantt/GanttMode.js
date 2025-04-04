@@ -386,7 +386,8 @@ export default function GanttMode({ data, modeConfig }) {
         data
     );
     const { timeLine, ganttConfig, formData } = useGanttMode({
-        data: filteredData,
+        data,
+        filteredData,
         selectedItemInd: ganttFilters[modeConfig?.modeOption?.key],
         modeOption: modeConfig?.modeOption
     });
