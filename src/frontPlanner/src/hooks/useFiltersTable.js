@@ -37,6 +37,30 @@ export const useFiltersTable = (tableData, toggleState, setToggleState, setData)
         stage: data => {
             return ['Все', ...Array.from(new Set(data.map(item => item?.stage?.title)))];
         },
+        deadlineTask: data => {
+            let currDate = new Date();
+            const newData = [];
+            let tempData = Array.from(
+                new Set(
+                    data.map(item => {
+                        if (item?.deadlineTask) {
+                            if (!item?.deadlineTask) return 'Без даты';
+                            else {
+                                let deadline = getDateFromString(item?.deadlineTask);
+                                if (currDate > deadline) return 'Просроченные';
+                                else return 'Непросроченные';
+                            }
+                        }
+                    })
+                )
+            );
+
+            tempData.map(item => {
+                if (item) newData.push(item);
+            });
+
+            return newData;
+        },
         dateOfEnding: data => {
             let currDate = new Date();
             const newData = [];

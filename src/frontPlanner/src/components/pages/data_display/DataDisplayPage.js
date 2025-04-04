@@ -9,7 +9,7 @@ import Preloader from '@components/auxiliary_pages/loader/Preloader';
 import DataDisplayService from '@services/data_display.service';
 
 // Импорт вспомогательных функций
-import { extractSampleData, simplifyData } from '@helpers/helper';
+import { extractSampleData, simplifyData, getFilteredData } from '@helpers/helper';
 
 // Импорт стилей
 import './data_display_page.css';
@@ -495,10 +495,10 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => {
-                                            const tableData = filterData(
+                                            const tableData = getFilteredData(
                                                 resolvedData?.tasks,
-                                                simplifyData(extractSampleData(resolvedData?.tasks, valsToDisplay)),
-                                                'qdtqwr4uhif68kagmofq48j58c'
+                                                'qdtqwr4uhif68kagmofq48j58c',
+                                                modeOption?.listTasks
                                             );
                                             return (
                                                 <ListMode

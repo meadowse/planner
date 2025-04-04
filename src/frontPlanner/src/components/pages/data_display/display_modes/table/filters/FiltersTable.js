@@ -58,6 +58,17 @@ const FILTERS_CONF = {
             <DropDownFilter id="status" defaultVal="Все" options={options} toggle={toggleState} onChange={onChange} />
         );
     },
+    deadlineTask: (options, toggleState, onChange) => {
+        return (
+            <DropDownFilter
+                id="deadlineTask"
+                defaultVal="Все"
+                options={options}
+                toggle={toggleState}
+                onChange={onChange}
+            />
+        );
+    },
     dateOfEnding: (options, toggleState, onChange) => {
         return (
             <DropDownFilter

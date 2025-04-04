@@ -46,6 +46,23 @@ export function findNestedObj(entireObj, keyToFind, valToFind) {
     return foundObj;
 }
 
+// Функция фильтрации данных
+export function getFilteredData(data, selectedItem, option) {
+    const filteredData = data.filter(task => {
+        if (task) {
+            if (typeof task[option?.key] === 'object' && !Array.isArray(task[option?.key])) {
+                const values =
+                    task[option?.key] && Object.keys(task[option?.key]).length !== 0
+                        ? Object.values(task[option?.key])
+                        : [];
+                if (values && values.length !== 0 && values.includes(selectedItem)) return true;
+            } else return task[option?.key] === selectedItem ? true : false;
+        }
+        return false;
+    });
+    return filteredData;
+}
+
 function simplifyItem(item, newItem = []) {
     let newData = newItem;
 

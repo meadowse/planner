@@ -99,12 +99,12 @@ export const TASKS_DATA_CONF = {
             mode: 'Список задач',
             keyMode: 'listTasks',
             modeOptions: [
-                { value: 'Исполнитель', key: 'executor', uniqueness: 'fullName' },
-                { value: 'Постановщик', key: 'director', uniqueness: 'fullName' }
+                { value: 'Исполнитель', key: 'executor', uniqueness: 'id' },
+                { value: 'Постановщик', key: 'director', uniqueness: 'id' }
             ],
             keys: {
-                executor: ['task', 'executor', 'deadlineTask', 'done'],
-                director: ['task', 'director', 'deadlineTask', 'done']
+                executor: ['task', 'executor', 'director', 'deadlineTask', 'done'],
+                director: ['task', 'director', 'executor', 'deadlineTask', 'done']
             }
             // keys: ['task', 'director', 'executor', 'deadlineTask', 'done']
         },
