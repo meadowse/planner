@@ -335,6 +335,23 @@ def getTypesWork(request):
                     {col: value for col, value in zip(columns, row)}
                     for row in result
                 ]  # Создаем список словарей с сериализацией значений
+                today = datetime.date.today()
+                for obj in json_result:
+                    dateDone = obj.get('dateDone')
+                    if dateDone is not None:
+                        if obj.get('done') == 0 and dateDone < today:
+                            dateDone = {
+                                'dateDone': {'value': dateDone,
+                                                 'expired': True}}
+                        else:
+                            dateDone = {
+                                'dateDone': {'value': dateDone,
+                                                 'expired': False}}
+                    else:
+                        dateDone = {
+                            'dateDone': {'value': dateDone,
+                                             'expired': False}}
+                    obj.update(dateDone)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить работы договора {ex}")
