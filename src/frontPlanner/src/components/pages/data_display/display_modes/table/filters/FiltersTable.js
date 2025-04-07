@@ -89,6 +89,17 @@ const FILTERS_CONF = {
             />
         );
     },
+    // dateDone: (options, activeOption, toggleState, onChange) => {
+    //     return (
+    //         <DropDownFilter
+    //             id="dateDone"
+    //             defaultVal={activeOption}
+    //             options={options}
+    //             toggle={toggleState}
+    //             onChange={onChange}
+    //         />
+    //     );
+    // },
     deadlineTask: (options, activeOption, toggleState, onChange) => {
         return (
             <DropDownFilter

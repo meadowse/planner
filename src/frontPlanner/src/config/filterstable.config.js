@@ -13,7 +13,7 @@ export const INITIAL_FILTERS = {
     pathToFolder: '',
     typeWork: '',
     deadline: 'Все',
-    dateDone: 'Все',
+    // dateDone: 'Все',
     done: 'Не завершено'
 };
 
@@ -174,39 +174,39 @@ export const OPTIONS_FILTER_CONF = {
 
         return newData;
     },
-    dateDone: data => {
-        const newData = [];
+    // dateDone: data => {
+    //     const newData = [];
 
-        let currDate = new Date();
-        let tempData = [
-            'Все',
-            ...Array.from(
-                new Set(
-                    data.map(item => {
-                        if (item?.dateOfEnding && Object.keys(item?.dateOfEnding).length !== 0) {
-                            if (!item?.dateOfEnding?.value) return 'Без даты';
-                            else {
-                                if ('expired' in item?.dateOfEnding) {
-                                    if (item?.dateOfEnding?.expired) return 'Просроченные';
-                                    else return 'Непросроченные';
-                                } else {
-                                    let deadline = getDateFromString(item?.dateOfEnding?.value);
-                                    if (currDate > deadline) return 'Просроченные';
-                                    else return 'Непросроченные';
-                                }
-                            }
-                        }
-                    })
-                )
-            )
-        ];
+    //     let currDate = new Date();
+    //     let tempData = [
+    //         'Все',
+    //         ...Array.from(
+    //             new Set(
+    //                 data.map(item => {
+    //                     if (item?.dateDone && Object.keys(item?.dateDone).length !== 0) {
+    //                         if (!item?.dateDone?.value) return 'Без даты';
+    //                         else {
+    //                             if ('expired' in item?.dateDone) {
+    //                                 if (item?.dateDone?.expired) return 'Просроченные';
+    //                                 else return 'Непросроченные';
+    //                             } else {
+    //                                 let deadline = getDateFromString(item?.dateDone?.value);
+    //                                 if (currDate > deadline) return 'Просроченные';
+    //                                 else return 'Непросроченные';
+    //                             }
+    //                         }
+    //                     }
+    //                 })
+    //             )
+    //         )
+    //     ];
 
-        tempData.map(item => {
-            if (item) newData.push(item);
-        });
+    //     tempData.map(item => {
+    //         if (item) newData.push(item);
+    //     });
 
-        return newData;
-    },
+    //     return newData;
+    // },
     done: data => {
         const newData = [];
         let tempData = [
@@ -302,23 +302,23 @@ export const FILTER_HANDLERS_CONF = new Map([
             }
         }
     ],
-    [
-        'dateDone',
-        (filterVal, date) => {
-            // console.log(`filterVal: ${filterVal}\ndate: ${JSON.stringify(date, null, 4)}`);
-            if (filterVal?.includes('Все')) return Object.values({ value: filterVal })?.includes(filterVal);
-            else {
-                if (date && Object.keys(date).length !== 0) {
-                    if (!date?.value) return Object.values({ value: 'Без даты' })?.includes(filterVal);
-                    else {
-                        if (date?.value && date?.expired)
-                            return Object.values({ value: 'Просроченные' })?.includes(filterVal);
-                        else return Object.values({ value: 'Непросроченные' })?.includes(filterVal);
-                    }
-                }
-            }
-        }
-    ],
+    // [
+    //     'dateDone',
+    //     (filterVal, date) => {
+    //         // console.log(`filterVal: ${filterVal}\ndate: ${JSON.stringify(date, null, 4)}`);
+    //         if (filterVal?.includes('Все')) return Object.values({ value: filterVal })?.includes(filterVal);
+    //         else {
+    //             if (date && Object.keys(date).length !== 0) {
+    //                 if (!date?.value) return Object.values({ value: 'Без даты' })?.includes(filterVal);
+    //                 else {
+    //                     if (date?.value && date?.expired)
+    //                         return Object.values({ value: 'Просроченные' })?.includes(filterVal);
+    //                     else return Object.values({ value: 'Непросроченные' })?.includes(filterVal);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // ],
     [
         'done',
         (filterVal, done) => {
