@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
+import classNames from 'classnames';
 import axios from 'axios';
 
 // Импорт компонетов
@@ -240,7 +241,12 @@ function Completeness(props) {
         <li className="popup__content-completeness popup-content-item">
             <h2 className="popup-content-title">Завершено</h2>
             <div className="popup__checkbox-wrapper">
-                <input className="popup__inpt-checkbox" type="checkbox" onChange={onChangeCompleteness} />
+                <input
+                    className="popup__inpt-checkbox"
+                    type="checkbox"
+                    checked={checked}
+                    onChange={onChangeCompleteness}
+                />
                 <span className="popup__custom-checkbox"></span>
             </div>
         </li>

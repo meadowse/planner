@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react';
 
 // Импорт конфигураций
-import { DEFAULT_ACTIVE_FILTERS, FILTER_HANDLERS_CONF } from '@config/filterstable.config';
+import { INITIAL_FILTERS, OPTIONS_FILTER_CONF, FILTER_HANDLERS_CONF } from '@config/filterstable.config';
 
-// Импорт доп.функционала
-import { getDateFromString } from '@helpers/calendar';
+// Инициализация фильтров
+function initializeFilters(keys) {
+    const initFilters = {};
+    if (keys && keys.length !== 0) {
+        keys.forEach(key => (initFilters[key] = INITIAL_FILTERS[key]));
+    }
+    console.log(`initFilters: ${JSON.stringify(initFilters, null, 4)}`);
+    return initFilters;
+}
 
 function applyFilters(data, filters) {
     // console.log(`filters: ${JSON.stringify(filters, null, 4)}\nfilters table data: ${JSON.stringify(data, null, 4)}`);
@@ -21,105 +28,36 @@ function applyFilters(data, filters) {
     return filteredData;
 }
 
-export const useFiltersTable = (tableData, toggleState, setToggleState, setData) => {
-    // const activeFilters = Object.assign({}, DEFAULT_ACTIVE_FILTERS);
-    const [activeFilters, setActiveFilters] = useState(Object.assign({}, DEFAULT_ACTIVE_FILTERS));
-    const filteredData = applyFilters(Array.from(tableData), activeFilters);
-
-    const OPTIONS_FILTER_MAP = {
-        services: data => {
-            return Array.from(
-                new Set(
-                    data.map(item => item.services && Object.keys(item.services).length !== 0 && item.services?.title)
-                )
-            );
-        },
-        stage: data => {
-            return ['Все', ...Array.from(new Set(data.map(item => item?.stage?.title)))];
-        },
-        deadlineTask: data => {
-            let currDate = new Date();
-            const newData = [];
-            let tempData = Array.from(
-                new Set(
-                    data.map(item => {
-                        if (item?.deadlineTask) {
-                            if (!item?.deadlineTask) return 'Без даты';
-                            else {
-                                let deadline = getDateFromString(item?.deadlineTask);
-                                if (currDate > deadline) return 'Просроченные';
-                                else return 'Непросроченные';
-                            }
-                        }
-                    })
-                )
-            );
-
-            tempData.map(item => {
-                if (item) newData.push(item);
-            });
-
-            return newData;
-        },
-        dateOfEnding: data => {
-            let currDate = new Date();
-            const newData = [];
-            let tempData = Array.from(
-                new Set(
-                    data.map(item => {
-                        if (item?.dateOfEnding && Object.keys(item?.dateOfEnding).length !== 0) {
-                            if (!item?.dateOfEnding?.value) return 'Без даты';
-                            else {
-                                if ('expired' in item?.dateOfEnding) {
-                                    if (item?.dateOfEnding?.expired) return 'Просроченные';
-                                    else return 'Непросроченные';
-                                } else {
-                                    let deadline = getDateFromString(item?.dateOfEnding?.value);
-                                    if (currDate > deadline) return 'Просроченные';
-                                    else return 'Непросроченные';
-                                }
-                            }
-                        }
-                    })
-                )
-            );
-
-            tempData.map(item => {
-                if (item) newData.push(item);
-            });
-
-            return newData;
-        },
-        responsible: data => {
-            const newData = [];
-            let tempData = Array.from(new Set(data.map(item => item.responsible?.fullName)));
-
-            tempData.map(item => {
-                if (item) newData.push(item);
-            });
-
-            return newData;
-        }
-    };
+export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleState) => {
+    const [activeFilters, setActiveFilters] = useState({});
+    const [filteredData, setFilteredData] = useState([]);
 
     // Сброс фильтров
     const onResetFilters = () => {
         setToggleState(!toggleState);
-        setData([...applyFilters(tableData, DEFAULT_ACTIVE_FILTERS)]);
+
+        setActiveFilters(initializeFilters(modeConfig?.keys));
+        setFilteredData(applyFilters(tableData, initializeFilters(modeConfig?.keys)));
+        // setActiveFilters(Object.assign({}, INITIAL_FILTERS));
+        // setFilteredData(applyFilters(tableData, INITIAL_FILTERS));
     };
 
     // Изменение фильтров
     const onChangeFilter = e => {
-        const tempFilters = activeFilters;
+        const tempFilters = Object.assign({}, activeFilters);
         tempFilters[e.target.id] = e.target.value;
 
+        // console.log(`tempFilters: ${JSON.stringify(tempFilters, null, 4)}`);
+
         setActiveFilters(tempFilters);
-        setData([...applyFilters(tableData, activeFilters)]);
+        setFilteredData(applyFilters(tableData, tempFilters));
     };
 
     useEffect(() => {
-        if (filteredData && filteredData.length !== 0) setData(filteredData);
-    }, []);
+        // console.log(`initFilters: ${JSON.stringify(initializeFilters(modeConfig?.keys), null, 4)}`);
+        setActiveFilters(initializeFilters(modeConfig?.keys));
+        setFilteredData(applyFilters(tableData, initializeFilters(modeConfig?.keys)));
+    }, [modeConfig]);
 
-    return { OPTIONS_FILTER_MAP, onResetFilters, onChangeFilter };
+    return { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter, onResetFilters };
 };

@@ -1,23 +1,222 @@
-export const DEFAULT_ACTIVE_FILTERS = {
-    stage: 'В работе'
+// Импорт доп.функционала
+import { getDateFromString } from '@helpers/calendar';
+
+export const INITIAL_FILTERS = {
+    contractNum: '',
+    address: '',
+    company: '',
+    services: 'Все',
+    stage: 'В работе',
+    deadlineTask: 'Все',
+    dateOfEnding: 'Все',
+    responsible: 'Все',
+    pathToFolder: '',
+    typeWork: '',
+    deadline: 'Все',
+    dateDone: 'Все',
+    done: 'Не завершено'
+};
+
+export const OPTIONS_FILTER_CONF = {
+    services: data => {
+        const newData = [];
+
+        let tempData = [
+            'Все',
+            ...Array.from(
+                new Set(
+                    data.map(item => item.services && Object.keys(item.services).length !== 0 && item.services?.title)
+                )
+            )
+        ];
+
+        tempData.map(item => {
+            if (item) newData.push(item);
+        });
+
+        return newData;
+    },
+    stage: data => {
+        const newData = [];
+
+        let tempData = ['Все', ...Array.from(new Set(data.map(item => item?.stage?.title)))];
+
+        tempData.map(item => {
+            if (item) newData.push(item);
+        });
+
+        return newData;
+    },
+    deadlineTask: data => {
+        const newData = [];
+
+        let currDate = new Date();
+        let tempData = [
+            'Все',
+            ...Array.from(
+                new Set(
+                    data.map(item => {
+                        if (item?.deadlineTask) {
+                            if (!item?.deadlineTask) return 'Без даты';
+                            else {
+                                let deadline = getDateFromString(item?.deadlineTask);
+                                if (currDate > deadline) return 'Просроченные';
+                                else return 'Непросроченные';
+                            }
+                        }
+                    })
+                )
+            )
+        ];
+
+        tempData.map(item => {
+            if (item) newData.push(item);
+        });
+
+        return newData;
+    },
+    dateOfEnding: data => {
+        const newData = [];
+
+        let currDate = new Date();
+        let tempData = [
+            'Все',
+            ...Array.from(
+                new Set(
+                    data.map(item => {
+                        if (item?.dateOfEnding && Object.keys(item?.dateOfEnding).length !== 0) {
+                            if (!item?.dateOfEnding?.value) return 'Без даты';
+                            else {
+                                if ('expired' in item?.dateOfEnding) {
+                                    if (item?.dateOfEnding?.expired) return 'Просроченные';
+                                    else return 'Непросроченные';
+                                } else {
+                                    let deadline = getDateFromString(item?.dateOfEnding?.value);
+                                    if (currDate > deadline) return 'Просроченные';
+                                    else return 'Непросроченные';
+                                }
+                            }
+                        }
+                    })
+                )
+            )
+        ];
+
+        tempData.map(item => {
+            if (item) newData.push(item);
+        });
+
+        return newData;
+    },
+    deadline: data => {
+        const newData = [];
+
+        let currDate = new Date();
+        let tempData = [
+            'Все',
+            ...Array.from(
+                new Set(
+                    data.map(item => {
+                        if (item?.dateOfEnding && Object.keys(item?.dateOfEnding).length !== 0) {
+                            if (!item?.dateOfEnding?.value) return 'Без даты';
+                            else {
+                                if ('expired' in item?.dateOfEnding) {
+                                    if (item?.dateOfEnding?.expired) return 'Просроченные';
+                                    else return 'Непросроченные';
+                                } else {
+                                    let deadline = getDateFromString(item?.dateOfEnding?.value);
+                                    if (currDate > deadline) return 'Просроченные';
+                                    else return 'Непросроченные';
+                                }
+                            }
+                        }
+                    })
+                )
+            )
+        ];
+
+        tempData.map(item => {
+            if (item) newData.push(item);
+        });
+
+        return newData;
+    },
+    dateDone: data => {
+        const newData = [];
+
+        let currDate = new Date();
+        let tempData = [
+            'Все',
+            ...Array.from(
+                new Set(
+                    data.map(item => {
+                        // if (item?.dateOfEnding && Object.keys(item?.dateOfEnding).length !== 0) {
+                        //     if (!item?.dateOfEnding?.value) return 'Без даты';
+                        //     else {
+                        //         if ('expired' in item?.dateOfEnding) {
+                        //             if (item?.dateOfEnding?.expired) return 'Просроченные';
+                        //             else return 'Непросроченные';
+                        //         } else {
+                        //             let deadline = getDateFromString(item?.dateOfEnding?.value);
+                        //             if (currDate > deadline) return 'Просроченные';
+                        //             else return 'Непросроченные';
+                        //         }
+                        //     }
+                        // }
+                    })
+                )
+            )
+        ];
+
+        tempData.map(item => {
+            if (item) newData.push(item);
+        });
+
+        return newData;
+    },
+    done: data => {
+        const newData = [];
+        let tempData = [
+            'Все',
+            ...Array.from(
+                new Set(
+                    data.map(item => {
+                        if (item.done) return 'Завершено';
+                        else return 'Не завершено';
+                    })
+                )
+            )
+        ];
+
+        tempData.map(item => {
+            if (item) newData.push(item);
+        });
+
+        return newData;
+    },
+    responsible: data => {
+        const newData = [];
+        let tempData = ['Все', ...Array.from(new Set(data.map(item => item.responsible?.fullName)))];
+
+        tempData.map(item => {
+            if (item) newData.push(item);
+        });
+
+        return newData;
+    }
 };
 
 export const FILTER_HANDLERS_CONF = new Map([
+    ['contractNum', (filterVal, contractNum) => contractNum?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['address', (filterVal, address) => address?.toLowerCase().includes(filterVal?.toLowerCase())],
+    ['company', (filterVal, company) => company?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['group', (filterVal, group) => group?.toLowerCase().includes(filterVal?.toLowerCase())],
-    // [
-    //     'dateOfEnding',
-    //     (filterVal, date) => {
-    //         if (!date?.value && filterVal?.toLowerCase().includes('Нет данных'.toLowerCase())) return true;
-    //         else return date?.value?.toLowerCase().includes(filterVal?.toLowerCase());
-    //     }
-    // ],
     ['pathToFolder', (filterVal, pathToFolder) => pathToFolder?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['car', (filterVal, car) => Object.values(car).some(item => item.toLowerCase().includes(filterVal.toLowerCase()))],
-    // ['responsible', (filterVal, responsible) => responsible?.fullName.toLowerCase().includes(filterVal?.toLowerCase())],
     ['subsection', (filterVal, subsection) => subsection?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['phone', (filterVal, phone) => phone?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['email', (filterVal, email) => email?.toLowerCase().includes(filterVal?.toLowerCase())],
+    ['typeWork', (filterVal, typeWork) => typeWork?.toLowerCase().includes(filterVal?.toLowerCase())],
     [
         'stage',
         (filterVal, stage) =>
@@ -31,7 +230,10 @@ export const FILTER_HANDLERS_CONF = new Map([
     ['status', (filterVal, status) => filterVal?.includes('Все') || Object.values(status)?.includes(filterVal)],
     [
         'responsible',
-        (filterVal, responsible) => filterVal?.includes('Все') || Object.values(responsible)?.includes(filterVal)
+        (filterVal, responsible) => {
+            if (responsible && Object.keys(responsible).length !== 0)
+                return filterVal?.includes('Все') || Object.values(responsible)?.includes(filterVal);
+        }
     ],
     [
         'dateOfEnding',
@@ -47,6 +249,18 @@ export const FILTER_HANDLERS_CONF = new Map([
                         else return Object.values({ value: 'Непросроченные' })?.includes(filterVal);
                     }
                 }
+            }
+        }
+    ],
+    ['deadline', (filterVal, deadline) => filterVal?.includes('Все')],
+    ['dateDone', (filterVal, dateDone) => filterVal?.includes('Все')],
+    [
+        'done',
+        (filterVal, done) => {
+            if (filterVal?.includes('Все')) return true;
+            else {
+                if (done) return filterVal === 'Завершено';
+                else return filterVal === 'Не завершено';
             }
         }
     ],

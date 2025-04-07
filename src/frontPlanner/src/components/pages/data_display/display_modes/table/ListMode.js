@@ -8,6 +8,7 @@ import FiltersTable from './filters/FiltersTable.js';
 
 // Импорт кастомных хуков
 import { useListMode } from '@hooks/useListMode.js';
+import { useFiltersTable } from '@hooks/useFiltersTable.js';
 
 // Импорт доп.функционала
 import { findNestedObj } from '@helpers/helper';
@@ -42,17 +43,20 @@ function Cell({ cellData, cellConfig }) {
 
 export default function ListMode(props) {
     const { testData, modeConfig } = props;
-    console.log(`ListMode testData: ${JSON.stringify(testData, null, 4)}`);
 
-    const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
+    const [toggleState, setToggleState] = useState(false);
     const [data, setData] = useState([]);
     const [order, setOrder] = useState('ASC');
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
     const { sortData } = useListMode(data);
-
-    // console.log(`keys: ${JSON.stringify(keys, null, 4)}\ntestData: ${JSON.stringify(testData, null, 4)}`);
-    // console.log(`columns: ${JSON.stringify(columns, null, 4)}`);
+    const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
+    const { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter, onResetFilters } = useFiltersTable(
+        modeConfig,
+        testData,
+        toggleState,
+        setToggleState
+    );
 
     // Конфигурация по заголовкам таблицы
     const HEAD_CELL_CONF = {
@@ -80,8 +84,8 @@ export default function ListMode(props) {
         },
         task: cellData => {
             const config = {
-                idContract: testData[cellData?.indRow]?.id,
-                task: testData[cellData?.indRow] || {}
+                idContract: filteredData[cellData?.indRow]?.id,
+                task: filteredData[cellData?.indRow] || {}
             };
             return <Cell cellData={cellData} cellConfig={config} />;
         },
@@ -91,9 +95,9 @@ export default function ListMode(props) {
     };
 
     useEffect(() => {
-        // setData(testData.sort((a, b) => parseInt(b?.id) - parseInt(a?.id)));
-        setData(testData);
-    }, [modeConfig]);
+        // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
+        setData(filteredData);
+    }, [activeFilters, filteredData]);
 
     return (
         <div className={classNames('table-mode__wrapper', { 'table-mode__wrapper_empty': !data || data.length === 0 })}>
@@ -101,7 +105,15 @@ export default function ListMode(props) {
             <table className="table-mode" {...getTableProps()}>
                 <thead className="table-mode__thead">
                     {modeConfig?.keys && modeConfig?.keys.length !== 0 ? (
-                        <FiltersTable keys={modeConfig?.keys} data={testData} setData={setData} />
+                        <FiltersTable
+                            keys={modeConfig?.keys}
+                            activeFilters={activeFilters}
+                            optionsFilter={OPTIONS_FILTER_CONF}
+                            data={testData}
+                            toggleState={toggleState}
+                            onChangeFilter={onChangeFilter}
+                            onResetFilters={onResetFilters}
+                        />
                     ) : null}
                     {headerGroups.map(headerGroup => (
                         <tr className="table-mode__thead-tr" {...headerGroup.getHeaderGroupProps()}>
@@ -123,7 +135,7 @@ export default function ListMode(props) {
                                                     onClick={() =>
                                                         column?.sortable &&
                                                         sortData(
-                                                            data,
+                                                            filteredData,
                                                             column.id,
                                                             column.sortBy,
                                                             order,
@@ -168,3 +180,7 @@ export default function ListMode(props) {
         </div>
     );
 }
+
+// console.log(`ListMode testData: ${JSON.stringify(testData, null, 4)}`);
+// console.log(`keys: ${JSON.stringify(keys, null, 4)}\ntestData: ${JSON.stringify(testData, null, 4)}`);
+// console.log(`columns: ${JSON.stringify(columns, null, 4)}`);

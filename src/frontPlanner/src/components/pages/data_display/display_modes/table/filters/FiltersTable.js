@@ -8,105 +8,136 @@ import './filters_table.css';
 
 const FILTERS_CONF = {
     // Текстовые поля
-    address: (_, toggleState, onChange) => {
+    contractNum: (_, activeOption, toggleState, onChange) => {
+        return (
+            <InputTextFilter id="contractNum" placeholder={'Номер договора'} toggle={toggleState} onChange={onChange} />
+        );
+    },
+    address: (_, activeOption, toggleState, onChange) => {
         return <InputTextFilter id="address" placeholder={'Адрес'} toggle={toggleState} onChange={onChange} />;
     },
-    group: (_, toggleState, onChange) => {
+    company: (_, activeOption, toggleState, onChange) => {
+        return <InputTextFilter id="company" placeholder={'Заказчик'} toggle={toggleState} onChange={onChange} />;
+    },
+    group: (_, activeOption, toggleState, onChange) => {
         return <InputTextFilter id="group" placeholder={'Группа'} toggle={toggleState} onChange={onChange} />;
     },
-    // dateOfEnding: (_, toggleState, onChange) => {
-    //     return <InputTextFilter id="dateOfEnding" placeholder={'00.00.00'} toggle={toggleState} onChange={onChange} />;
-    // },
-    departure: (_, toggleState, onChange) => {
+    departure: (_, activeOption, toggleState, onChange) => {
         return <InputTextFilter id="departure" placeholder={'00.00.00'} toggle={toggleState} onChange={onChange} />;
     },
-    pathToFolder: (_, toggleState, onChange) => {
+    pathToFolder: (_, activeOption, toggleState, onChange) => {
         return (
             <InputTextFilter id="pathToFolder" placeholder={'Путь к папке'} toggle={toggleState} onChange={onChange} />
         );
     },
-    car: (_, toggleState, onChange) => {
+    car: (_, activeOption, toggleState, onChange) => {
         return <InputTextFilter id="car" placeholder={'Марка'} toggle={toggleState} onChange={onChange} />;
     },
-    // responsible: (_, toggleState, onChange) => {
-    //     return <InputTextFilter id="responsible" placeholder={'Сотрудник'} toggle={toggleState} onChange={onChange} />;
-    // },
-    subsection: (_, toggleState, onChange) => {
+    subsection: (_, activeOption, toggleState, onChange) => {
         return (
             <InputTextFilter id="subsection" placeholder={'Подразделение'} toggle={toggleState} onChange={onChange} />
         );
     },
-    phone: (_, toggleState, onChange) => {
+    phone: (_, activeOption, toggleState, onChange) => {
         return <InputTextFilter id="phone" placeholder={'Телефон'} toggle={toggleState} onChange={onChange} />;
     },
-    email: (_, toggleState, onChange) => {
+    email: (_, activeOption, toggleState, onChange) => {
         return <InputTextFilter id="email" placeholder={'Почта'} toggle={toggleState} onChange={onChange} />;
     },
     // Выпадающие списки
-    stage: (options, toggleState, onChange) => {
+    stage: (options, activeOption, toggleState, onChange) => {
         return (
-            <DropDownFilter id="stage" defaultVal="Все" options={options} toggle={toggleState} onChange={onChange} />
+            <DropDownFilter
+                id="stage"
+                defaultVal={activeOption}
+                options={options}
+                toggle={toggleState}
+                onChange={onChange}
+            />
         );
     },
-    services: (options, toggleState, onChange) => {
+    services: (options, activeOption, toggleState, onChange) => {
         return (
-            <DropDownFilter id="services" defaultVal="Все" options={options} toggle={toggleState} onChange={onChange} />
+            <DropDownFilter
+                id="services"
+                defaultVal={activeOption}
+                options={options}
+                toggle={toggleState}
+                onChange={onChange}
+            />
         );
     },
-    status: (options, toggleState, onChange) => {
+    status: (options, activeOption, toggleState, onChange) => {
         return (
-            <DropDownFilter id="status" defaultVal="Все" options={options} toggle={toggleState} onChange={onChange} />
+            <DropDownFilter
+                id="status"
+                defaultVal={activeOption}
+                options={options}
+                toggle={toggleState}
+                onChange={onChange}
+            />
         );
     },
-    deadlineTask: (options, toggleState, onChange) => {
+    done: (options, activeOption, toggleState, onChange) => {
+        return (
+            <DropDownFilter
+                id="done"
+                defaultVal={activeOption}
+                options={options}
+                toggle={toggleState}
+                onChange={onChange}
+            />
+        );
+    },
+    deadlineTask: (options, activeOption, toggleState, onChange) => {
         return (
             <DropDownFilter
                 id="deadlineTask"
-                defaultVal="Все"
+                defaultVal={activeOption}
                 options={options}
                 toggle={toggleState}
                 onChange={onChange}
             />
         );
     },
-    dateOfEnding: (options, toggleState, onChange) => {
+    dateOfEnding: (options, activeOption, toggleState, onChange) => {
         return (
             <DropDownFilter
                 id="dateOfEnding"
-                defaultVal="Все"
+                defaultVal={activeOption}
                 options={options}
                 toggle={toggleState}
                 onChange={onChange}
             />
         );
     },
-    responsible: (options, toggleState, onChange) => {
+    responsible: (options, activeOption, toggleState, onChange) => {
         return (
             <DropDownFilter
                 id="responsible"
-                defaultVal="Все"
+                defaultVal={activeOption}
                 options={options}
                 toggle={toggleState}
                 onChange={onChange}
             />
         );
     },
-    participants: (options, toggleState, onChange) => {
+    participants: (options, activeOption, toggleState, onChange) => {
         return (
             <DropDownFilter
                 id="participants"
-                defaultVal="Выбрать"
+                defaultVal={activeOption}
                 options={options}
                 toggle={toggleState}
                 onChange={onChange}
             />
         );
     },
-    contacts: (options, toggleState, onChange) => {
+    contacts: (options, activeOption, toggleState, onChange) => {
         return (
             <DropDownFilter
                 id="contacts"
-                defaultVal="Выбрать"
+                defaultVal={activeOption}
                 options={options}
                 toggle={toggleState}
                 onChange={onChange}
@@ -144,7 +175,7 @@ function InputTextFilter(props) {
 // Компонент выпадающего списка
 function DropDownFilter(props) {
     const { id, defaultVal, options, toggle, onChange } = props;
-    const [selectedItem, setSelectedItem] = useState(defaultVal);
+    const [selectedItem, setSelectedItem] = useState({});
 
     function onSelectOption(e) {
         onChange(e);
@@ -153,17 +184,18 @@ function DropDownFilter(props) {
 
     useEffect(() => {
         setSelectedItem(defaultVal);
+    }, [defaultVal]);
+
+    useEffect(() => {
+        setSelectedItem(defaultVal);
     }, [toggle]);
 
     return (
         <select id={id} className="dropdown_filter" value={selectedItem} onChange={onSelectOption}>
-            <option key={defaultVal} value={defaultVal}>
-                {defaultVal}
-            </option>
             {options &&
                 options.length !== 0 &&
                 options.map(value => (
-                    <option key={value} value={value}>
+                    <option key={value} value={value} selected={value === selectedItem}>
                         {value}
                     </option>
                 ))}
@@ -172,28 +204,19 @@ function DropDownFilter(props) {
 }
 
 function Cell(props) {
-    const { keyVal, options, toggleState, onChangeFilter } = props;
+    const { keyVal, options, activeFilters, toggleState, onChangeFilter } = props;
 
     return FILTERS_CONF[keyVal] ? (
-        <td className="table-mode__thead-td">{FILTERS_CONF[keyVal](options, toggleState, onChangeFilter)}</td>
+        <td className="table-mode__thead-td">
+            {FILTERS_CONF[keyVal](options, activeFilters[keyVal], toggleState, onChangeFilter)}
+        </td>
     ) : (
         <td className="table-mode__thead-td"></td>
     );
 }
 
 export default function FiltersTable(props) {
-    const { keys, data, setData } = props;
-    const [toggleState, setToggleState] = useState(false);
-
-    // console.log(`activeFilters: ${JSON.stringify(activeFilters, null, 4)}`);
-    // console.log(`keys: ${JSON.stringify(keys, null, 4)}`);
-
-    const { OPTIONS_FILTER_MAP, onChangeFilter, onResetFilters } = useFiltersTable(
-        data,
-        toggleState,
-        setToggleState,
-        setData
-    );
+    const { keys, activeFilters, optionsFilter, data, toggleState, onChangeFilter, onResetFilters } = props;
 
     return (
         <>
@@ -204,12 +227,13 @@ export default function FiltersTable(props) {
             </tr>
             <tr className="table-mode__thead-tr-filters">
                 {keys.map(key => {
-                    const options = OPTIONS_FILTER_MAP[key] ? OPTIONS_FILTER_MAP[key](data) : null;
+                    const options = optionsFilter[key] ? optionsFilter[key](data) : null;
                     return (
                         <Cell
                             key={key}
                             keyVal={key}
                             options={options}
+                            activeFilters={activeFilters}
                             toggleState={toggleState}
                             onChangeFilter={onChangeFilter}
                         />
