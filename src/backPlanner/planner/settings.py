@@ -24,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-from .DJANGO_SECRET_KEY import SECRET_KEY
+from .DJANGO_SECRET_KEY import SECRET_KEY, DOMEN, DOMEN2
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.199.2.112', '10.199.2.118', '127.0.0.1', 'backplanner', 'localhost', '0.0.0.0', '10.199.2.118', '10.199.2.144', '10.199.254.28']
+ALLOWED_HOSTS = ['10.199.2.112', '10.199.2.118', '127.0.0.1', 'backplanner', 'localhost', '0.0.0.0', '10.199.2.118', '10.199.2.144', '10.199.254.28', DOMEN, DOMEN2, ]
 
 
 # Application definition
