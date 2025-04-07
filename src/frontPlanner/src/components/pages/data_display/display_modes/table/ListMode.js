@@ -131,7 +131,7 @@ export default function ListMode(props) {
                                             {column.sortable && (
                                                 <IconButton
                                                     nameClass={classNames('ic_btn', 'sorting')}
-                                                    icon={'sort.svg'}
+                                                    icon="sort.svg"
                                                     onClick={() =>
                                                         column?.sortable &&
                                                         sortData(

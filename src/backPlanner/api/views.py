@@ -672,9 +672,9 @@ def getTasksEmployee(request):
                     task.pop('idExecutor')
                     task.pop('directorName')
                     task.pop('executorName')
-                    deadlineTask = obj.get('deadlineTask')
+                    deadlineTask = task.get('deadlineTask')
                     if deadlineTask is not None:
-                        if obj.get('done') == 0 and deadlineTask < today:
+                        if task.get('done') == 0 and deadlineTask < today:
                             deadlineTask = {
                                 'deadlineTask': {'value': deadlineTask,
                                                  'expired': True}}
@@ -686,7 +686,7 @@ def getTasksEmployee(request):
                         deadlineTask = {
                             'deadlineTask': {'value': deadlineTask,
                                              'expired': False}}
-                    obj.update(deadlineTask)
+                    task.update(deadlineTask)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")

@@ -481,8 +481,16 @@ const COLUMNS = [
         sortable: true,
         sortBy: 'value',
         Cell: props => {
-            return CELLS['text'](props?.value, 'date');
+            if (props?.value?.value) {
+                return !props?.value?.expired
+                    ? CELLS['text'](props?.value?.value, 'date')
+                    : CELLS['text'](props?.value?.value, 'date_expired');
+            }
+            return 'Нет данных';
         }
+        // Cell: props => {
+        //     return CELLS['text'](props?.value, 'date');
+        // }
     }
 ];
 
