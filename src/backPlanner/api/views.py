@@ -645,6 +645,7 @@ def getTasksEmployee(request):
                     {col: value for col, value in zip(columns, row)}
                     for row in result
                 ]  # Создаем список словарей с сериализацией значений
+                today = datetime.date.today()
                 for task in json_result:
                     director = {'director': {'idDirector': task.get('idDirector'), 'directorName': task.get('directorName')}}
                     executor = {'executor': {'idExecutor': task.get('idExecutor'), 'executorName': task.get('executorName')}}
@@ -654,6 +655,21 @@ def getTasksEmployee(request):
                     task.pop('idExecutor')
                     task.pop('directorName')
                     task.pop('executorName')
+                    deadlineTask = obj.get('deadlineTask')
+                    if deadlineTask is not None:
+                        if obj.get('done') == 0 and deadlineTask < today:
+                            deadlineTask = {
+                                'deadlineTask': {'value': deadlineTask,
+                                                 'expired': True}}
+                        else:
+                            deadlineTask = {
+                                'deadlineTask': {'value': deadlineTask,
+                                                 'expired': False}}
+                    else:
+                        deadlineTask = {
+                            'deadlineTask': {'value': deadlineTask,
+                                             'expired': False}}
+                    obj.update(deadlineTask)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")
