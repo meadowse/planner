@@ -638,26 +638,32 @@ def getTasksEmployee(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                sql = f"""SELECT 
-                T218.ID, 
-                T218.F4695 AS TASK,
-                T218.F4698 AS COMMENT,
-                T218.F5569 AS START_DATE,
-                T218.F4696 AS DEADLINE_DATE,
-                T218.F5476 AS DEADLINE_TIME,
-                T218.F4697 AS DONE,
-                T218.F4708 AS DATE_OF_DONE,
-                DIRECTOR.F16 AS ID_OF_DIRECTOR,
-                DIRECTOR.F4886 AS DIRECTOR_NAME,
-                EXECUTOR.F16 AS ID_OF_EXECUTOR,
-                EXECUTOR.F4886 AS EXECUTOR_NAME
-                FROM T218
-                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
-                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}'"""
+                sql = f"""SELECT
+            T218.ID, 
+            T218.F4695 AS TASK,
+            T218.F4698 AS COMMENT,
+            T218.F5569 AS START_DATE,
+            T218.F4696 AS DEADLINE_DATE,
+            T218.F5476 AS DEADLINE_TIME,
+            T218.F4697 AS DONE,
+            T218.F4708 AS DATE_OF_DONE,
+            DIRECTOR.F16 AS ID_OF_DIRECTOR,
+            DIRECTOR.F4886 AS DIRECTOR_NAME,
+            EXECUTOR.F16 AS ID_OF_EXECUTOR,
+            EXECUTOR.F4886 AS EXECUTOR_NAME,
+            T212.ID AS contractId,
+            T212.F4538 AS CONTRACT_NUMBER,
+            T212.F4946 AS OBJECT_ADDRESS,
+            T205.F4331 AS CUSTOMER_NAME
+            FROM T218
+            LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
+            LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
+            LEFT JOIN T212 ON T218.F4691 = T212.ID
+            LEFT JOIN T205 ON T212.F4540 = T205.ID
+            WHERE DIRECTOR.F16 = '{employeeId}' OR EXECUTOR.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = ('id', 'task', 'comment', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'idDirector', 'directorName', 'idExecutor', 'executorName')
+                columns = ('id', 'task', 'comment', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'idDirector', 'directorName', 'idExecutor', 'executorName', 'contractId', 'contractNum', 'address', 'customer')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
