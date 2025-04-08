@@ -106,8 +106,17 @@ export const TASKS_DATA_CONF = {
                 { value: 'Постановщик', key: 'director', uniqueness: 'id' }
             ],
             keys: {
-                executor: ['task', 'executor', 'director', 'deadlineTask', 'done'],
-                director: ['task', 'director', 'executor', 'deadlineTask', 'done']
+                executor: [
+                    'task',
+                    'contractNum',
+                    'address',
+                    'customer',
+                    'executor',
+                    'director',
+                    'deadlineTask',
+                    'done'
+                ],
+                director: ['task', 'contractNum', 'address', 'customer', 'director', 'executor', 'deadlineTask', 'done']
             }
             // keys: ['task', 'director', 'executor', 'deadlineTask', 'done']
         },

@@ -99,6 +99,15 @@ const COLUMNS = [
         }
     },
     {
+        Header: 'Заказчик',
+        accessor: 'customer',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            return props.value ? CELLS['text'](props.value, 'customer') : 'Нет данных';
+        }
+    },
+    {
         Header: 'Группа / Ответственный',
         accessor: 'group',
         sortable: false,
@@ -377,16 +386,13 @@ const COLUMNS = [
         accessor: 'dateDone',
         sortable: true,
         sortBy: 'value',
-        // Cell: props => {
-        //     if (props?.value) {
-        //         return !props?.value?.expired
-        //             ? CELLS['text'](props?.value, 'date')
-        //             : CELLS['text'](props?.value, 'date_expired');
-        //     }
-        //     return 'Нет данных';
-        // }
         Cell: props => {
-            return CELLS['text'](props?.value, 'date');
+            if (props?.value) {
+                return !props?.value?.expired
+                    ? CELLS['text'](props?.value?.value, 'date')
+                    : CELLS['text'](props?.value?.value, 'date_expired');
+            }
+            return CELLS['text']('Нет данных', 'date');
         }
     },
     {
@@ -496,11 +502,6 @@ const COLUMNS = [
             }
             return 'Нет данных';
         }
-        // Cell: props => {
-        //     return isObject(props?.value) && Object.keys(props?.value).length !== 0
-        //         ? CELLS['text'](props?.value?.value, 'date')
-        //         : CELLS['text'](props?.value, 'date');
-        // }
     }
 ];
 

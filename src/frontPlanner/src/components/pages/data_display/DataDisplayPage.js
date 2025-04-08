@@ -520,16 +520,23 @@ export default function DataDisplayPage({ partition }) {
                             element={
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
-                                        {resolvedData => (
-                                            <ListMode
-                                                testData={resolvedData?.contracts}
-                                                modeConfig={{
-                                                    keys: valsToDisplay,
-                                                    partition: partition,
-                                                    dataOperations: dataOperations
-                                                }}
-                                            />
-                                        )}
+                                        {resolvedData => {
+                                            const tableData = getFilteredData(
+                                                resolvedData?.contracts,
+                                                'qdtqwr4uhif68kagmofq48j58c',
+                                                modeOption?.listContracts
+                                            );
+                                            return (
+                                                <ListMode
+                                                    testData={tableData}
+                                                    modeConfig={{
+                                                        keys: valsToDisplay,
+                                                        partition: partition,
+                                                        dataOperations: dataOperations
+                                                    }}
+                                                />
+                                            );
+                                        }}
                                     </Await>
                                 </Suspense>
                             }

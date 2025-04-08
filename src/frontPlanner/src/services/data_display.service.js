@@ -144,14 +144,18 @@ const loadData = async partition => {
         // Задачи
         tasks: async () => {
             const resolvedData = {};
-            const endPoints = [`${window.location.origin}/api/getTasksEmployee`];
+            const endPoints = [
+                `${window.location.origin}/api/getTasksEmployee`,
+                `${window.location.origin}/api/getContractsEmployee`
+            ];
 
             await axios
                 .all(endPoints.map(endpoint => axios.post(endpoint, { employeeId: 'qdtqwr4uhif68kagmofq48j58c' })))
                 .then(
                     axios.spread((tasks, contracts) => {
                         resolvedData.tasks = formData(tasks?.data, partition, null).sort((a, b) => b?.id - a?.id) || [];
-                        resolvedData.contracts = contracts || [];
+                        resolvedData.contracts =
+                            formData(contracts?.data, partition, null).sort((a, b) => b?.id - a?.id) || [];
                         // if (tasks?.data && tasks?.data.length !== 0) resolvedData.tasks = tasks?.data;
                         // if (contracts && contracts.length !== 0) resolvedData.contracts = contracts;
                     })
@@ -159,16 +163,19 @@ const loadData = async partition => {
                 .catch(error => {
                     if (error.response) {
                         console.log('server responded');
+
                         resolvedData.tasks = [];
-                        // resolvedData.contracts = [];
+                        resolvedData.contracts = [];
                     } else if (error.request) {
                         console.log('network error');
+
                         resolvedData.tasks = [];
-                        // resolvedData.contracts = [];
+                        resolvedData.contracts = [];
                     } else {
                         console.log(error);
+
                         resolvedData.tasks = [];
-                        // resolvedData.contracts = [];
+                        resolvedData.contracts = [];
                     }
                 });
             return resolvedData;

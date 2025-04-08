@@ -100,17 +100,17 @@ const FILTERS_CONF = {
     //         />
     //     );
     // },
-    deadlineTask: (options, activeOption, toggleState, onChange) => {
-        return (
-            <DropDownFilter
-                id="deadlineTask"
-                defaultVal={activeOption}
-                options={options}
-                toggle={toggleState}
-                onChange={onChange}
-            />
-        );
-    },
+    // deadlineTask: (options, activeOption, toggleState, onChange) => {
+    //     return (
+    //         <DropDownFilter
+    //             id="deadlineTask"
+    //             defaultVal={activeOption}
+    //             options={options}
+    //             toggle={toggleState}
+    //             onChange={onChange}
+    //         />
+    //     );
+    // },
     dateOfEnding: (options, activeOption, toggleState, onChange) => {
         return (
             <DropDownFilter
@@ -229,7 +229,7 @@ function Cell(props) {
 export default function FiltersTable(props) {
     const { keys, activeFilters, optionsFilter, data, toggleState, onChangeFilter, onResetFilters } = props;
 
-    return (
+    return data && data.length !== 0 ? (
         <>
             <tr className="table-mode__thead-tr-reset-filters">
                 <td colSpan={8} className="table-mode__thead-td-reset-filters">
@@ -252,5 +252,5 @@ export default function FiltersTable(props) {
                 })}
             </tr>
         </>
-    );
+    ) : null;
 }
