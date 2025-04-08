@@ -1,5 +1,6 @@
 // Импорт доп.функционала
 import { getDateFromString } from '@helpers/calendar';
+import { isObject } from '@helpers/helper';
 
 export const INITIAL_FILTERS = {
     contractNum: '',
@@ -40,34 +41,6 @@ export const OPTIONS_FILTER_CONF = {
         const newData = [];
 
         let tempData = ['Все', ...Array.from(new Set(data.map(item => item?.stage?.title)))];
-
-        tempData.map(item => {
-            if (item) newData.push(item);
-        });
-
-        return newData;
-    },
-    deadlineTask: data => {
-        const newData = [];
-
-        let currDate = new Date();
-        let tempData = [
-            'Все',
-            ...Array.from(
-                new Set(
-                    data.map(item => {
-                        if (item?.deadlineTask) {
-                            if (!item?.deadlineTask) return 'Без даты';
-                            else {
-                                let deadline = getDateFromString(item?.deadlineTask);
-                                if (currDate > deadline) return 'Просроченные';
-                                else return 'Непросроченные';
-                            }
-                        }
-                    })
-                )
-            )
-        ];
 
         tempData.map(item => {
             if (item) newData.push(item);
@@ -150,17 +123,12 @@ export const OPTIONS_FILTER_CONF = {
             ...Array.from(
                 new Set(
                     data.map(item => {
-                        if (item?.deadlineTask && Object.keys(item?.deadlineTask).length !== 0) {
-                            if (!item?.dateOfEnding?.value) return 'Без даты';
+                        if (item?.deadlineTask) {
+                            if (!item?.deadlineTask) return 'Без даты';
                             else {
-                                if ('expired' in item?.deadlineTask) {
-                                    if (item?.deadlineTask?.expired) return 'Просроченные';
-                                    else return 'Непросроченные';
-                                } else {
-                                    let deadline = getDateFromString(item?.deadlineTask?.value);
-                                    if (currDate > deadline) return 'Просроченные';
-                                    else return 'Непросроченные';
-                                }
+                                let deadline = getDateFromString(item?.deadlineTask);
+                                if (currDate > deadline) return 'Просроченные';
+                                else return 'Непросроченные';
                             }
                         }
                     })
@@ -184,7 +152,7 @@ export const OPTIONS_FILTER_CONF = {
     //             new Set(
     //                 data.map(item => {
     //                     if (item?.dateDone && Object.keys(item?.dateDone).length !== 0) {
-    //                         if (!item?.dateDone?.value) return 'Без даты';
+    //                         if (!item?.dateDone) return 'Без даты';
     //                         else {
     //                             if ('expired' in item?.dateDone) {
     //                                 if (item?.dateDone?.expired) return 'Просроченные';
@@ -289,14 +257,16 @@ export const FILTER_HANDLERS_CONF = new Map([
         'deadlineTask',
         (filterVal, date) => {
             // console.log(`filterVal: ${filterVal}\ndate: ${JSON.stringify(date, null, 4)}`);
-            if (filterVal?.includes('Все')) return Object.values({ value: filterVal })?.includes(filterVal);
-            else {
-                if (date && Object.keys(date).length !== 0) {
-                    if (!date?.value) return Object.values({ value: 'Без даты' })?.includes(filterVal);
-                    else {
-                        if (date?.value && date?.expired)
-                            return Object.values({ value: 'Просроченные' })?.includes(filterVal);
-                        else return Object.values({ value: 'Непросроченные' })?.includes(filterVal);
+            if (isObject(date)) {
+                if (filterVal?.includes('Все')) return Object.values({ value: filterVal })?.includes(filterVal);
+                else {
+                    if (date && Object.keys(date).length !== 0) {
+                        if (!date?.value) return Object.values({ value: 'Без даты' })?.includes(filterVal);
+                        else {
+                            if (date?.value && date?.expired)
+                                return Object.values({ value: 'Просроченные' })?.includes(filterVal);
+                            else return Object.values({ value: 'Непросроченные' })?.includes(filterVal);
+                        }
                     }
                 }
             }

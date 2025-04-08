@@ -219,6 +219,7 @@ export const useGanttMode = args => {
                                           title: task?.title || 'Нет данных',
                                           contractNum: `${contract?.contractNum}_${ind + 1}`,
                                           navKey: 'task',
+                                          done: +task?.done,
                                           dateOfStart: task?.dateOfStart,
                                           dateOfEnding: task?.dateOfEnding,
                                           bgColorTask: contract?.stage?.color

@@ -377,6 +377,14 @@ const COLUMNS = [
         accessor: 'dateDone',
         sortable: true,
         sortBy: 'value',
+        // Cell: props => {
+        //     if (props?.value) {
+        //         return !props?.value?.expired
+        //             ? CELLS['text'](props?.value, 'date')
+        //             : CELLS['text'](props?.value, 'date_expired');
+        //     }
+        //     return 'Нет данных';
+        // }
         Cell: props => {
             return CELLS['text'](props?.value, 'date');
         }
@@ -489,7 +497,9 @@ const COLUMNS = [
             return 'Нет данных';
         }
         // Cell: props => {
-        //     return CELLS['text'](props?.value, 'date');
+        //     return isObject(props?.value) && Object.keys(props?.value).length !== 0
+        //         ? CELLS['text'](props?.value?.value, 'date')
+        //         : CELLS['text'](props?.value, 'date');
         // }
     }
 ];

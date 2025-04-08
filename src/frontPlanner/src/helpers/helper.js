@@ -208,7 +208,7 @@ export const dataLoader = async path => {
             console.log(error);
         }
     });
-    return response.data;
+    return response.data || [];
 };
 
 // Функция поиска данных внутри объекта
