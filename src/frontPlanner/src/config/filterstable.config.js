@@ -185,8 +185,17 @@ export const OPTIONS_FILTER_CONF = {
         });
 
         return newData;
+    },
+    participants: data => {
+        const newData = [];
+        let tempData = [];
+
+        // tempData.map(item => {
+        //     if (item) newData.push(item);
+        // });
+
+        return ['Все'];
     }
-    // participants: data => {}
 };
 
 export const FILTER_HANDLERS_CONF = new Map([
@@ -218,19 +227,19 @@ export const FILTER_HANDLERS_CONF = new Map([
                 return filterVal?.includes('Все') || Object.values(responsible)?.includes(filterVal);
         }
     ],
-    // [
-    //     'participants',
-    //     (filterVal, participants) => {
-    //         if (participants && participants.length !== 0) {
-    //             if (filterVal?.includes('Все')) return true;
-    //             else {
-    //                 participants.forEach(participant => {
-    //                     if (Object.values(participant)?.includes(filterVal)) return true;
-    //                 });
-    //             }
-    //         }
-    //     }
-    // ],
+    [
+        'participants',
+        (filterVal, participants) => {
+            if (participants && participants.length !== 0) {
+                if (filterVal?.includes('Все')) return true;
+                // else {
+                //     participants.forEach(participant => {
+                //         if (Object.values(participant)?.includes(filterVal)) return true;
+                //     });
+                // }
+            }
+        }
+    ],
     [
         ('dateOfEnding',
         (filterVal, date) => {

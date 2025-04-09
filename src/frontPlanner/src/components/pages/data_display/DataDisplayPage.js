@@ -527,6 +527,9 @@ export default function DataDisplayPage({ partition }) {
                                                 Cookies.get('MMUSERID'),
                                                 modeOption?.listContracts
                                             );
+                                            console.log(
+                                                `listContracts tableData: ${JSON.stringify(tableData, null, 4)}`
+                                            );
                                             return (
                                                 <ListMode
                                                     testData={tableData}

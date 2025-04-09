@@ -48,13 +48,13 @@ export function findNestedObj(entireObj, keyToFind, valToFind) {
 
 // Функция фильтрации данных
 export function getFilteredData(data, selectedItem, option) {
-    console.log(
-        `getFilteredData\nselectedItem: ${JSON.stringify(selectedItem, null, 4)}\noption: ${JSON.stringify(
-            option,
-            null,
-            4
-        )}`
-    );
+    // console.log(
+    //     `getFilteredData\nselectedItem: ${JSON.stringify(selectedItem, null, 4)}\noption: ${JSON.stringify(
+    //         option,
+    //         null,
+    //         4
+    //     )}`
+    // );
     const filteredData = data.filter(item => {
         if (item) {
             if (item[option?.key] && typeof item[option?.key] === 'object' && !Array.isArray(item[option?.key])) {
@@ -77,7 +77,7 @@ export function getFilteredData(data, selectedItem, option) {
         return false;
     });
 
-    console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
+    // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
 
     return filteredData;
 }

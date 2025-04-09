@@ -201,31 +201,54 @@ function SignInForm(props) {
     async function onSubmit(e) {
         e.preventDefault();
         const loginPayload = {
-            login_id: 'n.filippov',
-            password: 'AsdFGhjKL12345'
+            login_id: values.email,
+            password: values.password
         };
 
         await axios
-            .all([
-                await axios.post(`${window.location.origin}/api/auth`, loginPayload),
-                await axios.post('https://mm-mpk.ru/api/v4/users/login', loginPayload)
-            ])
-            .then(
-                axios.spread((authRes, loginRes) => {
-                    if (authRes.status === 200) {
-                        // Cookies.set('MMUSERID', authRes?.data?.id, { expires: 30, path: '/' });
-                        Cookies.set('MMAUTHTOKEN', authRes?.data?.token, { expires: 30, path: '/' });
-                    }
-                    if (loginRes.status === 200) {
-                        setAuthState({
-                            accessToken: authRes?.data?.token
-                        });
-                        navigate('../department');
-                    }
-                    // output of req.
-                    // console.log('authRes', authRes, 'loginRes', loginRes);
-                })
-            );
+            .post(`${window.location.origin}/api/auth`, loginPayload)
+            .then(response => {
+                if (response.status === 200) {
+                    Cookies.set('MMUSERID', response?.data?.id, { expires: 30, path: '/' });
+                    Cookies.set('MMAUTHTOKEN', response?.data?.token, { expires: 30, path: '/' });
+
+                    setAuthState({
+                        accessToken: response?.data?.token
+                    });
+                    navigate('../department');
+                }
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log('server responded');
+                } else if (error.request) {
+                    console.log('network error');
+                } else {
+                    console.log(error);
+                }
+            });
+
+        // await axios
+        //     .all([
+        //         await axios.post(`${window.location.origin}/api/auth`, loginPayload),
+        //         await axios.post('https://mm-mpk.ru/api/v4/users/login', loginPayload)
+        //     ])
+        //     .then(
+        //         axios.spread((authRes, loginRes) => {
+        //             if (authRes.status === 200) {
+        //                 // Cookies.set('MMUSERID', authRes?.data?.id, { expires: 30, path: '/' });
+        //                 Cookies.set('MMAUTHTOKEN', authRes?.data?.token, { expires: 30, path: '/' });
+        //             }
+        //             if (loginRes.status === 200) {
+        //                 setAuthState({
+        //                     accessToken: authRes?.data?.token
+        //                 });
+        //                 navigate('../department');
+        //             }
+        //             // output of req.
+        //             // console.log('authRes', authRes, 'loginRes', loginRes);
+        //         })
+        //     );
     }
 
     useEffect(() => console.log(`Authorization errors: ${JSON.stringify(errors, null, 4)}`), [errors]);
