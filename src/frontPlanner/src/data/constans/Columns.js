@@ -117,7 +117,7 @@ const COLUMNS = [
         }
     },
     {
-        Header: 'Кто выезжает',
+        Header: 'Исполнители',
         accessor: 'participants',
         sortable: false,
         sortBy: undefined,

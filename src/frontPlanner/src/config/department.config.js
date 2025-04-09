@@ -124,19 +124,42 @@ export const TASKS_DATA_CONF = {
             mode: 'Список договоров',
             keyMode: 'listContracts',
             modeOptions: [
-                { value: 'Руководитель отдела', key: 'responsible', uniqueness: 'fullName' },
-                { value: 'Исполнитель', key: 'executor', uniqueness: 'fullName' }
+                { value: 'Руководитель отдела', key: 'responsible', uniqueness: 'id' },
+                { value: 'Исполнитель', key: 'participants', uniqueness: 'id' }
             ],
-            keys: [
-                'contractNum',
-                'address',
-                'company',
-                'services',
-                'stage',
-                'dateOfEnding',
-                'responsible',
-                'pathToFolder'
-            ]
+            keys: {
+                responsible: [
+                    'contractNum',
+                    'address',
+                    'company',
+                    'services',
+                    'stage',
+                    'dateOfEnding',
+                    'responsible',
+                    'pathToFolder'
+                ],
+                participants: [
+                    'contractNum',
+                    'address',
+                    'company',
+                    'services',
+                    'stage',
+                    'dateOfEnding',
+                    'participants',
+                    'pathToFolder'
+                ]
+            }
+            // keys: [
+            //     'contractNum',
+            //     'address',
+            //     'company',
+            //     'services',
+            //     'stage',
+            //     'dateOfEnding',
+            //     'responsible',
+            //     'participants',
+            //     'pathToFolder'
+            // ]
         }
     ],
     dataOperations: [

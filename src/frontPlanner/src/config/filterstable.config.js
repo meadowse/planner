@@ -11,6 +11,7 @@ export const INITIAL_FILTERS = {
     deadlineTask: 'Все',
     dateOfEnding: 'Все',
     responsible: 'Все',
+    participants: 'Все',
     pathToFolder: '',
     typeWork: '',
     deadline: 'Все',
@@ -185,6 +186,7 @@ export const OPTIONS_FILTER_CONF = {
 
         return newData;
     }
+    // participants: data => {}
 };
 
 export const FILTER_HANDLERS_CONF = new Map([
@@ -216,8 +218,21 @@ export const FILTER_HANDLERS_CONF = new Map([
                 return filterVal?.includes('Все') || Object.values(responsible)?.includes(filterVal);
         }
     ],
+    // [
+    //     'participants',
+    //     (filterVal, participants) => {
+    //         if (participants && participants.length !== 0) {
+    //             if (filterVal?.includes('Все')) return true;
+    //             else {
+    //                 participants.forEach(participant => {
+    //                     if (Object.values(participant)?.includes(filterVal)) return true;
+    //                 });
+    //             }
+    //         }
+    //     }
+    // ],
     [
-        'dateOfEnding',
+        ('dateOfEnding',
         (filterVal, date) => {
             // console.log(`filterVal: ${filterVal}\ndate: ${JSON.stringify(date, null, 4)}`);
             if (date) {
@@ -233,7 +248,7 @@ export const FILTER_HANDLERS_CONF = new Map([
                     }
                 }
             }
-        }
+        })
     ],
     [
         'deadlineTask',
@@ -283,12 +298,6 @@ export const FILTER_HANDLERS_CONF = new Map([
                 else return filterVal === 'Не завершено';
             }
         }
-    ],
-    [
-        'participants',
-        (filterVal, participants) =>
-            filterVal?.includes('Выбрать') ||
-            participants?.some(participant => Object.values(participant).includes(filterVal))
     ],
     [
         'contacts',

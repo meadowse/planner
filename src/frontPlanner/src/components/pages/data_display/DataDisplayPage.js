@@ -1,5 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Await, useOutletContext, useNavigate, useLoaderData } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
 // Импорт компонетов
@@ -497,7 +498,7 @@ export default function DataDisplayPage({ partition }) {
                                         {resolvedData => {
                                             const tableData = getFilteredData(
                                                 resolvedData?.tasks,
-                                                'qdtqwr4uhif68kagmofq48j58c',
+                                                Cookies.get('MMUSERID'),
                                                 modeOption?.listTasks
                                             );
                                             return (
@@ -523,7 +524,7 @@ export default function DataDisplayPage({ partition }) {
                                         {resolvedData => {
                                             const tableData = getFilteredData(
                                                 resolvedData?.contracts,
-                                                'qdtqwr4uhif68kagmofq48j58c',
+                                                Cookies.get('MMUSERID'),
                                                 modeOption?.listContracts
                                             );
                                             return (

@@ -133,17 +133,17 @@ const FILTERS_CONF = {
             />
         );
     },
-    participants: (options, activeOption, toggleState, onChange) => {
-        return (
-            <DropDownFilter
-                id="participants"
-                defaultVal={activeOption}
-                options={options}
-                toggle={toggleState}
-                onChange={onChange}
-            />
-        );
-    },
+    // participants: (options, activeOption, toggleState, onChange) => {
+    //     return (
+    //         <DropDownFilter
+    //             id="participants"
+    //             defaultVal={activeOption}
+    //             options={options}
+    //             toggle={toggleState}
+    //             onChange={onChange}
+    //         />
+    //     );
+    // },
     contacts: (options, activeOption, toggleState, onChange) => {
         return (
             <DropDownFilter
