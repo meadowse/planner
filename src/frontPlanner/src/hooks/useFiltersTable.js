@@ -1,18 +1,33 @@
 import { useEffect, useState } from 'react';
 
 // Импорт конфигураций
-import { INITIAL_FILTERS, OPTIONS_FILTER_CONF, FILTER_HANDLERS_CONF } from '@config/filterstable.config';
+import {
+    DEFAULT_FILTERS,
+    INITIAL_FILTERS,
+    OPTIONS_FILTER_CONF,
+    FILTER_HANDLERS_CONF
+} from '@config/filterstable.config';
 
 // Инициализация фильтров
-function initializeFilters(keys) {
+function initializeFilters(data, keys) {
     const initFilters = {};
+
     if (keys && keys.length !== 0) {
-        keys.forEach(key => (initFilters[key] = INITIAL_FILTERS[key]));
+        keys.forEach(key => {
+            if (key in OPTIONS_FILTER_CONF && key in INITIAL_FILTERS) {
+                const options = OPTIONS_FILTER_CONF[key](data);
+                if (options && options.length !== 0) {
+                    if (options.includes(INITIAL_FILTERS[key])) initFilters[key] = INITIAL_FILTERS[key];
+                }
+            } else initFilters[key] = DEFAULT_FILTERS[key];
+        });
     }
+
     console.log(`initFilters: ${JSON.stringify(initFilters, null, 4)}`);
     return initFilters;
 }
 
+// Фильтрация данных
 function applyFilters(data, filters) {
     // console.log(`filters: ${JSON.stringify(filters, null, 4)}\nfilters table data: ${JSON.stringify(data, null, 4)}`);
 
@@ -36,8 +51,8 @@ export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleSta
     const onResetFilters = () => {
         setToggleState(!toggleState);
 
-        setActiveFilters(initializeFilters(modeConfig?.keys));
-        setFilteredData(applyFilters(tableData, initializeFilters(modeConfig?.keys)));
+        setActiveFilters(initializeFilters(tableData, modeConfig?.keys));
+        setFilteredData(applyFilters(tableData, initializeFilters(tableData, modeConfig?.keys)));
         // setActiveFilters(Object.assign({}, INITIAL_FILTERS));
         // setFilteredData(applyFilters(tableData, INITIAL_FILTERS));
     };
@@ -55,8 +70,8 @@ export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleSta
 
     useEffect(() => {
         // console.log(`initFilters: ${JSON.stringify(initializeFilters(modeConfig?.keys), null, 4)}`);
-        setActiveFilters(initializeFilters(modeConfig?.keys));
-        setFilteredData(applyFilters(tableData, initializeFilters(modeConfig?.keys)));
+        setActiveFilters(initializeFilters(tableData, modeConfig?.keys));
+        setFilteredData(applyFilters(tableData, initializeFilters(tableData, modeConfig?.keys)));
     }, [modeConfig]);
 
     return { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter, onResetFilters };

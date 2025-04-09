@@ -1,4 +1,4 @@
-import { TAB_GENERAL_CONF } from '@config/tabs/tab_general.config';
+import { DEFAULT_VALUES, TAB_GENERAL_CONF } from '@config/tabs/tab_general.config';
 
 const getOptions = key => {
     return TAB_GENERAL_CONF[key];
@@ -48,47 +48,6 @@ const changeContactData = (key, event, indContact, prevContact, setContactData, 
 
 const getGeneralData = (data, disabledFields) => {
     const dataConf = {};
-    const DEFAULT_VALUES = {
-        condition: value => {
-            return value && Object.keys(value).length !== 0 ? value : '';
-        },
-        manager: value => {
-            return value && Object.keys(value).length !== 0 ? value : null;
-        },
-        responsible: value => {
-            return value && Object.keys(value).length !== 0 ? value : null;
-        },
-        participants: value => {
-            return value && value.length !== 0 ? value : [];
-        },
-        company: value => {
-            return value ? value : '';
-        },
-        address: value => {
-            return value ? value : '';
-        },
-        pathToFolder: value => {
-            return value ? value : '';
-        },
-        dateCreation: value => {
-            return value ? value : '';
-        },
-        dateOfStart: value => {
-            return value ? value : '';
-        },
-        dateOfEnding: value => {
-            return value ? value : '';
-        },
-        contractNum: value => {
-            return value ? value : '';
-        },
-        contacts: value => {
-            return value && value.length !== 0 ? value : [];
-        },
-        services: value => {
-            return value && value.length !== 0 ? value : [];
-        }
-    };
 
     if (data && Object.keys(data).length !== 0) {
         if (disabledFields && Object.keys(disabledFields).length !== 0) {

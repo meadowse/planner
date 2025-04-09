@@ -81,7 +81,8 @@ function ColorCard(props) {
 }
 
 // Блок "Изображение объекта"
-function ImageBuilding({ presetValue, disabledElem }) {
+function ImageBuilding(props) {
+    const { presetValue, disabledElem, onClick } = props;
     const [image, setImage] = useState(presetValue.imgBuilding ? presetValue.imgBuilding : null);
     // console.log(`image: ${JSON.stringify(presetValue, null, 4)}`);
 
@@ -93,16 +94,9 @@ function ImageBuilding({ presetValue, disabledElem }) {
 
             formData.append('image', file);
             formData.append('title', presetValue?.contractNum);
-            axios({
-                url: `${window.location.origin}/api/addPhoto`,
-                method: 'POST',
-                headers: {},
-                data: formData
-            })
-                .then(response => {
-                    if (response.status === 200) setImage(URL.createObjectURL(file));
-                }) // Handle the response from backend here
-                .catch(err => {}); // Catch errors if any
+
+            setImage(URL.createObjectURL(file));
+            onClick('imgBuilding', formData);
         }
     }
 
@@ -159,9 +153,9 @@ function HeaderLeftCol(props) {
             />
             <div className="tab-general__building tab-general-row-item">
                 <ImageBuilding
-                    additClass="building"
                     presetValue={{ contractNum: presetValue.contractNum, imgBuilding: presetValue.imgBuilding }}
                     disabledElem={dataOperation?.disabledFields?.imgBuilding}
+                    onClick={onClick}
                 />
                 <ColorCard
                     additClass="color"
@@ -942,7 +936,7 @@ function Service(props) {
     const { additClass, presetValue, serviceError, disabledElem, onClick } = props;
     const [services, setServices] = useState(presetValue ? presetValue[0] : {});
 
-    console.log(`presetValue: ${JSON.stringify(presetValue, null, 4)}`);
+    // console.log(`presetValue: ${JSON.stringify(presetValue, null, 4)}`);
 
     function onAddService(value) {
         setServices(value);
@@ -1030,17 +1024,43 @@ export default function TabGeneral() {
         if (checkData()) {
             if (data && Object.keys(data).length !== 0) {
                 // Логика для обновления данных
-                resultData = { contractId: data?.id, ...values };
-                if (resultData && Object.keys(resultData).length !== 0) {
-                    axios.post(`${window.location.origin}/api/corParticipants`, resultData).then(response => {
-                        if (response && response?.status === 200) navigate('../../department');
+                resultData = { contractId: data?.id, participants: values?.participants };
+                axios
+                    .all([
+                        axios({
+                            url: `${window.location.origin}/api/addPhoto`,
+                            method: 'POST',
+                            headers: {},
+                            data: values?.imgBuilding
+                        }),
+                        axios({
+                            url: `${window.location.origin}/api/corParticipants`,
+                            method: 'POST',
+                            headers: {},
+                            data: resultData
+                        })
+                    ])
+                    .then(
+                        axios.spread((responseImage, responseParticipants) => {
+                            if (responseImage && responseParticipants) {
+                                if (responseImage?.status === 200 && responseParticipants?.status === 200) navigate(-2);
+                            }
+                        })
+                    )
+                    .catch(error => {
+                        if (error.response) {
+                            console.log('server responded');
+                        } else if (error.request) {
+                            console.log('network error');
+                        } else {
+                            console.log(error);
+                        }
                     });
-                }
             } else {
                 // Логика для создания новых данных
                 alert(`data for submit: ${JSON.stringify(values, null, 4)}`);
             }
-            navigate('../../department');
+            // navigate('../../department');
         }
     }
 

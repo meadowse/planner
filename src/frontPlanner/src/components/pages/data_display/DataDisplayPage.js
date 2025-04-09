@@ -211,7 +211,7 @@ function HeaderBottom(props) {
                             type="text"
                             placeholder="Поиск по задачам"
                             value={searchElem}
-                            // onChange={e => setSearchElem(e.target.value)}
+                            onChange={e => setSearchElem(e.target.value)}
                         />
                         <DisplayModes
                             displayModes={displayModes}

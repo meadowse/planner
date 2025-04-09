@@ -2,12 +2,12 @@
 import { getDateFromString } from '@helpers/calendar';
 import { isObject } from '@helpers/helper';
 
-export const INITIAL_FILTERS = {
+export const DEFAULT_FILTERS = {
     contractNum: '',
     address: '',
     company: '',
     services: 'Все',
-    stage: 'В работе',
+    stage: 'Все',
     deadlineTask: 'Все',
     dateOfEnding: 'Все',
     responsible: 'Все',
@@ -16,6 +16,11 @@ export const INITIAL_FILTERS = {
     typeWork: '',
     deadline: 'Все',
     dateDone: 'Все',
+    done: 'Все'
+};
+
+export const INITIAL_FILTERS = {
+    stage: 'В работе',
     done: 'Не завершено'
 };
 

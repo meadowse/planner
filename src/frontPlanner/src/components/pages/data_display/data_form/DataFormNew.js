@@ -20,7 +20,8 @@ function FormHeader({ data }) {
 
     function onCancelAction() {
         startTransition(() => {
-            navigate('/');
+            // navigate('/');
+            navigate(-2);
         });
     }
 

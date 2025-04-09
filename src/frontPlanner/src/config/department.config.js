@@ -105,20 +105,7 @@ export const TASKS_DATA_CONF = {
                 { value: 'Исполнитель', key: 'executor', uniqueness: 'id' },
                 { value: 'Постановщик', key: 'director', uniqueness: 'id' }
             ],
-            keys: {
-                executor: [
-                    'task',
-                    'contractNum',
-                    'address',
-                    'customer',
-                    'executor',
-                    'director',
-                    'deadlineTask',
-                    'done'
-                ],
-                director: ['task', 'contractNum', 'address', 'customer', 'director', 'executor', 'deadlineTask', 'done']
-            }
-            // keys: ['task', 'director', 'executor', 'deadlineTask', 'done']
+            keys: ['task', 'contractNum', 'address', 'customer', 'director', 'executor', 'deadlineTask', 'done']
         },
         {
             mode: 'Список договоров',
@@ -149,17 +136,6 @@ export const TASKS_DATA_CONF = {
                     'pathToFolder'
                 ]
             }
-            // keys: [
-            //     'contractNum',
-            //     'address',
-            //     'company',
-            //     'services',
-            //     'stage',
-            //     'dateOfEnding',
-            //     'responsible',
-            //     'participants',
-            //     'pathToFolder'
-            // ]
         }
     ],
     dataOperations: [
