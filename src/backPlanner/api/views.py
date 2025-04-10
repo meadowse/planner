@@ -841,7 +841,7 @@ def getDataUser(request):
                 FROM T3
                 LEFT JOIN T5 ON T3.F27 = T5.ID
                 LEFT JOIN T4 ON T3.F11 = T4.ID
-                WHERE T3.F16 = {employeeId}"""
+                WHERE T3.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
