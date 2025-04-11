@@ -1,72 +1,126 @@
-import { Link, useParams } from 'react-router-dom';
+import { useRef } from 'react';
+import { useNavigate, useLoaderData } from 'react-router-dom';
 
 // Импорт компонентов
-import CardSubordination from './user_info/CardSubordination';
-import CardGroup from './user_info/CardGroup';
-import CardProfile from './user_info/CardProfile';
-import CardInfo from './user_info/CardInfo';
+import IconButton from '@generic/elements/buttons/IcButton';
 
 // Импорт кастомных хуков
-import { useDataLoader } from '@hooks/useDataLoader';
+// import { useDataLoader } from '@hooks/useDataLoader';
+
+// Импорт конфигураций
+import { MONTHS } from '@config/calendar.config';
+
+// Импорт доп.функционала
+import { getDateFromString } from '@helpers/calendar';
 
 // Импорт стилей
 import './user_info.css';
 
+function CardProfile({ profileData }) {
+    return (
+        <div className="user__profile-top">
+            <figure className="user__profile-photo">
+                <img className="user__profile-img" src={profileData.photo} alt="" />
+            </figure>
+            <h2 className="user__fullname">{profileData.fullName}</h2>
+        </div>
+    );
+}
+
+function CardInfoItem(props) {
+    const { key, title, value } = props;
+    const refValue = useRef();
+
+    const VALUE_CONF = {
+        birthday: value => {
+            const date = getDateFromString(value);
+            return `${date.getDate()}${String.fromCodePoint(8194)}${MONTHS[date.getMonth()]}${String.fromCodePoint(
+                8194
+            )}${date.getFullYear()}`;
+        }
+    };
+
+    return (
+        <li className="user__data-item">
+            <h2 className="user__item-title">{title}</h2>
+            <p className="user__item-value" ref={refValue} onMouseLeave={() => refValue?.current.scrollTo(0, 0)}>
+                <span>{VALUE_CONF[key] ? VALUE_CONF[key](value) : value}</span>
+            </p>
+        </li>
+    );
+}
+
+function CardInfo({ config, userData }) {
+    return (
+        <div className="user__profile-bottom">
+            {userData && Object.keys(userData).length !== 0 ? (
+                <ul className="user__personal-data">
+                    {Object.keys(config).map(key => (
+                        <CardInfoItem key={key} title={config[key]} value={userData[key]} />
+                    ))}
+                </ul>
+            ) : null}
+        </div>
+    );
+}
+
 export default function UserInfo() {
-    const { id } = useParams();
+    const { employeeData } = useLoaderData();
+    const navigate = useNavigate();
 
-    // https://rasilka.ru/planner/employee/17/ /getUser
-    // let userInfo = useDataLoader(`https://rasilka.ru/planner/employee/${id}/`);
-    let userInfo = useDataLoader(`http://localhost:5000/employee/${id}/`);
+    const tabs = [
+        {
+            title: 'Задачи',
+            path: 'tasks'
+        },
+        {
+            title: 'Договоры',
+            path: 'contracts'
+        }
+    ];
 
-    // console.log(`id user: ${id}`);
-    // console.log(`userInfo: ${JSON.stringify(userInfo, null, 4)}`);
+    const cardConfig = {
+        post: 'Должность',
+        personalPhone: 'Личный телефон',
+        mail: 'Почта',
+        workPhone: 'Рабочий телефон',
+        internalPhone: 'Внутренний телефон',
+        telegram: 'Telegram',
+        skype: 'Skype',
+        division: 'Подразделение',
+        birthday: 'День рождения'
+    };
 
-    const {
-        birthday,
-        post,
-        personal_phone,
-        mail,
-        work_phone,
-        internal_phone,
-        telegramm,
-        skype,
-        division,
-        personal_photo,
-        full_name,
-        _group_
-    } = userInfo;
+    function onClose() {
+        navigate(-1);
+    }
 
-    return userInfo && userInfo.length !== 0 ? (
-        <div className="user__card" id={id}>
-            <div className="card__top">
-                <div className="card__top-text">Просмотр аккаунта</div>
-                <div className="card__line">&nbsp;</div>
-                <div className="card__text grey fw-600">Изменить</div>
-                <Link className="card__text fw-600 card__close" to={'/'}>
-                    Закрыть <span>&nbsp;</span>
-                </Link>
+    // console.log(`employeeData: ${JSON.stringify(employeeData, null, 4)}`);
+
+    return (
+        <div className="user__info">
+            <div className="user__profile">
+                <CardProfile profileData={{ photo: employeeData?.photo, fullName: employeeData?.fullName }} />
+                <CardInfo config={cardConfig} userData={employeeData} />
             </div>
-            <div className="card__bottom">
-                <CardProfile personal_photo={personal_photo} full_name={full_name} />
-                <div className="card__about about">
-                    <CardInfo
-                        post={post}
-                        personal_phone={personal_phone}
-                        mail={mail}
-                        work_phone={work_phone}
-                        internal_phone={internal_phone}
-                        telegramm={telegramm}
-                        skype={skype}
-                        division={division}
-                        birthday={birthday}
+            <div className="user__tabs">
+                <ul className="user__list-tabs">
+                    {tabs.map(tab => (
+                        <li className="user__tab-item">{tab.title}</li>
+                    ))}
+                </ul>
+                <div className="user__tabs-top">
+                    <div className="user__tabs-line"></div>
+                    <IconButton
+                        nameClass="icon-btn__close-img icon-btn"
+                        type="button"
+                        text="Закрыть"
+                        icon="cancel_bl.svg"
+                        onClick={onClose}
                     />
-                    <div className="about__box">
-                        <CardGroup group={_group_} />
-                        <CardSubordination data={userInfo} />
-                    </div>
                 </div>
+                <div className="user__tabs-bottom"></div>
             </div>
         </div>
-    ) : null;
+    );
 }

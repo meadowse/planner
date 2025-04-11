@@ -12,6 +12,7 @@ import Preloader from '@components/auxiliary_pages/loader/Preloader';
 // Импорт сервисов
 import DataDisplayService from '@services/data_display.service';
 import DataFormService from '@services/data_form.service';
+import UserService from '@services/user.service';
 
 const DataDisplayPage = lazy(() => import('@components/pages/data_display/DataDisplayPage'));
 const DataForm = lazy(() => import('@components/pages/data_display/data_form/DataForm'));
@@ -50,25 +51,18 @@ const ROUTES_FOR_AUTH = [
                     },
                     {
                         path: 'department/*',
-                        // loader: () => {
-                        //     return defer({ department: DataDisplayService.loadData() });
-                        // },
                         loader: () => {
                             return defer({ uploadedData: DataDisplayService.loadData('department') });
                         },
                         shouldRevalidate: () => false,
                         element: (
                             <Suspense fallback={<Preloader />}>
-                                {/* <DataDisplayPage additClass="department" /> */}
                                 <DataDisplayPage partition="department" additClass="department" />
                             </Suspense>
                         )
                     },
                     {
                         path: 'equipment/*',
-                        // loader: () => {
-                        //     return defer({ equipment: EquipmentService.loadData() });
-                        // },
                         loader: () => {
                             return defer({ uploadedData: DataDisplayService.loadData('equipment') });
                         },
@@ -76,7 +70,6 @@ const ROUTES_FOR_AUTH = [
                         element: (
                             <Suspense fallback={<Preloader />}>
                                 <DataDisplayPage partition="equipment" additClass="equipment" />
-                                {/* <EquipmentPage additClass="equipment" /> */}
                             </Suspense>
                         )
                     },
@@ -101,25 +94,20 @@ const ROUTES_FOR_AUTH = [
                         element: (
                             <Suspense fallback={<Preloader />}>
                                 <DataDisplayPage partition="tasks" additClass="tasks" />
-                                {/* <TasksPage additClass="tasks" /> */}
                             </Suspense>
                         )
                     },
                     {
-                        path: 'chat/',
-                        element: (
-                            <Suspense fallback={<Preloader />}>
-                                <ChatPage additClass="chat" />
-                            </Suspense>
-                        )
-                    },
-                    {
-                        path: 'users/:id',
+                        path: 'user/*',
+                        loader: async () => {
+                            return { employeeData: await UserService.loadData('employee') };
+                        },
                         element: (
                             <Suspense fallback={<Preloader />}>
                                 <UserInfo />
                             </Suspense>
-                        )
+                        ),
+                        children: []
                     },
                     {
                         path: 'dataform/*',
