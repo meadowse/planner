@@ -28,7 +28,8 @@ def getAgreements(request):
         T212.F4566 AS dateOfEnding,
         T205.F4331 AS customer,
         LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
-        LIST(DISTINCT participants.ID || ';' || participants.F4886) AS participants,
+        LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
+        responsible.F16 AS idResponsible,
         responsible.F4886 AS responsible,
         LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697, '*') AS tasks
         FROM T212
@@ -41,12 +42,12 @@ def getAgreements(request):
         LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
         LEFT JOIN T218 ON T218.F4691 = T212.ID
         WHERE T212.ID > 2700
-        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
-        columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'responsible', 'tasks')
+        columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'idResponsible', 'responsible', 'tasks')
         json_result = [
             {col: value for col, value in zip(columns, row)}
             for row in result
@@ -68,10 +69,11 @@ def getAgreements(request):
                 obj.update(data)
             responsible = obj.get('responsible')
             if responsible is not None:
-                responsible = {'responsible': {'fullName': obj.get('responsible').strip()}}
+                responsible = {'responsible': {'idResponsible': obj.get('idResponsible'), 'fullName': responsible.strip()}}
             else:
-                responsible = {'responsible': {'fullName': obj.get('responsible')}}
+                responsible = {'responsible': {'idResponsible': obj.get('idResponsible'), 'fullName': responsible}}
             obj.update(responsible)
+            obj.pop('idResponsible')
             dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
             obj.update(dateOfStart)
             dateOfEnding = obj.get('dateOfEnding')
