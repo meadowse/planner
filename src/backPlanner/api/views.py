@@ -265,7 +265,7 @@ def getAgreement(request):
                     data = {'participants': []}
                     for participant in participants:
                         data2 = participant.split(';')
-                        data.get('participants').append({'participantId': data2[0], 'mmId': data2[1], 'fullName': data2[2].strip()})
+                        data.get('participants').append({'id': data2[0], 'mmId': data2[1], 'fullName': data2[2].strip()})
                     obj.update(data)
                 responsible = obj.get('responsible')
                 if responsible is not None:
