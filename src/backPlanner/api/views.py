@@ -129,6 +129,7 @@ def employees(request):
     ) as con:
         cur = con.cursor()
         sql = """select T3.F16 as id, 
+        T3.F16 as mmId,
         T3.F4886 as fullName, 
         T4.F7 as post, 
         T3.F4887SRC as photo, 
