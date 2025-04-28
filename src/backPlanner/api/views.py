@@ -274,6 +274,7 @@ def getAgreement(request):
                     responsible = {'responsible': {'id': obj.get('responsibleId'), 'mmId': obj.get('responsibleMMId'), 'fullName': responsible}}
                 obj.update(responsible)
                 obj.pop('responsibleId')
+                obj.pop('responsibleMMId')
                 dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
                 obj.update(dateOfStart)
                 dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding')}}
