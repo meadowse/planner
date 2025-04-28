@@ -57,13 +57,11 @@ export const DATA_CONVERSION_MAP = {
     },
     responsible: responsible => {
         if (responsible && Object.keys(responsible).length !== 0) {
-            if (responsible?.fullName) {
-                return {
-                    ...responsible,
-                    photo: '/img/user.svg',
-                    post: null
-                };
-            }
+            return {
+                ...responsible,
+                photo: '/img/user.svg',
+                post: null
+            };
         }
         return null;
     },
@@ -162,7 +160,8 @@ export const COMPANY_DATA_CONF = {
         {
             mode: 'Сотрудники',
             keyMode: 'employees',
-            keys: ['id', 'responsible', 'subsection', 'phone', 'email']
+            keys: ['id', 'responsible', 'post', 'phone', 'email']
+            // keys: ['id', 'responsible', 'subsection', 'phone', 'email']
         }
     ],
     dataOperations: [

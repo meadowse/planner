@@ -26,16 +26,17 @@ const formData = (data, partition, key) => {
                 // Сотрудники компании
                 employees: () => {
                     let newItem, newData;
-                    newData = data.map(item => {
+                    newData = data.map((item, ind) => {
                         if (item && Object.keys(item).length !== 0) {
                             newItem = {};
-                            newItem['id'] = item?.id;
+                            newItem['id'] = ind + 1;
                             newItem['responsible'] = {
+                                id: item?.id,
                                 fullName: item?.fullName,
-                                post: item?.post,
                                 photo: '/img/user.svg'
                             };
-                            newItem['subsection'] = item?.subsection;
+                            newItem['post'] = item?.post;
+                            // newItem['subsection'] = item?.subsection;
                             newItem['phone'] = item?.phone;
                             newItem['email'] = item?.email;
                         }

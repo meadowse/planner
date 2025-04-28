@@ -282,6 +282,7 @@ export default function Card(props) {
                 idContract: data?.id,
                 tabForm: { key: 'general', title: 'Общие' },
                 partition: partition,
+                path: `${window.location.pathname}`,
                 dataOperation: findNestedObj(dataOperations, 'key', operationVal)
             }
         };

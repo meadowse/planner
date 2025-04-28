@@ -184,6 +184,8 @@ export const useGanttMode = args => {
                 // newItem.contractId = item?.contractId;
                 // Заголовок задачи
                 newItem.title = item?.employee?.fullName || 'Сотрудник отсутствует';
+                // Идентификатор пользователя
+                newItem.idEmployee = item?.employee?.id;
                 // Ключ навигации
                 newItem.navKey = 'user';
                 // Задачи

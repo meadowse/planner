@@ -24,6 +24,9 @@ import {
 } from '@helpers/calendar';
 import { isObject, findNestedObj } from '@helpers/helper';
 
+//
+import { useHistoryContext } from '../../../../../contexts/history.context';
+
 // Импорт стилей
 import './gantt_mode.css';
 
@@ -112,6 +115,7 @@ function TotalTaskRow(props) {
 // Отображение задач
 function TaskRow(props) {
     const { timeLine, partition, task, dateState, config, dataOperations } = props;
+    const { addToHistory } = useHistoryContext();
 
     const containTasks = task && Object.keys(task).length !== 0 ? 'tasks' in task : false;
     let daysDiff = getDaysBetweenTwoDates(
@@ -142,7 +146,13 @@ function TaskRow(props) {
 
         const NAVIGATION_CONF = {
             user: () => {
-                alert('../../user');
+                const navigationArg = {
+                    state: {
+                        idEmployee: task?.idEmployee,
+                        path: `${window.location.pathname}`
+                    }
+                };
+                navigate('../../user/', navigationArg);
             },
             contract: () => {
                 const navigationArg = {
@@ -150,10 +160,13 @@ function TaskRow(props) {
                         idContract: task?.contractId,
                         tabForm: { key: 'general', title: 'Общие' },
                         partition: partition,
+                        path: `${window.location.pathname}`,
                         dataOperation: findNestedObj(dataOperations, 'key', operationVal)
                     }
                 };
+                addToHistory({ path: `${window.location.pathname}`, args: {} });
                 navigate('../../dataform/general/', navigationArg);
+                localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
             },
             task: () => {
                 const navigationArg = {
@@ -161,9 +174,11 @@ function TaskRow(props) {
                         idContract: task?.contractId,
                         tabForm: { key: 'works', title: 'Работа и задачи' },
                         partition: partition,
+                        path: `${window.location.pathname}`,
                         dataOperation: findNestedObj(dataOperations, 'key', operationVal)
                     }
                 };
+                localStorage.setItem('selectedTab', JSON.stringify({ key: 'works', title: 'Работа и задачи' }));
                 navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
             }
         };

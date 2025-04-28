@@ -10,18 +10,20 @@ import IconButton from '@generic/elements/buttons/IcButton';
 // Импорт сервисов
 import DataFormService from '@services/data_form.service';
 
+import { useHistoryContext } from '../../../../contexts/history.context';
+
 // Импорт стилей
 import './data_form.css';
 
-function FormHeader({ data }) {
-    const navigate = useNavigate();
-
-    function onSelectAction(value) {}
+function FormHeader(props) {
+    const { data, config, navigate } = props;
+    const { history, backToPrevPath } = useHistoryContext();
 
     function onCancelAction() {
         startTransition(() => {
-            // navigate('/');
-            navigate(-2);
+            // alert(`prevpath: ${config?.prevPath}`);
+            // navigate(`../../${config?.prevPath}`);
+            navigate(`../../${history[history.length - 1]?.path}`);
         });
     }
 
@@ -57,8 +59,10 @@ function FormHeader({ data }) {
 }
 
 function TabsHeader(props) {
-    const { tabs, tab, config, tabClick } = props;
-    const navigate = useNavigate();
+    const { tabs, tab, config, tabClick, navigate } = props;
+    //
+    // console.log(`TabsHeader config: ${JSON.stringify(config, null, 4)}`);
+    console.log(`Selected tab: ${JSON.stringify(tab, null, 4)}`);
 
     const NAVIGATION_CONF = {
         works: item => navigate(`${item?.key}/${config?.idContract}`, { state: config }),
@@ -71,14 +75,7 @@ function TabsHeader(props) {
         // console.log(`config: ${JSON.stringify(config, null, 4)}`);
         if (item?.key in NAVIGATION_CONF) NAVIGATION_CONF[item?.key](item);
         else NAVIGATION_CONF?.default(item);
-        // NAVIGATION_CONF[item?.key] ? NAVIGATION_CONF[item?.key](item) : NAVIGATION_CONF?.default(item);
-        // console.log(`click config: ${JSON.stringify(config, null, 4)}`);
-        // navigate(`${item?.key}/${config?.idContract}`, { state: { ...config } });
     }
-
-    // useEffect(() => {
-    //     navigate(`${tab?.key}/${config?.idContract}`, { state: { ...config } });
-    // }, []);
 
     return (
         <ul className="section__dataform-tabs-header">
@@ -100,24 +97,29 @@ function TabsHeader(props) {
 }
 
 function Tabs(props) {
-    const { tabs, config } = props;
+    const { tabs, config, navigate } = props;
     // console.log(`config: ${JSON.stringify(config, null, 4)}`);
-    const [tab, setTab] = useState(
-        config?.tabForm && Object.keys(config?.tabForm).length !== 0 ? config?.tabForm : tabs[0]
-    );
-    // const [tab, setTab] = useState(null);
-    const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     console.log(`tab: ${JSON.stringify(tab, null, 4)}`);
-    //     // navigate(`${tab?.key}/${config?.idContract}`, { state: { ...config } });
-    //     navigate(`${tab?.key}/`, { state: config });
-    //     // console.log(`config state: ${JSON.stringify(config, null, 4)}`);
-    // }, []);
+    // const [tab, setTab] = useState(
+    //     config?.tabForm && Object.keys(config?.tabForm).length !== 0 ? config?.tabForm : tabs[0]
+    // );
+    const [tab, setTab] = useState(tabs[0] || {});
+
+    useEffect(() => {
+        console.log(`onfig?.tabForm : ${JSON.stringify(config?.tabForm, null, 4)}`);
+        const savedTab = JSON.parse(localStorage.getItem('selectedTab'));
+        if (savedTab && Object.keys(savedTab).length !== 0) setTab(savedTab);
+        // if (config?.tabForm && Object.keys(config?.tabForm).length !== 0) setTab(config?.tabForm);
+        // else {
+        //     const savedTab = JSON.parse(localStorage.getItem('selectedTab'));
+        //     if (savedTab && Object.keys(savedTab).length !== 0) setTab(savedTab);
+        //     // else setTab(tabs[0]);
+        // }
+    }, []);
 
     return (
         <div className="section__dataform-tabs">
-            <TabsHeader tabs={tabs} tab={tab} config={config} tabClick={setTab} />
+            <TabsHeader tabs={tabs} tab={tab} config={config} tabClick={setTab} navigate={navigate} />
             <Outlet context={config} />
         </div>
     );
@@ -125,7 +127,9 @@ function Tabs(props) {
 
 export default function DataFormNew() {
     const uploadedData = useLoaderData();
+    const navigate = useNavigate();
     const { state } = useLocation();
+    const [prevPath] = useState(state?.path);
 
     const configData = {
         idContract: state?.idContract,
@@ -134,12 +138,16 @@ export default function DataFormNew() {
         tabForm: state?.tabForm,
         data: uploadedData
     };
-    console.log(`uploadedData: ${JSON.stringify(uploadedData, null, 4)}`);
+    console.log(`DataFormNew state: ${JSON.stringify(state, null, 4)}`);
 
     return (
         <section className="section__dataform">
-            <FormHeader data={{ contractNum: uploadedData?.contractNum, address: uploadedData?.address }} />
-            <Tabs tabs={DataFormService.getOptions('tabs')} config={configData} />
+            <FormHeader
+                data={{ contractNum: uploadedData?.contractNum, address: uploadedData?.address }}
+                config={{ prevPath }}
+                navigate={navigate}
+            />
+            <Tabs tabs={DataFormService.getOptions('tabs')} config={configData} navigate={navigate} />
         </section>
     );
 }

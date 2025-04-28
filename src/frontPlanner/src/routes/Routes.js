@@ -4,10 +4,9 @@ import axios from 'axios';
 
 // Импорт компонетов
 import ProtectedRoute from './ProtectedRoute';
-import UserInfo from '@components/pages/data_user/UserInfo';
+// import UserInfo from '@components/pages/data_user/UserInfo';
 import Layout from '@components/layout/Layout';
 import Authentication from '../authentication/Authentication';
-import Preloader from '@components/auxiliary_pages/loader/Preloader';
 
 // Импорт сервисов
 import DataDisplayService from '@services/data_display.service';
@@ -19,6 +18,8 @@ const DataForm = lazy(() => import('@components/pages/data_display/data_form/Dat
 const DataFormNew = lazy(() => import('@components/pages/data_display/data_form/DataFormNew'));
 const TasksPage = lazy(() => import('@components/pages/tasks/TasksPage'));
 const ChatPage = lazy(() => import('@components/pages/chat/ChatPage'));
+const UserInfo = lazy(() => import('@components/pages/data_user/UserInfo'));
+// const UserInfoNew = lazy(() => import('@components/pages/data_user/UserInfoNew'));
 //
 const TabGeneral = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_general/TabGeneral'));
 const TabWorkNew = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_work/TabWorkNew'));
@@ -55,11 +56,7 @@ const ROUTES_FOR_AUTH = [
                             return defer({ uploadedData: DataDisplayService.loadData('department') });
                         },
                         shouldRevalidate: () => false,
-                        element: (
-                            <Suspense fallback={<Preloader />}>
-                                <DataDisplayPage partition="department" additClass="department" />
-                            </Suspense>
-                        )
+                        element: <DataDisplayPage partition="department" additClass="department" />
                     },
                     {
                         path: 'equipment/*',
@@ -67,11 +64,7 @@ const ROUTES_FOR_AUTH = [
                             return defer({ uploadedData: DataDisplayService.loadData('equipment') });
                         },
                         shouldRevalidate: () => false,
-                        element: (
-                            <Suspense fallback={<Preloader />}>
-                                <DataDisplayPage partition="equipment" additClass="equipment" />
-                            </Suspense>
-                        )
+                        element: <DataDisplayPage partition="equipment" additClass="equipment" />
                     },
                     {
                         path: 'company/*',
@@ -79,11 +72,7 @@ const ROUTES_FOR_AUTH = [
                             return defer({ uploadedData: DataDisplayService.loadData('company') });
                         },
                         shouldRevalidate: () => false,
-                        element: (
-                            <Suspense fallback={<Preloader />}>
-                                <DataDisplayPage partition="company" additClass="company" />
-                            </Suspense>
-                        )
+                        element: <DataDisplayPage partition="company" additClass="company" />
                     },
                     {
                         path: 'tasks/*',
@@ -91,31 +80,19 @@ const ROUTES_FOR_AUTH = [
                             return defer({ uploadedData: DataDisplayService.loadData('tasks') });
                         },
                         shouldRevalidate: () => false,
-                        element: (
-                            <Suspense fallback={<Preloader />}>
-                                <DataDisplayPage partition="tasks" additClass="tasks" />
-                            </Suspense>
-                        )
+                        element: <DataDisplayPage partition="tasks" additClass="tasks" />
                     },
                     {
-                        path: 'user/*',
-                        loader: async () => {
-                            return { employeeData: await UserService.loadData('employee') };
-                        },
-                        element: (
-                            <Suspense fallback={<Preloader />}>
-                                <UserInfo />
-                            </Suspense>
-                        ),
-                        children: []
+                        path: 'user/',
+                        // loader: async ({ params }) => {
+                        //     const { tab, id } = params;
+                        //     return defer({ uploadedData: await UserService.loadData(tab, id) });
+                        // },
+                        element: <UserInfo />
                     },
                     {
                         path: 'dataform/*',
-                        element: (
-                            <Suspense fallback={<Preloader />}>
-                                <DataFormNew />
-                            </Suspense>
-                        ),
+                        element: <DataFormNew />,
                         loader: async () => {
                             return await DataFormService.loadData('general', {
                                 contractId: JSON.parse(localStorage.getItem('idContract'))
@@ -124,11 +101,7 @@ const ROUTES_FOR_AUTH = [
                         children: [
                             {
                                 path: 'general/',
-                                element: (
-                                    <Suspense fallback={<Preloader />}>
-                                        <TabGeneral />
-                                    </Suspense>
-                                )
+                                element: <TabGeneral />
                             },
                             {
                                 path: 'works/:id',
@@ -138,12 +111,7 @@ const ROUTES_FOR_AUTH = [
                                         uploadedData: await DataFormService.loadData('works', { contractId: id })
                                     };
                                 },
-                                element: (
-                                    <Suspense fallback={<Preloader />}>
-                                        <TabWorkNew />
-                                        {/* <p>TabWork</p> */}
-                                    </Suspense>
-                                )
+                                element: <TabWorkNew />
                             }
                         ]
                     }

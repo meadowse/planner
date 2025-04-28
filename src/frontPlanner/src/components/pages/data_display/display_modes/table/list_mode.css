@@ -123,6 +123,13 @@
     text-decoration: underline;
 }
 
+/* Ячейка "Пользователь" */
+
+.cell__person {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 /* Ячейки "Кем создан и Кто выполняет" */
 
 .cell__participant {

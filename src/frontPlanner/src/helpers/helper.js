@@ -49,33 +49,40 @@ export function findNestedObj(entireObj, keyToFind, valToFind) {
 // Функция фильтрации данных
 export function getFilteredData(data, selectedItem, option) {
     // console.log(
-    //     `getFilteredData\nselectedItem: ${JSON.stringify(selectedItem, null, 4)}\noption: ${JSON.stringify(
-    //         option,
+    //     `getFilteredData\ndata: ${JSON.stringify(data, null, 4)}\nselectedItem: ${JSON.stringify(
+    //         selectedItem,
     //         null,
     //         4
-    //     )}`
+    //     )}\noption: ${JSON.stringify(option, null, 4)}`
     // );
-    const filteredData = data.filter(item => {
-        if (item) {
-            if (item[option?.key] && typeof item[option?.key] === 'object' && !Array.isArray(item[option?.key])) {
-                const values =
-                    item[option?.key] && Object.keys(item[option?.key]).length !== 0
-                        ? Object.values(item[option?.key])
-                        : [];
-                if (values && values.length !== 0 && values.includes(selectedItem)) return true;
-            }
-            if (item[option?.key] && isArray(item[option?.key]) && item[option?.key].length !== 0) {
-                const values = [];
-                simplifyData(item[option?.key]).forEach(value => {
-                    value.forEach(val => values.push(val));
-                });
-                if (values && values.length !== 0 && values.includes(selectedItem)) return true;
-                // console.log(`is Arr values; ${JSON.stringify(values, null, 4)}`);
-            }
-            return item[option?.key] === selectedItem ? true : false;
-        }
-        return false;
-    });
+    const filteredData =
+        data && data.length !== 0
+            ? data?.filter(item => {
+                  if (item) {
+                      if (
+                          item[option?.key] &&
+                          typeof item[option?.key] === 'object' &&
+                          !Array.isArray(item[option?.key])
+                      ) {
+                          const values =
+                              item[option?.key] && Object.keys(item[option?.key]).length !== 0
+                                  ? Object.values(item[option?.key])
+                                  : [];
+                          if (values && values.length !== 0 && values.includes(selectedItem)) return true;
+                      }
+                      if (item[option?.key] && isArray(item[option?.key]) && item[option?.key].length !== 0) {
+                          const values = [];
+                          simplifyData(item[option?.key]).forEach(value => {
+                              value.forEach(val => values.push(val));
+                          });
+                          if (values && values.length !== 0 && values.includes(selectedItem)) return true;
+                          // console.log(`is Arr values; ${JSON.stringify(values, null, 4)}`);
+                      }
+                      return item[option?.key] === selectedItem ? true : false;
+                  }
+                  return false;
+              })
+            : [];
 
     // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
 

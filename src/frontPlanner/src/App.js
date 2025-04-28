@@ -4,6 +4,7 @@ import { useContext } from 'react';
 // Импорт доп.функционала
 import { ROUTES_FOR_NOT_AUTH, ROUTES_FOR_AUTH } from './routes/Routes';
 import { authContext } from './contexts/auth.context';
+import { HistoryProvider } from './contexts/history.context';
 
 export default function App() {
     const { authState } = useContext(authContext);
@@ -15,5 +16,9 @@ export default function App() {
 
     const router = createBrowserRouter([...(!authState.accessToken ? ROUTES_FOR_NOT_AUTH : []), ...ROUTES_FOR_AUTH]);
     // const router = createBrowserRouter([...ROUTES_FOR_AUTH]);
-    return <RouterProvider router={router} />;
+    return (
+        <HistoryProvider>
+            <RouterProvider router={router} />
+        </HistoryProvider>
+    );
 }

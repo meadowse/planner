@@ -23,7 +23,7 @@ function initializeFilters(data, keys) {
         });
     }
 
-    console.log(`initFilters: ${JSON.stringify(initFilters, null, 4)}`);
+    // console.log(`initFilters: ${JSON.stringify(initFilters, null, 4)}`);
     return initFilters;
 }
 

@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, use, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import TaskPopup from '@components/pages/data_display/data_form/tabs/tab_work/po
 
 // Импорт доп.функционала
 import { isObject, isArray } from '@helpers/helper';
+import { useHistoryContext } from '../../contexts/history.context';
 
 const CELLS = {
     text: (value, additClass) => {
@@ -23,9 +24,9 @@ const CELLS = {
             'Нет данных'
         );
     },
-    user: (value, additClass) => {
+    user: (value, additClass, onClick) => {
         return (
-            <div className={`cell__${additClass}`}>
+            <div className={`cell__${additClass}`} onClick={onClick}>
                 <img className={`cell__${additClass}-photo`} src={value?.photo} alt="" />
                 <div className={`cell__${additClass}-info`}>
                     <h2 className={`cell__${additClass}-fullname`}>{value?.fullName || 'Нет данных'}</h2>
@@ -56,6 +57,7 @@ const COLUMNS = [
         sortBy: undefined,
         Cell: props => {
             const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
 
             function onShowInfoCard() {
                 const navigationArg = {
@@ -67,6 +69,8 @@ const COLUMNS = [
                     }
                 };
                 localStorage.setItem('idContract', JSON.stringify(props?.config?.idContract));
+
+                addToHistory({ path: `${window.location.pathname}`, args: {} });
                 navigate('../../dataform/general/', navigationArg);
             }
 
@@ -128,7 +132,7 @@ const COLUMNS = [
                     {props?.value && props?.value.length !== 0 && (
                         <ul className="cell__participants cell">
                             {props.value.map(participant => {
-                                return CELLS['user'](participant, 'person');
+                                return CELLS['user'](participant, 'person', null);
                             })}
                         </ul>
                     )}
@@ -230,9 +234,6 @@ const COLUMNS = [
             }
             return 'Нет данных';
         }
-        // Cell: props => {
-        //     return  ? CELLS['text'](props?.value?.value, 'date') : 'Нет данных';
-        // }
     },
     {
         Header: 'Путь к папке',
@@ -241,10 +242,16 @@ const COLUMNS = [
         sortBy: undefined,
         Cell: props => {
             const refCell = useRef();
+
+            function onCopyToClipboard() {
+                if (!navigator.clipboard) return;
+                navigator.clipboard.writeText(props?.value);
+            }
+
             return (
                 <div className="cell__path-to-folder cell">
                     {CELLS?.longtext(props?.value, 'cell__path-to-folder', refCell)}
-                    <button className="cell__btn-copy-path">
+                    <button className="cell__btn-copy-path" onClick={onCopyToClipboard}>
                         <img src="/img/copy.svg" alt="" />
                     </button>
                 </div>
@@ -257,20 +264,39 @@ const COLUMNS = [
         sortable: true,
         sortBy: 'fullName',
         Cell: props => {
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee() {
+                addToHistory({ path: `${window.location.pathname}`, args: {} });
+                navigate('../../user/', {
+                    state: { idEmployee: props?.config?.idEmployee, path: `${window.location.pathname}` }
+                });
+            }
+
             return props?.value && Object.keys(props?.value).length !== 0
-                ? CELLS['user'](props?.value, 'person')
+                ? CELLS['user'](props?.value, 'person', onShowInfoEmployee)
                 : 'Нет данных';
         }
     },
     {
-        Header: 'Подразделение',
-        accessor: 'subsection',
+        Header: 'Должность',
+        accessor: 'post',
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return CELLS['text'](props?.value, 'subsection');
+            return CELLS['text'](props?.value, 'post');
         }
     },
+    // {
+    //     Header: 'Подразделение',
+    //     accessor: 'subsection',
+    //     sortable: false,
+    //     sortBy: undefined,
+    //     Cell: props => {
+    //         return CELLS['text'](props?.value, 'subsection');
+    //     }
+    // },
     {
         Header: 'Телефон',
         accessor: 'phone',
@@ -473,8 +499,18 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee() {
+                addToHistory({ path: `${window.location.pathname}`, args: {} });
+                navigate('../../user/', {
+                    state: { idEmployee: props?.config?.idEmployee, path: `${window.location.pathname}` }
+                });
+            }
+
             return props?.value && Object.keys(props?.value).length !== 0
-                ? CELLS['user'](props?.value, 'person')
+                ? CELLS['user'](props?.value, 'person', onShowInfoEmployee)
                 : 'Нет данных';
         }
     },
@@ -484,8 +520,19 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee() {
+                addToHistory({ path: `${window.location.pathname}`, args: {} });
+
+                navigate('../../user/', {
+                    state: { idEmployee: props?.config?.idEmployee, path: `${window.location.pathname}` }
+                });
+            }
+
             return props?.value && Object.keys(props?.value).length !== 0
-                ? CELLS['user'](props?.value, 'person')
+                ? CELLS['user'](props?.value, 'person', onShowInfoEmployee)
                 : 'Нет данных';
         }
     },

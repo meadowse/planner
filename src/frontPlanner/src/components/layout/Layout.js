@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 // Импорт компонетов
+import Preloader from '@components/auxiliary_pages/loader/Preloader';
 import SideMenu from './side_menu/SideMenu';
 
 // Импорт данных
@@ -14,8 +16,23 @@ export default function Layout() {
     const [itemSideMenu, setItemSideMenu] = useState({});
     const navigate = useNavigate();
 
+    // function onRetrieveUser() {
+    //     navigate('user/', { state: { idEmployee: Cookies.get('MMUSERID') } });
+    // }
+
     function onRetrieveUser() {
-        navigate('user/');
+        navigate(`user/`, {
+            state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
+        });
+        // const employeeInfo = JSON.parse(localStorage.getItem('employee_info')) || {};
+        // if (!employeeInfo || Object.keys(employeeInfo).length === 0)
+        //     navigate(`user/profile/${Cookies.get('MMUSERID')}/`, {
+        //         state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
+        //     });
+        // else
+        //     navigate(`user/${employeeInfo?.data[employeeInfo?.activeTab]?.tab?.key}/${Cookies.get('MMUSERID')}`, {
+        //         state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
+        //     });
     }
 
     useEffect(() => {
@@ -38,7 +55,9 @@ export default function Layout() {
             <div className="app__right-column">
                 <main className="main">
                     <div id="portal"></div>
-                    <Outlet context={itemSideMenu} />
+                    <Suspense fallback={<Preloader />}>
+                        <Outlet context={itemSideMenu} />
+                    </Suspense>
                 </main>
             </div>
         </div>

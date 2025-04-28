@@ -16,11 +16,14 @@ import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
 import CalendarWindow from '@generic/elements/calendar/CalendarWindow';
 
 // Импорт доп.функционала
-import { getUniqueData } from '@helpers/helper';
+import { isArray, getUniqueData } from '@helpers/helper';
 import { getDateInSpecificFormat } from '@helpers/calendar';
 
 // Импорт сервисов
 import TabGeneralService from '@services/tabs/tab_general.service';
+
+//
+import { useHistoryContext } from '../../../../../../contexts/history.context';
 
 // Импорт кастомных хуков
 import { useGeneralForm } from '@hooks/useGeneralForm';
@@ -236,9 +239,19 @@ function Manager(props) {
 // Блок "Ответственный"
 function Responsible(props) {
     const { additClass, presetValue, responsibleError, disabledElem, onClick } = props;
+    const { addToHistory } = useHistoryContext();
 
     const [statePopup, setStatePopup] = useState(false);
     const [responsible, setResponsible] = useState(presetValue ? presetValue : {});
+    const navigate = useNavigate();
+
+    function onClickUser(user) {
+        // alert(`Responsible click: ${JSON.stringify(user, null, 4)}`);
+        addToHistory({ path: `${window.location.pathname}`, args: {} });
+        navigate(`../../user/`, {
+            state: { idEmployee: user?.id, path: `${window.location.pathname}` }
+        });
+    }
 
     function onSelectManager(user) {
         setResponsible(user);
@@ -257,7 +270,10 @@ function Responsible(props) {
                 <div className="tab-general__manager tab-general-row-item">
                     <ul className="tab-general-row__item-managers">
                         {responsible && Object.keys(responsible)?.length !== 0 ? (
-                            <li className="tab-general-row__item-manager tab-general-row-item__user" onClick={null}>
+                            <li
+                                className="tab-general-row__item-manager tab-general-row-item__user"
+                                onClick={() => onClickUser(responsible)}
+                            >
                                 {responsible?.fullName}
                                 <IconButton
                                     nameClass="tab-general-row__ic-btn icon-btn"
@@ -305,8 +321,19 @@ function Participants(props) {
     const [statePopup, setStatePopup] = useState(false);
     const [participants, setParticipants] = useState(presetValue && presetValue.length !== 0 ? presetValue : []);
 
+    const { addToHistory } = useHistoryContext();
+    const navigate = useNavigate();
+
     const listParticipants = [...participants];
     let participant;
+
+    function onClickUser(user) {
+        // alert(`Responsible click: ${JSON.stringify(user, null, 4)}`);
+        addToHistory({ path: `${window.location.pathname}`, args: {} });
+        navigate(`../../user/`, {
+            state: { idEmployee: user?.participantId, path: `${window.location.pathname}` }
+        });
+    }
 
     function onSelectParticipant(participantVal) {
         let { id, ...other } = participantVal;
@@ -334,7 +361,7 @@ function Participants(props) {
                                 <li
                                     key={index}
                                     className="tab-general-row-item__participant tab-general-row-item__user"
-                                    onClick={null}
+                                    onClick={() => onClickUser(participant)}
                                 >
                                     {participant?.fullName}
                                     <IconButton
@@ -583,10 +610,16 @@ function Contact(props) {
     const { contact, indContact, contactsInfo, contactError, disabledElem, onDeleteContact, onChangeByInd } = props;
 
     const [contactState, setContactState] = useState(false);
-    const [contactData, setContactData] = useState({ fullName: '', post: '', phone: '', email: '' });
+    const [contactData, setContactData] = useState({
+        fullName: contact?.fullName || '',
+        post: contact?.post || '',
+        phone: contact?.phone || '',
+        email: contact?.email || ''
+    });
 
     function onCopyToClipboard(value) {
         if (!navigator.clipboard) return;
+        if (isArray(value) && value.length !== 0) navigator.clipboard.writeText(value[0]);
         navigator.clipboard.writeText(value);
     }
 

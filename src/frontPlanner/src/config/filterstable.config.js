@@ -13,6 +13,9 @@ export const DEFAULT_FILTERS = {
     responsible: 'Все',
     participants: 'Все',
     pathToFolder: '',
+    // subsection: '',
+    phone: '',
+    email: '',
     typeWork: '',
     deadline: 'Все',
     dateDone: 'Все',
@@ -154,7 +157,7 @@ export const OPTIONS_FILTER_CONF = {
             )
         ];
 
-        console.log(`tempData data: ${JSON.stringify(tempData, null, 4)}`);
+        // console.log(`tempData data: ${JSON.stringify(tempData, null, 4)}`);
 
         tempData.map(item => {
             if (item) newData.push(item);
@@ -210,7 +213,7 @@ export const FILTER_HANDLERS_CONF = new Map([
     ['group', (filterVal, group) => group?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['pathToFolder', (filterVal, pathToFolder) => pathToFolder?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['car', (filterVal, car) => Object.values(car).some(item => item.toLowerCase().includes(filterVal.toLowerCase()))],
-    ['subsection', (filterVal, subsection) => subsection?.toLowerCase().includes(filterVal?.toLowerCase())],
+    // ['subsection', (filterVal, subsection) => subsection?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['phone', (filterVal, phone) => phone?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['email', (filterVal, email) => email?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['typeWork', (filterVal, typeWork) => typeWork?.toLowerCase().includes(filterVal?.toLowerCase())],
@@ -228,8 +231,11 @@ export const FILTER_HANDLERS_CONF = new Map([
     [
         'responsible',
         (filterVal, responsible) => {
-            if (responsible && Object.keys(responsible).length !== 0)
-                return filterVal?.includes('Все') || Object.values(responsible)?.includes(filterVal);
+            if (filterVal?.includes('Все')) return true;
+            else {
+                if (responsible && Object.keys(responsible).length !== 0)
+                    return filterVal?.includes('Все') || Object.values(responsible)?.includes(filterVal);
+            }
         }
     ],
     [

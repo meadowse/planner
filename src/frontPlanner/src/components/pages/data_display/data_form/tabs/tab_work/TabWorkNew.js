@@ -17,7 +17,7 @@ export default function TabWorkNew() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log(`loaded data: ${JSON.stringify(uploadedData, null, 4)}`);
+        // console.log(`loaded data: ${JSON.stringify(uploadedData, null, 4)}`);
         if (uploadedData && Object.keys(uploadedData).length !== 0) {
             setWorks(uploadedData?.works);
             setTasks(uploadedData?.tasks);
@@ -37,6 +37,7 @@ export default function TabWorkNew() {
                         modeConfig={{
                             keys: ['number', 'typeWork', 'deadline', 'dateDone', 'done'],
                             partition: partition,
+                            path: `${window.location.pathname}`,
                             dataOperations: [],
                             idContract: idContract
                         }}
@@ -47,6 +48,7 @@ export default function TabWorkNew() {
                         modeConfig={{
                             keys: ['task', 'director', 'executor', 'deadlineTask', 'done'],
                             partition: partition,
+                            path: `${window.location.pathname}`,
                             dataOperations: [],
                             idContract: idContract
                         }}
