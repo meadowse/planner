@@ -141,7 +141,7 @@ def employees(request):
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
-        columns = ('id', 'fullName', 'post', 'photo', 'phone', 'email')
+        columns = ('id', 'mmId', 'fullName', 'post', 'photo', 'phone', 'email')
         json_result = [
             {col: value for col, value in zip(columns, row)}
             for row in result
