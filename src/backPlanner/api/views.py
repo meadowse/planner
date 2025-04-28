@@ -378,9 +378,9 @@ def getTasksContracts(request):
                 T218.F4695 AS TASK,
                 T218.F5724 AS ID_OF_TYPE_OF_WORK,
                 T218.F4696 AS DEADLINE,
-                T218.F4693 AS ID_OF_DIRECTOR,
+                DIRECTOR.F16 AS ID_OF_DIRECTOR,
                 DIRECTOR.F4886 AS DIRECTOR_NAME,
-                T218.F4694 AS ID_OF_EXECUTOR,
+                EXECUTOR.F16 AS ID_OF_EXECUTOR,
                 EXECUTOR.F4886 AS EXECUTOR_NAME, 
                 T218.F4697 AS DONE
                 FROM T218
