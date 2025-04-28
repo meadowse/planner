@@ -126,13 +126,23 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee(participant) {
+                addToHistory({ path: `${window.location.pathname}`, args: {} });
+                navigate('../../user/', {
+                    state: { idEmployee: participant?.id, path: `${window.location.pathname}` }
+                });
+            }
+
             return (
                 <>
                     {Object.keys(props).length === 0 || !props.value || (props.value.length === 0 && <p>Нет данных</p>)}
                     {props?.value && props?.value.length !== 0 && (
                         <ul className="cell__participants cell">
                             {props.value.map(participant => {
-                                return CELLS['user'](participant, 'person', null);
+                                return CELLS['user'](participant, 'person', () => onShowInfoEmployee(participant));
                             })}
                         </ul>
                     )}

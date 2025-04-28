@@ -98,6 +98,15 @@ export default function ListMode(props) {
             };
             return <Cell cellData={cellData} cellConfig={config} />;
         },
+        participants: cellData => {
+            // console.log(`responsible data: ${JSON.stringify(filteredData[cellData?.indRow]?.responsible, null, 4)}`);
+            // console.log(`Listmode responsible path: ${window.location.path}`);
+            const config = {
+                idEmployee: filteredData[cellData?.indRow]?.responsible?.id,
+                path: `${window.location.pathname}`
+            };
+            return <Cell cellData={cellData} cellConfig={config} />;
+        },
         executor: cellData => {
             const config = {
                 idEmployee: filteredData[cellData?.indRow]?.executor?.id,
@@ -118,7 +127,7 @@ export default function ListMode(props) {
     };
 
     useEffect(() => {
-        console.log(`activeFilters: ${JSON.stringify(activeFilters, null, 4)}`);
+        console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
         setData(filteredData);
     }, [activeFilters, filteredData]);
 

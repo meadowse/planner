@@ -48,9 +48,9 @@
 
 .user__profile {
     width: 100%;
-    display: flex;
-    /* flex-direction: column; */
-    row-gap: 55px;
+    display: grid;
+    grid-template-columns: 0.25fr 0.5fr;
+    column-gap: 150px;
 }
 
 .user__profile-top {
@@ -110,8 +110,10 @@
 
 .user__data-item {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 35px;
+    /* grid-template-columns: 1fr 1fr; */
+    grid-template-columns: 0.5fr 0.5fr;
+    row-gap: 35px;
+    /* gap: 35px; */
 }
 
 .user__item-title {

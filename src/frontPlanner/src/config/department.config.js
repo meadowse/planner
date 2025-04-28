@@ -58,6 +58,7 @@ export const DATA_CONVERSION_MAP = {
     responsible: responsible => {
         if (responsible && Object.keys(responsible).length !== 0) {
             return {
+                id: responsible?.idResponsible,
                 ...responsible,
                 photo: '/img/user.svg',
                 post: null
@@ -86,7 +87,8 @@ export const DATA_CONVERSION_MAP = {
     participants: participants => {
         return participants && participants.length !== 0
             ? participants.map(participant => {
-                  return { ...participant, photo: '/img/user.svg', post: null };
+                  const { participantId, ...restElems } = participant;
+                  return { id: participantId, ...restElems, photo: '/img/user.svg', post: null };
               })
             : null;
     }

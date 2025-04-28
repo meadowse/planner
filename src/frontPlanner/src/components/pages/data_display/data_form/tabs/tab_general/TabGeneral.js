@@ -328,7 +328,7 @@ function Participants(props) {
     let participant;
 
     function onClickUser(user) {
-        // alert(`Responsible click: ${JSON.stringify(user, null, 4)}`);
+        alert(`Participant click: ${JSON.stringify(user, null, 4)}`);
         addToHistory({ path: `${window.location.pathname}`, args: {} });
         navigate(`../../user/`, {
             state: { idEmployee: user?.participantId, path: `${window.location.pathname}` }
