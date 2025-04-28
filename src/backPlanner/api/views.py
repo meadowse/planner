@@ -227,8 +227,9 @@ def getAgreement(request):
             T212.F4566 AS dateOfEnding,
             T205.F4332 AS company,
             LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
-            LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
-            responsible.F16 AS responsibleId,
+            LIST(DISTINCT participants.ID || ';' || participants.F16 || ';' || participants.F4886) AS participants,
+            responsible.ID AS responsibleId,
+            responsible.F16 AS responsibleMMId,
             responsible.F4886 AS responsible,
             LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696, '*') AS tasks, 
             T212.F4644 AS channelId
@@ -242,12 +243,13 @@ def getAgreement(request):
             LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
             LEFT JOIN T218 ON T218.F4691 = T212.ID
             WHERE T212.ID = {contractId}
-            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 15
+            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 16
             """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
             cur.execute(sql)
             result = cur.fetchall()
             # Преобразование результата в список словарей
-            columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'responsibleId', 'responsible', 'tasks', 'channelId')
+            columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart',
+                       'dateOfEnding', 'company', 'contacts', 'participants', 'responsibleId', 'responsibleMMId', 'responsible', 'tasks', 'channelId')
             json_result = [
                 {col: value for col, value in zip(columns, row)}
                 for row in result
@@ -263,13 +265,13 @@ def getAgreement(request):
                     data = {'participants': []}
                     for participant in participants:
                         data2 = participant.split(';')
-                        data.get('participants').append({'participantId': data2[0], 'fullName': data2[1].strip()})
+                        data.get('participants').append({'participantId': data2[0], 'mmId': data2[1], 'fullName': data2[2].strip()})
                     obj.update(data)
                 responsible = obj.get('responsible')
                 if responsible is not None:
-                    responsible = {'responsible': {'id': obj.get('responsibleId'), 'fullName': responsible.strip()}}
+                    responsible = {'responsible': {'id': obj.get('responsibleId'), 'mmId': obj.get('responsibleMMId'), 'fullName': responsible.strip()}}
                 else:
-                    responsible = {'responsible': {'id': obj.get('responsibleId'), 'fullName': responsible}}
+                    responsible = {'responsible': {'id': obj.get('responsibleId'), 'mmId': obj.get('responsibleMMId'), 'fullName': responsible}}
                 obj.update(responsible)
                 obj.pop('responsibleId')
                 dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
