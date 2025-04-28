@@ -68,7 +68,9 @@ const COLUMNS = [
                         dataOperation: props?.config?.dataOperation
                     }
                 };
+
                 localStorage.setItem('idContract', JSON.stringify(props?.config?.idContract));
+                localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
 
                 addToHistory({ path: `${window.location.pathname}`, args: {} });
                 navigate('../../dataform/general/', navigationArg);
@@ -129,10 +131,11 @@ const COLUMNS = [
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
 
-            function onShowInfoEmployee(participant) {
+            function onShowInfoEmployee(employee) {
+                // alert(`Исполнители employee: ${JSON.stringify(employee, null, 4)}`);
                 addToHistory({ path: `${window.location.pathname}`, args: {} });
                 navigate('../../user/', {
-                    state: { idEmployee: participant?.id, path: `${window.location.pathname}` }
+                    state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                 });
             }
 
@@ -277,15 +280,16 @@ const COLUMNS = [
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
 
-            function onShowInfoEmployee() {
+            function onShowInfoEmployee(employee) {
+                // alert(`employee: ${JSON.stringify(employee, null, 4)}`);
                 addToHistory({ path: `${window.location.pathname}`, args: {} });
                 navigate('../../user/', {
-                    state: { idEmployee: props?.config?.idEmployee, path: `${window.location.pathname}` }
+                    state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                 });
             }
 
             return props?.value && Object.keys(props?.value).length !== 0
-                ? CELLS['user'](props?.value, 'person', onShowInfoEmployee)
+                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
                 : 'Нет данных';
         }
     },
@@ -512,15 +516,15 @@ const COLUMNS = [
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
 
-            function onShowInfoEmployee() {
+            function onShowInfoEmployee(employee) {
                 addToHistory({ path: `${window.location.pathname}`, args: {} });
                 navigate('../../user/', {
-                    state: { idEmployee: props?.config?.idEmployee, path: `${window.location.pathname}` }
+                    state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
                 });
             }
 
             return props?.value && Object.keys(props?.value).length !== 0
-                ? CELLS['user'](props?.value, 'person', onShowInfoEmployee)
+                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
                 : 'Нет данных';
         }
     },
@@ -533,16 +537,16 @@ const COLUMNS = [
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
 
-            function onShowInfoEmployee() {
+            function onShowInfoEmployee(employee) {
+                // alert(`employee: ${JSON.stringify(employee, null, 4)}`);
                 addToHistory({ path: `${window.location.pathname}`, args: {} });
-
                 navigate('../../user/', {
-                    state: { idEmployee: props?.config?.idEmployee, path: `${window.location.pathname}` }
+                    state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
                 });
             }
 
             return props?.value && Object.keys(props?.value).length !== 0
-                ? CELLS['user'](props?.value, 'person', onShowInfoEmployee)
+                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
                 : 'Нет данных';
         }
     },

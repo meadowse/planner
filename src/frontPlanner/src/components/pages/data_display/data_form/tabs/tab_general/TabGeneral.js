@@ -249,7 +249,7 @@ function Responsible(props) {
         // alert(`Responsible click: ${JSON.stringify(user, null, 4)}`);
         addToHistory({ path: `${window.location.pathname}`, args: {} });
         navigate(`../../user/`, {
-            state: { idEmployee: user?.id, path: `${window.location.pathname}` }
+            state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
         });
     }
 
@@ -270,11 +270,8 @@ function Responsible(props) {
                 <div className="tab-general__manager tab-general-row-item">
                     <ul className="tab-general-row__item-managers">
                         {responsible && Object.keys(responsible)?.length !== 0 ? (
-                            <li
-                                className="tab-general-row__item-manager tab-general-row-item__user"
-                                onClick={() => onClickUser(responsible)}
-                            >
-                                {responsible?.fullName}
+                            <li className="tab-general-row__item-manager tab-general-row-item__user">
+                                <p onClick={() => onClickUser(responsible)}>{responsible?.fullName}</p>
                                 <IconButton
                                     nameClass="tab-general-row__ic-btn icon-btn"
                                     type="button"
@@ -319,7 +316,8 @@ function Participants(props) {
     const { additClass, presetValue, participantsError, disabledElem, onClick } = props;
 
     const [statePopup, setStatePopup] = useState(false);
-    const [participants, setParticipants] = useState(presetValue && presetValue.length !== 0 ? presetValue : []);
+    // const [participants, setParticipants] = useState(presetValue && presetValue.length !== 0 ? presetValue : []);
+    const [participants, setParticipants] = useState([]);
 
     const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
@@ -330,15 +328,16 @@ function Participants(props) {
     function onClickUser(user) {
         addToHistory({ path: `${window.location.pathname}`, args: {} });
         navigate(`../../user/`, {
-            state: { idEmployee: user?.participantId, path: `${window.location.pathname}` }
+            state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
         });
     }
 
     function onSelectParticipant(participantVal) {
-        let { id, ...other } = participantVal;
-        participant = { participantId: id, ...other };
-
+        // alert(`participantVal: ${JSON.stringify(participantVal, null, 4)}`);
+        let { id, ...restElems } = participantVal;
+        participant = { participantId: +id, ...restElems };
         listParticipants.push(participant);
+
         setParticipants(getUniqueData([...participants, participant], { key: 'participantId', uniqueness: null }));
         onClick(additClass, [...participants, participant]);
     }
@@ -348,6 +347,17 @@ function Participants(props) {
         setParticipants([...listParticipants]);
         onClick(additClass, [...listParticipants]);
     }
+
+    useEffect(() => {
+        if (presetValue && presetValue.length !== 0) {
+            const participantsData = presetValue.map(participant => {
+                const { id, ...restElems } = participant;
+                return { participantId: +id, ...restElems };
+            });
+
+            setParticipants(participantsData);
+        }
+    }, []);
 
     return (
         <div className="tab-general-row-wrapper" data-error={participantsError ? participantsError.message : null}>
@@ -360,9 +370,8 @@ function Participants(props) {
                                 <li
                                     key={index}
                                     className="tab-general-row-item__participant tab-general-row-item__user"
-                                    onClick={() => onClickUser(participant)}
                                 >
-                                    {participant?.fullName}
+                                    <p onClick={() => onClickUser(participant)}>{participant?.fullName}</p>
                                     <IconButton
                                         nameClass="tab-general-row__ic-btn icon-btn"
                                         type="button"

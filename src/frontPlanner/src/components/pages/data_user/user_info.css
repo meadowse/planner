@@ -112,8 +112,7 @@
     display: grid;
     /* grid-template-columns: 1fr 1fr; */
     grid-template-columns: 0.5fr 0.5fr;
-    row-gap: 35px;
-    /* gap: 35px; */
+    gap: 35px;
 }
 
 .user__item-title {

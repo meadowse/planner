@@ -286,7 +286,10 @@ export default function Card(props) {
                 dataOperation: findNestedObj(dataOperations, 'key', operationVal)
             }
         };
+
+        localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
         localStorage.setItem('idContract', JSON.stringify(data?.id));
+
         navigate('../../dataform/general/', navigationArg);
         // await axios.post(`${window.location.origin}/api/getAgreement`, { contractId: cardData?.id }).then(response => {
         //     if (response?.status === 200) {}

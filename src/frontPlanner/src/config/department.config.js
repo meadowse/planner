@@ -58,13 +58,22 @@ export const DATA_CONVERSION_MAP = {
     responsible: responsible => {
         if (responsible && Object.keys(responsible).length !== 0) {
             return {
-                id: responsible?.idResponsible,
-                ...responsible,
+                id: -1,
+                mmId: responsible?.idResponsible || -1,
+                fullName: responsible?.fullName,
                 photo: '/img/user.svg',
                 post: null
             };
         }
         return null;
+    },
+    participants: participants => {
+        return participants && participants.length !== 0
+            ? participants.map(participant => {
+                  const { participantId, ...restElems } = participant;
+                  return { id: -1, mmId: participantId, ...restElems, photo: '/img/user.svg', post: null };
+              })
+            : null;
     },
     director: director => {
         return director && Object.keys(director).length !== 0
@@ -82,14 +91,6 @@ export const DATA_CONVERSION_MAP = {
                   fullName: executor.fullName || executor.executorName,
                   photo: '/img/user.svg'
               }
-            : null;
-    },
-    participants: participants => {
-        return participants && participants.length !== 0
-            ? participants.map(participant => {
-                  const { participantId, ...restElems } = participant;
-                  return { id: participantId, ...restElems, photo: '/img/user.svg', post: null };
-              })
             : null;
     }
 };

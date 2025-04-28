@@ -26,12 +26,12 @@ const formData = (data, partition, key) => {
                 // Сотрудники компании
                 employees: () => {
                     let newItem, newData;
-                    newData = data.map((item, ind) => {
+                    newData = data.map(item => {
                         if (item && Object.keys(item).length !== 0) {
                             newItem = {};
-                            newItem['id'] = ind + 1;
+                            newItem['id'] = item?.id;
                             newItem['responsible'] = {
-                                id: item?.id,
+                                mmId: item?.mmId,
                                 fullName: item?.fullName,
                                 photo: '/img/user.svg'
                             };
