@@ -1,10 +1,13 @@
-import { Suspense, useEffect, useState } from 'react';
+import { startTransition, Suspense, useEffect, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 // Импорт компонетов
 import Preloader from '@components/auxiliary_pages/loader/Preloader';
 import SideMenu from './side_menu/SideMenu';
+
+//
+import { useHistoryContext } from '../../contexts/history.context';
 
 // Импорт данных
 import menuItems from '@data/sideMenuData.json';
@@ -13,17 +16,26 @@ import menuItems from '@data/sideMenuData.json';
 import './layout.css';
 
 export default function Layout() {
-    const [itemSideMenu, setItemSideMenu] = useState({});
     const navigate = useNavigate();
+    const { addToHistory } = useHistoryContext();
+
+    const [itemSideMenu, setItemSideMenu] = useState({});
 
     // function onRetrieveUser() {
     //     navigate('user/', { state: { idEmployee: Cookies.get('MMUSERID') } });
     // }
 
     function onRetrieveUser() {
-        navigate(`user/`, {
-            state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
+        startTransition(() => {
+            addToHistory(`${window.location.pathname}`);
+            navigate(`../../user/profile/`, {
+                state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
+            });
+            // navigate(`user/`, {
+            //     state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
+            // });
         });
+
         // const employeeInfo = JSON.parse(localStorage.getItem('employee_info')) || {};
         // if (!employeeInfo || Object.keys(employeeInfo).length === 0)
         //     navigate(`user/profile/${Cookies.get('MMUSERID')}/`, {

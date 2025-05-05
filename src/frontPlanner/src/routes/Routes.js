@@ -12,6 +12,8 @@ import Authentication from '../authentication/Authentication';
 import DataDisplayService from '@services/data_display.service';
 import DataFormService from '@services/data_form.service';
 import UserService from '@services/user.service';
+import Preloader from '../components/auxiliary_pages/loader/Preloader';
+// import UserInfoNew from '../components/pages/data_user/UserInfoNew';
 
 const DataDisplayPage = lazy(() => import('@components/pages/data_display/DataDisplayPage'));
 const DataForm = lazy(() => import('@components/pages/data_display/data_form/DataForm'));
@@ -20,7 +22,6 @@ const TasksPage = lazy(() => import('@components/pages/tasks/TasksPage'));
 const ChatPage = lazy(() => import('@components/pages/chat/ChatPage'));
 const UserInfo = lazy(() => import('@components/pages/data_user/UserInfo'));
 // const UserInfoNew = lazy(() => import('@components/pages/data_user/UserInfoNew'));
-//
 const TabGeneral = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_general/TabGeneral'));
 const TabWorkNew = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_work/TabWorkNew'));
 
@@ -41,6 +42,15 @@ const ROUTES_FOR_AUTH = [
             {
                 path: '/auth',
                 element: <Authentication />
+            },
+            {
+                path: 'user/*',
+                // loader: async ({ params }) => {
+                //     const { tab, id } = params;
+                //     return defer({ uploadedData: await UserService.loadData(tab, id) });
+                // },
+                element: <UserInfo />
+                // element: <UserInfoNew />
             },
             {
                 path: '',
@@ -82,14 +92,14 @@ const ROUTES_FOR_AUTH = [
                         shouldRevalidate: () => false,
                         element: <DataDisplayPage partition="tasks" additClass="tasks" />
                     },
-                    {
-                        path: 'user/',
-                        // loader: async ({ params }) => {
-                        //     const { tab, id } = params;
-                        //     return defer({ uploadedData: await UserService.loadData(tab, id) });
-                        // },
-                        element: <UserInfo />
-                    },
+                    // {
+                    //     path: 'user/',
+                    //     // loader: async ({ params }) => {
+                    //     //     const { tab, id } = params;
+                    //     //     return defer({ uploadedData: await UserService.loadData(tab, id) });
+                    //     // },
+                    //     element: <UserInfo />
+                    // },
                     {
                         path: 'dataform/*',
                         element: <DataFormNew />,
@@ -101,7 +111,11 @@ const ROUTES_FOR_AUTH = [
                         children: [
                             {
                                 path: 'general/',
-                                element: <TabGeneral />
+                                element: (
+                                    <Suspense fallback={<Preloader />}>
+                                        <TabGeneral />
+                                    </Suspense>
+                                )
                             },
                             {
                                 path: 'works/:id',
@@ -111,7 +125,11 @@ const ROUTES_FOR_AUTH = [
                                         uploadedData: await DataFormService.loadData('works', { contractId: id })
                                     };
                                 },
-                                element: <TabWorkNew />
+                                element: (
+                                    <Suspense fallback={<Preloader />}>
+                                        <TabWorkNew />
+                                    </Suspense>
+                                )
                             }
                         ]
                     }

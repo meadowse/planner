@@ -1,7 +1,6 @@
-import { Fragment, use, useRef, useState } from 'react';
+import { startTransition, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
-import axios from 'axios';
 import classNames from 'classnames';
 
 // Импорт компонентов
@@ -72,7 +71,7 @@ const COLUMNS = [
                 localStorage.setItem('idContract', JSON.stringify(props?.config?.idContract));
                 localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
 
-                addToHistory({ path: `${window.location.pathname}`, args: {} });
+                addToHistory(`${window.location.pathname}`);
                 navigate('../../dataform/general/', navigationArg);
             }
 
@@ -120,37 +119,6 @@ const COLUMNS = [
         sortBy: undefined,
         Cell: props => {
             return <p className="cell__group cell">{props.value ? props?.value : 'Нет данных'}</p>;
-        }
-    },
-    {
-        Header: 'Исполнители',
-        accessor: 'participants',
-        sortable: false,
-        sortBy: undefined,
-        Cell: props => {
-            const navigate = useNavigate();
-            const { addToHistory } = useHistoryContext();
-
-            function onShowInfoEmployee(employee) {
-                // alert(`Исполнители employee: ${JSON.stringify(employee, null, 4)}`);
-                addToHistory({ path: `${window.location.pathname}`, args: {} });
-                navigate('../../user/', {
-                    state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
-                });
-            }
-
-            return (
-                <>
-                    {Object.keys(props).length === 0 || !props.value || (props.value.length === 0 && <p>Нет данных</p>)}
-                    {props?.value && props?.value.length !== 0 && (
-                        <ul className="cell__participants cell">
-                            {props.value.map(participant => {
-                                return CELLS['user'](participant, 'person', () => onShowInfoEmployee(participant));
-                            })}
-                        </ul>
-                    )}
-                </>
-            );
         }
     },
     {
@@ -281,10 +249,18 @@ const COLUMNS = [
             const { addToHistory } = useHistoryContext();
 
             function onShowInfoEmployee(employee) {
-                // alert(`employee: ${JSON.stringify(employee, null, 4)}`);
-                addToHistory({ path: `${window.location.pathname}`, args: {} });
-                navigate('../../user/', {
-                    state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
+
+                // localStorage.setItem('employee_settings', JSON.stringify({ activeTab: 0, data: userInfo?.data || [] }));
+
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+                    navigate(`../../user/profile/`, {
+                        state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                    });
+                    // navigate('../../user/', {
+                    //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                    // });
                 });
             }
 
@@ -470,7 +446,7 @@ const COLUMNS = [
                                 addTaskState={addTaskState}
                                 setAddTaskState={setAddTaskState}
                             />,
-                            document.getElementById('portal')
+                            document.getElementById('root')
                         )}
                 </>
             );
@@ -501,7 +477,7 @@ const COLUMNS = [
                                 addTaskState={addTaskState}
                                 setAddTaskState={setAddTaskState}
                             />,
-                            document.getElementById('portal')
+                            document.getElementById('root')
                         )}
                 </>
             );
@@ -517,9 +493,16 @@ const COLUMNS = [
             const { addToHistory } = useHistoryContext();
 
             function onShowInfoEmployee(employee) {
-                addToHistory({ path: `${window.location.pathname}`, args: {} });
-                navigate('../../user/', {
-                    state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+                // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
+                // localStorage.setItem('employee_settings', JSON.stringify({ activeTab: 0, data: userInfo?.data || [] }));
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+                    navigate(`../../user/profile/`, {
+                        state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+                    });
+                    // navigate('../../user/', {
+                    //     state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+                    // });
                 });
             }
 
@@ -539,15 +522,63 @@ const COLUMNS = [
 
             function onShowInfoEmployee(employee) {
                 // alert(`employee: ${JSON.stringify(employee, null, 4)}`);
-                addToHistory({ path: `${window.location.pathname}`, args: {} });
-                navigate('../../user/', {
-                    state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+                // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
+                // localStorage.setItem('employee_settings', JSON.stringify({ activeTab: 0, data: userInfo?.data || [] }));
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+                    navigate(`../../user/profile/`, {
+                        state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+                    });
+                    // navigate('../../user/', {
+                    //     state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+                    // });
                 });
             }
 
             return props?.value && Object.keys(props?.value).length !== 0
                 ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
                 : 'Нет данных';
+        }
+    },
+    {
+        Header: 'Исполнители',
+        accessor: 'participants',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee(employee) {
+                // alert(`Исполнители employee: ${JSON.stringify(employee, null, 4)}`);
+                // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
+                // localStorage.setItem('employee_settings', JSON.stringify({ activeTab: 0, data: userInfo?.data || [] }));
+
+                startTransition(() => {
+                    startTransition(() => {
+                        addToHistory(`${window.location.pathname}`);
+                        navigate(`../../user/profile/`, {
+                            state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                        });
+                        // navigate('../../user/', {
+                        //     state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+                        // });
+                    });
+                });
+            }
+
+            return (
+                <>
+                    {Object.keys(props).length === 0 || !props.value || (props.value.length === 0 && <p>Нет данных</p>)}
+                    {props?.value && props?.value.length !== 0 && (
+                        <ul className="cell__participants cell">
+                            {props.value.map(participant => {
+                                return CELLS['user'](participant, 'person', () => onShowInfoEmployee(participant));
+                            })}
+                        </ul>
+                    )}
+                </>
+            );
         }
     },
     {

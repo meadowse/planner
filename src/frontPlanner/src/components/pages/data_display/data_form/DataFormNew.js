@@ -23,7 +23,7 @@ function FormHeader(props) {
         startTransition(() => {
             // alert(`prevpath: ${config?.prevPath}`);
             // navigate(`../../${config?.prevPath}`);
-            navigate(`../../${history[history.length - 1]?.path}`);
+            navigate(`../../${history[history.length - 1]}`);
         });
     }
 
@@ -60,9 +60,9 @@ function FormHeader(props) {
 
 function TabsHeader(props) {
     const { tabs, tab, config, tabClick, navigate } = props;
-    //
+
     // console.log(`TabsHeader config: ${JSON.stringify(config, null, 4)}`);
-    console.log(`Selected tab: ${JSON.stringify(tab, null, 4)}`);
+    // console.log(`Selected tab: ${JSON.stringify(tab, null, 4)}`);
 
     const NAVIGATION_CONF = {
         works: item => navigate(`${item?.key}/${config?.idContract}`, { state: config }),
@@ -100,21 +100,11 @@ function Tabs(props) {
     const { tabs, config, navigate } = props;
     // console.log(`config: ${JSON.stringify(config, null, 4)}`);
 
-    // const [tab, setTab] = useState(
-    //     config?.tabForm && Object.keys(config?.tabForm).length !== 0 ? config?.tabForm : tabs[0]
-    // );
     const [tab, setTab] = useState(tabs[0] || {});
 
     useEffect(() => {
-        console.log(`onfig?.tabForm : ${JSON.stringify(config?.tabForm, null, 4)}`);
         const savedTab = JSON.parse(localStorage.getItem('selectedTab'));
         if (savedTab && Object.keys(savedTab).length !== 0) setTab(savedTab);
-        // if (config?.tabForm && Object.keys(config?.tabForm).length !== 0) setTab(config?.tabForm);
-        // else {
-        //     const savedTab = JSON.parse(localStorage.getItem('selectedTab'));
-        //     if (savedTab && Object.keys(savedTab).length !== 0) setTab(savedTab);
-        //     // else setTab(tabs[0]);
-        // }
     }, []);
 
     return (
@@ -132,13 +122,13 @@ export default function DataFormNew() {
     const [prevPath] = useState(state?.path);
 
     const configData = {
-        idContract: state?.idContract,
+        idContract: state?.idContract || localStorage.getItem('idContract') || -1,
         partition: state?.partition,
         dataOperation: state?.dataOperation,
         tabForm: state?.tabForm,
         data: uploadedData
     };
-    console.log(`DataFormNew state: ${JSON.stringify(state, null, 4)}`);
+    // console.log(`DataFormNew state: ${JSON.stringify(state, null, 4)}`);
 
     return (
         <section className="section__dataform">

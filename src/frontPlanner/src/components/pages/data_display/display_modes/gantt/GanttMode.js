@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { startTransition, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import classNames from 'classnames';
@@ -152,7 +152,11 @@ function TaskRow(props) {
                         path: `${window.location.pathname}`
                     }
                 };
-                navigate('../../user/', navigationArg);
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+                    navigate(`../../user/profile/`, navigationArg);
+                    // navigate('../../user/', navigationArg);
+                });
             },
             contract: () => {
                 const navigationArg = {
@@ -164,8 +168,10 @@ function TaskRow(props) {
                         dataOperation: findNestedObj(dataOperations, 'key', operationVal)
                     }
                 };
-                addToHistory({ path: `${window.location.pathname}`, args: {} });
-                navigate('../../dataform/general/', navigationArg);
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+                    navigate('../../dataform/general/', navigationArg);
+                });
                 localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
             },
             task: () => {
@@ -178,8 +184,13 @@ function TaskRow(props) {
                         dataOperation: findNestedObj(dataOperations, 'key', operationVal)
                     }
                 };
+
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+                    navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
+                });
+
                 localStorage.setItem('selectedTab', JSON.stringify({ key: 'works', title: 'Работа и задачи' }));
-                navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
             }
         };
         return task?.navKey in NAVIGATION_CONF ? NAVIGATION_CONF[task?.navKey]() : null;

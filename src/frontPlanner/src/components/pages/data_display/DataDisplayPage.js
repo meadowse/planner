@@ -82,7 +82,7 @@ function DisplayModes(props) {
 // Опции режима отображения
 function ModeOptions(props) {
     const { modeOptions, modeOption, onSelectOption } = props;
-    console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
+    // console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
 
     return (
         <ul className="page-section-options">
@@ -341,7 +341,7 @@ export default function DataDisplayPage({ partition }) {
             return option;
         });
 
-        console.log(`mode: ${JSON.stringify(mode, null, 4)}`);
+        // console.log(`mode: ${JSON.stringify(mode, null, 4)}`);
     }, [mode]);
 
     useEffect(() => {}, [modeOption]);

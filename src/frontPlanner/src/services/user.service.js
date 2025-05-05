@@ -29,7 +29,7 @@ const initStorageSettings = (tabs, tabOption) => {
 };
 
 const loadData = async (partition, idEmployee) => {
-    console.log(`Userinfo loadData\npartition: ${partition}\nidEmployee: ${idEmployee}`);
+    // console.log(`Userinfo loadData\npartition: ${partition}\nidEmployee: ${idEmployee}`);
     const PARTITION_CONF = {
         // Информация о пользователе
         profile: async () => {

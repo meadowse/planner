@@ -18,7 +18,7 @@ import { getWeek } from '@helpers/calendar';
 import './kanban_mode.css';
 
 function getConfigKanban(modeOption, data) {
-    console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
+    // console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
     if (data && data.length !== 0) {
         if (modeOption && Object.keys(modeOption).length !== 0) {
             return {
@@ -51,7 +51,7 @@ function getConfigKanban(modeOption, data) {
 
 // Функция инициализации данных для режима отображения Канбан
 function initKanbanData(headerData, data) {
-    console.log(`headerData: ${JSON.stringify(headerData, null, 4)}`);
+    // console.log(`headerData: ${JSON.stringify(headerData, null, 4)}`);
 
     if (Object.keys(headerData).length !== 0 && headerData?.data.length !== 0) {
         const newData = {};

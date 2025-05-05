@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, startTransition } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 
 // Импорт компонентов
@@ -53,9 +53,8 @@ function CardInfo({ config, userData }) {
     );
 }
 
-export default function () {
-    // Сохраненные настройки
-    const savedSettings = JSON.parse(localStorage.getItem('employee_settings'));
+export default function UserInfoNew() {
+    const lastSegmentPath = `${window.location.href.match(/([^\/]*)\/*$/)[1]}`;
 
     const { state } = useLocation();
     const { history, backToPrevPath } = useHistoryContext();
@@ -64,7 +63,6 @@ export default function () {
     const refTabBar = useRef(null);
 
     const [isLoading, setIsLoading] = useState(false);
-    const [prevPath] = useState(state?.path);
     const [data, setData] = useState([]);
     const [userInfo, setUserInfo] = useState({
         // Разделы пользователя
@@ -84,43 +82,60 @@ export default function () {
     const TABS_CONF = {
         profile: () => {
             const employee = Object.assign({}, data?.employee);
-            return employee && Object.keys(employee).length !== 0 ? (
-                <div className="user__profile">
-                    <CardProfile
-                        profileData={{
-                            photo: employee?.photo,
-                            fullName: employee?.fullName
-                        }}
-                    />
-                    <CardInfo config={UserService.getEmployeeConfig()} userData={employee} />
-                </div>
-            ) : null;
+            return (
+                <Route
+                    path="profile"
+                    element={
+                        employee && Object.keys(employee).length !== 0 ? (
+                            <div className="user__profile">
+                                <CardProfile
+                                    profileData={{
+                                        photo: employee?.photo,
+                                        fullName: employee?.fullName
+                                    }}
+                                />
+                                <CardInfo config={UserService.getEmployeeConfig()} userData={employee} />
+                            </div>
+                        ) : null
+                    }
+                />
+            );
         },
         tasks: () => {
             const filteredData = getFilteredData(data?.tabData, state?.idEmployee, userInfo?.tabOption) || [];
             return (
-                <ListMode
-                    testData={filteredData || []}
-                    modeConfig={{
-                        keys: userInfo.valsToDisplay,
-                        partition: userInfo.tab?.key,
-                        dataOperations: userInfo.dataOperations,
-                        idContract: null
-                    }}
+                <Route
+                    path="tasks"
+                    element={
+                        <ListMode
+                            testData={filteredData || []}
+                            modeConfig={{
+                                keys: userInfo.valsToDisplay,
+                                partition: userInfo.tab?.key,
+                                dataOperations: userInfo.dataOperations,
+                                idContract: null
+                            }}
+                        />
+                    }
                 />
             );
         },
         contracts: () => {
             const filteredData = getFilteredData(data?.tabData, state?.idEmployee, userInfo?.tabOption) || [];
             return (
-                <ListMode
-                    testData={filteredData || []}
-                    modeConfig={{
-                        keys: userInfo.valsToDisplay,
-                        partition: userInfo.tab?.key,
-                        dataOperations: userInfo.dataOperations,
-                        idContract: null
-                    }}
+                <Route
+                    path="contracts"
+                    element={
+                        <ListMode
+                            testData={filteredData || []}
+                            modeConfig={{
+                                keys: userInfo.valsToDisplay,
+                                partition: userInfo.tab?.key,
+                                dataOperations: userInfo.dataOperations,
+                                idContract: null
+                            }}
+                        />
+                    }
                 />
             );
         }
@@ -140,8 +155,11 @@ export default function () {
 
     function onClose() {
         startTransition(() => {
-            backToPrevPath();
-            navigate(-1);
+            setTimeout(() => {
+                backToPrevPath();
+            }, 2000);
+
+            navigate(history[history.length - 1]);
         });
     }
 
@@ -166,33 +184,21 @@ export default function () {
             };
         });
 
-        if (savedSettings && Object.keys(savedSettings).length !== 0) {
-            savedSettings.activeTab = indTab;
-            savedSettings.data[indTab] = {
-                tab: tabData || {},
-                option: {
-                    activeOption: 0,
-                    ...tabOptionData
-                }
-            };
-            localStorage.setItem('employee_settings', JSON.stringify(savedSettings));
-        }
+        startTransition(() => {
+            navigate(`${tabData?.key}/`, {
+                state: { idEmployee: state?.idEmployee, path: `${window.location.pathname}` }
+            });
+        });
     }
 
     function onSelectOption(indOption, optionData) {
-        const { tabOption, ...restElems } = Object.assign({}, userInfo);
-
-        if (savedSettings && Object.keys(savedSettings).length !== 0) {
-            savedSettings.data[savedSettings?.activeTab] = {
-                tab: userInfo?.tab || {},
-                option: { activeOption: indOption, ...optionData }
-            };
-            localStorage.setItem('employee_settings', JSON.stringify(savedSettings));
-        }
+        const { tabOption, valsToDisplay, ...restElems } = Object.assign({}, userInfo);
+        const valsToDisplayData = UserService.getValuesToDisplay(userInfo?.tab, optionData) || [];
 
         setUserInfo(() => {
             refTabBar.current.style.marginLeft = `${indOption * 12.5}%`;
-            return { tabOption: optionData, ...restElems };
+
+            return { tabOption: optionData, valsToDisplay: valsToDisplayData, ...restElems };
         });
     }
 
@@ -201,7 +207,8 @@ export default function () {
             UserService.getTabs()?.map(item => {
                 return { key: item?.keyTab, value: item?.tab };
             }) || [];
-        const tabData = savedSettings?.data[savedSettings?.activeTab].tab || tabsData[0];
+        // const tabData = savedSettings?.data[savedSettings?.activeTab].tab || tabsData[0];
+        const tabData = { key: lastSegmentPath };
 
         const tabOptionsData = UserService.getTabOptions(tabData) || [];
         const tabOptionData = tabOptionsData[0];
@@ -209,11 +216,8 @@ export default function () {
         const valsToDisplayData = UserService.getValuesToDisplay(tabData, tabOptionData) || [];
         const dataOperationsData = UserService.getDataOperations() || [];
 
-        if (!savedSettings || Object.keys(savedSettings).length === 0)
-            UserService.initStorageSettings(tabsData, tabOptionData);
-
         setUserInfo(() => {
-            fetchData(tabData?.key, state?.idEmployee);
+            fetchData(lastSegmentPath, state?.idEmployee);
             return {
                 tabs: tabsData,
                 tab: tabData,
@@ -223,7 +227,7 @@ export default function () {
                 dataOperations: dataOperationsData
             };
         });
-    }, []);
+    }, [history]);
 
     return (
         <div className="user__info">
@@ -252,7 +256,6 @@ export default function () {
                         text="Закрыть"
                         icon="cancel_bl.svg"
                         onClick={onClose}
-                        // onClick={() => navigate(-1)}
                     />
                 </div>
             </div>
@@ -270,7 +273,11 @@ export default function () {
                 ))}
             </ul>
             <div className="user__options-content">
-                {isLoading ? <Preloader /> : userInfo.tab?.key in TABS_CONF ? TABS_CONF[userInfo.tab?.key]() : null}
+                {isLoading ? (
+                    <Preloader />
+                ) : userInfo.tab?.key in TABS_CONF ? (
+                    <Routes>{TABS_CONF[userInfo.tab?.key]()}</Routes>
+                ) : null}
             </div>
         </div>
     );

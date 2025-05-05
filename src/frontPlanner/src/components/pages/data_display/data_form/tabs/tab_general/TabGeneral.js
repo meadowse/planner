@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { startTransition, useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
@@ -246,10 +246,11 @@ function Responsible(props) {
     const navigate = useNavigate();
 
     function onClickUser(user) {
-        // alert(`Responsible click: ${JSON.stringify(user, null, 4)}`);
-        addToHistory({ path: `${window.location.pathname}`, args: {} });
-        navigate(`../../user/`, {
-            state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+        startTransition(() => {
+            addToHistory(`${window.location.pathname}`);
+            navigate(`../../user/profile/`, {
+                state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+            });
         });
     }
 
@@ -326,9 +327,11 @@ function Participants(props) {
     let participant;
 
     function onClickUser(user) {
-        addToHistory({ path: `${window.location.pathname}`, args: {} });
-        navigate(`../../user/`, {
-            state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+        startTransition(() => {
+            addToHistory(`${window.location.pathname}`);
+            navigate(`../../user/profile/`, {
+                state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+            });
         });
     }
 
@@ -1054,9 +1057,9 @@ export default function TabGeneral() {
     );
     const navigate = useNavigate();
 
-    console.log(
-        `TabGeneral data: ${JSON.stringify(data, null, 4)}\ndataOperation: ${JSON.stringify(dataOperation, null, 4)}`
-    );
+    // console.log(
+    //     `TabGeneral data: ${JSON.stringify(data, null, 4)}\ndataOperation: ${JSON.stringify(dataOperation, null, 4)}`
+    // );
 
     // getGeneralDataNew(cardData, dataOperation?.disabledFields);
 

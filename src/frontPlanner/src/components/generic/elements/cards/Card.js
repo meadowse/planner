@@ -8,6 +8,9 @@ import BgFillText from '../text/BgFillText';
 // Импорт доп.функционала
 import { isObject, isArray, findNestedObj } from '@helpers/helper';
 
+//
+import { useHistoryContext } from '../../../../contexts/history.context';
+
 // Импорт стилей
 import './card.css';
 
@@ -249,6 +252,7 @@ function FooterCard({ data }) {
 export default function Card(props) {
     // console.log(`card data: ${JSON.stringify(data, null, 4)}`);
     const { partition, data, dataOperations } = props;
+    const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
 
     const cardData = {
@@ -290,10 +294,8 @@ export default function Card(props) {
         localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
         localStorage.setItem('idContract', JSON.stringify(data?.id));
 
+        addToHistory(`${window.location.pathname}`);
         navigate('../../dataform/general/', navigationArg);
-        // await axios.post(`${window.location.origin}/api/getAgreement`, { contractId: cardData?.id }).then(response => {
-        //     if (response?.status === 200) {}
-        // });
     }
 
     return (
