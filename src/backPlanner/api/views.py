@@ -47,7 +47,7 @@ def getAgreements(request):
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
-        columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'idResponsible', 'responsible', 'tasks')
+        columns = ('contractId', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'idResponsible', 'responsible', 'tasks')
         json_result = [
             {col: value for col, value in zip(columns, row)}
             for row in result
