@@ -283,7 +283,7 @@ export default function Card(props) {
     function onShowInfoCard(operationVal) {
         const navigationArg = {
             state: {
-                idContract: data?.id,
+                idContract: data?.contractId,
                 tabForm: { key: 'general', title: 'Общие' },
                 partition: partition,
                 path: `${window.location.pathname}`,
@@ -292,7 +292,7 @@ export default function Card(props) {
         };
 
         localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
-        localStorage.setItem('idContract', JSON.stringify(data?.id));
+        localStorage.setItem('idContract', JSON.stringify(data?.contractId));
 
         addToHistory(`${window.location.pathname}`);
         navigate('../../dataform/general/', navigationArg);

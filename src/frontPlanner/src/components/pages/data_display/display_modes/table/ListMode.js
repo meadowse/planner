@@ -75,9 +75,10 @@ export default function ListMode(props) {
     // Конфигурация по ячейкам таблицы
     const CELL_CONF = {
         contractNum: cellData => {
+            // console.log(`List mode\nCell contractNum\filteredData: ${JSON.stringify(filteredData, null, 4)}`);
             const config = {
                 partition: modeConfig?.partition,
-                idContract: data[cellData?.indRow]?.id,
+                idContract: filteredData[cellData?.indRow]?.contractId,
                 dataOperation: findNestedObj(modeConfig?.dataOperations, 'key', 'update')
             };
             return <Cell cellData={cellData} cellConfig={config} />;
@@ -95,7 +96,7 @@ export default function ListMode(props) {
     };
 
     useEffect(() => {
-        // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
+        console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
         setData(filteredData);
     }, [activeFilters, filteredData]);
 
@@ -180,7 +181,3 @@ export default function ListMode(props) {
         </div>
     );
 }
-
-// console.log(`ListMode testData: ${JSON.stringify(testData, null, 4)}`);
-// console.log(`keys: ${JSON.stringify(keys, null, 4)}\ntestData: ${JSON.stringify(testData, null, 4)}`);
-// console.log(`columns: ${JSON.stringify(columns, null, 4)}`);

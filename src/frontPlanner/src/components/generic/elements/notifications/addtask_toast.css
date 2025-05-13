@@ -1,0 +1,65 @@
+.toast {
+    margin-top: 10px;
+    width: 450px;
+    background-color: #f1f1f1;
+}
+
+.toast-content {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    font-size: calc(0.625rem + 6 * (100vw - 320px) / 1600);
+}
+
+.toast-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.toast-title {
+    font-family: 'Montserrat-SemiBold';
+}
+
+.toast-header__title {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: auto;
+    scrollbar-width: none;
+    font-size: calc(0.625rem + 8 * (100vw - 320px) / 1600);
+}
+
+.toast-header__title:hover {
+    text-overflow: clip;
+    cursor: default;
+}
+
+.toast-header__user {
+    padding: 5px;
+}
+
+.toast-header__user span {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.toast-date {
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+}
+
+.toast-date p {
+    width: max-content;
+    padding: 5px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    color: #000;
+}
+
+.toast-text {
+}

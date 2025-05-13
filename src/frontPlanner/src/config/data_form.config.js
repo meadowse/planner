@@ -18,6 +18,9 @@ export const DATA_CONVERSION_MAP = {
             ? { title: stage?.title, color: STAGES_CONF_MAP[stage.title] }
             : { title: 'Без стадии', color: STAGES_CONF_MAP['Без стадии'] };
     },
+    deadlineTask: date => {
+        return date ? { value: date } : { value: 'Нет данных' };
+    },
     director: director => {
         return director && Object.keys(director).length !== 0
             ? {
@@ -58,7 +61,6 @@ export const DATA_FORM_CONF = {
             title: 'Правки',
             color: '#DADF9E'
         },
-        ,
         {
             title: 'Доработка',
             color: '#ffa200'

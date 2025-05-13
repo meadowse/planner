@@ -1,20 +1,37 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useLoaderData, useOutletContext } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 // Импорт компонентов
 import ListMode from '@components/pages/data_display/display_modes/table/ListMode';
+import AddTaskToast from '@generic/elements/notifications/AddTaskToast';
 import Preloader from '../../../../../auxiliary_pages/loader/Preloader';
+
+// Импорт контекста
+import { SocketContext } from '../../../../../../contexts/socket.context';
 
 // Импорт стилей
 import './tab_worknew.css';
 
 export default function TabWorkNew() {
+    const socket = useContext(SocketContext);
     const { idContract, partition } = useOutletContext();
     const { uploadedData } = useLoaderData();
 
     const [works, setWorks] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        socket.on('taskAssigned', taskData => {
+            toast.info(<AddTaskToast task={taskData} />, { className: 'toast', position: 'bottom-right', icon: false });
+            // alert(` Вам назначена новая задача: "${taskData.task}"`);
+        });
+
+        return () => {
+            socket.off('taskAssigned');
+        };
+    }, []);
 
     useEffect(() => {
         // console.log(`loaded data: ${JSON.stringify(uploadedData, null, 4)}`);
@@ -57,33 +74,4 @@ export default function TabWorkNew() {
             )}
         </div>
     );
-}
-
-{
-    /* {works && works.length !== 0 ? (
-                    <ListMode
-                        key={`${partition}-table-works`}
-                        testData={works.sort((a, b) => parseInt(b?.number) - parseInt(a?.number))}
-                        modeConfig={{
-                            keys: ['number', 'typeWork', 'deadline', 'dateDone', 'done'],
-                            partition: partition,
-                            dataOperations: [],
-                            idContract: idContract
-                        }}
-                    />
-                ) : null} */
-}
-{
-    /* {tasks && tasks.length !== 0 ? (
-                    <ListMode
-                        key={`${partition}-table-tasks`}
-                        testData={tasks.sort((a, b) => parseInt(b?.id) - parseInt(a?.id))}
-                        modeConfig={{
-                            keys: ['task', 'director', 'executor', 'deadlineTask', 'done'],
-                            partition: partition,
-                            dataOperations: [],
-                            idContract: idContract
-                        }}
-                    />
-                ) : null} */
 }

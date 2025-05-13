@@ -136,7 +136,7 @@ export const useGanttMode = args => {
             // Данные по договорам
             contracts: item => {
                 // id договора
-                newItem.contractId = item?.id;
+                newItem.contractId = item?.contractId;
                 // Заголовок задачи
                 newItem.title =
                     (item?.contractNum || 'Номер договора отсутствует') +
@@ -160,7 +160,7 @@ export const useGanttMode = args => {
                     item?.tasks && item?.tasks.length !== 0
                         ? item?.tasks.map((task, ind) => {
                               return {
-                                  contractId: item?.id,
+                                  contractId: item?.contractId,
                                   title: task?.title || 'Нет данных',
                                   contractNum: `${item?.contractNum}_${ind + 1}`,
                                   navKey: 'task',
@@ -194,7 +194,7 @@ export const useGanttMode = args => {
                 if (item?.contracts && item?.contracts.length !== 0) {
                     item?.contracts.forEach(contract => {
                         // id договора
-                        taskItem.contractId = +contract?.id;
+                        taskItem.contractId = +contract?.contractId;
                         // Заголовок задачи
                         taskItem.title =
                             (contract?.contractNum || 'Номер договора отсутствует') +
@@ -217,7 +217,7 @@ export const useGanttMode = args => {
                             contract?.tasks && contract?.tasks.length !== 0
                                 ? contract?.tasks.map((task, ind) => {
                                       return {
-                                          contractId: +contract?.id,
+                                          contractId: +contract?.contractId,
                                           title: task?.title || 'Нет данных',
                                           contractNum: `${contract?.contractNum}_${ind + 1}`,
                                           navKey: 'task',

@@ -1,4 +1,4 @@
-import { startTransition, Suspense, useEffect, useState } from 'react';
+import { startTransition, Suspense, useContext, useEffect, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -6,8 +6,9 @@ import Cookies from 'js-cookie';
 import Preloader from '@components/auxiliary_pages/loader/Preloader';
 import SideMenu from './side_menu/SideMenu';
 
-//
+// Импорт контекстов
 import { useHistoryContext } from '../../contexts/history.context';
+import { SocketContext } from '../../contexts/socket.context';
 
 // Импорт данных
 import menuItems from '@data/sideMenuData.json';
@@ -17,13 +18,11 @@ import './layout.css';
 
 export default function Layout() {
     const navigate = useNavigate();
+
+    const socket = useContext(SocketContext);
     const { addToHistory } = useHistoryContext();
 
     const [itemSideMenu, setItemSideMenu] = useState({});
-
-    // function onRetrieveUser() {
-    //     navigate('user/', { state: { idEmployee: Cookies.get('MMUSERID') } });
-    // }
 
     function onRetrieveUser() {
         startTransition(() => {
@@ -31,23 +30,12 @@ export default function Layout() {
             navigate(`../../user/profile/`, {
                 state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
             });
-            // navigate(`user/`, {
-            //     state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
-            // });
         });
-
-        // const employeeInfo = JSON.parse(localStorage.getItem('employee_info')) || {};
-        // if (!employeeInfo || Object.keys(employeeInfo).length === 0)
-        //     navigate(`user/profile/${Cookies.get('MMUSERID')}/`, {
-        //         state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
-        //     });
-        // else
-        //     navigate(`user/${employeeInfo?.data[employeeInfo?.activeTab]?.tab?.key}/${Cookies.get('MMUSERID')}`, {
-        //         state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
-        //     });
     }
 
     useEffect(() => {
+        socket.emit('register', Cookies.get('MMUSERID'));
+
         const savedMenu = JSON.parse(localStorage.getItem('itemSideMenu'));
         if (!savedMenu || Object.keys(savedMenu).length === 0) {
             setItemSideMenu(menuItems[0]);
@@ -66,7 +54,7 @@ export default function Layout() {
             </div>
             <div className="app__right-column">
                 <main className="main">
-                    <div id="portal"></div>
+                    <div id="portal" />
                     <Suspense fallback={<Preloader />}>
                         <Outlet context={itemSideMenu} />
                     </Suspense>

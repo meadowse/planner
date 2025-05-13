@@ -145,13 +145,13 @@ const loadData = async partition => {
         // Задачи
         tasks: async () => {
             const resolvedData = {};
-            const endPoints = [
+            const endpoints = [
                 `${window.location.origin}/api/getTasksEmployee`,
                 `${window.location.origin}/api/getContractsEmployee`
             ];
 
             await axios
-                .all(endPoints.map(endpoint => axios.post(endpoint, { employeeId: Cookies.get('MMUSERID') })))
+                .all(endpoints.map(endpoint => axios.post(endpoint, { employeeId: Cookies.get('MMUSERID') })))
                 .then(
                     axios.spread((tasks, contracts) => {
                         resolvedData.tasks = formData(tasks?.data, partition, null).sort((a, b) => b?.id - a?.id) || [];

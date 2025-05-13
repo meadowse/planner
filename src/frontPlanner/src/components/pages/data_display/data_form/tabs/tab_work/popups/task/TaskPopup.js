@@ -1,8 +1,9 @@
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 // Импорт компонетов
 import BgFillText from '@generic/elements/text/BgFillText';
@@ -13,6 +14,9 @@ import CalendarWindow from '@generic/elements/calendar/CalendarWindow';
 import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
 import InputDataPopup from '@generic/elements/popup/InputDataPopup';
 import ActionSelectionPopup from '@generic/elements/popup/ActionSelectionPopup';
+
+//
+import { SocketContext } from '../../../../../../../../contexts/socket.context';
 
 // Импорт кастомных хуков
 import { useTaskForm } from '@hooks/useAddTaskForm';
@@ -461,10 +465,11 @@ export default function TaskPopup(props) {
         dataOperation?.disabledFields
     );
     const navigate = useNavigate();
+    const socket = useContext(SocketContext);
 
     // console.log(`dataOperation: ${JSON.stringify(dataOperation, null, 4)}`);
-    console.log(`values: ${JSON.stringify(values, null, 4)}`);
-    console.log(`data: ${JSON.stringify(data, null, 4)}`);
+    // console.log(`values: ${JSON.stringify(values, null, 4)}`);
+    // console.log(`data: ${JSON.stringify(data, null, 4)}`);
 
     // Удаление задачи
     function onDeleteTask() {
@@ -512,19 +517,44 @@ export default function TaskPopup(props) {
                 task: values?.task,
                 comment: values?.comment
             };
+
+            const endpoints = {
+                [`${window.location.origin}/api/addTask`]: resultData,
+                [`${window.location.origin}/api/getDataUser`]: { employeeId: values?.director?.mmId }
+            };
+
+            // console.log(`keys: ${JSON.stringify(Object.keys(endpoints), null, 4)}`);
+
             await axios
-                .post(`${window.location.origin}/api/addTask`, resultData)
-                .then(response => {
-                    if (response.status === 200) {
-                        setAddTaskState(false);
-                        const navigationArg = {
-                            partition: 'department',
-                            dataOperation: dataOperation
-                        };
-                        // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
-                        navigate(`../../dataform/works/${idContract}`, { state: navigationArg });
-                    }
-                })
+                .all(Object.keys(endpoints).map(key => axios.post(key, endpoints[key])))
+                .then(
+                    axios.spread((response, user) => {
+                        if (response.status === 200) {
+                            const employee = user.data && user.data.length !== 0 ? user.data[0] : {};
+                            socket.emit('addTask', {
+                                task: {
+                                    title: resultData?.task,
+                                    director: {
+                                        mmId: employee?.id,
+                                        fullName: employee?.FIO
+                                    },
+                                    deadline: resultData?.deadline,
+                                    comment: resultData?.comment
+                                },
+                                assigneeId: values?.executor?.mmId
+                            });
+
+                            setAddTaskState(false);
+
+                            navigate(`../../dataform/works/${idContract}`, {
+                                state: {
+                                    partition: 'department',
+                                    dataOperation: dataOperation
+                                }
+                            });
+                        }
+                    })
+                )
                 .catch(error => {
                     if (error.response) {
                         console.log(error.response);
@@ -643,3 +673,34 @@ export default function TaskPopup(props) {
         </InputDataPopup>
     );
 }
+
+// await axios
+//     .post(`${window.location.origin}/api/addTask`, resultData)
+//     .then(response => {
+//         if (response.status === 200) {
+//             socket.emit('addTask', {
+//                 task: resultData,
+//                 assigneeId: values?.executor?.mmId,
+//                 directorId: values?.director?.mmId
+//             });
+//             setAddTaskState(false);
+
+//             // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
+//             navigate(`../../dataform/works/${idContract}`, {
+//                 state: {
+//                     partition: 'department',
+//                     dataOperation: dataOperation
+//                 }
+//             });
+//         }
+//     })
+//     .catch(error => {
+//         if (error.response) {
+//             console.log(error.response);
+//             console.log('server responded');
+//         } else if (error.request) {
+//             console.log('network error');
+//         } else {
+//             console.log(error);
+//         }
+//     });

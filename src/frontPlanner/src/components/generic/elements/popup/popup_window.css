@@ -40,6 +40,10 @@
     transform: translate(-50%, 0);
 }
 
+.popup__task-calendar {
+    z-index: 30;
+}
+
 .popup__filters {
     top: 1.25rem;
 }

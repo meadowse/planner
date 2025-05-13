@@ -27,7 +27,7 @@ def getAgreements(request):
         T212.F4610 AS dateOfStart,
         T212.F4566 AS dateOfEnding,
         T205.F4331 AS customer,
-        LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358, '*') AS contacts,
+        LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
         LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
         responsible.F16 AS idResponsible,
         responsible.F4886 AS responsible,
