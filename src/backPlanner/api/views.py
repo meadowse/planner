@@ -18,7 +18,7 @@ def getAgreements(request):
     ) as con:
         cur = con.cursor()
         sql = """
-        SELECT T212.ID AS id,
+        SELECT T212.ID AS contractId,
         T212.F4538 AS contractNum,
         T212.F4544 AS stage,
         T212.F4946 AS address,
