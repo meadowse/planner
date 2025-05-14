@@ -89,7 +89,7 @@ const ROUTES_FOR_AUTH = [
                         loader: () => {
                             return defer({ uploadedData: DataDisplayService.loadData('tasks') });
                         },
-                        shouldRevalidate: () => false,
+                        // shouldRevalidate: () => false,
                         element: <DataDisplayPage partition="tasks" additClass="tasks" />
                     },
                     // {

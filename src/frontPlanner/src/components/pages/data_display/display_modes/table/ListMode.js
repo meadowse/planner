@@ -96,7 +96,7 @@ export default function ListMode(props) {
     };
 
     useEffect(() => {
-        console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
+        // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
         setData(filteredData);
     }, [activeFilters, filteredData]);
 

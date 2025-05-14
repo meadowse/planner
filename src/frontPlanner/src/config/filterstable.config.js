@@ -252,7 +252,7 @@ export const FILTER_HANDLERS_CONF = new Map([
         }
     ],
     [
-        ('dateOfEnding',
+        'dateOfEnding',
         (filterVal, date) => {
             // console.log(`filterVal: ${filterVal}\ndate: ${JSON.stringify(date, null, 4)}`);
             if (date) {
@@ -268,7 +268,7 @@ export const FILTER_HANDLERS_CONF = new Map([
                     }
                 }
             }
-        })
+        }
     ],
     [
         'deadlineTask',

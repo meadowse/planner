@@ -26,6 +26,10 @@
     /* row-gap: 0.5vw; */
 }
 
+.popup__add_user {
+    z-index: 40;
+}
+
 .popup__filters,
 .popup__works,
 .popup__add-user,

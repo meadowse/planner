@@ -45,7 +45,7 @@ function filterData(data, simplifiedData, filter) {
         // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}\nfilteredData len: ${filteredData.length}`);
 
         return filteredData;
-    } else return data;
+    } else return [];
 }
 
 function Option(props) {
@@ -189,7 +189,7 @@ function HeaderBottom(props) {
                             type="text"
                             placeholder="Поиск по компании"
                             value={searchElem}
-                            // onChange={e => setSearchElem(e.target.value)}
+                            onChange={e => setSearchElem(e.target.value)}
                         />
                         <DisplayModes
                             displayModes={displayModes}
@@ -291,6 +291,16 @@ export default function DataDisplayPage({ partition }) {
     // Операции которые можно совершать с данными
     const dataOperations = DataDisplayService.getDataOperations(partition) || [];
 
+    // useEffect(() => {
+    //     const keyData = modeOption[mode?.key]?.keyData;
+    //     const filteredValues = filterData(
+    //         data?.uploadedData[keyData],
+    //         simplifyData(extractSampleData(data?.uploadedData[keyData], valsToDisplay)),
+    //         searchElem
+    //     );
+    //     setFilteredData(filteredValues);
+    // }, [searchElem]);
+
     useEffect(() => {
         const dataDisplayModes = DataDisplayService.getDisplayModes(partition)?.map(item => {
             return { key: item?.keyMode, value: item?.mode };
@@ -343,8 +353,6 @@ export default function DataDisplayPage({ partition }) {
 
         // console.log(`mode: ${JSON.stringify(mode, null, 4)}`);
     }, [mode]);
-
-    useEffect(() => {}, [modeOption]);
 
     return (
         <section className="page__section-department page-section">
@@ -476,16 +484,23 @@ export default function DataDisplayPage({ partition }) {
                             element={
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
-                                        {resolvedData => (
-                                            <ListMode
-                                                testData={resolvedData?.employees}
-                                                modeConfig={{
-                                                    keys: valsToDisplay,
-                                                    partition: partition,
-                                                    dataOperations: dataOperations
-                                                }}
-                                            />
-                                        )}
+                                        {resolvedData => {
+                                            const tableData = filterData(
+                                                resolvedData?.employees,
+                                                simplifyData(extractSampleData(resolvedData?.employees, valsToDisplay)),
+                                                searchElem
+                                            );
+                                            return (
+                                                <ListMode
+                                                    testData={tableData}
+                                                    modeConfig={{
+                                                        keys: valsToDisplay,
+                                                        partition: partition,
+                                                        dataOperations: dataOperations
+                                                    }}
+                                                />
+                                            );
+                                        }}
                                     </Await>
                                 </Suspense>
                             }
@@ -496,14 +511,19 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => {
-                                            const tableData = getFilteredData(
+                                            const filteredDataById = getFilteredData(
                                                 resolvedData?.tasks,
                                                 Cookies.get('MMUSERID'),
                                                 modeOption?.listTasks
                                             );
+                                            const filteredData = filterData(
+                                                filteredDataById,
+                                                simplifyData(extractSampleData(filteredDataById, valsToDisplay)),
+                                                searchElem
+                                            );
                                             return (
                                                 <ListMode
-                                                    testData={tableData}
+                                                    testData={filteredData}
                                                     modeConfig={{
                                                         keys: valsToDisplay,
                                                         partition: partition,
@@ -522,17 +542,19 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => {
-                                            const tableData = getFilteredData(
+                                            const filteredDataById = getFilteredData(
                                                 resolvedData?.contracts,
                                                 Cookies.get('MMUSERID'),
                                                 modeOption?.listContracts
                                             );
-                                            console.log(
-                                                `listContracts tableData: ${JSON.stringify(tableData, null, 4)}`
+                                            const filteredData = filterData(
+                                                filteredDataById,
+                                                simplifyData(extractSampleData(filteredDataById, valsToDisplay)),
+                                                searchElem
                                             );
                                             return (
                                                 <ListMode
-                                                    testData={tableData}
+                                                    testData={filteredData}
                                                     modeConfig={{
                                                         keys: valsToDisplay,
                                                         partition: partition,

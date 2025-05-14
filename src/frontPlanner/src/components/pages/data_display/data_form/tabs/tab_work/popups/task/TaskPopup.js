@@ -17,6 +17,7 @@ import ActionSelectionPopup from '@generic/elements/popup/ActionSelectionPopup';
 
 // Импорт контекста
 import { SocketContext } from '../../../../../../../../contexts/socket.context';
+import { useHistoryContext } from '../../../../../../../../contexts/history.context';
 
 // Импорт кастомных хуков
 import { useTaskForm } from '@hooks/useAddTaskForm';
@@ -364,12 +365,15 @@ function DeadlineTask(props) {
     let dateYYYYMMDD;
 
     const [calendarState, setCalendarState] = useState(false);
-    const [deadline, setDeadline] = useState(presetValue ? presetValue : '');
+    const [deadline, setDeadline] = useState(presetValue ? presetValue : { value: '' });
+    // const [deadline, setDeadline] = useState(presetValue ? presetValue : '');
 
     // Удаление даты
     function onDeleteDate() {
-        setDeadline('');
-        onSelect('deadlineTask', '');
+        setDeadline({ value: '' });
+        onSelect('deadlineTask', { value: '' });
+        // setDeadline('');
+        // onSelect('deadlineTask', '');
     }
 
     // Выбор даты
@@ -378,8 +382,10 @@ function DeadlineTask(props) {
             format: 'YYYYMMDD',
             separator: '-'
         });
-        setDeadline(dateYYYYMMDD);
-        onSelect('deadlineTask', dateYYYYMMDD);
+        setDeadline({ value: dateYYYYMMDD });
+        onSelect('deadlineTask', { value: dateYYYYMMDD });
+        // setDeadline(dateYYYYMMDD);
+        // onSelect('deadlineTask', dateYYYYMMDD);
     }
 
     // function onDeleteSelectedDate() {
@@ -395,7 +401,7 @@ function DeadlineTask(props) {
                     <input
                         className="popup-task-date-input"
                         type="text"
-                        value={deadline}
+                        value={deadline && Object.keys(deadline).length !== 0 ? deadline?.value : 'Нет данных'}
                         disabled={true}
                         // onChange={onChangeDeadline}
                     />
@@ -464,8 +470,10 @@ export default function TaskPopup(props) {
         TaskService.getTaskData(data?.task, dataOperation?.disabledFields),
         dataOperation?.disabledFields
     );
-    const navigate = useNavigate();
     const socket = useContext(SocketContext);
+
+    const { history } = useHistoryContext();
+    const navigate = useNavigate();
 
     // console.log(`dataOperation: ${JSON.stringify(dataOperation, null, 4)}`);
     // console.log(`values: ${JSON.stringify(values, null, 4)}`);
@@ -480,12 +488,13 @@ export default function TaskPopup(props) {
                 .then(response => {
                     if (response.status === 200) {
                         setAddTaskState(false);
-                        const navigationArg = {
-                            partition: 'department',
-                            dataOperation: dataOperation
-                        };
+                        // const navigationArg = {
+                        //     partition: 'department',
+                        //     dataOperation: dataOperation
+                        // };
                         // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
-                        navigate(`../../dataform/works/${idContract}`, { state: navigationArg });
+                        // navigate(`../../dataform/works/${idContract}`, { state: navigationArg });
+                        navigate(window.location.pathname);
                     }
                 })
                 .catch(error => {
@@ -518,6 +527,8 @@ export default function TaskPopup(props) {
                 comment: values?.comment
             };
 
+            // console.log(`resultData: ${JSON.stringify(resultData, null, 4)}`);
+
             const endpoints = {
                 [`${window.location.origin}/api/addTask`]: resultData,
                 [`${window.location.origin}/api/getDataUser`]: { employeeId: values?.director?.mmId }
@@ -538,20 +549,27 @@ export default function TaskPopup(props) {
                                         mmId: employee?.id,
                                         fullName: employee?.FIO
                                     },
-                                    deadline: resultData?.deadline,
+                                    deadline: resultData?.deadline?.value,
                                     comment: resultData?.comment
                                 },
                                 assigneeId: values?.executor?.mmId
                             });
 
                             setAddTaskState(false);
+                            navigate(window.location.pathname);
+                            // navigate(window.location.pathname, {
+                            //     state: {
+                            //         partition: 'department',
+                            //         dataOperation: dataOperation
+                            //     }
+                            // });
 
-                            navigate(`../../dataform/works/${idContract}`, {
-                                state: {
-                                    partition: 'department',
-                                    dataOperation: dataOperation
-                                }
-                            });
+                            // navigate(`../../dataform/works/${idContract}`, {
+                            //     state: {
+                            //         partition: 'department',
+                            //         dataOperation: dataOperation
+                            //     }
+                            // });
                         }
                     })
                 )
@@ -582,13 +600,14 @@ export default function TaskPopup(props) {
                 .post(`${window.location.origin}/api/editTask`, resultData)
                 .then(response => {
                     if (response.status === 200) {
-                        setAddTaskState(false);
                         const navigationArg = {
                             partition: 'department',
                             dataOperation: dataOperation
                         };
                         // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
-                        navigate(`../../dataform/works/${idContract}`, { state: navigationArg });
+                        setAddTaskState(false);
+                        navigate(window.location.pathname);
+                        // navigate(`../../dataform/works/${idContract}`, { state: navigationArg });
                     }
                 })
                 .catch(error => {
@@ -663,13 +682,13 @@ export default function TaskPopup(props) {
                         config={{ hidden: dataOperation?.hiddenFields?.comment ? true : false }}
                         onChange={onChange}
                     />
-                    {data?.task && Object.keys(data?.task).length !== 0 ? (
-                        <button className="popup__content-del-task" onClick={onDeleteTask}>
-                            Удалить
-                        </button>
-                    ) : null}
                 </div>
             </form>
+            {data?.task && Object.keys(data?.task).length !== 0 ? (
+                <button className="popup__content-del-task" onClick={onDeleteTask}>
+                    Удалить
+                </button>
+            ) : null}
         </InputDataPopup>
     );
 }

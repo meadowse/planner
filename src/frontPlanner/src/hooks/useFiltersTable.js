@@ -38,7 +38,7 @@ function applyFilters(data, filters) {
         })
     );
 
-    // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
+    console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
 
     return filteredData;
 }

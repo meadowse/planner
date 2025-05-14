@@ -33,7 +33,8 @@ const getTaskData = (data, disabledFields) => {
         },
         // Дедлайн
         deadlineTask: value => {
-            return value ? value : '';
+            // return value ? value : '';
+            return value && Object.keys(value).length !== 0 ? value : null;
         },
         // Завершено
         done: value => {

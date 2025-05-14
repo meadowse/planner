@@ -1,7 +1,6 @@
 .popup__add_user {
     width: 50%;
     height: 60vh;
-    z-index: 40;
 }
 
 .popup__add_user .popup__wrapper {

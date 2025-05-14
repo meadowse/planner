@@ -78,7 +78,7 @@ const loadData = async partition => {
                     axios.spread((contractsData, sectionsData) => {
                         if (contractsData && contractsData.length !== 0)
                             resolvedData.contracts = formData(contractsData, partition, null)?.sort(
-                                (a, b) => b?.id - a?.id
+                                (a, b) => b?.contractId - a?.contractId
                             );
                         if (sectionsData && sectionsData.length !== 0) {
                             resolvedData.sections = sectionsData?.map(item => {
@@ -87,7 +87,7 @@ const loadData = async partition => {
                                         section: item?.section,
                                         employee: item?.employee,
                                         contracts: formData(item?.contracts, partition, null)?.sort(
-                                            (a, b) => +b?.id - +a?.id
+                                            (a, b) => +b?.contractId - +a?.contractId
                                         )
                                     };
                                 }
@@ -156,7 +156,8 @@ const loadData = async partition => {
                     axios.spread((tasks, contracts) => {
                         resolvedData.tasks = formData(tasks?.data, partition, null).sort((a, b) => b?.id - a?.id) || [];
                         resolvedData.contracts =
-                            formData(contracts?.data, partition, null).sort((a, b) => b?.id - a?.id) || [];
+                            formData(contracts?.data, partition, null).sort((a, b) => b?.contractId - a?.contractId) ||
+                            [];
                         // if (tasks?.data && tasks?.data.length !== 0) resolvedData.tasks = tasks?.data;
                         // if (contracts && contracts.length !== 0) resolvedData.contracts = contracts;
                     })
