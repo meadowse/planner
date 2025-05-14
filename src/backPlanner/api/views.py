@@ -255,8 +255,10 @@ def getAgreement(request):
                 {col: value for col, value in zip(columns, row)}
                 for row in result
             ]  # Создаем список словарей с сериализацией значений
+            today = datetime.date.today()
             for obj in json_result:
-                stage = {'stage': {'title': obj.get('stage')}}
+                status = obj.get('stage')
+                stage = {'stage': {'title': status}}
                 obj.update(stage)
                 services = {'services': [{'title': obj.get('services')}]}
                 obj.update(services)
@@ -278,7 +280,18 @@ def getAgreement(request):
                 obj.pop('responsibleMMId')
                 dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
                 obj.update(dateOfStart)
-                dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding')}}
+                dateOfEnding = obj.get('dateOfEnding')
+                if dateOfEnding is not None:
+                    if status == 'В работе' and dateOfEnding < today:
+                        dateOfEnding = {
+                            'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': True}}
+                    else:
+                        dateOfEnding = {
+                            'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'),
+                                             'expired': False}}
+                else:
+                    dateOfEnding = {
+                        'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': False}}
                 obj.update(dateOfEnding)
                 Str = obj.get('contacts')
                 contacts = {'contacts': []}
@@ -398,9 +411,26 @@ def getTasksContracts(request):
                     {col: value for col, value in zip(columns, row)}
                     for row in result
                 ]  # Создаем список словарей с сериализацией значений
+                today = datetime.date.today()
                 for row in json_result:
+                    status = row.get('done')
                     row.update({'director': {'id': row.get('idDirector'), 'fullName': row.get('directorFIO')}})
                     row.update({'executor': {'id': row.get('idExecutor'), 'fullName': row.get('executorFIO')}})
+                    deadlineTask = obj.get('deadlineTask')
+                    if deadlineTask is not None:
+                        if status == 0 and deadlineTask < today:
+                            deadlineTask = {
+                                'deadlineTask': {'title': 'Срок работы', 'value': deadlineTask,
+                                                 'expired': True}}
+                        else:
+                            deadlineTask = {
+                                'deadlineTask': {'title': 'Срок работы', 'value': deadlineTask,
+                                                 'expired': False}}
+                    else:
+                        deadlineTask = {
+                            'deadlineTask': {'title': 'Срок работы', 'value': deadlineTask,
+                                             'expired': False}}
+                    obj.update(deadlineTask)
                     row.pop('idDirector')
                     row.pop('idExecutor')
                     row.pop('executorFIO')
@@ -422,7 +452,7 @@ def addTask(request):
         comment = obj.get('comment')
         typeWorkId = obj.get('typeWorkId')
         dateStart = obj.get('dateStart')
-        deadline = obj.get('deadline')
+        deadline = obj.get('deadline').get('value')
         directorId = obj.get('directorId')
         executorId = obj.get('executorId')
         with firebirdsql.connect(host=host, database=database, user=user, password=password,
@@ -474,7 +504,7 @@ def editTask(request):
         comment = obj.get('comment')
         typeWorkId = obj.get('typeWorkId')
         dateStart = obj.get('dateStart')
-        deadline = obj.get('deadline')
+        deadline = obj.get('deadline').get('value')
         directorId = obj.get('directorId')
         executorId = obj.get('executorId')
         done = obj.get('done')
@@ -514,7 +544,6 @@ def editTask(request):
             SET {', '.join(set_clause)}
             WHERE id = {taskId}
             """
-            print(sql)
 
             cur.execute(sql)
             con.commit()
