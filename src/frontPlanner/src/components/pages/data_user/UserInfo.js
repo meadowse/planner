@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, startTransition } from 'react';
 import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
 // Импорт компонентов
@@ -202,6 +203,13 @@ export default function UserInfoNew() {
         });
     }
 
+    function onExitAccount() {
+        // Cookies.remove('MMAUTHTOKEN');
+        // Cookies.remove('MMUSERID');
+
+        navigate('/auth');
+    }
+
     useEffect(() => {
         const tabsData =
             UserService.getTabs()?.map(item => {
@@ -259,19 +267,25 @@ export default function UserInfoNew() {
                     />
                 </div>
             </div>
-            <ul className="user__side-menu">
-                {userInfo.tabs.map((tabData, indTab) => (
-                    <li
-                        className={classNames('user__side-menu-item', {
-                            'user__side-menu-item_active': tabData?.key === userInfo.tab?.key
-                        })}
-                        onClick={() => onSelectTab(indTab, tabData)}
-                    >
-                        <img className="user__side-menu-img" src={`/img/${tabData?.key}.svg`} alt="Profile" />
-                        {tabData.value}
-                    </li>
-                ))}
-            </ul>
+            <div className="user__side-menu-content">
+                <ul className="user__side-menu">
+                    {userInfo.tabs.map((tabData, indTab) => (
+                        <li
+                            className={classNames('user__side-menu-item', {
+                                'user__side-menu-item_active': tabData?.key === userInfo.tab?.key
+                            })}
+                            onClick={() => onSelectTab(indTab, tabData)}
+                        >
+                            <img className="user__side-menu-img" src={`/img/${tabData?.key}.svg`} alt="Profile" />
+                            {tabData.value}
+                        </li>
+                    ))}
+                </ul>
+                <button className="btn-exit-account" onClick={onExitAccount}>
+                    <img src="/img/exit.svg" alt="Exit" />
+                    Выход
+                </button>
+            </div>
             <div className="user__options-content">
                 {isLoading ? (
                     <Preloader />

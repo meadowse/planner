@@ -15,7 +15,7 @@ import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
 import InputDataPopup from '@generic/elements/popup/InputDataPopup';
 import ActionSelectionPopup from '@generic/elements/popup/ActionSelectionPopup';
 
-//
+// Импорт контекста
 import { SocketContext } from '../../../../../../../../contexts/socket.context';
 
 // Импорт кастомных хуков

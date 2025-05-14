@@ -1,10 +1,10 @@
 services:
-  frontPlanner:
-    image: notification_server
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    environment:
-      NODE_ENV: production
-    ports:
-      - 3500:3500
+    notificationServer:
+        image: notification_server
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        environment:
+            NODE_ENV: production
+        ports:
+            - 3500:3500

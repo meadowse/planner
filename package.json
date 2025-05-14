@@ -1,1 +1,5 @@
-{}
+{
+  "dependencies": {
+    "react-toasty": "^0.0.4"
+  }
+}

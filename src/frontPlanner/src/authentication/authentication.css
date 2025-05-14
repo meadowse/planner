@@ -72,14 +72,13 @@
 }
 
 .auth-page-col__btn-registration,
-.auth-page-col__btn-login{
+.auth-page-col__btn-login {
     position: relative;
     padding-bottom: 5px;
 }
 
-
-.auth-page-col-btn_active::after{
-    content: "";
+.auth-page-col-btn_active::after {
+    content: '';
     width: 100%;
     height: 1px;
     display: block;
@@ -89,7 +88,7 @@
     background-color: #c92432;
 }
 
-.auth-page-col-btn_active::after{
+.auth-page-col-btn_active::after {
     animation-name: line_moving_forward;
     animation-duration: 0.8s;
     animation-direction: normal;
@@ -172,7 +171,12 @@
     font-size: calc(12px + 4 * (100vw - 320px) / 1600);
     font-family: 'Montserrat-SemiBold';
     color: #fff;
+    cursor: pointer;
     background-color: #d71920;
+}
+
+.btn-auth-action:active {
+    margin-top: 1.5px;
 }
 
 /* Анимации */

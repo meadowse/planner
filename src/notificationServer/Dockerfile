@@ -3,8 +3,8 @@ WORKDIR /usr/src/app
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 RUN npm install && mv node_modules ../
 COPY . .
-RUN npm run start
-EXPOSE 80
+ENTRYPOINT ["npm", "run", "start"]
+# EXPOSE 80
 
 #FROM nginx
 #RUN useradd meadowse; \
@@ -30,4 +30,4 @@ EXPOSE 80
 #EXPOSE 80
 #USER meadowse
 #ENTRYPOINT ["/docker-entrypoint.sh", "nginx", "-g", "daemon off;"]
-HEALTHCHECK --interval=5m --timeout=30s CMD curl -f http://localhost || exit 1
+HEALTHCHECK --interval=5m --timeout=30s CMD curl -f http://localhost:3500 || exit 1

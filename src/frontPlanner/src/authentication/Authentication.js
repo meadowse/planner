@@ -190,7 +190,7 @@ function SignInForm(props) {
 
     const [formData, setFormData] = useState(data);
     // const { values, errors, onChange, checkData, checkAuthorization } = useAuthForm(mode, formData);
-    const { values, errors, onChange } = useAuthForm(mode, formData);
+    const { values, errors, onChange, checkResponse } = useAuthForm(mode, formData);
 
     function onChangeInptField(e) {
         data[e.target.name] = e.target.value;
@@ -218,46 +218,27 @@ function SignInForm(props) {
                     navigate('../department');
                 }
             })
-            .catch(error => {
-                if (error.response) {
-                    console.log('server responded');
-                } else if (error.request) {
-                    console.log('network error');
+            .catch(err => {
+                if (err.response) {
+                    if (err.response.data && Object.keys(err.response.data).length !== 0) {
+                        const errorData = Object.values({ ...err.response.data }).map(error => JSON.parse(error));
+                        if (errorData && errorData.length !== 0) checkResponse(mode, errorData[0]?.message);
+                    }
+                } else if (err.request) {
+                    console.log(`error request: ${JSON.stringify(err.request, null, 4)}`);
                 } else {
-                    console.log(error);
+                    console.log(`error: ${JSON.stringify(err, null, 4)}`);
                 }
             });
-
-        // await axios
-        //     .all([
-        //         await axios.post(`${window.location.origin}/api/auth`, loginPayload),
-        //         await axios.post('https://mm-mpk.ru/api/v4/users/login', loginPayload)
-        //     ])
-        //     .then(
-        //         axios.spread((authRes, loginRes) => {
-        //             if (authRes.status === 200) {
-        //                 // Cookies.set('MMUSERID', authRes?.data?.id, { expires: 30, path: '/' });
-        //                 Cookies.set('MMAUTHTOKEN', authRes?.data?.token, { expires: 30, path: '/' });
-        //             }
-        //             if (loginRes.status === 200) {
-        //                 setAuthState({
-        //                     accessToken: authRes?.data?.token
-        //                 });
-        //                 navigate('../department');
-        //             }
-        //             // output of req.
-        //             // console.log('authRes', authRes, 'loginRes', loginRes);
-        //         })
-        //     );
     }
 
-    useEffect(() => console.log(`Authorization errors: ${JSON.stringify(errors, null, 4)}`), [errors]);
+    // useEffect(() => console.log(`Authorization errors: ${JSON.stringify(errors, null, 4)}`), [errors]);
 
     return (
         <form
             action="#"
             className="auth-page-form"
-            data-errors={errors.authorization ? errors.authorization.message : ''}
+            data-error={errors.authorization ? errors.authorization.message : ''}
             onSubmit={onSubmit}
         >
             <div className="auth-form-inpt-wrapper" data-error={errors.email ? errors.email.message : ''}>
@@ -321,10 +302,6 @@ export default function Authentication() {
         1: () => <SignInForm mode={authMode} navigate={navigate} setAuthState={setAuthState} />
     };
 
-    function onSelectAuthMode(mode) {
-        setAuthMode(mode);
-    }
-
     return (
         <div className="auth-page">
             <div className="auth-page-col__left auth-page-col">
@@ -351,7 +328,7 @@ export default function Authentication() {
                             className={classNames('auth-page-col__btn-login', 'auth-page-col-btn', {
                                 'auth-page-col-btn_active': authMode === 1
                             })}
-                            onClick={() => onSelectAuthMode(1)}
+                            onClick={() => setAuthMode(1)}
                         >
                             Войти
                         </button>

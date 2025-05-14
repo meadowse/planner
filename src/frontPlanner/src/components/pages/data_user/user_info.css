@@ -9,16 +9,23 @@
     background-color: #f1f1f1;
 }
 
+.user__side-menu-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #f8f9fa;
+}
+
 .user__side-menu {
     display: flex;
     flex-direction: column;
     row-gap: 20px;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    background-color: #f8f9fa;
 }
 
-.user__side-menu-item {
+.user__side-menu-item,
+.btn-exit-account {
     padding: 10px 15px;
     display: flex;
     flex-direction: column;

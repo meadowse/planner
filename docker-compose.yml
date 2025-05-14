@@ -1,13 +1,18 @@
 services:
-  backplanner:
-    image: backplanner
-    build: "./src/backPlanner"
-#    ports:
-#      - 8888:8000
-    volumes:
-      - /mnt/work/6. Технологии/11. Изображения для карточек договоров:/app/images
-  frontPlanner:
-    image: front_planner
-    build: "./src/frontPlanner"
-    ports:
-      - 3000:3000
+    backplanner:
+        image: backplanner
+        build: './src/backPlanner'
+        #    ports:
+        #      - 8888:8000
+        volumes:
+            - /mnt/work/6. Технологии/11. Изображения для карточек договоров:/app/images
+    frontPlanner:
+        image: front_planner
+        build: './src/frontPlanner'
+        ports:
+            - 3000:3000
+    notificationServer:
+        image: notification_server
+        build: './src/notificationServer'
+        ports:
+            - 3500:3500
