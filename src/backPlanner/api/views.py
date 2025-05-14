@@ -430,7 +430,7 @@ def getTasksContracts(request):
                         deadlineTask = {
                             'deadlineTask': {'title': 'Срок работы', 'value': deadlineTask,
                                              'expired': False}}
-                    obj.update('deadlineTask')
+                    row.update('deadlineTask')
                     row.pop('idDirector')
                     row.pop('idExecutor')
                     row.pop('executorFIO')
