@@ -416,7 +416,7 @@ def getTasksContracts(request):
                     status = row.get('done')
                     row.update({'director': {'id': row.get('idDirector'), 'fullName': row.get('directorFIO')}})
                     row.update({'executor': {'id': row.get('idExecutor'), 'fullName': row.get('executorFIO')}})
-                    deadlineTask = obj.get('deadlineTask')
+                    deadlineTask = row.get('deadlineTask')
                     if deadlineTask is not None:
                         if status == 0 and deadlineTask < today:
                             deadlineTask = {
@@ -430,7 +430,7 @@ def getTasksContracts(request):
                         deadlineTask = {
                             'deadlineTask': {'title': 'Срок работы', 'value': deadlineTask,
                                              'expired': False}}
-                    row.update('deadlineTask')
+                    row.update(deadlineTask)
                     row.pop('idDirector')
                     row.pop('idExecutor')
                     row.pop('executorFIO')
