@@ -31,6 +31,8 @@ def getAgreements(request):
         LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
         responsible.F16 AS idResponsible,
         responsible.F4886 AS responsible,
+        manager.F16 AS idManager,
+        manager.F4886 AS manager,
         LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697, '*') AS tasks
         FROM T212
         LEFT JOIN T237 ON T212.F4948 = T237.ID
@@ -40,14 +42,17 @@ def getAgreements(request):
         LEFT JOIN T253 ON T212.ID = T253.F5024
         LEFT JOIN T3 participants ON T253.F5022 = participants.ID
         LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
+        LEFT JOIN T3 manager ON T212.F4950 = manager.ID
         LEFT JOIN T218 ON T218.F4691 = T212.ID
         WHERE T212.ID > 2700
-        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
-        columns = ('contractId', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'idResponsible', 'responsible', 'tasks')
+        columns = ('contractId', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart',
+                   'dateOfEnding', 'company', 'contacts', 'participants', 'idResponsible', 'responsible',
+                   'idManager', 'manager', 'tasks')
         json_result = [
             {col: value for col, value in zip(columns, row)}
             for row in result
@@ -67,6 +72,14 @@ def getAgreements(request):
                     data2 = participant.split(';')
                     data.get('participants').append({'participantId': data2[0], 'fullName': data2[1].strip()})
                 obj.update(data)
+            manager = obj.get('manager')
+            if manager is not None:
+                manager = {
+                    'manager': {'idManager': obj.get('idManager'), 'fullName': manager.strip()}}
+            else:
+                manager = {'manager': {'idManager': obj.get('idManager'), 'fullName': manager}}
+            obj.update(manager)
+            obj.pop('idManager')
             responsible = obj.get('responsible')
             if responsible is not None:
                 responsible = {'responsible': {'idResponsible': obj.get('idResponsible'), 'fullName': responsible.strip()}}
@@ -232,6 +245,9 @@ def getAgreement(request):
             responsible.ID AS responsibleId,
             responsible.F16 AS responsibleMMId,
             responsible.F4886 AS responsible,
+            manager.ID AS managerId,
+            manager.F16 AS managerMMId,
+            manager.F4886 AS manager,
             LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696, '*') AS tasks, 
             T212.F4644 AS channelId
             FROM T212
@@ -242,15 +258,17 @@ def getAgreement(request):
             LEFT JOIN T253 ON T212.ID = T253.F5024
             LEFT JOIN T3 participants ON T253.F5022 = participants.ID
             LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
+            LEFT JOIN T3 manager ON T212.F4950 = manager.ID
             LEFT JOIN T218 ON T218.F4691 = T212.ID
             WHERE T212.ID = {contractId}
-            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 16
+            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 19
             """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
             cur.execute(sql)
             result = cur.fetchall()
             # Преобразование результата в список словарей
             columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart',
-                       'dateOfEnding', 'company', 'contacts', 'participants', 'responsibleId', 'responsibleMMId', 'responsible', 'tasks', 'channelId')
+                       'dateOfEnding', 'company', 'contacts', 'participants', 'responsibleId', 'responsibleMMId',
+                       'responsible', 'managerId', 'managerMMId', 'manager', 'tasks', 'channelId')
             json_result = [
                 {col: value for col, value in zip(columns, row)}
                 for row in result
@@ -278,6 +296,16 @@ def getAgreement(request):
                 obj.update(responsible)
                 obj.pop('responsibleId')
                 obj.pop('responsibleMMId')
+                manager = obj.get('manager')
+                if manager is not None:
+                    manager = {'manager': {'id': obj.get('managerId'), 'mmId': obj.get('managerMMId'),
+                                                   'fullName': manager.strip()}}
+                else:
+                    manager = {'manager': {'id': obj.get('managerId'), 'mmId': obj.get('managerMMId'),
+                                                   'fullName': manager}}
+                obj.update(manager)
+                obj.pop('managerId')
+                obj.pop('managerMMId')
                 dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
                 obj.update(dateOfStart)
                 dateOfEnding = obj.get('dateOfEnding')
