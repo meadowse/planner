@@ -394,6 +394,7 @@ def getTasksContracts(request):
                 T218.F4691 AS CONRACT_ID, 
                 T218.F4695 AS TASK,
                 T218.F5724 AS ID_OF_TYPE_OF_WORK,
+                T218.F5569 AS dateStart,
                 T218.F4696 AS DEADLINE,
                 DIRECTOR.ID AS ID_OF_DIRECTOR,
                 DIRECTOR.F16 AS ID_MM_DIRECTOR,
@@ -408,7 +409,7 @@ def getTasksContracts(request):
                 WHERE T218.F4691 = {contractId}"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = ('id', 'contractId', 'task', 'idTypeWork', 'deadlineTask', 'idDirector', 'idMMDirector', 'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done')
+                columns = ('id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'idDirector', 'idMMDirector', 'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
