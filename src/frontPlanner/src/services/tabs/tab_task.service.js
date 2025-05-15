@@ -1,5 +1,6 @@
 // Импорт доп.функционала
 import { findNestedObj } from '@helpers/helper';
+import { getDateInSpecificFormat } from '@helpers/calendar';
 
 // Импорт конфигураций
 import { DATA_FORM_OPERATIONS } from '@config/tabs/tab_work.config';
@@ -29,7 +30,11 @@ const getTaskData = (data, disabledFields) => {
         },
         // Дата начала
         dateStart: value => {
-            return value ? value : '';
+            const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
+                format: 'YYYYMMDD',
+                separator: '-'
+            });
+            return value ? value : currDateYYYYMMDD;
         },
         // Дедлайн
         deadlineTask: value => {

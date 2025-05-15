@@ -124,6 +124,35 @@ function Director(props) {
         onSelect('director', null);
     }
 
+    async function loadUserEmployee() {
+        await axios
+            .post(`${window.location.origin}/api/getDataUser`, { employeeId: Cookies.get('MMUSERID') })
+            .then(response => {
+                if (response.status === 200) {
+                    const { id, mmId, FIO } = response.data && response.data.length !== 0 ? response.data[0] : {};
+                    const fio = FIO.trim().split(' ');
+                    const employee = { id, mmId, fullName: `${fio[0] + ' ' + fio[1]}` };
+
+                    setDirector(employee);
+                    onSelect('director', employee);
+                    // console.log(`empl: ${JSON.stringify(empl, null, 4)}`);
+                }
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log('server responded');
+                } else if (error.request) {
+                    console.log('network error');
+                } else {
+                    console.log(error);
+                }
+            });
+    }
+
+    useEffect(() => {
+        if (!director || Object.keys(director).length === 0) loadUserEmployee();
+    }, []);
+
     return !config?.hidden ? (
         <li className="popup__content-user popup-content-item">
             <h2 className="popup-content-title">Постановщик</h2>
@@ -285,14 +314,13 @@ function TaskName(props) {
 // Дата начала
 function CommencementDate(props) {
     const { presetValue, config, onSelect } = props;
-
-    let dateYYYYMMDD;
-    let currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
+    const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
         format: 'YYYYMMDD',
         separator: '-'
     });
 
     const [calendarState, setCalendarState] = useState(false);
+    // const [startDate, setStartDate] = useState(currDateYYYYMMDD);
     const [startDate, setStartDate] = useState(presetValue ? presetValue : currDateYYYYMMDD);
 
     // Удаление даты
@@ -303,7 +331,7 @@ function CommencementDate(props) {
 
     // Выбор даты
     function onSelectStartDate(date) {
-        dateYYYYMMDD = getDateInSpecificFormat(new Date(date.getFullYear(), date.getMonth(), date.getDate()), {
+        const dateYYYYMMDD = getDateInSpecificFormat(new Date(date.getFullYear(), date.getMonth(), date.getDate()), {
             format: 'YYYYMMDD',
             separator: '-'
         });
@@ -311,9 +339,22 @@ function CommencementDate(props) {
         onSelect('dateStart', dateYYYYMMDD);
     }
 
-    useEffect(() => {
-        onSelect('dateStart', currDateYYYYMMDD);
-    }, []);
+    // useEffect(() => {
+    //     if (!presetValue || presetValue.length === 0) onSelect('dateStart', startDate);
+    //     else onSelect('dateStart', presetValue);
+    // }, []);
+
+    // useEffect(() => {
+    //     if (!presetValue || presetValue.length === 0) {
+    //         let currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
+    //             format: 'YYYYMMDD',
+    //             separator: '-'
+    //         });
+    //         // console.log(`currDateYYYYMMDD: ${typeof currDateYYYYMMDD}`);
+    //         setStartDate(currDateYYYYMMDD);
+    //         onSelect('dateStart', currDateYYYYMMDD);
+    //     }
+    // }, []);
 
     return !config?.hidden ? (
         <li className="popup__content-start-date popup-content-item">
@@ -464,24 +505,20 @@ export default function TaskPopup(props) {
     const { additClass, title, data, operation, addTaskState, setAddTaskState } = props;
     const dataOperation = TaskService.getDataFormOperation(operation);
 
-    const [stateActionPopup, setStateActionPopup] = useState(false);
-
     const { values, onChange, onClick } = useTaskForm(
         TaskService.getTaskData(data?.task, dataOperation?.disabledFields),
         dataOperation?.disabledFields
     );
     const socket = useContext(SocketContext);
-
-    const { history } = useHistoryContext();
     const navigate = useNavigate();
 
     // console.log(`dataOperation: ${JSON.stringify(dataOperation, null, 4)}`);
-    // console.log(`values: ${JSON.stringify(values, null, 4)}`);
+    console.log(`values: ${JSON.stringify(values, null, 4)}`);
     // console.log(`data: ${JSON.stringify(data, null, 4)}`);
 
     // Удаление задачи
     function onDeleteTask() {
-        const idContract = JSON.parse(localStorage.getItem('idContract'));
+        // const idContract = JSON.parse(localStorage.getItem('idContract'));
         if (data?.task && Object.keys(data?.task).length !== 0) {
             axios
                 .post(`${window.location.origin}/api/deleteTask`, { taskId: data?.task?.id })
@@ -527,8 +564,6 @@ export default function TaskPopup(props) {
                 comment: values?.comment
             };
 
-            // console.log(`resultData: ${JSON.stringify(resultData, null, 4)}`);
-
             const endpoints = {
                 [`${window.location.origin}/api/addTask`]: resultData,
                 [`${window.location.origin}/api/getDataUser`]: { employeeId: values?.director?.mmId }
@@ -557,12 +592,6 @@ export default function TaskPopup(props) {
 
                             setAddTaskState(false);
                             navigate(window.location.pathname);
-                            // navigate(window.location.pathname, {
-                            //     state: {
-                            //         partition: 'department',
-                            //         dataOperation: dataOperation
-                            //     }
-                            // });
 
                             // navigate(`../../dataform/works/${idContract}`, {
                             //     state: {
@@ -583,7 +612,9 @@ export default function TaskPopup(props) {
                         console.log(error);
                     }
                 });
-        } else {
+        }
+        // Редактирование задачи
+        else {
             const resultData = {
                 typeWorkId: values?.typeWork?.id,
                 contractId: JSON.parse(localStorage.getItem('idContract')),
@@ -600,10 +631,10 @@ export default function TaskPopup(props) {
                 .post(`${window.location.origin}/api/editTask`, resultData)
                 .then(response => {
                     if (response.status === 200) {
-                        const navigationArg = {
-                            partition: 'department',
-                            dataOperation: dataOperation
-                        };
+                        // const navigationArg = {
+                        //     partition: 'department',
+                        //     dataOperation: dataOperation
+                        // };
                         // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
                         setAddTaskState(false);
                         navigate(window.location.pathname);
@@ -661,7 +692,7 @@ export default function TaskPopup(props) {
                         onChange={onChange}
                     />
                     <CommencementDate
-                        presetValue={data?.task?.dateStart}
+                        presetValue={data?.task?.dateStart || data?.task?.startDate}
                         config={{ hidden: dataOperation?.hiddenFields?.dateStart ? true : false }}
                         onSelect={onClick}
                     />
