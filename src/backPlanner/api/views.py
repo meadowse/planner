@@ -864,7 +864,8 @@ def getDataUser(request):
             cur = con.cursor()
             try:
                 sql = f"""SELECT
-                T3.F16 as ID,
+                T3.ID as ID,
+                T3.F16 as MMID,
                 T3.F10 AS FIO,
                 T5.F26 AS DEPARTMENT,
                 T4.F7 AS JOB_TITLE,
@@ -882,8 +883,8 @@ def getDataUser(request):
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
-                'id', 'FIO', 'department', 'job', 'email', 'telephone', 'jobTelephone', 'addTelephone',
-                'telegram', 'birthday', 'office')
+                    'id', 'mmId', 'FIO', 'department', 'job', 'email', 'telephone', 'jobTelephone', 'addTelephone',
+                    'telegram', 'birthday', 'office')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
