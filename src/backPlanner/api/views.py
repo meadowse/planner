@@ -395,9 +395,11 @@ def getTasksContracts(request):
                 T218.F4695 AS TASK,
                 T218.F5724 AS ID_OF_TYPE_OF_WORK,
                 T218.F4696 AS DEADLINE,
-                DIRECTOR.F16 AS ID_OF_DIRECTOR,
+                DIRECTOR.ID AS ID_OF_DIRECTOR,
+                DIRECTOR.F16 AS ID_MM_DIRECTOR,
                 DIRECTOR.F4886 AS DIRECTOR_NAME,
-                EXECUTOR.F16 AS ID_OF_EXECUTOR,
+                EXECUTOR.ID AS ID_OF_EXECUTOR,
+                EXECUTOR.F16 AS ID_MM_EXECUTOR,
                 EXECUTOR.F4886 AS EXECUTOR_NAME, 
                 T218.F4697 AS DONE
                 FROM T218
@@ -406,7 +408,7 @@ def getTasksContracts(request):
                 WHERE T218.F4691 = {contractId}"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = ('id', 'contractId', 'task', 'idTypeWork', 'deadlineTask', 'idDirector', 'directorFIO', 'idExecutor', 'executorFIO', 'done')
+                columns = ('id', 'contractId', 'task', 'idTypeWork', 'deadlineTask', 'idDirector', 'idMMDirector', 'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
@@ -414,8 +416,8 @@ def getTasksContracts(request):
                 today = datetime.date.today()
                 for row in json_result:
                     status = row.get('done')
-                    row.update({'director': {'id': row.get('idDirector'), 'fullName': row.get('directorFIO')}})
-                    row.update({'executor': {'id': row.get('idExecutor'), 'fullName': row.get('executorFIO')}})
+                    row.update({'director': {'id': row.get('idDirector'), 'idMM': row.get('idMMDirector'), 'fullName': row.get('directorFIO')}})
+                    row.update({'executor': {'id': row.get('idExecutor'), 'idMM': row.get('idMMExecutor'), 'fullName': row.get('executorFIO')}})
                     deadlineTask = row.get('deadlineTask')
                     if deadlineTask is not None:
                         if status == 0 and deadlineTask < today:
@@ -433,6 +435,8 @@ def getTasksContracts(request):
                     row.update(deadlineTask)
                     row.pop('idDirector')
                     row.pop('idExecutor')
+                    row.pop('idMMDirector')
+                    row.pop('idMMExecutor')
                     row.pop('executorFIO')
                     row.pop('directorFIO')
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
@@ -511,7 +515,6 @@ def editTask(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                  charset=charset) as con:
             cur = con.cursor()
-
             # Подготовка значений для обновления
             values = {
                 'F4691': contractId,
@@ -525,7 +528,6 @@ def editTask(request):
                 'F4693': directorId,  # должно быть ID пользователя
                 'F4694': executorId,
             }
-
             # Преобразование значений в SQL-формат
             set_clause = []
             for key, value in values.items():
@@ -537,14 +539,12 @@ def editTask(request):
                     set_clause.append(f"{key} = '{value}'")
                 else:
                     raise ValueError(f"Unsupported type for value: {value}")
-
             # Формирование SQL-запроса
             sql = f"""
             UPDATE T218
             SET {', '.join(set_clause)}
             WHERE id = {taskId}
             """
-
             cur.execute(sql)
             con.commit()
         return JsonResponse({'status': 'Ok'}, status=200)
