@@ -516,6 +516,9 @@ export default function DataDisplayPage({ partition }) {
                                                 Cookies.get('MMUSERID'),
                                                 modeOption?.listTasks
                                             );
+                                            console.log(
+                                                `filteredDataById: ${JSON.stringify(filteredDataById, null, 4)}`
+                                            );
                                             const filteredData = filterData(
                                                 filteredDataById,
                                                 simplifyData(extractSampleData(filteredDataById, valsToDisplay)),

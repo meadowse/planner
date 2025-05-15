@@ -176,7 +176,7 @@ export const useGanttMode = args => {
                 tasks.push(newItem);
                 newItem = {};
             },
-            // Данные по отделам
+            // Данные по всем отделам
             sections: item => {
                 let taskItem = {};
 

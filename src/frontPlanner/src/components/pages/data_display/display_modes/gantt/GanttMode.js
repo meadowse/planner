@@ -297,7 +297,7 @@ function GanttChart(props) {
     // function onDrop(e, taskData) {}
 
     // console.log(`year: ${JSON.stringify(getDaysYear(dateState), null, 4)}`);
-    // console.log(`new Data: ${JSON.stringify(ganttData, null, 4)}`);
+    console.log(`new Data: ${JSON.stringify(gantt, null, 4)}`);
 
     useEffect(() => {
         refCurrMonth?.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });

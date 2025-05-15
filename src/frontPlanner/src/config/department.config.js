@@ -79,6 +79,7 @@ export const DATA_CONVERSION_MAP = {
         return director && Object.keys(director).length !== 0
             ? {
                   id: director.idDirector,
+                  mmId: director.mmId,
                   fullName: director.fullName || director.directorName,
                   photo: '/img/user.svg'
               }
@@ -88,6 +89,7 @@ export const DATA_CONVERSION_MAP = {
         return executor && Object.keys(executor).length !== 0
             ? {
                   id: executor.idExecutor,
+                  mmId: executor.mmId,
                   fullName: executor.fullName || executor.executorName,
                   photo: '/img/user.svg'
               }
