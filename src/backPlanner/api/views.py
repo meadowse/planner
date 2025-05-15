@@ -416,8 +416,8 @@ def getTasksContracts(request):
                 today = datetime.date.today()
                 for row in json_result:
                     status = row.get('done')
-                    row.update({'director': {'id': row.get('idDirector'), 'idMM': row.get('idMMDirector'), 'fullName': row.get('directorFIO')}})
-                    row.update({'executor': {'id': row.get('idExecutor'), 'idMM': row.get('idMMExecutor'), 'fullName': row.get('executorFIO')}})
+                    row.update({'director': {'id': row.get('idDirector'), 'mmId': row.get('idMMDirector'), 'fullName': row.get('directorFIO')}})
+                    row.update({'executor': {'id': row.get('idExecutor'), 'mmId': row.get('idMMExecutor'), 'fullName': row.get('executorFIO')}})
                     deadlineTask = row.get('deadlineTask')
                     if deadlineTask is not None:
                         if status == 0 and deadlineTask < today:
