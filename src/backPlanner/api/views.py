@@ -685,9 +685,11 @@ def getTasksEmployee(request):
             T218.F5476 AS DEADLINE_TIME,
             T218.F4697 AS DONE,
             T218.F4708 AS DATE_OF_DONE,
-            DIRECTOR.F16 AS ID_OF_DIRECTOR,
+            DIRECTOR.ID AS ID_DIRECTOR,
+            DIRECTOR.F16 AS ID_MM_DIRECTOR,
             DIRECTOR.F4886 AS DIRECTOR_NAME,
-            EXECUTOR.F16 AS ID_OF_EXECUTOR,
+            EXECUTOR.ID AS ID_EXECUTOR,
+            EXECUTOR.F16 AS ID_MM_EXECUTOR,
             EXECUTOR.F4886 AS EXECUTOR_NAME,
             T212.ID AS contractId,
             T212.F4538 AS CONTRACT_NUMBER,
@@ -701,19 +703,21 @@ def getTasksEmployee(request):
             WHERE DIRECTOR.F16 = '{employeeId}' OR EXECUTOR.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = ('id', 'task', 'comment', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'idDirector', 'directorName', 'idExecutor', 'executorName', 'contractId', 'contractNum', 'address', 'customer')
+                columns = ('id', 'task', 'comment', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'idDirector', 'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId', 'contractNum', 'address', 'customer')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
                 ]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
                 for task in json_result:
-                    director = {'director': {'idDirector': task.get('idDirector'), 'directorName': task.get('directorName')}}
-                    executor = {'executor': {'idExecutor': task.get('idExecutor'), 'executorName': task.get('executorName')}}
+                    director = {'director': {'idDirector': task.get('idDirector'), 'mmId': task.get('idMMDirector'), 'directorName': task.get('directorName')}}
+                    executor = {'executor': {'idExecutor': task.get('idExecutor'), 'mmId': task.get('idMMExecutor'), 'executorName': task.get('executorName')}}
                     task.update(director)
                     task.update(executor)
                     task.pop('idDirector')
                     task.pop('idExecutor')
+                    task.pop('idMMDirector')
+                    task.pop('idMMExecutor')
                     task.pop('directorName')
                     task.pop('executorName')
                     deadlineTask = task.get('deadlineTask')
