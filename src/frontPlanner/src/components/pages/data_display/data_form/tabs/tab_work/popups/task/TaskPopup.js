@@ -15,9 +15,9 @@ import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
 import InputDataPopup from '@generic/elements/popup/InputDataPopup';
 import ActionSelectionPopup from '@generic/elements/popup/ActionSelectionPopup';
 
-// Импорт контекста
+// Импорт контекстов
 import { SocketContext } from '../../../../../../../../contexts/socket.context';
-import { useHistoryContext } from '../../../../../../../../contexts/history.context';
+import { authContext } from '../../../../../../../../contexts/auth.context';
 
 // Импорт кастомных хуков
 import { useTaskForm } from '@hooks/useAddTaskForm';
@@ -31,9 +31,35 @@ import { getDateInSpecificFormat } from '@helpers/calendar';
 // Импорт стилей
 import './task_popup.css';
 
+// Идентификатор договора
+function ContractNumber(props) {
+    const { config, onChange } = props;
+    const [contractNum, setContractNum] = useState('');
+
+    function onChangeContractNum(e) {
+        setContractNum(e.target.value);
+        onChange(e);
+    }
+
+    return !config?.hidden ? (
+        <li className="popup__content-contractnum popup-content-item">
+            <h2 className="popup-content-title">Номер договора</h2>
+            <input
+                type="text"
+                className="popup__contractnum inpt-txt"
+                name="сontractNum"
+                value={contractNum}
+                onChange={e => onChangeContractNum(e)}
+            />
+        </li>
+    ) : null;
+}
+
 // Вид работы
 function TypeWork(props) {
-    const { idContract, presetValue, config, onSelect } = props;
+    const { idContract, contractNum, contractsIDs, config, onSelect, setIdContract } = props;
+
+    // const [idContract, setIdContract] = useState(presetValue ? presetValue : null);
     const [typeWork, setTypeWork] = useState({});
     const [typesWork, setTypesWork] = useState([]);
 
@@ -48,14 +74,15 @@ function TypeWork(props) {
     }
 
     // Загрузка видов работ
-    async function loadData() {
+    async function loadData(contractId) {
         await axios
             .post(`${window.location.origin}/api/getTypesWork`, {
-                contractId: JSON.parse(localStorage.getItem('idContract'))
+                // contractId: JSON.parse(localStorage.getItem('idContract'))
+                contractId: contractId
             })
             .then(response => {
                 if (response?.status === 200) {
-                    console.log(`id: ${JSON.parse(localStorage.getItem('idContract'))}`);
+                    // console.log(`id: ${JSON.parse(localStorage.getItem('idContract'))}`);
                     if (response?.data && response?.data.length !== 0) {
                         const newData = response?.data?.map(item => {
                             return { id: item?.number, title: item?.typeWork };
@@ -77,8 +104,14 @@ function TypeWork(props) {
     }
 
     useEffect(() => {
-        loadData();
-    }, []);
+        if (idContract) loadData(idContract);
+        else {
+            if (contractNum in contractsIDs) {
+                setIdContract(contractsIDs[contractNum]);
+                loadData(contractsIDs[contractNum]);
+            }
+        }
+    }, [contractNum]);
 
     return !config?.hidden ? (
         <li className="popup__content-type popup-content-item">
@@ -109,6 +142,8 @@ function TypeWork(props) {
 function Director(props) {
     const { presetValue, config, onSelect } = props;
 
+    const { authorizedUser } = useContext(authContext);
+
     const [statePopup, setStatePopup] = useState(false);
     const [director, setDirector] = useState(presetValue ? presetValue : {});
 
@@ -124,33 +159,11 @@ function Director(props) {
         onSelect('director', null);
     }
 
-    async function loadUserEmployee() {
-        await axios
-            .post(`${window.location.origin}/api/getDataUser`, { employeeId: Cookies.get('MMUSERID') })
-            .then(response => {
-                if (response.status === 200) {
-                    const { id, mmId, FIO } = response.data && response.data.length !== 0 ? response.data[0] : {};
-                    const fio = FIO.trim().split(' ');
-                    const employee = { id, mmId, fullName: `${fio[0] + ' ' + fio[1]}` };
-
-                    setDirector(employee);
-                    onSelect('director', employee);
-                    // console.log(`empl: ${JSON.stringify(empl, null, 4)}`);
-                }
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log('server responded');
-                } else if (error.request) {
-                    console.log('network error');
-                } else {
-                    console.log(error);
-                }
-            });
-    }
-
     useEffect(() => {
-        if (!director || Object.keys(director).length === 0) loadUserEmployee();
+        if (!director || Object.keys(director).length === 0) {
+            setDirector(authorizedUser);
+            onSelect('director', authorizedUser);
+        }
     }, []);
 
     return !config?.hidden ? (
@@ -319,8 +332,9 @@ function CommencementDate(props) {
         separator: '-'
     });
 
+    // console.log(`CommencementDate presetValue: ${presetValue}`);
+
     const [calendarState, setCalendarState] = useState(false);
-    // const [startDate, setStartDate] = useState(currDateYYYYMMDD);
     const [startDate, setStartDate] = useState(presetValue ? presetValue : currDateYYYYMMDD);
 
     // Удаление даты
@@ -505,6 +519,7 @@ export default function TaskPopup(props) {
     const { additClass, title, data, operation, addTaskState, setAddTaskState } = props;
     const dataOperation = TaskService.getDataFormOperation(operation);
 
+    const [idContract, setIdContract] = useState(data?.idContract ? data?.idContract : null);
     const { values, onChange, onClick } = useTaskForm(
         TaskService.getTaskData(data?.task, dataOperation?.disabledFields),
         dataOperation?.disabledFields
@@ -514,43 +529,23 @@ export default function TaskPopup(props) {
 
     // console.log(`dataOperation: ${JSON.stringify(dataOperation, null, 4)}`);
     console.log(`values: ${JSON.stringify(values, null, 4)}`);
-    // console.log(`data: ${JSON.stringify(data, null, 4)}`);
+    // console.log(`TaskPopup data: ${JSON.stringify(data, null, 4)}`);
 
     // Удаление задачи
     function onDeleteTask() {
         // const idContract = JSON.parse(localStorage.getItem('idContract'));
         if (data?.task && Object.keys(data?.task).length !== 0) {
-            axios
-                .post(`${window.location.origin}/api/deleteTask`, { taskId: data?.task?.id })
-                .then(response => {
-                    if (response.status === 200) {
-                        setAddTaskState(false);
-                        // const navigationArg = {
-                        //     partition: 'department',
-                        //     dataOperation: dataOperation
-                        // };
-                        // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
-                        // navigate(`../../dataform/works/${idContract}`, { state: navigationArg });
-                        navigate(window.location.pathname);
-                    }
-                })
-                .catch(error => {
-                    if (error.response) {
-                        console.log(error.response);
-                        console.log('server responded');
-                    } else if (error.request) {
-                        console.log('network error');
-                    } else {
-                        console.log(error);
-                    }
-                });
+            TaskService.deleteTask(data?.task?.id);
+
+            setAddTaskState(false);
+            navigate(window.location.pathname);
         }
     }
 
     // Сохранение и редактирование задачи
     async function onOnSubmitData(e) {
         e.preventDefault();
-        const idContract = JSON.parse(localStorage.getItem('idContract'));
+        // const idContract = JSON.parse(localStorage.getItem('idContract'));
         // Создание новой задачи
         if (!data?.task || Object.keys(data?.task).length === 0) {
             const resultData = {
@@ -564,60 +559,16 @@ export default function TaskPopup(props) {
                 comment: values?.comment
             };
 
-            const endpoints = {
-                [`${window.location.origin}/api/addTask`]: resultData,
-                [`${window.location.origin}/api/getDataUser`]: { employeeId: values?.director?.mmId }
-            };
-
-            // console.log(`keys: ${JSON.stringify(Object.keys(endpoints), null, 4)}`);
-
-            await axios
-                .all(Object.keys(endpoints).map(key => axios.post(key, endpoints[key])))
-                .then(
-                    axios.spread((response, user) => {
-                        if (response.status === 200) {
-                            const employee = user.data && user.data.length !== 0 ? user.data[0] : {};
-                            socket.emit('addTask', {
-                                task: {
-                                    title: resultData?.task,
-                                    director: {
-                                        mmId: employee?.id,
-                                        fullName: employee?.FIO
-                                    },
-                                    deadline: resultData?.deadline?.value,
-                                    comment: resultData?.comment
-                                },
-                                assigneeId: values?.executor?.mmId
-                            });
-
-                            setAddTaskState(false);
-                            navigate(window.location.pathname);
-
-                            // navigate(`../../dataform/works/${idContract}`, {
-                            //     state: {
-                            //         partition: 'department',
-                            //         dataOperation: dataOperation
-                            //     }
-                            // });
-                        }
-                    })
-                )
-                .catch(error => {
-                    if (error.response) {
-                        console.log(error.response);
-                        console.log('server responded');
-                    } else if (error.request) {
-                        console.log('network error');
-                    } else {
-                        console.log(error);
-                    }
-                });
+            await TaskService.addTask(resultData, socket, {
+                director: values?.director,
+                executor: values?.executor
+            });
         }
         // Редактирование задачи
         else {
             const resultData = {
                 typeWorkId: values?.typeWork?.id,
-                contractId: JSON.parse(localStorage.getItem('idContract')),
+                contractId: idContract,
                 directorId: values?.director?.id,
                 executorId: values?.executor?.id,
                 taskId: data?.task?.id,
@@ -627,32 +578,12 @@ export default function TaskPopup(props) {
                 task: values?.task,
                 comment: values?.comment
             };
-            await axios
-                .post(`${window.location.origin}/api/editTask`, resultData)
-                .then(response => {
-                    if (response.status === 200) {
-                        // const navigationArg = {
-                        //     partition: 'department',
-                        //     dataOperation: dataOperation
-                        // };
-                        // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
-                        setAddTaskState(false);
-                        navigate(window.location.pathname);
-                        // navigate(`../../dataform/works/${idContract}`, { state: navigationArg });
-                    }
-                })
-                .catch(error => {
-                    if (error.response) {
-                        console.log(error.response);
-                        console.log('server responded');
-                    } else if (error.request) {
-                        console.log('network error');
-                    } else {
-                        console.log(error);
-                    }
-                });
-            // console.log(`edit task: ${JSON.stringify(resultData, null, 4)}`);
+
+            await TaskService.editTask(resultData);
         }
+
+        setAddTaskState(false);
+        navigate(window.location.pathname);
     }
 
     return (
@@ -670,10 +601,18 @@ export default function TaskPopup(props) {
                 onSubmit={e => onOnSubmitData(e)}
             >
                 <ul className="popup__content-add-task-left">
+                    {!data?.idContract ? (
+                        <ContractNumber
+                            config={{ hidden: dataOperation?.hiddenFields?.typeWork ? true : false }}
+                            onChange={onChange}
+                        />
+                    ) : null}
                     <TypeWork
-                        idContract={data?.idContract}
-                        presetValue={null}
+                        idContract={idContract}
+                        contractNum={values?.сontractNum}
+                        contractsIDs={data?.contractsIDs}
                         config={{ hidden: dataOperation?.hiddenFields?.typeWork ? true : false }}
+                        setIdContract={setIdContract}
                         onSelect={onClick}
                     />
                     <Director
@@ -723,34 +662,3 @@ export default function TaskPopup(props) {
         </InputDataPopup>
     );
 }
-
-// await axios
-//     .post(`${window.location.origin}/api/addTask`, resultData)
-//     .then(response => {
-//         if (response.status === 200) {
-//             socket.emit('addTask', {
-//                 task: resultData,
-//                 assigneeId: values?.executor?.mmId,
-//                 directorId: values?.director?.mmId
-//             });
-//             setAddTaskState(false);
-
-//             // console.log(`contractData: ${JSON.stringify(contractData, null, 4)}`);
-//             navigate(`../../dataform/works/${idContract}`, {
-//                 state: {
-//                     partition: 'department',
-//                     dataOperation: dataOperation
-//                 }
-//             });
-//         }
-//     })
-//     .catch(error => {
-//         if (error.response) {
-//             console.log(error.response);
-//             console.log('server responded');
-//         } else if (error.request) {
-//             console.log('network error');
-//         } else {
-//             console.log(error);
-//         }
-//     });

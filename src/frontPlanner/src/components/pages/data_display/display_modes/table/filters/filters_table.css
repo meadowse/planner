@@ -8,12 +8,6 @@
     padding: 0 0.5rem;
 }
 
-.table-mode__thead-td-reset-filters {
-    width: 100%;
-    padding: 0.3125rem 0.625rem;
-    outline: none;
-}
-
 .table-mode__filters-inpt-filter,
 .dropdown_filter {
     width: 100%;
@@ -22,6 +16,12 @@
 
 .table-mode__thead-tr-reset-filters {
     background-color: #fff;
+}
+
+.table-mode__thead-td-reset-filters {
+    width: 100%;
+    padding: 0.3125rem 0.625rem;
+    outline: none;
 }
 
 .table-mode__thead-td-reset-filters p {

@@ -516,9 +516,9 @@ export default function DataDisplayPage({ partition }) {
                                                 Cookies.get('MMUSERID'),
                                                 modeOption?.listTasks
                                             );
-                                            console.log(
-                                                `filteredDataById: ${JSON.stringify(filteredDataById, null, 4)}`
-                                            );
+                                            // console.log(
+                                            //     `filteredDataById: ${JSON.stringify(filteredDataById, null, 4)}`
+                                            // );
                                             const filteredData = filterData(
                                                 filteredDataById,
                                                 simplifyData(extractSampleData(filteredDataById, valsToDisplay)),
@@ -529,6 +529,7 @@ export default function DataDisplayPage({ partition }) {
                                                     testData={filteredData}
                                                     modeConfig={{
                                                         keys: valsToDisplay,
+                                                        contractsIDs: resolvedData?.contractsIDs,
                                                         partition: partition,
                                                         dataOperations: dataOperations
                                                     }}

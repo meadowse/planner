@@ -75,12 +75,10 @@ const COLUMNS = [
                 navigate('../../dataform/general/', navigationArg);
             }
 
-            return props.value ? (
+            return (
                 <p className="cell__num" onClick={onShowInfoCard}>
                     {props.value ? props.value : 'Нет данных'}
                 </p>
-            ) : (
-                'Нет данных'
             );
         }
     },
@@ -237,36 +235,6 @@ const COLUMNS = [
                     </button>
                 </div>
             );
-        }
-    },
-    {
-        Header: 'Сотрудник',
-        accessor: 'responsible',
-        sortable: true,
-        sortBy: 'fullName',
-        Cell: props => {
-            const navigate = useNavigate();
-            const { addToHistory } = useHistoryContext();
-
-            function onShowInfoEmployee(employee) {
-                // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
-
-                // localStorage.setItem('employee_settings', JSON.stringify({ activeTab: 0, data: userInfo?.data || [] }));
-
-                startTransition(() => {
-                    addToHistory(`${window.location.pathname}`);
-                    navigate(`../../user/profile/`, {
-                        state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
-                    });
-                    // navigate('../../user/', {
-                    //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
-                    // });
-                });
-            }
-
-            return props?.value && Object.keys(props?.value).length !== 0
-                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
-                : 'Нет данных';
         }
     },
     {
@@ -441,7 +409,11 @@ const COLUMNS = [
                             <TaskPopup
                                 additClass="add-task"
                                 title="Новая задача"
-                                data={{ idContract: props?.config?.idContract, task: props?.config?.task }}
+                                data={{
+                                    idContract: props?.config?.idContract,
+                                    task: props?.config?.task,
+                                    contractsIDs: props?.config?.contractsIDs
+                                }}
                                 operation="creation"
                                 addTaskState={addTaskState}
                                 setAddTaskState={setAddTaskState}
@@ -472,7 +444,11 @@ const COLUMNS = [
                             <TaskPopup
                                 additClass="add-task"
                                 title="Редактирование задачи"
-                                data={{ idContract: props?.config?.idContract, task: props?.config?.task }}
+                                data={{
+                                    idContract: props?.config?.idContract,
+                                    task: props?.config?.task,
+                                    contractsIDs: props?.config?.contractsIDs
+                                }}
                                 operation="update"
                                 addTaskState={addTaskState}
                                 setAddTaskState={setAddTaskState}
@@ -481,6 +457,61 @@ const COLUMNS = [
                         )}
                 </>
             );
+        }
+    },
+    {
+        Header: 'Проектный менеджер',
+        accessor: 'manager',
+        sortable: true,
+        sortBy: 'fullName',
+        Cell: props => {
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee(employee) {
+                if (employee?.mmId && employee?.mmId !== -1) {
+                    startTransition(() => {
+                        addToHistory(`${window.location.pathname}`);
+                        navigate(`../../user/profile/`, {
+                            state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                        });
+                    });
+                }
+            }
+
+            return props?.value && Object.keys(props?.value).length !== 0
+                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
+                : 'Нет данных';
+        }
+    },
+    {
+        Header: 'Руководитель отдела',
+        accessor: 'responsible',
+        sortable: true,
+        sortBy: 'fullName',
+        Cell: props => {
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee(employee) {
+                // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
+
+                // localStorage.setItem('employee_settings', JSON.stringify({ activeTab: 0, data: userInfo?.data || [] }));
+
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+                    navigate(`../../user/profile/`, {
+                        state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                    });
+                    // navigate('../../user/', {
+                    //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                    // });
+                });
+            }
+
+            return props?.value && Object.keys(props?.value).length !== 0
+                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
+                : 'Нет данных';
         }
     },
     {

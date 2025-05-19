@@ -10,6 +10,7 @@ export const DEFAULT_FILTERS = {
     stage: 'Все',
     deadlineTask: 'Все',
     dateOfEnding: 'Все',
+    manager: 'Все',
     responsible: 'Все',
     participants: 'Все',
     pathToFolder: '',
@@ -184,9 +185,19 @@ export const OPTIONS_FILTER_CONF = {
 
         return newData;
     },
+    manager: data => {
+        const newData = [];
+        const tempData = ['Все', ...Array.from(new Set(data.map(item => item.manager?.fullName)))];
+
+        tempData.map(item => {
+            if (item) newData.push(item);
+        });
+
+        return newData;
+    },
     responsible: data => {
         const newData = [];
-        let tempData = ['Все', ...Array.from(new Set(data.map(item => item.responsible?.fullName)))];
+        const tempData = ['Все', ...Array.from(new Set(data.map(item => item.responsible?.fullName)))];
 
         tempData.map(item => {
             if (item) newData.push(item);
@@ -228,6 +239,16 @@ export const FILTER_HANDLERS_CONF = new Map([
             filterVal?.includes('Все') || services?.title?.toLowerCase().includes(filterVal?.toLowerCase())
     ],
     ['status', (filterVal, status) => filterVal?.includes('Все') || Object.values(status)?.includes(filterVal)],
+    [
+        'manager',
+        (filterVal, manager) => {
+            if (filterVal?.includes('Все')) return true;
+            else {
+                if (manager && Object.keys(manager).length !== 0)
+                    return filterVal?.includes('Все') || Object.values(manager)?.includes(filterVal);
+            }
+        }
+    ],
     [
         'responsible',
         (filterVal, responsible) => {

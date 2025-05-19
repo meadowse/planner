@@ -104,9 +104,7 @@ const loadData = async partition => {
                         console.log(error);
                     }
                 });
-            // console.log(`resolvedData: ${JSON.stringify(resolvedData, null, 4)}`);
-            // return formData(await dataLoader(`${window.location.origin}/contracts.json`), partition, null);
-            // return formData(await dataLoader('http://10.199.254.28:3000/api/'), partition, null);
+
             return resolvedData;
         },
         // Оборудование
@@ -151,13 +149,39 @@ const loadData = async partition => {
             ];
 
             await axios
+                .get(`${window.location.origin}/api/`)
+                .then(response => {
+                    if (response.status === 200) {
+                        if (response.data && response.data.length !== 0) {
+                            resolvedData.contractsIDs = {};
+                            response.data.forEach(contract => {
+                                resolvedData.contractsIDs[contract.contractNum] = contract?.contractId || -1;
+                            });
+                        }
+                    }
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.log('server responded');
+                        resolvedData.contractsIDs = {};
+                    } else if (error.request) {
+                        console.log('network error');
+                        resolvedData.contractsIDs = {};
+                    } else {
+                        console.log(error);
+                        resolvedData.contractsIDs = {};
+                    }
+                });
+
+            await axios
                 .all(endpoints.map(endpoint => axios.post(endpoint, { employeeId: Cookies.get('MMUSERID') })))
                 .then(
-                    axios.spread((tasks, contracts) => {
+                    axios.spread((tasks, personalContracts) => {
                         resolvedData.tasks = formData(tasks?.data, partition, null).sort((a, b) => b?.id - a?.id) || [];
                         resolvedData.contracts =
-                            formData(contracts?.data, partition, null).sort((a, b) => b?.contractId - a?.contractId) ||
-                            [];
+                            formData(personalContracts?.data, partition, null).sort(
+                                (a, b) => b?.contractId - a?.contractId
+                            ) || [];
                         // if (tasks?.data && tasks?.data.length !== 0) resolvedData.tasks = tasks?.data;
                         // if (contracts && contracts.length !== 0) resolvedData.contracts = contracts;
                     })
@@ -165,19 +189,13 @@ const loadData = async partition => {
                 .catch(error => {
                     if (error.response) {
                         console.log('server responded');
-
-                        resolvedData.tasks = [];
-                        resolvedData.contracts = [];
+                        resolvedData.tasks = resolvedData.contracts = [];
                     } else if (error.request) {
                         console.log('network error');
-
-                        resolvedData.tasks = [];
-                        resolvedData.contracts = [];
+                        resolvedData.tasks = resolvedData.contracts = [];
                     } else {
                         console.log(error);
-
-                        resolvedData.tasks = [];
-                        resolvedData.contracts = [];
+                        resolvedData.tasks = resolvedData.contracts = [];
                     }
                 });
             return resolvedData;

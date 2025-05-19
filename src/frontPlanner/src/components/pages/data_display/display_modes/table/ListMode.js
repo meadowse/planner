@@ -44,6 +44,8 @@ function Cell({ cellData, cellConfig }) {
 export default function ListMode(props) {
     const { testData, modeConfig } = props;
 
+    // console.log(`ListMode modeConfig: ${JSON.stringify(modeConfig, null, 4)}`);
+
     const [toggleState, setToggleState] = useState(false);
     const [data, setData] = useState([]);
     const [order, setOrder] = useState('ASC');
@@ -63,6 +65,7 @@ export default function ListMode(props) {
         task: headData => {
             const config = {
                 idContract: modeConfig?.idContract,
+                contractsIDs: modeConfig?.contractsIDs,
                 task: {}
             };
             return <HeadCell cellData={headData} cellConfig={config} />;
@@ -85,7 +88,8 @@ export default function ListMode(props) {
         },
         task: cellData => {
             const config = {
-                idContract: filteredData[cellData?.indRow]?.id,
+                idContract: filteredData[cellData?.indRow]?.contractId,
+                contractsIDs: modeConfig?.contractsIDs,
                 task: filteredData[cellData?.indRow] || {}
             };
             return <Cell cellData={cellData} cellConfig={config} />;
@@ -117,40 +121,42 @@ export default function ListMode(props) {
                         />
                     ) : null}
                     {headerGroups.map(headerGroup => (
-                        <tr className="table-mode__thead-tr" {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => {
-                                const cellData = {
-                                    column: column
-                                };
-                                return (
-                                    <th className="table-mode__thead-th" {...column.getHeaderProps()}>
-                                        <div className="table-mode__thead-th-inner">
-                                            {/* Генерация ячеек шапки таблицы */}
-                                            {HEAD_CELL_CONF[column.id]
-                                                ? HEAD_CELL_CONF[column.id](cellData)
-                                                : HEAD_CELL_CONF.default(cellData)}
-                                            {column.sortable && (
-                                                <IconButton
-                                                    nameClass={classNames('ic_btn', 'sorting')}
-                                                    icon="sort.svg"
-                                                    onClick={() =>
-                                                        column?.sortable &&
-                                                        sortData(
-                                                            filteredData,
-                                                            column.id,
-                                                            column.sortBy,
-                                                            order,
-                                                            setOrder,
-                                                            setData
-                                                        )
-                                                    }
-                                                />
-                                            )}
-                                        </div>
-                                    </th>
-                                );
-                            })}
-                        </tr>
+                        <>
+                            <tr className="table-mode__thead-tr" {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => {
+                                    const cellData = {
+                                        column: column
+                                    };
+                                    return (
+                                        <th className="table-mode__thead-th" {...column.getHeaderProps()}>
+                                            <div className="table-mode__thead-th-inner">
+                                                {/* Генерация ячеек шапки таблицы */}
+                                                {HEAD_CELL_CONF[column.id]
+                                                    ? HEAD_CELL_CONF[column.id](cellData)
+                                                    : HEAD_CELL_CONF.default(cellData)}
+                                                {column.sortable && (
+                                                    <IconButton
+                                                        nameClass={classNames('ic_btn', 'sorting')}
+                                                        icon="sort.svg"
+                                                        onClick={() =>
+                                                            column?.sortable &&
+                                                            sortData(
+                                                                filteredData,
+                                                                column.id,
+                                                                column.sortBy,
+                                                                order,
+                                                                setOrder,
+                                                                setData
+                                                            )
+                                                        }
+                                                    />
+                                                )}
+                                            </div>
+                                        </th>
+                                    );
+                                })}
+                            </tr>
+                        </>
                     ))}
                 </thead>
                 <tbody className="table-mode__tbody" {...getTableBodyProps()}>

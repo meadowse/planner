@@ -39,6 +39,12 @@ export const STATUSES_CONF = {
 
 // Конфигурация по преобразованию данных
 export const DATA_CONVERSION_MAP = {
+    contractNum: contractNum => {
+        return contractNum ? contractNum : 'Нет данных';
+    },
+    address: address => {
+        return address ? address : 'Нет данных';
+    },
     stage: stage => {
         return Object.keys(stage).length !== 0 && stage?.title
             ? { title: stage?.title, color: STAGES_CONF_MAP[stage.title] }
@@ -66,6 +72,17 @@ export const DATA_CONVERSION_MAP = {
             };
         }
         return null;
+    },
+    manager: manager => {
+        if (manager && Object.keys(manager).length !== 0) {
+            return {
+                id: -1,
+                mmId: manager?.idManager || -1,
+                fullName: manager?.fullName,
+                photo: '/img/user.svg',
+                post: null
+            };
+        }
     },
     participants: participants => {
         return participants && participants.length !== 0
@@ -249,6 +266,7 @@ export const DEPARTMENT_DATA_CONF = {
                 'company',
                 'contacts',
                 'dateOfEnding',
+                'manager',
                 'responsible'
             ]
         },
@@ -264,6 +282,7 @@ export const DEPARTMENT_DATA_CONF = {
                 'stage',
                 'dateOfEnding',
                 'responsible',
+                'manager',
                 'pathToFolder'
             ]
         },

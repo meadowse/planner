@@ -287,6 +287,7 @@ export default function UserInfoNew() {
                 </button>
             </div>
             <div className="user__options-content">
+                <div id="portal" />
                 {isLoading ? (
                     <Preloader />
                 ) : userInfo.tab?.key in TABS_CONF ? (

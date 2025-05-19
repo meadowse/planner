@@ -53,8 +53,6 @@ export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleSta
 
         setActiveFilters(initializeFilters(tableData, modeConfig?.keys));
         setFilteredData(applyFilters(tableData, initializeFilters(tableData, modeConfig?.keys)));
-        // setActiveFilters(Object.assign({}, INITIAL_FILTERS));
-        // setFilteredData(applyFilters(tableData, INITIAL_FILTERS));
     };
 
     // Изменение фильтров

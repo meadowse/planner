@@ -191,7 +191,7 @@ function Manager(props) {
     return (
         <div className="tab-general-row-wrapper" data-error={managerError ? managerError.message : null}>
             <div className="tab-general-row__manager tab-general-row">
-                <h2 className="tab-general-row__title">Менеджер</h2>
+                <h2 className="tab-general-row__title">Проектный менеджер</h2>
                 <div className="tab-general__manager tab-general-row-item">
                     <ul className="tab-general-row__item-managers">
                         {manager && Object.keys(manager)?.length !== 0 ? (
@@ -365,7 +365,7 @@ function Participants(props) {
     return (
         <div className="tab-general-row-wrapper" data-error={participantsError ? participantsError.message : null}>
             <div className="tab-general-row__participants tab-general-row">
-                <h2 className="tab-general-row__title">Участники</h2>
+                <h2 className="tab-general-row__title">Исполнители</h2>
                 <div className="tab-general__participants tab-general-row-item">
                     <ul className="tab-general-row-item__participants">
                         {participants && participants.length !== 0 ? (

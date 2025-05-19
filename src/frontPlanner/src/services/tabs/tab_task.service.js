@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 // Импорт доп.функционала
 import { findNestedObj } from '@helpers/helper';
 import { getDateInSpecificFormat } from '@helpers/calendar';
@@ -12,6 +14,10 @@ const getDataFormOperation = operation => {
 const getTaskData = (data, disabledFields) => {
     const dataConf = {};
     const DEFAULT_VALUES = {
+        //
+        // contractNum: value => {
+        //     return value ? value : '';
+        // },
         // Вид работы
         typeWork: value => {
             return value && Object.keys(value).length !== 0 ? value : null;
@@ -88,9 +94,103 @@ const getTaskData = (data, disabledFields) => {
     return dataConf;
 };
 
+// Добавление задачи
+const addTask = async (data, socket, notificationData) => {
+    const endpoints = {
+        [`${window.location.origin}/api/addTask`]: data,
+        [`${window.location.origin}/api/getDataUser`]: { employeeId: notificationData?.director?.mmId }
+    };
+
+    // console.log(`keys: ${JSON.stringify(Object.keys(endpoints), null, 4)}`);
+
+    await axios
+        .all(Object.keys(endpoints).map(key => axios.post(key, endpoints[key])))
+        .then(
+            axios.spread((response, user) => {
+                if (response.status === 200) {
+                    const employee = user.data && user.data.length !== 0 ? user.data[0] : {};
+
+                    socket.emit('addTask', {
+                        task: {
+                            title: data?.task,
+                            director: {
+                                mmId: employee?.id,
+                                fullName: employee?.FIO
+                            },
+                            deadline: data?.deadline?.value,
+                            comment: data?.comment
+                        },
+                        assigneeId: notificationData?.executor?.mmId
+                    });
+
+                    // setAddTaskState(false);
+                    // navigate(window.location.pathname);
+                }
+            })
+        )
+        .catch(error => {
+            if (error.response) {
+                console.log(error.response);
+                console.log('server responded');
+                return false;
+            } else if (error.request) {
+                console.log('network error');
+                return false;
+            } else {
+                console.log(error);
+                return false;
+            }
+        });
+};
+
+// Редактирование задачи
+const editTask = async newData => {
+    await axios
+        .post(`${window.location.origin}/api/editTask`, newData)
+        .then(response => {
+            if (response.status === 200) {
+                //
+            }
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log(error.response);
+                console.log('server responded');
+            } else if (error.request) {
+                console.log('network error');
+            } else {
+                console.log(error);
+            }
+        });
+};
+
+// Удаление задачи
+const deleteTask = async idTask => {
+    await axios
+        .post(`${window.location.origin}/api/deleteTask`, { taskId: idTask })
+        .then(response => {
+            if (response.status === 200) {
+                //
+            }
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log(error.response);
+                console.log('server responded');
+            } else if (error.request) {
+                console.log('network error');
+            } else {
+                console.log(error);
+            }
+        });
+};
+
 const TaskService = {
     getDataFormOperation,
-    getTaskData
+    getTaskData,
+    addTask,
+    editTask,
+    deleteTask
 };
 
 export default TaskService;

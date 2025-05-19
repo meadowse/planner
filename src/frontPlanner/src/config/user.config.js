@@ -5,7 +5,6 @@ export const EMPLOYEE_CONF = {
     workPhone: 'Рабочий телефон',
     internalPhone: 'Внутренний телефон',
     telegramm: 'Telegram',
-    skype: 'Skype',
     division: 'Подразделение',
     birthday: 'День рождения'
 };
