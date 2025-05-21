@@ -1,5 +1,14 @@
-import { useState, useEffect, useRef, startTransition } from 'react';
-import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef, startTransition, Suspense } from 'react';
+import {
+    Routes,
+    Route,
+    useNavigate,
+    useParams,
+    useLocation,
+    useLoaderData,
+    Await,
+    resolvePath
+} from 'react-router-dom';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
@@ -57,14 +66,17 @@ function CardInfo({ config, userData }) {
 export default function UserInfoNew() {
     const lastSegmentPath = `${window.location.href.match(/([^\/]*)\/*$/)[1]}`;
 
+    const { idEmployee } = useParams();
+    const data = useLoaderData();
     const { state } = useLocation();
+
     const { history, backToPrevPath } = useHistoryContext();
     const navigate = useNavigate();
 
     const refTabBar = useRef(null);
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [data, setData] = useState([]);
+    // const [isLoading, setIsLoading] = useState(false);
+    // const [data, setData] = useState([]);
     const [userInfo, setUserInfo] = useState({
         // Разделы пользователя
         tabs: [],
@@ -80,79 +92,7 @@ export default function UserInfoNew() {
         dataOperations: []
     });
 
-    const TABS_CONF = {
-        profile: () => {
-            const employee = Object.assign({}, data?.employee);
-            return (
-                <Route
-                    path="profile"
-                    element={
-                        employee && Object.keys(employee).length !== 0 ? (
-                            <div className="user__profile">
-                                <CardProfile
-                                    profileData={{
-                                        photo: employee?.photo,
-                                        fullName: employee?.fullName
-                                    }}
-                                />
-                                <CardInfo config={UserService.getEmployeeConfig()} userData={employee} />
-                            </div>
-                        ) : null
-                    }
-                />
-            );
-        },
-        tasks: () => {
-            const filteredData = getFilteredData(data?.tabData, state?.idEmployee, userInfo?.tabOption) || [];
-            return (
-                <Route
-                    path="tasks"
-                    element={
-                        <ListMode
-                            testData={filteredData || []}
-                            modeConfig={{
-                                keys: userInfo.valsToDisplay,
-                                partition: userInfo.tab?.key,
-                                dataOperations: userInfo.dataOperations,
-                                idContract: null
-                            }}
-                        />
-                    }
-                />
-            );
-        },
-        contracts: () => {
-            const filteredData = getFilteredData(data?.tabData, state?.idEmployee, userInfo?.tabOption) || [];
-            return (
-                <Route
-                    path="contracts"
-                    element={
-                        <ListMode
-                            testData={filteredData || []}
-                            modeConfig={{
-                                keys: userInfo.valsToDisplay,
-                                partition: userInfo.tab?.key,
-                                dataOperations: userInfo.dataOperations,
-                                idContract: null
-                            }}
-                        />
-                    }
-                />
-            );
-        }
-    };
-
-    async function fetchData(key, idEmployee) {
-        try {
-            setIsLoading(true);
-            const response = await UserService.loadData(key, idEmployee);
-            setData(response);
-        } catch (err) {
-            console.log(`error msg: ${err.message}`);
-        } finally {
-            setIsLoading(false);
-        }
-    }
+    // console.log(`UserInfo uploadedData: ${JSON.stringify(data, null, 4)}`);
 
     function onClose() {
         startTransition(() => {
@@ -173,22 +113,25 @@ export default function UserInfoNew() {
 
         if (refTabBar.current) refTabBar.current.style.marginLeft = `${0 * 12.5}%`;
 
-        setUserInfo(() => {
-            fetchData(tabData?.key, state?.idEmployee);
-            return {
-                tabs: userInfo.tabs,
-                tab: tabData,
-                tabOptions: tabOptionsData,
-                tabOption: tabOptionData,
-                valsToDisplay: valsToDisplayData,
-                dataOperations: dataOperationsData
-            };
+        setUserInfo({
+            tabs: userInfo.tabs,
+            tab: tabData,
+            tabOptions: tabOptionsData,
+            tabOption: tabOptionData,
+            valsToDisplay: valsToDisplayData,
+            dataOperations: dataOperationsData
         });
 
         startTransition(() => {
-            navigate(`${tabData?.key}/`, {
+            navigate(`/user/${idEmployee}/${tabData?.key}/${tabData?.key}`, {
                 state: { idEmployee: state?.idEmployee, path: `${window.location.pathname}` }
             });
+            // navigate(`${tabData?.key}/${lastSegmentPath}`, {
+            //     state: { idEmployee: state?.idEmployee, path: `${window.location.pathname}` }
+            // });
+            // navigate(`${tabData?.key}/`, {
+            //     state: { idEmployee: state?.idEmployee, path: `${window.location.pathname}` }
+            // });
         });
     }
 
@@ -204,8 +147,8 @@ export default function UserInfoNew() {
     }
 
     function onExitAccount() {
-        // Cookies.remove('MMAUTHTOKEN');
-        // Cookies.remove('MMUSERID');
+        Cookies.remove('MMAUTHTOKEN');
+        Cookies.remove('MMUSERID');
 
         navigate('/auth');
     }
@@ -224,18 +167,19 @@ export default function UserInfoNew() {
         const valsToDisplayData = UserService.getValuesToDisplay(tabData, tabOptionData) || [];
         const dataOperationsData = UserService.getDataOperations() || [];
 
-        setUserInfo(() => {
-            fetchData(lastSegmentPath, state?.idEmployee);
-            return {
-                tabs: tabsData,
-                tab: tabData,
-                tabOptions: tabOptionsData,
-                tabOption: tabOptionData,
-                valsToDisplay: valsToDisplayData,
-                dataOperations: dataOperationsData
-            };
+        console.log(`User info: ${JSON.stringify(userInfo, null, 4)}`);
+
+        if (refTabBar.current) refTabBar.current.style.marginLeft = `${0 * 12.5}%`;
+
+        setUserInfo({
+            tabs: tabsData,
+            tab: tabData,
+            tabOptions: tabOptionsData,
+            tabOption: tabOptionData,
+            valsToDisplay: valsToDisplayData,
+            dataOperations: dataOperationsData
         });
-    }, [history]);
+    }, [data?.uploadedData]); //[history, lastSegmentPath]
 
     return (
         <div className="user__info">
@@ -287,13 +231,157 @@ export default function UserInfoNew() {
                 </button>
             </div>
             <div className="user__options-content">
-                <div id="portal" />
-                {isLoading ? (
-                    <Preloader />
-                ) : userInfo.tab?.key in TABS_CONF ? (
-                    <Routes>{TABS_CONF[userInfo.tab?.key]()}</Routes>
-                ) : null}
+                <Routes>
+                    <Route
+                        path="profile"
+                        element={
+                            <Suspense fallback={<Preloader />}>
+                                <Await resolve={data?.uploadedData}>
+                                    {resolvedData => {
+                                        const employee = Object.assign({}, resolvedData?.employee);
+                                        return employee && Object.keys(employee).length !== 0 ? (
+                                            <div className="user__profile">
+                                                <CardProfile
+                                                    profileData={{
+                                                        photo: employee?.photo,
+                                                        fullName: employee?.fullName
+                                                    }}
+                                                />
+                                                <CardInfo
+                                                    config={UserService.getEmployeeConfig()}
+                                                    userData={employee}
+                                                />
+                                            </div>
+                                        ) : null;
+                                    }}
+                                </Await>
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="tasks"
+                        element={
+                            <Suspense fallback={<Preloader />}>
+                                <Await resolve={data?.uploadedData}>
+                                    {resolvedData => {
+                                        const filteredData =
+                                            getFilteredData(resolvedData?.tabData, idEmployee, userInfo?.tabOption) ||
+                                            [];
+
+                                        return (
+                                            <ListMode
+                                                testData={filteredData || []}
+                                                modeConfig={{
+                                                    keys: userInfo.valsToDisplay,
+                                                    partition: userInfo.tab?.key,
+                                                    dataOperations: userInfo.dataOperations,
+                                                    idContract: null
+                                                }}
+                                            />
+                                        );
+                                    }}
+                                </Await>
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="contracts"
+                        element={
+                            <Suspense fallback={<Preloader />}>
+                                <Await resolve={data?.uploadedData}>
+                                    {resolvedData => {
+                                        const filteredData =
+                                            getFilteredData(resolvedData?.tabData, idEmployee, userInfo?.tabOption) ||
+                                            [];
+
+                                        return (
+                                            <ListMode
+                                                testData={filteredData || []}
+                                                modeConfig={{
+                                                    keys: userInfo.valsToDisplay,
+                                                    partition: userInfo.tab?.key,
+                                                    dataOperations: userInfo.dataOperations,
+                                                    idContract: null
+                                                }}
+                                            />
+                                        );
+                                    }}
+                                </Await>
+                            </Suspense>
+                        }
+                    />
+                </Routes>
             </div>
         </div>
     );
 }
+
+// {isLoading ? (
+//                     <Preloader />
+//                 ) : userInfo.tab?.key in TABS_CONF ? (
+//                     <Routes>{TABS_CONF[userInfo.tab?.key]()}</Routes>
+//                 ) : null}
+
+// const TABS_CONF = {
+//     profile: () => {
+//         const employee = Object.assign({}, uploadedData?.employee);
+//         return (
+//             <Route
+//                 path="profile"
+//                 element={
+//                     employee && Object.keys(employee).length !== 0 ? (
+//                         <div className="user__profile">
+//                             <CardProfile
+//                                 profileData={{
+//                                     photo: employee?.photo,
+//                                     fullName: employee?.fullName
+//                                 }}
+//                             />
+//                             <CardInfo config={UserService.getEmployeeConfig()} userData={employee} />
+//                         </div>
+//                     ) : null
+//                 }
+//             />
+//         );
+//     },
+//     tasks: () => {
+//         // const filteredData = getFilteredData(data?.tabData, state?.idEmployee, userInfo?.tabOption) || [];
+//         const filteredData = getFilteredData(uploadedData?.tabData, idEmployee, userInfo?.tabOption) || [];
+//         return (
+//             <Route
+//                 path="tasks"
+//                 element={
+//                     <ListMode
+//                         testData={filteredData || []}
+//                         modeConfig={{
+//                             keys: userInfo.valsToDisplay,
+//                             partition: userInfo.tab?.key,
+//                             dataOperations: userInfo.dataOperations,
+//                             idContract: null
+//                         }}
+//                     />
+//                 }
+//             />
+//         );
+//     }
+//     contracts: () => {
+//         // const filteredData = getFilteredData(data?.tabData, state?.idEmployee, userInfo?.tabOption) || [];
+//         const filteredData = getFilteredData(uploadedData?.tabData, idEmployee, userInfo?.tabOption) || [];
+//         return (
+//             <Route
+//                 path="contracts"
+//                 element={
+//                     <ListMode
+//                         testData={filteredData || []}
+//                         modeConfig={{
+//                             keys: userInfo.valsToDisplay,
+//                             partition: userInfo.tab?.key,
+//                             dataOperations: userInfo.dataOperations,
+//                             idContract: null
+//                         }}
+//                     />
+//                 }
+//             />
+//         );
+//     }
+// };

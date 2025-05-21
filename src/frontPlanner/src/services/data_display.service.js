@@ -149,31 +149,6 @@ const loadData = async partition => {
             ];
 
             await axios
-                .get(`${window.location.origin}/api/`)
-                .then(response => {
-                    if (response.status === 200) {
-                        if (response.data && response.data.length !== 0) {
-                            resolvedData.contractsIDs = {};
-                            response.data.forEach(contract => {
-                                resolvedData.contractsIDs[contract.contractNum] = contract?.contractId || -1;
-                            });
-                        }
-                    }
-                })
-                .catch(error => {
-                    if (error.response) {
-                        console.log('server responded');
-                        resolvedData.contractsIDs = {};
-                    } else if (error.request) {
-                        console.log('network error');
-                        resolvedData.contractsIDs = {};
-                    } else {
-                        console.log(error);
-                        resolvedData.contractsIDs = {};
-                    }
-                });
-
-            await axios
                 .all(endpoints.map(endpoint => axios.post(endpoint, { employeeId: Cookies.get('MMUSERID') })))
                 .then(
                     axios.spread((tasks, personalContracts) => {

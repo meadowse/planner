@@ -27,9 +27,12 @@ export default function Layout() {
     function onRetrieveUser() {
         startTransition(() => {
             addToHistory(`${window.location.pathname}`);
-            navigate(`../../user/profile/`, {
+            navigate(`../../user/${Cookies.get('MMUSERID')}/profile/profile/`, {
                 state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
             });
+            // navigate(`../../user/profile/`, {
+            //     state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
+            // });
         });
     }
 

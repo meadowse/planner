@@ -65,7 +65,7 @@ export default function ListMode(props) {
         task: headData => {
             const config = {
                 idContract: modeConfig?.idContract,
-                contractsIDs: modeConfig?.contractsIDs,
+                // contractsIDs: modeConfig?.contractsIDs,
                 task: {}
             };
             return <HeadCell cellData={headData} cellConfig={config} />;
@@ -89,7 +89,7 @@ export default function ListMode(props) {
         task: cellData => {
             const config = {
                 idContract: filteredData[cellData?.indRow]?.contractId,
-                contractsIDs: modeConfig?.contractsIDs,
+                // contractsIDs: modeConfig?.contractsIDs,
                 task: filteredData[cellData?.indRow] || {}
             };
             return <Cell cellData={cellData} cellConfig={config} />;

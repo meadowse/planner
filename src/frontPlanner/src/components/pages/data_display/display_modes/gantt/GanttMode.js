@@ -154,7 +154,8 @@ function TaskRow(props) {
                 };
                 startTransition(() => {
                     addToHistory(`${window.location.pathname}`);
-                    navigate(`../../user/profile/`, navigationArg);
+                    navigate(`../../user/${task?.idEmployee}/profile/profile/`, navigationArg);
+                    // navigate(`../../user/profile/`, navigationArg);
                     // navigate('../../user/', navigationArg);
                 });
             },

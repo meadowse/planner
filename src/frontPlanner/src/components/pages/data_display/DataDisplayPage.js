@@ -529,7 +529,7 @@ export default function DataDisplayPage({ partition }) {
                                                     testData={filteredData}
                                                     modeConfig={{
                                                         keys: valsToDisplay,
-                                                        contractsIDs: resolvedData?.contractsIDs,
+                                                        // contractsIDs: resolvedData?.contractsIDs,
                                                         partition: partition,
                                                         dataOperations: dataOperations
                                                     }}

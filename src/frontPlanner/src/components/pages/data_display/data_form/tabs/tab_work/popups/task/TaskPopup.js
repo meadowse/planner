@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState, useContext } from 'react';
+import { useEffect, useReducer, useRef, useState, useContext, startTransition } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
@@ -18,6 +18,7 @@ import ActionSelectionPopup from '@generic/elements/popup/ActionSelectionPopup';
 // Импорт контекстов
 import { SocketContext } from '../../../../../../../../contexts/socket.context';
 import { authContext } from '../../../../../../../../contexts/auth.context';
+import { useHistoryContext } from '../../../../../../../../contexts/history.context';
 
 // Импорт кастомных хуков
 import { useTaskForm } from '@hooks/useAddTaskForm';
@@ -33,85 +34,117 @@ import './task_popup.css';
 
 // Идентификатор договора
 function ContractNumber(props) {
-    const { config, onChange } = props;
+    const { isLoading, contractsIDs, config, setIdContract, onSelect } = props;
     const [contractNum, setContractNum] = useState('');
 
-    function onChangeContractNum(e) {
-        setContractNum(e.target.value);
-        onChange(e);
+    // Выбор номера договора
+    function onSelectContractNum(value) {
+        // alert(`onSelectContractNum ${JSON.stringify(value, null, 4)}`);
+        setContractNum(value?.title);
+        onSelect('contractNum', value?.title);
     }
+
+    // Удаление номера договора
+    function onDeleteContractNum() {
+        setContractNum('');
+        onSelect('contractNum', '');
+        setIdContract(null);
+    }
+
+    useEffect(() => {
+        if (contractNum && contractNum in contractsIDs) setIdContract(contractsIDs[contractNum]);
+    }, [contractNum]);
 
     return !config?.hidden ? (
         <li className="popup__content-contractnum popup-content-item">
             <h2 className="popup-content-title">Номер договора</h2>
-            <input
-                type="text"
-                className="popup__contractnum inpt-txt"
-                name="сontractNum"
-                value={contractNum}
-                onChange={e => onChangeContractNum(e)}
-            />
+            <div className="popup__menu-wrapper">
+                {!isLoading ? (
+                    contractsIDs ? (
+                        <DropdownMenu
+                            additClass="contract-num"
+                            icon="arrow_down_gr.svg"
+                            nameMenu="Выбрать номер договора"
+                            specifiedVal={!contractNum ? { title: 'Выбрать номер договора' } : { title: contractNum }}
+                            dataSource={Object.keys(contractsIDs).map(key => {
+                                return { title: key };
+                            })}
+                            onItemClick={onSelectContractNum}
+                        />
+                    ) : null
+                ) : (
+                    'Загрузка данных...'
+                )}
+                {contractNum ? (
+                    <IconButton
+                        nameClass="icon-btn__delete-type"
+                        type="button"
+                        icon="cancel.svg"
+                        onClick={onDeleteContractNum}
+                    />
+                ) : null}
+            </div>
         </li>
     ) : null;
 }
 
+{
+    /* <select
+                            value={!contractNum ? 'Выбрать номер договора' : null}
+                            onChange={e => onSelectContractNum(e.target.value)}
+                        >
+                            <option value="">Выбрать номер договора</option>
+                            {Object.keys(contractsIDs).map(keyVal => (
+                                <option key={keyVal} value={keyVal}>
+                                    {keyVal}
+                                </option>
+                            ))}
+                        </select> */
+}
+
 // Вид работы
 function TypeWork(props) {
-    const { idContract, contractNum, contractsIDs, config, onSelect, setIdContract } = props;
+    const {
+        idContract,
+        contractNum,
+        contractsIDs,
+        config,
+        onSelect
+        //  setIdContract
+    } = props;
 
     // const [idContract, setIdContract] = useState(presetValue ? presetValue : null);
     const [typeWork, setTypeWork] = useState({});
     const [typesWork, setTypesWork] = useState([]);
 
-    function onDeleteTypeWork() {
-        setTypeWork(null);
-        onSelect('typeWork', null);
+    // Загрузка видов работ
+    async function fetchTypesWork(contractId) {
+        const typesWork = await TaskService.getTypesWork(contractId);
+        if (typesWork && typesWork.length) setTypesWork(typesWork);
     }
 
+    // Выбор вида работ
     function onSelectTypeWork(value) {
         setTypeWork(value);
         onSelect('typeWork', value);
     }
 
-    // Загрузка видов работ
-    async function loadData(contractId) {
-        await axios
-            .post(`${window.location.origin}/api/getTypesWork`, {
-                // contractId: JSON.parse(localStorage.getItem('idContract'))
-                contractId: contractId
-            })
-            .then(response => {
-                if (response?.status === 200) {
-                    // console.log(`id: ${JSON.parse(localStorage.getItem('idContract'))}`);
-                    if (response?.data && response?.data.length !== 0) {
-                        const newData = response?.data?.map(item => {
-                            return { id: item?.number, title: item?.typeWork };
-                        });
-                        if (newData.length !== 0) setTypesWork(newData);
-                    }
-                }
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log('server responded');
-                    setTypesWork([]);
-                } else if (error.request) {
-                    console.log('network error');
-                } else {
-                    console.log(error);
-                }
-            });
+    // Удаление вида работ
+    function onDeleteTypeWork() {
+        setTypeWork(null);
+        onSelect('typeWork', null);
     }
 
     useEffect(() => {
-        if (idContract) loadData(idContract);
-        else {
-            if (contractNum in contractsIDs) {
-                setIdContract(contractsIDs[contractNum]);
-                loadData(contractsIDs[contractNum]);
-            }
-        }
-    }, [contractNum]);
+        if (idContract) fetchTypesWork(idContract);
+        else setTypeWork({});
+        // else {
+        //     if (contractNum in contractsIDs) {
+        //         setIdContract(contractsIDs[contractNum]);
+        //         loadData(contractsIDs[contractNum]);
+        //     }
+        // }
+    }, [idContract]);
 
     return !config?.hidden ? (
         <li className="popup__content-type popup-content-item">
@@ -120,7 +153,7 @@ function TypeWork(props) {
                 <DropdownMenu
                     additClass="type-work"
                     icon="arrow_down_gr.svg"
-                    nameMenu="Выбрать"
+                    nameMenu="Выбрать вид работы"
                     specifiedVal={typeWork}
                     dataSource={typesWork}
                     onItemClick={onSelectTypeWork}
@@ -142,10 +175,18 @@ function TypeWork(props) {
 function Director(props) {
     const { presetValue, config, onSelect } = props;
 
-    const { authorizedUser } = useContext(authContext);
-
     const [statePopup, setStatePopup] = useState(false);
     const [director, setDirector] = useState(presetValue ? presetValue : {});
+
+    const navigate = useNavigate();
+    const { addToHistory } = useHistoryContext();
+
+    // Загрузка постановщика по умолчанию
+    async function fetchDefaultDirector() {
+        const employee = await TaskService.getAuthorizedEmployee(Cookies.get('MMUSERID'));
+        setDirector(employee);
+        onSelect('director', employee);
+    }
 
     // Выбор пользователя
     function onSelectDirector(user) {
@@ -159,11 +200,22 @@ function Director(props) {
         onSelect('director', null);
     }
 
+    // Переход к профилю пользователя
+    function onClickUser() {
+        startTransition(() => {
+            addToHistory(`${window.location.pathname}`);
+            navigate(`../../user/${director?.mmId}/profile/profile/`, {
+                state: { idEmployee: director?.mmId, path: `${window.location.pathname}` }
+            });
+
+            // navigate(`../../user/profile/`, {
+            //     state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+            // });
+        });
+    }
+
     useEffect(() => {
-        if (!director || Object.keys(director).length === 0) {
-            setDirector(authorizedUser);
-            onSelect('director', authorizedUser);
-        }
+        if (!director || Object.keys(director).length === 0) fetchDefaultDirector();
     }, []);
 
     return !config?.hidden ? (
@@ -184,7 +236,7 @@ function Director(props) {
                     : null}
                 {director && Object.keys(director).length !== 0 ? (
                     <ul className="popup__director-list popup__users-list">
-                        <li className="popup__director-list-item">
+                        <li className="popup__director-list-item" onClick={onClickUser}>
                             <BgFillText type="p" text={director.fullName} bgColor="#f1f1f1" />
                         </li>
                         <li className="popup__director-list-item">
@@ -217,6 +269,9 @@ function Executor(props) {
     const [statePopup, setStatePopup] = useState(false);
     const [executor, setExecutor] = useState(presetValue ? presetValue : {});
 
+    const navigate = useNavigate();
+    const { addToHistory } = useHistoryContext();
+
     // Выбор пользователя
     function onSelectExecutor(user) {
         setExecutor(user);
@@ -227,6 +282,20 @@ function Executor(props) {
     function onDeleteExecutor() {
         setExecutor(null);
         onSelect('executor', null);
+    }
+
+    // Переход к профилю пользователя
+    function onClickUser() {
+        startTransition(() => {
+            addToHistory(`${window.location.pathname}`);
+            navigate(`../../user/${executor?.mmId}/profile/profile/`, {
+                state: { idEmployee: executor?.mmId, path: `${window.location.pathname}` }
+            });
+
+            // navigate(`../../user/profile/`, {
+            //     state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+            // });
+        });
     }
 
     return !config?.hidden ? (
@@ -247,7 +316,7 @@ function Executor(props) {
                     : null}
                 {executor && Object.keys(executor).length !== 0 ? (
                     <ul className="popup__executor-list popup__users-list">
-                        <li className="popup__executor-list-item">
+                        <li className="popup__executor-list-item" onClick={onClickUser}>
                             <BgFillText type="p" text={executor.fullName} bgColor="#f1f1f1" />
                         </li>
                         <li className="popup__executor-list-item">
@@ -353,23 +422,6 @@ function CommencementDate(props) {
         onSelect('dateStart', dateYYYYMMDD);
     }
 
-    // useEffect(() => {
-    //     if (!presetValue || presetValue.length === 0) onSelect('dateStart', startDate);
-    //     else onSelect('dateStart', presetValue);
-    // }, []);
-
-    // useEffect(() => {
-    //     if (!presetValue || presetValue.length === 0) {
-    //         let currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
-    //             format: 'YYYYMMDD',
-    //             separator: '-'
-    //         });
-    //         // console.log(`currDateYYYYMMDD: ${typeof currDateYYYYMMDD}`);
-    //         setStartDate(currDateYYYYMMDD);
-    //         onSelect('dateStart', currDateYYYYMMDD);
-    //     }
-    // }, []);
-
     return !config?.hidden ? (
         <li className="popup__content-start-date popup-content-item">
             <h2 className="popup-content-title">Дата начала</h2>
@@ -417,10 +469,13 @@ function CommencementDate(props) {
 // Дедлайн
 function DeadlineTask(props) {
     const { presetValue, config, onSelect } = props;
-    let dateYYYYMMDD;
+    const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
+        format: 'YYYYMMDD',
+        separator: '-'
+    });
 
     const [calendarState, setCalendarState] = useState(false);
-    const [deadline, setDeadline] = useState(presetValue ? presetValue : { value: '' });
+    const [deadline, setDeadline] = useState(presetValue ? presetValue : { value: currDateYYYYMMDD });
     // const [deadline, setDeadline] = useState(presetValue ? presetValue : '');
 
     // Удаление даты
@@ -433,7 +488,7 @@ function DeadlineTask(props) {
 
     // Выбор даты
     function onSelectDeadline(date) {
-        dateYYYYMMDD = getDateInSpecificFormat(new Date(date.getFullYear(), date.getMonth(), date.getDate()), {
+        const dateYYYYMMDD = getDateInSpecificFormat(new Date(date.getFullYear(), date.getMonth(), date.getDate()), {
             format: 'YYYYMMDD',
             separator: '-'
         });
@@ -519,7 +574,10 @@ export default function TaskPopup(props) {
     const { additClass, title, data, operation, addTaskState, setAddTaskState } = props;
     const dataOperation = TaskService.getDataFormOperation(operation);
 
+    const [isLoading, setIsLoading] = useState(false);
     const [idContract, setIdContract] = useState(data?.idContract ? data?.idContract : null);
+    const [contractsIDs, setContractsIDs] = useState({});
+
     const { values, onChange, onClick } = useTaskForm(
         TaskService.getTaskData(data?.task, dataOperation?.disabledFields),
         dataOperation?.disabledFields
@@ -539,6 +597,19 @@ export default function TaskPopup(props) {
 
             setAddTaskState(false);
             navigate(window.location.pathname);
+        }
+    }
+
+    async function fetchContractsIDs() {
+        try {
+            setIsLoading(true);
+            const contractsIDsData = await TaskService.getContractsIDs();
+            // console.log(`contractsIDsData: ${JSON.stringify(contractsIDsData, null, 4)}`);
+            if (contractsIDsData && Object.keys(contractsIDsData).length !== 0) setContractsIDs(contractsIDsData);
+        } catch (err) {
+            console.log(`error msg: ${err.message}`);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -586,79 +657,87 @@ export default function TaskPopup(props) {
         navigate(window.location.pathname);
     }
 
+    useEffect(() => {
+        if (!data?.idContract) fetchContractsIDs();
+    }, []);
+
     return (
-        <InputDataPopup
-            idForm="add-task-form"
-            title={title}
-            additClass={additClass}
-            overlay={true}
-            statePopup={addTaskState}
-            setStatePopup={setAddTaskState}
-        >
-            <form
-                id="add-task-form"
-                className="popup__content-add-task popup-content"
-                onSubmit={e => onOnSubmitData(e)}
+        <>
+            <div id="portal"></div>
+            <InputDataPopup
+                idForm="add-task-form"
+                title={title}
+                additClass={additClass}
+                overlay={true}
+                statePopup={addTaskState}
+                setStatePopup={setAddTaskState}
             >
-                <ul className="popup__content-add-task-left">
-                    {!data?.idContract ? (
-                        <ContractNumber
+                <form
+                    id="add-task-form"
+                    className="popup__content-add-task popup-content"
+                    onSubmit={e => onOnSubmitData(e)}
+                >
+                    <ul className="popup__content-add-task-left">
+                        {!data?.idContract ? (
+                            <ContractNumber
+                                isLoading={isLoading}
+                                contractsIDs={contractsIDs}
+                                config={{ hidden: dataOperation?.hiddenFields?.typeWork ? true : false }}
+                                setIdContract={setIdContract}
+                                onSelect={onClick}
+                            />
+                        ) : null}
+                        <TypeWork
+                            idContract={idContract}
                             config={{ hidden: dataOperation?.hiddenFields?.typeWork ? true : false }}
+                            setIdContract={setIdContract}
+                            onSelect={onClick}
+                        />
+                        <Director
+                            presetValue={data?.task?.director}
+                            config={{ hidden: dataOperation?.hiddenFields?.director ? true : false }}
+                            onSelect={onClick}
+                        />
+                        <Executor
+                            presetValue={data?.task?.executor}
+                            config={{ hidden: dataOperation?.hiddenFields?.executor ? true : false }}
+                            onSelect={onClick}
+                        />
+                        <TaskName
+                            presetValue={data?.task?.task}
+                            config={{ hidden: dataOperation?.hiddenFields?.task ? true : false }}
                             onChange={onChange}
                         />
-                    ) : null}
-                    <TypeWork
-                        idContract={idContract}
-                        contractNum={values?.сontractNum}
-                        contractsIDs={data?.contractsIDs}
-                        config={{ hidden: dataOperation?.hiddenFields?.typeWork ? true : false }}
-                        setIdContract={setIdContract}
-                        onSelect={onClick}
-                    />
-                    <Director
-                        presetValue={data?.task?.director}
-                        config={{ hidden: dataOperation?.hiddenFields?.director ? true : false }}
-                        onSelect={onClick}
-                    />
-                    <Executor
-                        presetValue={data?.task?.executor}
-                        config={{ hidden: dataOperation?.hiddenFields?.executor ? true : false }}
-                        onSelect={onClick}
-                    />
-                    <TaskName
-                        presetValue={data?.task?.task}
-                        config={{ hidden: dataOperation?.hiddenFields?.task ? true : false }}
-                        onChange={onChange}
-                    />
-                    <CommencementDate
-                        presetValue={data?.task?.dateStart || data?.task?.startDate}
-                        config={{ hidden: dataOperation?.hiddenFields?.dateStart ? true : false }}
-                        onSelect={onClick}
-                    />
-                    <DeadlineTask
-                        presetValue={data?.task?.deadlineTask}
-                        config={{ hidden: dataOperation?.hiddenFields?.deadlineTask ? true : false }}
-                        onSelect={onClick}
-                    />
-                    <Completeness
-                        presetValue={data?.task?.done}
-                        config={{ hidden: dataOperation?.hiddenFields?.done ? true : false }}
-                        onSelect={onClick}
-                    />
-                </ul>
-                <div className="popup__content-add-task-right">
-                    <Comment
-                        presetValue={null}
-                        config={{ hidden: dataOperation?.hiddenFields?.comment ? true : false }}
-                        onChange={onChange}
-                    />
-                </div>
-            </form>
-            {data?.task && Object.keys(data?.task).length !== 0 ? (
-                <button className="popup__content-del-task" onClick={onDeleteTask}>
-                    Удалить
-                </button>
-            ) : null}
-        </InputDataPopup>
+                        <CommencementDate
+                            presetValue={data?.task?.dateStart || data?.task?.startDate}
+                            config={{ hidden: dataOperation?.hiddenFields?.dateStart ? true : false }}
+                            onSelect={onClick}
+                        />
+                        <DeadlineTask
+                            presetValue={data?.task?.deadlineTask}
+                            config={{ hidden: dataOperation?.hiddenFields?.deadlineTask ? true : false }}
+                            onSelect={onClick}
+                        />
+                        <Completeness
+                            presetValue={data?.task?.done}
+                            config={{ hidden: dataOperation?.hiddenFields?.done ? true : false }}
+                            onSelect={onClick}
+                        />
+                    </ul>
+                    <div className="popup__content-add-task-right">
+                        <Comment
+                            presetValue={null}
+                            config={{ hidden: dataOperation?.hiddenFields?.comment ? true : false }}
+                            onChange={onChange}
+                        />
+                    </div>
+                </form>
+                {data?.task && Object.keys(data?.task).length !== 0 ? (
+                    <button className="popup__content-del-task" onClick={onDeleteTask}>
+                        Удалить
+                    </button>
+                ) : null}
+            </InputDataPopup>
+        </>
     );
 }

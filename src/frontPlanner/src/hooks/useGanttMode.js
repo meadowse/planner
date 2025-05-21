@@ -12,6 +12,7 @@ export const useGanttMode = args => {
             // Формирование заголовков по которым будут отфильтрованы данные для диаграммы Ганта
             const tempData = getUniqueData(data, modeOption)?.map(item => {
                 if (modeOption && Object.keys(modeOption).length !== 0) {
+                    console.log(`getHeadlinesGantt item: ${JSON.stringify(item, null, 4)}`);
                     if (item && item[modeOption?.key] && modeOption?.key) {
                         if (isObject(item[modeOption?.key]) && Object.keys(item[modeOption?.key]).length !== 0)
                             return item[modeOption?.key];

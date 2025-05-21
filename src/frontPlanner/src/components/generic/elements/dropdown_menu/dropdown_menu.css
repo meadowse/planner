@@ -110,6 +110,13 @@
     background-color: #e3e3e3;
 }
 
+/* Выпадающее меню "Номер договора" */
+
+.dropdown-menu-list__contract-num {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
 /* Выпадающее меню "Вид работы" */
 
 .dropdown-menu__type-work {

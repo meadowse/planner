@@ -78,7 +78,7 @@ export const DATA_CONVERSION_MAP = {
             return {
                 id: -1,
                 mmId: manager?.idManager || -1,
-                fullName: manager?.fullName,
+                fullName: manager?.fullName || 'Нет данных',
                 photo: '/img/user.svg',
                 post: null
             };
@@ -297,6 +297,7 @@ export const DEPARTMENT_DATA_CONF = {
             modeOptions: [
                 { value: 'Услуги', key: 'services', keyData: 'contracts', uniqueness: 'title' },
                 { value: 'Руководители отделов', key: 'responsible', keyData: 'contracts', uniqueness: 'fullName' },
+                { value: 'Менеджеры проектов', key: 'manager', keyData: 'contracts', uniqueness: 'fullName' },
                 { value: 'Сотрудники отделов', key: 'section', keyData: 'sections', uniqueness: 'title' }
             ]
             // keys: [

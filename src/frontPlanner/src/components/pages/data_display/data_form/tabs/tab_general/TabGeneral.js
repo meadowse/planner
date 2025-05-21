@@ -178,6 +178,9 @@ function Manager(props) {
     const [statePopup, setStatePopup] = useState(false);
     const [manager, setManager] = useState(presetValue ? presetValue : {});
 
+    const navigate = useNavigate();
+    const { addToHistory } = useHistoryContext();
+
     function onSelectManager(user) {
         setManager(user);
         onClick('manager', user);
@@ -188,6 +191,19 @@ function Manager(props) {
         onClick(additClass, null);
     }
 
+    function onClickUser(user) {
+        startTransition(() => {
+            addToHistory(`${window.location.pathname}`);
+            navigate(`../../user/${user?.mmId}/profile/profile/`, {
+                state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+            });
+
+            // navigate(`../../user/profile/`, {
+            //     state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+            // });
+        });
+    }
+
     return (
         <div className="tab-general-row-wrapper" data-error={managerError ? managerError.message : null}>
             <div className="tab-general-row__manager tab-general-row">
@@ -196,7 +212,7 @@ function Manager(props) {
                     <ul className="tab-general-row__item-managers">
                         {manager && Object.keys(manager)?.length !== 0 ? (
                             <li className="tab-general-row__item-manager tab-general-row-item__user" onClick={null}>
-                                {manager?.fullName}
+                                <p onClick={() => onClickUser(manager)}>{manager?.fullName}</p>
                                 <IconButton
                                     nameClass="tab-general-row__ic-btn icon-btn"
                                     type="button"
@@ -248,9 +264,13 @@ function Responsible(props) {
     function onClickUser(user) {
         startTransition(() => {
             addToHistory(`${window.location.pathname}`);
-            navigate(`../../user/profile/`, {
+            navigate(`../../user/${user?.mmId}/profile/profile/`, {
                 state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
             });
+
+            // navigate(`../../user/profile/`, {
+            //     state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+            // });
         });
     }
 
@@ -329,9 +349,13 @@ function Participants(props) {
     function onClickUser(user) {
         startTransition(() => {
             addToHistory(`${window.location.pathname}`);
-            navigate(`../../user/profile/`, {
+            navigate(`../../user/${user?.mmId}/profile/profile/`, {
                 state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
             });
+
+            // navigate(`../../user/profile/`, {
+            //     state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+            // });
         });
     }
 

@@ -411,8 +411,8 @@ const COLUMNS = [
                                 title="Новая задача"
                                 data={{
                                     idContract: props?.config?.idContract,
-                                    task: props?.config?.task,
-                                    contractsIDs: props?.config?.contractsIDs
+                                    task: props?.config?.task
+                                    // contractsIDs: props?.config?.contractsIDs
                                 }}
                                 operation="creation"
                                 addTaskState={addTaskState}
@@ -446,8 +446,8 @@ const COLUMNS = [
                                 title="Редактирование задачи"
                                 data={{
                                     idContract: props?.config?.idContract,
-                                    task: props?.config?.task,
-                                    contractsIDs: props?.config?.contractsIDs
+                                    task: props?.config?.task
+                                    // contractsIDs: props?.config?.contractsIDs
                                 }}
                                 operation="update"
                                 addTaskState={addTaskState}
@@ -472,9 +472,13 @@ const COLUMNS = [
                 if (employee?.mmId && employee?.mmId !== -1) {
                     startTransition(() => {
                         addToHistory(`${window.location.pathname}`);
-                        navigate(`../../user/profile/`, {
+                        navigate(`../../user/${employee?.mmId}/profile/profile/`, {
                             state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                         });
+
+                        // navigate(`../../user/profile/`, {
+                        //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                        // });
                     });
                 }
             }
@@ -500,10 +504,11 @@ const COLUMNS = [
 
                 startTransition(() => {
                     addToHistory(`${window.location.pathname}`);
-                    navigate(`../../user/profile/`, {
+                    navigate(`../../user/${employee?.mmId}/profile/profile/`, {
                         state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                     });
-                    // navigate('../../user/', {
+
+                    // navigate(`../../user/profile/`, {
                     //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                     // });
                 });
@@ -528,11 +533,12 @@ const COLUMNS = [
                 // localStorage.setItem('employee_settings', JSON.stringify({ activeTab: 0, data: userInfo?.data || [] }));
                 startTransition(() => {
                     addToHistory(`${window.location.pathname}`);
-                    navigate(`../../user/profile/`, {
-                        state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+                    navigate(`../../user/${employee?.mmId}/profile/profile/`, {
+                        state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                     });
-                    // navigate('../../user/', {
-                    //     state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+
+                    // navigate(`../../user/profile/`, {
+                    //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                     // });
                 });
             }
@@ -553,15 +559,14 @@ const COLUMNS = [
 
             function onShowInfoEmployee(employee) {
                 // alert(`employee: ${JSON.stringify(employee, null, 4)}`);
-                // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
-                // localStorage.setItem('employee_settings', JSON.stringify({ activeTab: 0, data: userInfo?.data || [] }));
                 startTransition(() => {
                     addToHistory(`${window.location.pathname}`);
-                    navigate(`../../user/profile/`, {
-                        state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+
+                    navigate(`../../user/${employee?.mmId}/profile/profile/`, {
+                        state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                     });
-                    // navigate('../../user/', {
-                    //     state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+                    // navigate(`../../user/profile/`, {
+                    //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                     // });
                 });
             }
@@ -588,11 +593,13 @@ const COLUMNS = [
                 startTransition(() => {
                     startTransition(() => {
                         addToHistory(`${window.location.pathname}`);
-                        navigate(`../../user/profile/`, {
+
+                        navigate(`../../user/${employee?.mmId}/profile/profile/`, {
                             state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                         });
-                        // navigate('../../user/', {
-                        //     state: { idEmployee: employee?.id, path: `${window.location.pathname}` }
+
+                        // navigate(`../../user/profile/`, {
+                        //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                         // });
                     });
                 });

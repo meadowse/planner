@@ -44,8 +44,11 @@ const getTaskData = (data, disabledFields) => {
         },
         // Дедлайн
         deadlineTask: value => {
-            // return value ? value : '';
-            return value && Object.keys(value).length !== 0 ? value : null;
+            const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
+                format: 'YYYYMMDD',
+                separator: '-'
+            });
+            return value && Object.keys(value).length !== 0 ? value : { value: currDateYYYYMMDD };
         },
         // Завершено
         done: value => {
@@ -92,6 +95,94 @@ const getTaskData = (data, disabledFields) => {
     }
 
     return dataConf;
+};
+
+// Получение всех договоров
+const getContractsIDs = async () => {
+    const contractsIDs = {};
+
+    await axios
+        .get(`${window.location.origin}/api/`)
+        .then(response => {
+            if (response.status === 200) {
+                if (response.data && response.data.length !== 0) {
+                    response.data.forEach(contract => {
+                        contractsIDs[contract.contractNum] = contract?.contractId || -1;
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log('server responded');
+                contractsIDs = {};
+            } else if (error.request) {
+                console.log('network error');
+                contractsIDs = {};
+            } else {
+                console.log(error);
+                contractsIDs = {};
+            }
+        });
+    return contractsIDs;
+};
+
+// Получение видов работ
+const getTypesWork = async idContract => {
+    let typesWork = [];
+    await axios
+        .post(`${window.location.origin}/api/getTypesWork`, {
+            // contractId: JSON.parse(localStorage.getItem('idContract'))
+            contractId: idContract
+        })
+        .then(response => {
+            if (response?.status === 200) {
+                // console.log(`id: ${JSON.parse(localStorage.getItem('idContract'))}`);
+                if (response?.data && response?.data.length !== 0) {
+                    typesWork = response?.data?.map(item => {
+                        return { id: item?.number, title: item?.typeWork };
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log('server responded');
+                typesWork = [];
+            } else if (error.request) {
+                console.log('network error');
+                typesWork = [];
+            } else {
+                console.log(error);
+                typesWork = [];
+            }
+        });
+
+    return typesWork;
+};
+
+// Получение авторизованного сотрудника
+const getAuthorizedEmployee = async idEmployee => {
+    let employee = {};
+    await axios
+        .post(`${window.location.origin}/api/getDataUser`, { employeeId: idEmployee })
+        .then(response => {
+            if (response.status === 200) {
+                const { id, mmId, FIO } = response.data && response.data.length !== 0 ? response.data[0] : {};
+                const fio = FIO.trim().split(' ');
+                employee = { id, mmId, fullName: `${fio[0] + ' ' + fio[1]}` };
+            }
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log('server responded');
+            } else if (error.request) {
+                console.log('network error');
+            } else {
+                console.log(error);
+            }
+        });
+    return employee;
 };
 
 // Добавление задачи
@@ -188,6 +279,9 @@ const deleteTask = async idTask => {
 const TaskService = {
     getDataFormOperation,
     getTaskData,
+    getContractsIDs,
+    getTypesWork,
+    getAuthorizedEmployee,
     addTask,
     editTask,
     deleteTask

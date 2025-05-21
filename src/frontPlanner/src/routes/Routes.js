@@ -13,6 +13,7 @@ import DataDisplayService from '@services/data_display.service';
 import DataFormService from '@services/data_form.service';
 import UserService from '@services/user.service';
 import Preloader from '../components/auxiliary_pages/loader/Preloader';
+import UserInfo from '../components/pages/data_user/UserInfo';
 // import UserInfoNew from '../components/pages/data_user/UserInfoNew';
 
 const DataDisplayPage = lazy(() => import('@components/pages/data_display/DataDisplayPage'));
@@ -20,7 +21,7 @@ const DataForm = lazy(() => import('@components/pages/data_display/data_form/Dat
 const DataFormNew = lazy(() => import('@components/pages/data_display/data_form/DataFormNew'));
 const TasksPage = lazy(() => import('@components/pages/tasks/TasksPage'));
 const ChatPage = lazy(() => import('@components/pages/chat/ChatPage'));
-const UserInfo = lazy(() => import('@components/pages/data_user/UserInfo'));
+// const UserInfo = lazy(() => import('@components/pages/data_user/UserInfo'));
 // const UserInfoNew = lazy(() => import('@components/pages/data_user/UserInfoNew'));
 const TabGeneral = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_general/TabGeneral'));
 const TabWorkNew = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_work/TabWorkNew'));
@@ -44,11 +45,12 @@ const ROUTES_FOR_AUTH = [
                 element: <Authentication />
             },
             {
-                path: 'user/*',
-                // loader: async ({ params }) => {
-                //     const { tab, id } = params;
-                //     return defer({ uploadedData: await UserService.loadData(tab, id) });
-                // },
+                // path: 'user/*',
+                path: 'user/:idEmployee/:tab/*',
+                loader: ({ params }) => {
+                    const { tab, idEmployee } = params;
+                    return defer({ uploadedData: UserService.loadData(tab, idEmployee) });
+                },
                 element: <UserInfo />
                 // element: <UserInfoNew />
             },
@@ -90,12 +92,7 @@ const ROUTES_FOR_AUTH = [
                             return defer({ uploadedData: DataDisplayService.loadData('tasks') });
                         },
                         // shouldRevalidate: () => false,
-                        // element: <DataDisplayPage partition="tasks" additClass="tasks" />
-                        element: (
-                            <Suspense fallback={<Preloader />}>
-                                <DataDisplayPage partition="tasks" additClass="tasks" />
-                            </Suspense>
-                        )
+                        element: <DataDisplayPage partition="tasks" additClass="tasks" />
                     },
                     // {
                     //     path: 'user/',
