@@ -81,16 +81,18 @@ export default function ListMode(props) {
             // console.log(`List mode\nCell contractNum\filteredData: ${JSON.stringify(filteredData, null, 4)}`);
             const config = {
                 partition: modeConfig?.partition,
-                idContract: filteredData[cellData?.indRow]?.contractId,
+                // idContract: filteredData[cellData?.indRow]?.contractId,
+                idContract: data[cellData?.indRow]?.contractId,
                 dataOperation: findNestedObj(modeConfig?.dataOperations, 'key', 'update')
             };
             return <Cell cellData={cellData} cellConfig={config} />;
         },
         task: cellData => {
             const config = {
-                idContract: filteredData[cellData?.indRow]?.contractId,
-                // contractsIDs: modeConfig?.contractsIDs,
-                task: filteredData[cellData?.indRow] || {}
+                idContract: data[cellData?.indRow]?.contractId,
+                task: data[cellData?.indRow] || {}
+                // idContract: filteredData[cellData?.indRow]?.contractId,
+                // task: filteredData[cellData?.indRow] || {}
             };
             return <Cell cellData={cellData} cellConfig={config} />;
         },

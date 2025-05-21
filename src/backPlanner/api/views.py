@@ -240,8 +240,8 @@ def getAgreement(request):
             T212.F4610 AS dateOfStart,
             T212.F4566 AS dateOfEnding,
             T205.F4332 AS company,
-            LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
-            LIST(DISTINCT participants.ID || ';' || participants.F16 || ';' || participants.F4886) AS participants,
+            LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358, '*') AS contacts,
+            LIST(DISTINCT participants.ID || ';' || participants.F16 || ';' || participants.F4886, '*') AS participants,
             responsible.ID AS responsibleId,
             responsible.F16 AS responsibleMMId,
             responsible.F4886 AS responsible,
@@ -282,7 +282,7 @@ def getAgreement(request):
                 obj.update(services)
                 participants = obj.get('participants')
                 if participants is not None:
-                    participants = participants.split(',')
+                    participants = participants.split('*')
                     data = {'participants': []}
                     for participant in participants:
                         data2 = participant.split(';')
@@ -324,7 +324,7 @@ def getAgreement(request):
                 Str = obj.get('contacts')
                 contacts = {'contacts': []}
                 if Str is not None:
-                    List = Str.split(',')
+                    List = Str.split('*')
                     for allData in List:
                         list2 = allData.split(';')
                         flag = 0

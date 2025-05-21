@@ -7,7 +7,7 @@ export const useHistoryContext = () => {
 };
 
 export const HistoryProvider = ({ children }) => {
-    const [history, setHistory] = useState([]);
+    const [history, setHistory] = useState(JSON.parse(localStorage.getItem('history')) || []);
     const [route, setRoute] = useState(null);
 
     const unsavedRoutes = ['user'];
@@ -25,24 +25,32 @@ export const HistoryProvider = ({ children }) => {
     };
 
     const backToPrevPath = () => {
-        const tempData = Array.from(history);
-        tempData.splice(tempData.length - 1, 1);
-        setHistory(tempData);
+        if (!history || history.length === 0) {
+            setHistory(() => {
+                localStorage.setItem('history', JSON.stringify(['/department']));
+                return ['/department'];
+            });
+        } else {
+            const tempData = Array.from(history);
+            tempData.splice(tempData.length - 1, 1);
+            setHistory(tempData);
+        }
     };
 
     useEffect(() => {
-        // const newHistory = [];
-        const tempData = Array.from(new Set(history));
-        setHistory(tempData);
-
-        // tempData.forEach(route => {
-        //     const pathSegments = route.split('/');
-        //     unsavedRoutes.forEach(unsavedRoute => {
-        //         if (!pathSegments.includes(unsavedRoute)) newHistory.push(route);
-        //     });
-        // });
-
-        console.log(`newHistory: ${JSON.stringify(tempData, null, 4)}`);
+        if (!history || history.length === 0) {
+            setHistory(() => {
+                localStorage.setItem('history', JSON.stringify(['/department']));
+                return ['/department'];
+            });
+        } else {
+            const tempData = Array.from(new Set(history));
+            setHistory(() => {
+                localStorage.setItem('history', JSON.stringify(tempData));
+                return tempData;
+            });
+            console.log(`newHistory: ${JSON.stringify(tempData, null, 4)}`);
+        }
     }, [route]);
 
     return (
