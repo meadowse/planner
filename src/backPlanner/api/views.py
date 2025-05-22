@@ -625,7 +625,7 @@ def getAllDepartmentsStaffAndTasks(request):
             FROM (SELECT
             T5.ID AS sectionId,
             T5.F26 AS sectionName,
-            executor.F16 AS employeeId,
+            T3.F16 AS employeeId,
             T3.F4886 AS employeeName,
             T3.F4887SRC as photo,
             T212.ID AS contractId,
@@ -647,13 +647,11 @@ def getAllDepartmentsStaffAndTasks(request):
             """
             cur.execute(sql)
             result = cur.fetchall()
-
             columns = ('sectionId', 'sectionName', 'employeeId', 'employeeName', 'photo', 'contracts')
             json_result = [
                 {col: value for col, value in zip(columns, row)}
                 for row in result
             ]  # Создаем список словарей с сериализацией значений
-
             # Для каждого отдела получаем информацию о сотрудниках, договорах и задачах
             for obj in json_result:
                 section = {'section': {'title': obj.get('sectionName'), 'id': obj.get('sectionId')}}
