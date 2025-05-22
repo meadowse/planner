@@ -783,7 +783,7 @@ def getContractsEmployee(request):
         ) as con:
             cur = con.cursor()
             sql = f"""
-            SELECT T212.ID AS id,
+            SELECT T212.ID AS contractId,
             T212.F4538 AS contractNum,
             T212.F4544 AS stage,
             T212.F4946 AS address,
@@ -812,7 +812,7 @@ def getContractsEmployee(request):
             cur.execute(sql)
             result = cur.fetchall()
             # Преобразование результата в список словарей
-            columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'responsibleId', 'responsible', 'tasks')
+            columns = ('contractId', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'responsibleId', 'responsible', 'tasks')
             json_result = [
                 {col: value for col, value in zip(columns, row)}
                 for row in result
