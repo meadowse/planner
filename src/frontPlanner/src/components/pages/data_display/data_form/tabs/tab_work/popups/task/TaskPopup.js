@@ -1,8 +1,6 @@
 import { useEffect, useReducer, useRef, useState, useContext, startTransition } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
-import classNames from 'classnames';
-import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // Импорт компонетов
@@ -17,7 +15,6 @@ import ActionSelectionPopup from '@generic/elements/popup/ActionSelectionPopup';
 
 // Импорт контекстов
 import { SocketContext } from '../../../../../../../../contexts/socket.context';
-import { authContext } from '../../../../../../../../contexts/auth.context';
 import { useHistoryContext } from '../../../../../../../../contexts/history.context';
 
 // Импорт кастомных хуков

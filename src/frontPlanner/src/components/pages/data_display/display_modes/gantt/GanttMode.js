@@ -1,6 +1,6 @@
 import { startTransition, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
 // Импорт компонентов
@@ -30,6 +30,20 @@ import { useHistoryContext } from '../../../../../contexts/history.context';
 // Импорт стилей
 import './gantt_mode.css';
 
+function AssignedUser({ employee }) {
+    return employee && Object.keys(employee).length !== 0 ? (
+        <div className="gantt-task-assigned-user">
+            <img className="gantt-task-assigned-user__photo" src={employee?.photo} alt="" />
+            <div className="gantt-task-assigned-user__info">
+                <h2 className="gantt-task-assigned-user__fullname">{employee?.fullName || 'Нет данных'}</h2>
+                {employee?.role ? (
+                    <p className="gantt-task-assigned-user__role">{employee?.role || 'Нет данных'}</p>
+                ) : null}
+            </div>
+        </div>
+    ) : null;
+}
+
 // Продолжительность задачи
 function DurationTask(props) {
     const { additClass, data, draggable, onDragStartHandler, onDragEndHandler } = props;
@@ -45,7 +59,12 @@ function DurationTask(props) {
                     data?.duration && data?.duration !== 0 ? `${data?.dateOfStart} / span ${data?.duration}` : null,
                 backgroundColor: data?.bgColorTask
             }}
-        ></div>
+        >
+            {/* {data?.authorizedUser && Object.keys(data?.authorizedUser).length !== 0 ? data?.authorizedUser?.role : null} */}
+            {data?.authorizedUser && Object.keys(data?.authorizedUser).length !== 0 ? (
+                <AssignedUser employee={data?.authorizedUser} />
+            ) : null}
+        </div>
     );
 }
 
@@ -230,20 +249,29 @@ function TaskRow(props) {
                     </div>
                 )}
                 <div className="gantt-empty-row"></div>
-                <ul className="gantt-time-period">
+                <ul className={classNames('gantt-time-period', { 'top-divide': task?.navKey === 'contract' })}>
                     {timeLine && Object.keys(timeLine).length !== 0
                         ? timeLine?.data?.map(day => {
                               const idTask =
                                   task?.dateOfEnding && task?.dateOfEnding === day ? task?.contractNum : null;
                               return (
-                                  <li id={idTask} className="gantt-time-period-cell">
+                                  <li
+                                      id={idTask}
+                                      className="gantt-time-period-cell"
+                                      //   style={
+                                      //       task?.dateOfStart && task?.dateOfStart === day
+                                      //           ? { position: 'relative' }
+                                      //           : null
+                                      //   }
+                                  >
                                       {task?.dateOfStart && task?.dateOfStart === day ? (
                                           <DurationTask
                                               additClass="gantt-time-period-cell__task"
                                               data={{
                                                   dateOfStart: timeLine?.data?.indexOf(task?.dateOfStart),
                                                   duration: daysDiff,
-                                                  bgColorTask: task?.bgColorTask
+                                                  bgColorTask: task?.bgColorTask,
+                                                  authorizedUser: task?.authorizedUser
                                               }}
                                           />
                                       ) : null}
@@ -416,7 +444,8 @@ export default function GanttMode({ data, modeConfig }) {
         data,
         filteredData,
         selectedItemInd: ganttFilters[modeConfig?.modeOption?.key],
-        modeOption: modeConfig?.modeOption
+        modeOption: modeConfig?.modeOption,
+        authorizedUserId: Cookies.get('MMUSERID') || null
     });
 
     // Состояние текущей даты

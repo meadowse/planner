@@ -2,7 +2,7 @@ import { getDaysYear, getDaysBetweenTwoDates, getDateFromString, getDateInSpecif
 import { isObject, isArray, getUniqueData, extractSampleData, simplifyData } from '@helpers/helper';
 
 export const useGanttMode = args => {
-    const { data, filteredData, selectedItemInd, modeOption } = args;
+    const { data, filteredData, selectedItemInd, modeOption, authorizedUserId } = args;
 
     // Получение заголовков Ганта
     const getHeadlinesGantt = () => {
@@ -12,7 +12,7 @@ export const useGanttMode = args => {
             // Формирование заголовков по которым будут отфильтрованы данные для диаграммы Ганта
             const tempData = getUniqueData(data, modeOption)?.map(item => {
                 if (modeOption && Object.keys(modeOption).length !== 0) {
-                    console.log(`getHeadlinesGantt item: ${JSON.stringify(item, null, 4)}`);
+                    // console.log(`getHeadlinesGantt item: ${JSON.stringify(item, null, 4)}`);
                     if (item && item[modeOption?.key] && modeOption?.key) {
                         if (isObject(item[modeOption?.key]) && Object.keys(item[modeOption?.key]).length !== 0)
                             return item[modeOption?.key];
@@ -160,6 +160,24 @@ export const useGanttMode = args => {
                 newItem.tasks =
                     item?.tasks && item?.tasks.length !== 0
                         ? item?.tasks.map((task, ind) => {
+                              const assignedUsersTask = [
+                                  ...Object.values(task?.director),
+                                  ...Object.values(task?.executor)
+                              ];
+                              const mmIdDirector = assignedUsersTask[0];
+                              const mmIdExecutor = assignedUsersTask[1];
+                              let authorizedUserData = {};
+
+                              if (assignedUsersTask.includes(authorizedUserId)) {
+                                  authorizedUserData.fullName = 'Фамилия Имя';
+                                  authorizedUserData.photo = '/img/user.svg';
+
+                                  if (mmIdDirector === authorizedUserId) authorizedUserData.role = 'Постановщик';
+                                  if (mmIdExecutor === authorizedUserId) authorizedUserData.role = 'Исполнитель';
+                                  if ((mmIdExecutor === mmIdDirector) === authorizedUserId)
+                                      authorizedUserData.role = 'Исполнитель / Постановщик';
+                              }
+
                               return {
                                   contractId: item?.contractId,
                                   title: task?.title || 'Нет данных',
@@ -168,7 +186,8 @@ export const useGanttMode = args => {
                                   done: +task?.done,
                                   dateOfStart: task?.dateOfStart,
                                   dateOfEnding: task?.dateOfEnding,
-                                  bgColorTask: item?.stage?.color
+                                  bgColorTask: item?.stage?.color,
+                                  authorizedUser: authorizedUserData
                               };
                           })
                         : [];

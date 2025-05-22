@@ -437,7 +437,7 @@ const COLUMNS = [
                         onMouseLeave={() => refCell?.current.scrollTo(0, 0)}
                         onClick={() => setAddTaskState(true)}
                     >
-                        <span>{props?.value}</span>
+                        <span>{props?.value || 'Нет данных'}</span>
                     </p>
                     {addTaskState &&
                         createPortal(
