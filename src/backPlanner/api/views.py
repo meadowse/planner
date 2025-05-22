@@ -500,12 +500,12 @@ def addTask(request):
                 'F4695': task,
                 'F4698': comment,
                 'F5724': typeWorkId,
+                'F4970': dateStart,
                 'F5569': dateStart,
                 'F4696': deadline,
                 'F4693': directorId,  # должно быть ID пользователя
                 'F4694': executorId,
             }
-
             # Преобразование значений в SQL-формат
             sql_values = []
             for key, value in values.items():
@@ -517,10 +517,8 @@ def addTask(request):
                     sql_values.append(f"'{value}'")
                 else:
                     raise ValueError(f"Unsupported type for value: {value}")
-
             # Формирование SQL-запроса
             sql = f"""INSERT INTO T218 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
-
             cur.execute(sql)
             con.commit()
         return JsonResponse({'status': 'Ok'}, status=200)
