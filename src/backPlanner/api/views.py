@@ -507,6 +507,7 @@ def addTask(request):
                 'F4696': deadline,
                 'F4693': directorId,  # должно быть ID пользователя
                 'F4694': executorId,
+                'F4697': 0
             }
             # Преобразование значений в SQL-формат
             sql_values = []
