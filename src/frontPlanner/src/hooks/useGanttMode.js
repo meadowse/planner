@@ -174,7 +174,7 @@ export const useGanttMode = args => {
 
                                   if (mmIdDirector === authorizedUserId) authorizedUserData.role = 'Постановщик';
                                   if (mmIdExecutor === authorizedUserId) authorizedUserData.role = 'Исполнитель';
-                                  if ((mmIdExecutor === mmIdDirector) === authorizedUserId)
+                                  if (authorizedUserId === mmIdExecutor && authorizedUserId === mmIdDirector)
                                       authorizedUserData.role = 'Исполнитель / Постановщик';
                               }
 

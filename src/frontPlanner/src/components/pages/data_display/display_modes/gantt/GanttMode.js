@@ -61,9 +61,9 @@ function DurationTask(props) {
             }}
         >
             {/* {data?.authorizedUser && Object.keys(data?.authorizedUser).length !== 0 ? data?.authorizedUser?.role : null} */}
-            {data?.authorizedUser && Object.keys(data?.authorizedUser).length !== 0 ? (
+            {/* {data?.authorizedUser && Object.keys(data?.authorizedUser).length !== 0 ? (
                 <AssignedUser employee={data?.authorizedUser} />
-            ) : null}
+            ) : null} */}
         </div>
     );
 }
@@ -223,13 +223,27 @@ function TaskRow(props) {
             <div className="gantt-grid__main-row">
                 {containTasks ? (
                     <div className="gantt-task-title-wrapper" style={{ paddingLeft: `${config.indent / 16}rem` }}>
+                        {/* <input type="checkbox" /> */}
+                        {/* <button className="">&#8942;</button> */}
                         <div className="gantt-task-title" onClick={() => onShowInfo(task, 'update')}>
                             <span>{task?.title}</span>
                         </div>
-                        <div className="gantt-task-images">
-                            <img src="/img/eye.png" alt="" onClick={onHideTasks} />
+                        <div className="gantt-task-actions">
+                            <button
+                                className="gantt-task-actions__btn-hide gantt-task-btn-action"
+                                onClick={onHideTasks}
+                            >
+                                {showTasks
+                                    ? String.fromCharCode(parseInt('2212', 16))
+                                    : String.fromCharCode(parseInt('002B', 16))}
+                            </button>
                             {task?.dateOfStart && task?.dateOfEnding ? (
-                                <img src="/img/ic_move.png" alt="" onClick={e => onMoveToTask(e, task?.contractNum)} />
+                                <button
+                                    className="gantt-task-btn-action"
+                                    onClick={e => onMoveToTask(e, task?.contractNum)}
+                                >
+                                    &#11122;
+                                </button>
                             ) : null}
                         </div>
                     </div>
@@ -244,7 +258,9 @@ function TaskRow(props) {
                             <span>{task?.title}</span>
                         </div>
                         {task?.dateOfStart && task?.dateOfEnding ? (
-                            <img src="/img/ic_move.png" alt="" onClick={e => onMoveToTask(e, task?.contractNum)} />
+                            <button className="gantt-task-btn-action" onClick={e => onMoveToTask(e, task?.contractNum)}>
+                                &#11122;
+                            </button>
                         ) : null}
                     </div>
                 )}
@@ -258,11 +274,7 @@ function TaskRow(props) {
                                   <li
                                       id={idTask}
                                       className="gantt-time-period-cell"
-                                      //   style={
-                                      //       task?.dateOfStart && task?.dateOfStart === day
-                                      //           ? { position: 'relative' }
-                                      //           : null
-                                      //   }
+                                      style={idTask ? { position: 'relative' } : null}
                                   >
                                       {task?.dateOfStart && task?.dateOfStart === day ? (
                                           <DurationTask
@@ -274,6 +286,9 @@ function TaskRow(props) {
                                                   authorizedUser: task?.authorizedUser
                                               }}
                                           />
+                                      ) : null}
+                                      {task?.dateOfEnding && task?.dateOfEnding === day ? (
+                                          <AssignedUser employee={task?.authorizedUser} />
                                       ) : null}
                                   </li>
                               );
