@@ -799,7 +799,7 @@ def getContractsEmployee(request):
             LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
             responsible.F16 AS responsibleId,
             responsible.F4886 AS responsible,
-            LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697, '*') AS tasks
+            LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16, '*') AS tasks
             FROM T212
             LEFT JOIN T237 ON T212.F4948 = T237.ID
             LEFT JOIN T205 ON T212.F4540 = T205.ID
@@ -809,6 +809,8 @@ def getContractsEmployee(request):
             LEFT JOIN T3 participants ON T253.F5022 = participants.ID
             LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
             LEFT JOIN T218 ON T218.F4691 = T212.ID
+            LEFT JOIN T3 director ON T218.F4693 = director.ID
+            LEFT JOIN T3 executor ON T218.F4694 = executor.ID
             WHERE participants.F16 = '{employeeId}' OR responsible.F16 = '{employeeId}'
             GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13
             """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
@@ -880,7 +882,9 @@ def getContractsEmployee(request):
                         if list2[0] == '' and list2[1] == '' and list2[2] == '':
                             continue
                         else:
-                            tasks.get('tasks').append({'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2], 'done': list2[3]})
+                            tasks.get('tasks').append(
+                                {'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2], 'done': list2[3],
+                                 'director': {'mmId': list2[4]}, 'executor': {'mmId': list2[5]}})
                 obj.update(tasks)
             end = perf_counter()
             print(end - start)
