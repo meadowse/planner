@@ -3,11 +3,8 @@ import { useEffect, useState } from 'react';
 // Импорт конфигураций
 import { INITIAL_FILTERS, FILTER_HANDLERS_CONF } from '@config/filtersgantt.config';
 
-// Импорт доп.функционала
-import { getDateFromString } from '@helpers/calendar';
-
 function applyFilters(keyData, data, filters) {
-    // console.log(`applyFilters: ${JSON.stringify(data, null, 4)}`);
+    console.log(`applyFilters\nfilters: ${JSON.stringify(filters, null, 4)}`);
 
     const FILTER_DATA_CONF = {
         contracts: () => {
@@ -19,7 +16,8 @@ function applyFilters(keyData, data, filters) {
                     })
                 );
                 // console.log(`Gantt filteredData: ${JSON.stringify(filteredData, null, 4)}`);
-                return filteredData;
+                // return filteredData
+                return filteredData.length !== 0 ? filteredData : data;
             }
         },
         sections: () => {
@@ -40,7 +38,8 @@ function applyFilters(keyData, data, filters) {
                 }
             });
 
-            return newData;
+            // return newData;
+            return newData.length !== 0 ? newData : data;
         }
     };
 

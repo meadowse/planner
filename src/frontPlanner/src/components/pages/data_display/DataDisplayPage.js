@@ -546,14 +546,14 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => {
-                                            const filteredDataById = getFilteredData(
+                                            const dataById = getFilteredData(
                                                 resolvedData?.contracts,
                                                 Cookies.get('MMUSERID'),
                                                 modeOption?.listContracts
                                             );
                                             const filteredData = filterData(
-                                                filteredDataById,
-                                                simplifyData(extractSampleData(filteredDataById, valsToDisplay)),
+                                                dataById,
+                                                simplifyData(extractSampleData(dataById, valsToDisplay)),
                                                 searchElem
                                             );
                                             return (
@@ -562,6 +562,76 @@ export default function DataDisplayPage({ partition }) {
                                                     modeConfig={{
                                                         keys: valsToDisplay,
                                                         partition: partition,
+                                                        dataOperations: dataOperations
+                                                    }}
+                                                />
+                                            );
+                                        }}
+                                    </Await>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="gantContracts"
+                            element={
+                                <Suspense fallback={<Preloader />}>
+                                    <Await resolve={data?.uploadedData}>
+                                        {resolvedData => {
+                                            // const keyData = modeOption[mode?.key]?.keyData;
+                                            // const filteredDataById = getFilteredData(
+                                            //     resolvedData[keyData],
+                                            //     Cookies.get('MMUSERID'),
+                                            //     modeOption?.gantContracts
+                                            // );
+                                            // console.log(
+                                            //     `path gantContracts\nmodeOption: ${JSON.stringify(
+                                            //         modeOption,
+                                            //         null,
+                                            //         4
+                                            //     )}\nresolvedData[keyData]: ${JSON.stringify(
+                                            //         resolvedData[keyData],
+                                            //         null,
+                                            //         4
+                                            //     )}`
+                                            // );
+                                            const filteredData = filterData(
+                                                resolvedData?.contracts,
+                                                simplifyData(
+                                                    extractSampleData(resolvedData?.contracts, [
+                                                        'contractId',
+                                                        'stage',
+                                                        'contractNum',
+                                                        'company',
+                                                        'address',
+                                                        'services',
+                                                        'dateOfStart',
+                                                        'dateOfEnding',
+                                                        'tasks'
+                                                    ])
+                                                ),
+                                                Cookies.get('MMUSERID')
+                                            );
+                                            return (
+                                                <GanttMode
+                                                    // data={resolvedData?.contracts || []}
+                                                    data={filteredData}
+                                                    modeConfig={{
+                                                        resolvedData: resolvedData?.contracts,
+                                                        modeOptions: modeOptions,
+                                                        modeOption: {
+                                                            keyData: 'contracts',
+                                                            keys: [
+                                                                'contractId',
+                                                                'stage',
+                                                                'contractNum',
+                                                                'company',
+                                                                'address',
+                                                                'services',
+                                                                'dateOfStart',
+                                                                'dateOfEnding',
+                                                                'tasks'
+                                                            ]
+                                                        },
                                                         dataOperations: dataOperations
                                                     }}
                                                 />

@@ -6,7 +6,7 @@ export const useGanttMode = args => {
 
     // Получение заголовков Ганта
     const getHeadlinesGantt = () => {
-        console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
+        // console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
         if (data && data.length !== 0) {
             const headlinesGantt = [];
             // Формирование заголовков по которым будут отфильтрованы данные для диаграммы Ганта
@@ -44,23 +44,42 @@ export const useGanttMode = args => {
         // Найденные элементы
         let foundElems = [];
 
-        if (isArray(selectedItem) && selectedItem.length !== 0) {
-            if (foundElems.length !== 0) foundElems = [];
-            simplifiedData.forEach((item, indItem) => {
-                foundElems = [];
-                elemsToFind.forEach(elem => {
-                    if (item.includes(elem)) foundElems.push(elem);
+        // if (isArray(selectedItem) && selectedItem.length !== 0) {
+        //     if (foundElems.length !== 0) foundElems = [];
+        //     simplifiedData.forEach((item, indItem) => {
+        //         foundElems = [];
+        //         elemsToFind.forEach(elem => {
+        //             if (item.includes(elem)) foundElems.push(elem);
+        //         });
+        //         foundElems = Array.from(new Set(foundElems)).sort((a, b) => a.localeCompare(b));
+        //         if (JSON.stringify(elemsToFind) === JSON.stringify(foundElems)) indexes.push(indItem);
+        //     });
+        // } else {
+        //     simplifiedData.forEach((item, indItem) => {
+        //         if (selectedItem && Object.keys(selectedItem).length !== 0) {
+        //             if (item.includes(selectedItem[modeOption?.uniqueness])) indexes.push(indItem);
+        //         }
+        //     });
+        // }
+
+        if (selectedItem) {
+            if (isArray(selectedItem) && selectedItem.length !== 0) {
+                if (foundElems.length !== 0) foundElems = [];
+                simplifiedData.forEach((item, indItem) => {
+                    foundElems = [];
+                    elemsToFind.forEach(elem => {
+                        if (item.includes(elem)) foundElems.push(elem);
+                    });
+                    foundElems = Array.from(new Set(foundElems)).sort((a, b) => a.localeCompare(b));
+                    if (JSON.stringify(elemsToFind) === JSON.stringify(foundElems)) indexes.push(indItem);
                 });
-                foundElems = Array.from(new Set(foundElems)).sort((a, b) => a.localeCompare(b));
-                if (JSON.stringify(elemsToFind) === JSON.stringify(foundElems)) indexes.push(indItem);
-            });
-        } else {
-            simplifiedData.forEach((item, indItem) => {
-                if (selectedItem && Object.keys(selectedItem).length !== 0) {
+            }
+            if (isObject(selectedItem) && Object.keys(selectedItem).length !== 0) {
+                simplifiedData.forEach((item, indItem) => {
                     if (item.includes(selectedItem[modeOption?.uniqueness])) indexes.push(indItem);
-                }
-            });
-        }
+                });
+            }
+        } else return filteredData;
 
         return indexes.map(item => filteredData[item]);
     };
@@ -70,9 +89,11 @@ export const useGanttMode = args => {
         const timeLine = [];
         let years = [];
 
+        // console.log(`formTimeline data: ${JSON.stringify(data, null, 4)}`);
+
         const DATA_CONF = {
             contracts: () => {
-                return extractSampleData(data, ['dateOfStart', 'dateOfEnding']);
+                return extractSampleData(data, ['dateOfStart', 'dateOfEnding', 'tasks']);
             },
             sections: () => {
                 const contracts = [];
@@ -97,6 +118,12 @@ export const useGanttMode = args => {
                         years.push(getDateFromString(item?.dateOfStart.value)?.getFullYear());
                     if (item?.dateOfEnding && Object.keys(item?.dateOfEnding).length !== 0 && item?.dateOfEnding.value)
                         years.push(getDateFromString(item?.dateOfEnding.value)?.getFullYear());
+                    if (item.tasks && item.tasks.length !== 0) {
+                        item.tasks.forEach(elem => {
+                            if (elem?.dateOfStart) years.push(getDateFromString(elem?.dateOfStart)?.getFullYear());
+                            if (elem?.dateOfEnding) years.push(getDateFromString(elem?.dateOfEnding)?.getFullYear());
+                        });
+                    }
                 }
             });
         }
@@ -136,6 +163,8 @@ export const useGanttMode = args => {
         const KEYS_DATA_CONF = {
             // Данные по договорам
             contracts: item => {
+                // id
+                newItem.moveElemId = item?.contractId;
                 // id договора
                 newItem.contractId = item?.contractId;
                 // Заголовок задачи
@@ -160,26 +189,27 @@ export const useGanttMode = args => {
                 newItem.tasks =
                     item?.tasks && item?.tasks.length !== 0
                         ? item?.tasks.map((task, ind) => {
-                              const assignedUsersTask = [
-                                  ...Object.values(task?.director),
-                                  ...Object.values(task?.executor)
-                              ];
-                              const mmIdDirector = assignedUsersTask[0];
-                              const mmIdExecutor = assignedUsersTask[1];
-                              let authorizedUserData = {};
+                              const assignedUsersData = [];
+                              if (task?.director && Object.keys(task?.director).length !== 0) {
+                                  assignedUsersData.push({
+                                      fullName: task?.director?.fullName || '',
+                                      role: 'Постановщик',
+                                      photo: '/img/user.svg'
+                                  });
+                              }
 
-                              if (assignedUsersTask.includes(authorizedUserId)) {
-                                  authorizedUserData.fullName = 'Фамилия Имя';
-                                  authorizedUserData.photo = '/img/user.svg';
-
-                                  if (mmIdDirector === authorizedUserId) authorizedUserData.role = 'Постановщик';
-                                  if (mmIdExecutor === authorizedUserId) authorizedUserData.role = 'Исполнитель';
-                                  if (authorizedUserId === mmIdExecutor && authorizedUserId === mmIdDirector)
-                                      authorizedUserData.role = 'Исполнитель / Постановщик';
+                              if (task?.executor && Object.keys(task?.executor).length !== 0) {
+                                  assignedUsersData.push({
+                                      fullName: task?.executor?.fullName || '',
+                                      role: 'Исполнитель',
+                                      photo: '/img/user.svg'
+                                  });
                               }
 
                               return {
+                                  moveElemId: item?.contractId + (ind + 1),
                                   contractId: item?.contractId,
+                                  taskId: task?.id || -1,
                                   title: task?.title || 'Нет данных',
                                   contractNum: `${item?.contractNum}_${ind + 1}`,
                                   navKey: 'task',
@@ -187,7 +217,7 @@ export const useGanttMode = args => {
                                   dateOfStart: task?.dateOfStart,
                                   dateOfEnding: task?.dateOfEnding,
                                   bgColorTask: item?.stage?.color,
-                                  authorizedUser: authorizedUserData
+                                  assignedUsers: assignedUsersData
                               };
                           })
                         : [];
@@ -269,38 +299,42 @@ export const useGanttMode = args => {
         };
 
         // Формирование массива данных всех задач
-        filteredData.forEach(item => {
-            dateStart = getDateFromString(item?.dateOfStart?.value);
-            dateEnd = getDateFromString(item?.dateOfEnding?.value);
+        if (filteredData && isArray(filteredData) && filteredData.length !== 0) {
+            filteredData.forEach(item => {
+                dateStart = getDateFromString(item?.dateOfStart?.value);
+                dateEnd = getDateFromString(item?.dateOfEnding?.value);
 
-            daysBetweenTwoDate = getDaysBetweenTwoDates(dateStart, dateEnd).map(date =>
-                getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
-            );
+                daysBetweenTwoDate = getDaysBetweenTwoDates(dateStart, dateEnd).map(date =>
+                    getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
+                );
 
-            if (daysBetweenTwoDate && daysBetweenTwoDate.length !== 0) dateRanges.push(daysBetweenTwoDate);
+                if (daysBetweenTwoDate && daysBetweenTwoDate.length !== 0) dateRanges.push(daysBetweenTwoDate);
 
-            if (item?.tasks && item?.tasks.length !== 0) {
-                item?.tasks.map(task => {
-                    dateStart = getDateFromString(task?.dateOfStart);
-                    dateEnd = getDateFromString(task?.dateOfEnding);
+                if (item?.tasks && item?.tasks.length !== 0) {
+                    item?.tasks.map(task => {
+                        dateStart = getDateFromString(task?.dateOfStart);
+                        dateEnd = getDateFromString(task?.dateOfEnding);
 
-                    daysBetweenTwoDate = getDaysBetweenTwoDates(dateStart, dateEnd).map(date =>
-                        getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
-                    );
+                        daysBetweenTwoDate = getDaysBetweenTwoDates(dateStart, dateEnd).map(date =>
+                            getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
+                        );
 
-                    if (daysBetweenTwoDate && daysBetweenTwoDate.length !== 0) dateRanges.push(daysBetweenTwoDate);
-                });
-            }
-        });
+                        if (daysBetweenTwoDate && daysBetweenTwoDate.length !== 0) dateRanges.push(daysBetweenTwoDate);
+                    });
+                }
+            });
+        }
 
         // Все задачи
         newData.totalTasks = dateRanges;
         // Задний фон
         newData.bgColorTask = '#E4E4E4';
 
-        filteredData.forEach(item => {
-            if (item && Object.keys(item).length !== 0) KEYS_DATA_CONF[modeOption?.keyData](item);
-        });
+        if (filteredData && isArray(filteredData) && filteredData.length !== 0) {
+            filteredData.forEach(item => {
+                if (item && Object.keys(item).length !== 0) KEYS_DATA_CONF[modeOption?.keyData](item);
+            });
+        }
 
         totalCount += tasks.length;
 
@@ -317,3 +351,33 @@ export const useGanttMode = args => {
         formData
     };
 };
+
+//   let assignedUsersTask = [];
+//   let authorizedUserData = {};
+
+//   if (task?.director && task?.executor) {
+//       if (
+//           Object.keys(task?.director).length !== 0 &&
+//           Object.keys(task?.executor).length !== 0
+//       ) {
+//           assignedUsersTask = [
+//               ...(Object?.values(task?.director) || null),
+//               ...(Object?.values(task?.executor) || null)
+//           ];
+//       }
+//   }
+
+//   if (assignedUsersTask.length !== 0) {
+//       const mmIdDirector = assignedUsersTask[0];
+//       const mmIdExecutor = assignedUsersTask[1];
+
+//       if (assignedUsersTask.includes(authorizedUserId)) {
+//           authorizedUserData.fullName = 'Фамилия Имя';
+//           authorizedUserData.photo = '/img/user.svg';
+//
+//           if (mmIdDirector === authorizedUserId) authorizedUserData.role = 'Постановщик';
+//           if (mmIdExecutor === authorizedUserId) authorizedUserData.role = 'Исполнитель';
+//           if (authorizedUserId === mmIdExecutor && authorizedUserId === mmIdDirector)
+//               authorizedUserData.role = 'Исполнитель / Постановщик';
+//       }
+//   }

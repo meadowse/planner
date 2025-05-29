@@ -1,10 +1,4 @@
-import { useEffect, useState } from 'react';
-
-// Импорт дополнительного функционала
-import { isObject, isArray, getUniqueData, findNestedObj, extractSampleData, simplifyData } from '@helpers/helper';
-
-// Импорт кастомных хуков
-import { useFiltersGantt } from '@hooks/useFiltersGantt';
+import { useState } from 'react';
 
 // Импорт стилей
 import './filters_gantt.css';

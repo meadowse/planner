@@ -156,6 +156,27 @@ export const TASKS_DATA_CONF = {
                     'pathToFolder'
                 ]
             }
+        },
+        {
+            mode: 'Гант',
+            keyMode: 'gantContracts',
+            modeOptions: [
+                // { value: 'Услуги', key: 'services', keyData: 'contracts', uniqueness: 'title' },
+                // { value: 'Руководители отделов', key: 'responsible', keyData: 'contracts', uniqueness: 'fullName' },
+                // { value: 'Менеджеры проектов', key: 'manager', keyData: 'contracts', uniqueness: 'fullName' },
+                // { value: 'Сотрудники отделов', key: 'section', keyData: 'sections', uniqueness: 'title' }
+            ],
+            keys: [
+                'contractId',
+                'stage',
+                'contractNum',
+                'company',
+                'address',
+                'services',
+                'dateOfStart',
+                'dateOfEnding',
+                'tasks'
+            ]
         }
     ],
     dataOperations: [

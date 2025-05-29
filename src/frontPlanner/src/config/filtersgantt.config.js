@@ -1,3 +1,7 @@
+export const DEFAULT_FILTERS = {
+    stage: 'Все'
+};
+
 export const INITIAL_FILTERS = {
     stage: 'В работе'
 };

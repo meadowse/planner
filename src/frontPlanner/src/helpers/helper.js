@@ -112,7 +112,7 @@ export function simplifyData(data) {
     const newData = [];
     let newItem = [];
 
-    if (data && data.length !== 0) {
+    if (data && isArray(data) && data.length !== 0) {
         data?.forEach(item => {
             if (isObject(item) && Object.keys(item).length !== 0) {
                 newData.push(simplifyItem(item, newItem));

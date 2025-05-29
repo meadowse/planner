@@ -20,7 +20,8 @@ import {
     getDateFromString,
     getDateInSpecificFormat,
     getDaysYear,
-    getDayInYear
+    getDayInYear,
+    getAddedDay
 } from '@helpers/calendar';
 import { isObject, findNestedObj } from '@helpers/helper';
 
@@ -50,6 +51,7 @@ function DurationTask(props) {
 
     return (
         <div
+            id={`${data?.id}`}
             className={`${additClass} gantt-time-period-cell-task`}
             draggable={draggable}
             onDragStart={e => onDragStartHandler(e, data)}
@@ -89,17 +91,19 @@ function TotalTaskRow(props) {
                 style={{ backgroundColor: `${bgColorTask}` }}
                 onClick={onHideTasks}
             >
-                <select className="gantt-mode__select-list" onChange={onSelectItem}>
-                    {ganttConfig?.map((headline, index) => {
-                        if (isObject(headline) && Object.keys(headline).length !== 0) {
-                            return (
-                                <option key={headline?.title} value={index} selected={selectedItemInd === index}>
-                                    {headline[modeConfig?.modeOption?.uniqueness]}
-                                </option>
-                            );
-                        }
-                    })}
-                </select>
+                {ganttConfig && Object.keys(ganttConfig).length !== 0 ? (
+                    <select className="gantt-mode__select-list" onChange={onSelectItem}>
+                        {ganttConfig?.map((headline, index) => {
+                            if (isObject(headline) && Object.keys(headline).length !== 0) {
+                                return (
+                                    <option key={headline?.title} value={index} selected={selectedItemInd === index}>
+                                        {headline[modeConfig?.modeOption?.uniqueness]}
+                                    </option>
+                                );
+                            }
+                        })}
+                    </select>
+                ) : null}
             </div>
             <div className="gantt-empty-row"></div>
             <ul className="gantt-time-period">
@@ -152,10 +156,20 @@ function TaskRow(props) {
     }
 
     // Перемещение к задаче
-    function onMoveToTask(e, id) {
+    function onMoveToTask(e, task) {
+        // alert(`onMoveToTask: ${JSON.stringify(task?.id, null, 4)}`);
         e.preventDefault();
-        const element = document.getElementById(id);
-        if (element) element.scrollIntoView({ block: 'center', behavior: 'smooth' });
+
+        const moveElement = document.getElementById(task?.moveElemId);
+        const backlightElement = document.getElementById(task?.contractNum);
+
+        if (moveElement) moveElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        if (backlightElement) {
+            backlightElement.classList.add('backlight');
+            setTimeout(() => {
+                backlightElement.classList.remove('backlight');
+            }, 1500);
+        }
     }
 
     // Просмотр подробной информации о ...
@@ -174,8 +188,6 @@ function TaskRow(props) {
                 startTransition(() => {
                     addToHistory(`${window.location.pathname}`);
                     navigate(`../../user/${task?.idEmployee}/profile/profile/`, navigationArg);
-                    // navigate(`../../user/profile/`, navigationArg);
-                    // navigate('../../user/', navigationArg);
                 });
             },
             contract: () => {
@@ -238,10 +250,7 @@ function TaskRow(props) {
                                     : String.fromCharCode(parseInt('002B', 16))}
                             </button>
                             {task?.dateOfStart && task?.dateOfEnding ? (
-                                <button
-                                    className="gantt-task-btn-action"
-                                    onClick={e => onMoveToTask(e, task?.contractNum)}
-                                >
+                                <button className="gantt-task-btn-action" onClick={e => onMoveToTask(e, task)}>
                                     &#11122;
                                 </button>
                             ) : null}
@@ -258,7 +267,7 @@ function TaskRow(props) {
                             <span>{task?.title}</span>
                         </div>
                         {task?.dateOfStart && task?.dateOfEnding ? (
-                            <button className="gantt-task-btn-action" onClick={e => onMoveToTask(e, task?.contractNum)}>
+                            <button className="gantt-task-btn-action" onClick={e => onMoveToTask(e, task)}>
                                 &#11122;
                             </button>
                         ) : null}
@@ -268,27 +277,38 @@ function TaskRow(props) {
                 <ul className={classNames('gantt-time-period', { 'top-divide': task?.navKey === 'contract' })}>
                     {timeLine && Object.keys(timeLine).length !== 0
                         ? timeLine?.data?.map(day => {
-                              const idTask =
-                                  task?.dateOfEnding && task?.dateOfEnding === day ? task?.contractNum : null;
+                              //   const idTask =
+                              //       task?.dateOfEnding && task?.dateOfEnding === day ? task?.contractNum : null;
+                              const idTask = task?.dateOfEnding && task?.dateOfEnding === day ? task?.moveElemId : null;
                               return (
                                   <li
                                       id={idTask}
                                       className="gantt-time-period-cell"
-                                      style={idTask ? { position: 'relative' } : null}
+                                      style={idTask ? { position: 'relative', scrollMargin: '500px' } : null}
                                   >
                                       {task?.dateOfStart && task?.dateOfStart === day ? (
                                           <DurationTask
                                               additClass="gantt-time-period-cell__task"
                                               data={{
+                                                  id: task?.contractNum,
                                                   dateOfStart: timeLine?.data?.indexOf(task?.dateOfStart),
                                                   duration: daysDiff,
                                                   bgColorTask: task?.bgColorTask,
-                                                  authorizedUser: task?.authorizedUser
+                                                  assignedUsers: task?.assignedUsers
+                                                  //   authorizedUser: task?.authorizedUser
                                               }}
                                           />
                                       ) : null}
                                       {task?.dateOfEnding && task?.dateOfEnding === day ? (
-                                          <AssignedUser employee={task?.authorizedUser} />
+                                          task?.assignedUsers && task?.assignedUsers?.length !== 0 ? (
+                                              <div className="gantt-time-period-cell__users">
+                                                  {task?.assignedUsers?.length !== 0
+                                                      ? task?.assignedUsers.map(user => (
+                                                            <AssignedUser employee={user} />
+                                                        ))
+                                                      : null}
+                                              </div>
+                                          ) : null
                                       ) : null}
                                   </li>
                               );
@@ -443,6 +463,7 @@ function GanttChart(props) {
 }
 
 export default function GanttMode({ data, modeConfig }) {
+    console.log(`GanttMode data: ${JSON.stringify(data, null, 4)}`);
     // Сохраненные значения выпадающего списка
     const [ganttFilters, setGanttFilters] = useState(
         JSON.parse(localStorage.getItem('gantt-filters')) || {
@@ -497,7 +518,7 @@ export default function GanttMode({ data, modeConfig }) {
         setGanttData(formData());
     }, [ganttFilters[modeConfig?.modeOption?.key], modeConfig?.modeOption]);
 
-    return ganttConfig && ganttConfig.length !== 0 ? (
+    return (
         <div className="gantt-mode">
             <FiltersGantt
                 activeFilters={activeFilters}
@@ -514,5 +535,5 @@ export default function GanttMode({ data, modeConfig }) {
                 onSelectItem={onSelectItem}
             />
         </div>
-    ) : null;
+    );
 }

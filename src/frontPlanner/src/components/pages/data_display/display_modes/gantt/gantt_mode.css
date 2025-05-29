@@ -183,6 +183,15 @@
     border-right: 0.5px solid #e9eaeb;
 }
 
+.gantt-time-period-cell__users {
+    column-gap: 10px;
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: -100%;
+    transform: translateX(100%);
+}
+
 .gantt-time-period-cell-task {
     width: 100%;
     height: 60%;
@@ -193,8 +202,12 @@
     border-radius: 5px;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
     cursor: move;
-    transition: opacity 1s;
+    transition: all 0.8s ease;
     z-index: 1;
+}
+
+.gantt-time-period-cell-task.backlight {
+    box-shadow: 0px 0px 8px 8px #abd2fa;
 }
 
 .gantt-time-period-cell-task_dragging {
@@ -211,10 +224,6 @@
     width: max-content;
     column-gap: 10px;
     display: flex;
-    position: absolute;
-    right: -100%;
-    top: 0;
-    transform: translateX(100%);
     border-radius: 50%;
     transition: opacity 0.8s ease-in-out;
     background-color: #dcdcdc;
