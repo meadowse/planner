@@ -190,20 +190,55 @@ export const useGanttMode = args => {
                     item?.tasks && item?.tasks.length !== 0
                         ? item?.tasks.map((task, ind) => {
                               const assignedUsersData = [];
-                              if (task?.director && Object.keys(task?.director).length !== 0) {
-                                  assignedUsersData.push({
-                                      fullName: task?.director?.fullName || '',
-                                      role: 'Постановщик',
-                                      photo: '/img/user.svg'
-                                  });
+                              let users = [];
+
+                              if (task?.director && task?.executor) {
+                                  if (
+                                      Object.keys(task?.director).length !== 0 &&
+                                      Object.keys(task?.executor).length !== 0
+                                  ) {
+                                      users = [
+                                          ...(Object?.values(task?.director) || null),
+                                          ...(Object?.values(task?.executor) || null)
+                                      ];
+                                  }
                               }
 
-                              if (task?.executor && Object.keys(task?.executor).length !== 0) {
-                                  assignedUsersData.push({
-                                      fullName: task?.executor?.fullName || '',
-                                      role: 'Исполнитель',
-                                      photo: '/img/user.svg'
-                                  });
+                              if (users.length !== 0) {
+                                  const mmIdDirector = task?.director?.mmId;
+                                  const mmIdExecutor = task?.executor?.mmId;
+
+                                  if (mmIdDirector === mmIdExecutor) {
+                                      //
+                                      assignedUsersData.push({
+                                          mmId: task?.executor?.mmId || task?.director?.mmId,
+                                          authorizedUser:
+                                              authorizedUserId === mmIdExecutor && authorizedUserId === mmIdDirector
+                                                  ? true
+                                                  : false,
+                                          fullName: task?.executor?.fullName || '',
+                                          role: 'Исполнитель / Постановщик',
+                                          photo: '/img/user.svg'
+                                      });
+                                  } else {
+                                      // Добавление Постановщика
+                                      assignedUsersData.push({
+                                          mmId: task?.director?.mmId,
+                                          authorizedUser: mmIdDirector === authorizedUserId ? true : false,
+                                          fullName: task?.director?.fullName || '',
+                                          role: 'Постановщик',
+                                          photo: '/img/user.svg'
+                                      });
+
+                                      // Добавление Исполнителя
+                                      assignedUsersData.push({
+                                          mmId: task?.executor?.mmId,
+                                          authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
+                                          fullName: task?.executor?.fullName || '',
+                                          role: 'Исполнитель',
+                                          photo: '/img/user.svg'
+                                      });
+                                  }
                               }
 
                               return {
@@ -243,6 +278,7 @@ export const useGanttMode = args => {
 
                 if (item?.contracts && item?.contracts.length !== 0) {
                     item?.contracts.forEach(contract => {
+                        taskItem.moveElemId = +contract?.contractId;
                         // id договора
                         taskItem.contractId = +contract?.contractId;
                         // Заголовок задачи
@@ -266,7 +302,61 @@ export const useGanttMode = args => {
                         taskItem.tasks =
                             contract?.tasks && contract?.tasks.length !== 0
                                 ? contract?.tasks.map((task, ind) => {
+                                      const assignedUsersData = [];
+                                      let users = [];
+
+                                      if (task?.director && task?.executor) {
+                                          if (
+                                              Object.keys(task?.director).length !== 0 &&
+                                              Object.keys(task?.executor).length !== 0
+                                          ) {
+                                              users = [
+                                                  ...(Object?.values(task?.director) || null),
+                                                  ...(Object?.values(task?.executor) || null)
+                                              ];
+                                          }
+                                      }
+
+                                      if (users.length !== 0) {
+                                          const mmIdDirector = task?.director?.mmId;
+                                          const mmIdExecutor = task?.executor?.mmId;
+
+                                          if (mmIdDirector === mmIdExecutor) {
+                                              //
+                                              assignedUsersData.push({
+                                                  mmId: task?.executor?.mmId || task?.director?.mmId,
+                                                  authorizedUser:
+                                                      authorizedUserId === mmIdExecutor &&
+                                                      authorizedUserId === mmIdDirector
+                                                          ? true
+                                                          : false,
+                                                  fullName: task?.executor?.fullName || '',
+                                                  role: 'Исполнитель / Постановщик',
+                                                  photo: '/img/user.svg'
+                                              });
+                                          } else {
+                                              // Добавление Постановщика
+                                              assignedUsersData.push({
+                                                  mmId: task?.director?.mmId,
+                                                  authorizedUser: mmIdDirector === authorizedUserId ? true : false,
+                                                  fullName: task?.director?.fullName || '',
+                                                  role: 'Постановщик',
+                                                  photo: '/img/user.svg'
+                                              });
+
+                                              // Добавление Исполнителя
+                                              assignedUsersData.push({
+                                                  mmId: task?.executor?.mmId,
+                                                  authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
+                                                  fullName: task?.executor?.fullName || '',
+                                                  role: 'Исполнитель',
+                                                  photo: '/img/user.svg'
+                                              });
+                                          }
+                                      }
+
                                       return {
+                                          moveElemId: +contract?.contractId + (ind + 1),
                                           contractId: +contract?.contractId,
                                           title: task?.title || 'Нет данных',
                                           contractNum: `${contract?.contractNum}_${ind + 1}`,
@@ -274,7 +364,8 @@ export const useGanttMode = args => {
                                           done: +task?.done,
                                           dateOfStart: task?.dateOfStart,
                                           dateOfEnding: task?.dateOfEnding,
-                                          bgColorTask: contract?.stage?.color
+                                          bgColorTask: contract?.stage?.color,
+                                          assignedUsers: assignedUsersData
                                       };
                                   })
                                 : [];
@@ -374,7 +465,7 @@ export const useGanttMode = args => {
 //       if (assignedUsersTask.includes(authorizedUserId)) {
 //           authorizedUserData.fullName = 'Фамилия Имя';
 //           authorizedUserData.photo = '/img/user.svg';
-//
+
 //           if (mmIdDirector === authorizedUserId) authorizedUserData.role = 'Постановщик';
 //           if (mmIdExecutor === authorizedUserId) authorizedUserData.role = 'Исполнитель';
 //           if (authorizedUserId === mmIdExecutor && authorizedUserId === mmIdDirector)

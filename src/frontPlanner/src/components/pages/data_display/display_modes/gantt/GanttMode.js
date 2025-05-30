@@ -32,8 +32,29 @@ import { useHistoryContext } from '../../../../../contexts/history.context';
 import './gantt_mode.css';
 
 function AssignedUser({ employee }) {
+    const { addToHistory } = useHistoryContext();
+    const navigate = useNavigate();
+
+    function showInfoEmployee() {
+        const navigationArg = {
+            state: {
+                idEmployee: employee?.mmId,
+                path: `${window.location.pathname}`
+            }
+        };
+        startTransition(() => {
+            addToHistory(`${window.location.pathname}`);
+            navigate(`../../user/${employee?.mmId}/profile/profile/`, navigationArg);
+        });
+    }
+
     return employee && Object.keys(employee).length !== 0 ? (
-        <div className="gantt-task-assigned-user">
+        <div
+            className={classNames('gantt-task-assigned-user', {
+                'gantt-task-assigned-user_backlight': employee?.authorizedUser
+            })}
+            onClick={showInfoEmployee}
+        >
             <img className="gantt-task-assigned-user__photo" src={employee?.photo} alt="" />
             <div className="gantt-task-assigned-user__info">
                 <h2 className="gantt-task-assigned-user__fullname">{employee?.fullName || 'Нет данных'}</h2>
@@ -61,12 +82,7 @@ function DurationTask(props) {
                     data?.duration && data?.duration !== 0 ? `${data?.dateOfStart} / span ${data?.duration}` : null,
                 backgroundColor: data?.bgColorTask
             }}
-        >
-            {/* {data?.authorizedUser && Object.keys(data?.authorizedUser).length !== 0 ? data?.authorizedUser?.role : null} */}
-            {/* {data?.authorizedUser && Object.keys(data?.authorizedUser).length !== 0 ? (
-                <AssignedUser employee={data?.authorizedUser} />
-            ) : null} */}
-        </div>
+        ></div>
     );
 }
 
@@ -138,7 +154,9 @@ function TotalTaskRow(props) {
 // Отображение задач
 function TaskRow(props) {
     const { timeLine, partition, task, dateState, config, dataOperations } = props;
+
     const { addToHistory } = useHistoryContext();
+    const navigate = useNavigate();
 
     const containTasks = task && Object.keys(task).length !== 0 ? 'tasks' in task : false;
     let daysDiff = getDaysBetweenTwoDates(
@@ -147,7 +165,7 @@ function TaskRow(props) {
     ).length;
 
     const [showTasks, setShowTasks] = useState(true);
-    const navigate = useNavigate();
+
     // console.log(`tasks: ${JSON.stringify(tasks, null, 4)}`);
 
     // Скрытие задач

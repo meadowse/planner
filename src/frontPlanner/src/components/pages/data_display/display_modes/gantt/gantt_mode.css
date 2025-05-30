@@ -173,11 +173,6 @@
     font-size: 1.25rem;
 }
 
-/* .gantt-task-actions__btn-hide {
-    border: 1px solid #000;
-    border-radius: 5px;
-} */
-
 .gantt-time-period-cell {
     height: 100%;
     border-right: 0.5px solid #e9eaeb;
@@ -190,6 +185,7 @@
     top: 0;
     right: -100%;
     transform: translateX(100%);
+    z-index: 2;
 }
 
 .gantt-time-period-cell-task {
@@ -230,8 +226,14 @@
     z-index: 2;
 }
 
+.gantt-task-assigned-user_backlight {
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
+        rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+}
+
 .gantt-task-assigned-user:hover {
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .gantt-task-assigned-user__info {
