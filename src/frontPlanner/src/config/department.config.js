@@ -67,7 +67,9 @@ export const DATA_CONVERSION_MAP = {
                 id: -1,
                 mmId: responsible?.idResponsible || -1,
                 fullName: responsible?.fullName,
-                photo: '/img/user.svg',
+                photo: responsible?.idResponsible
+                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.idResponsible}/image`
+                    : '/img/user.svg',
                 post: null
             };
         }
@@ -79,7 +81,9 @@ export const DATA_CONVERSION_MAP = {
                 id: -1,
                 mmId: manager?.idManager || -1,
                 fullName: manager?.fullName || 'Нет данных',
-                photo: '/img/user.svg',
+                photo: manager?.idManager
+                    ? `https://mm-mpk.ru/api/v4/users/${manager?.idManager}/image`
+                    : '/img/user.svg',
                 post: null
             };
         }
@@ -88,7 +92,13 @@ export const DATA_CONVERSION_MAP = {
         return participants && participants.length !== 0
             ? participants.map(participant => {
                   const { participantId, ...restElems } = participant;
-                  return { id: -1, mmId: participantId, ...restElems, photo: '/img/user.svg', post: null };
+                  return {
+                      id: -1,
+                      mmId: participantId,
+                      ...restElems,
+                      photo: participantId ? `https://mm-mpk.ru/api/v4/users/${participantId}/image` : '/img/user.svg',
+                      post: null
+                  };
               })
             : null;
     },
@@ -98,7 +108,7 @@ export const DATA_CONVERSION_MAP = {
                   id: director.idDirector,
                   mmId: director.mmId,
                   fullName: director.fullName || director.directorName,
-                  photo: '/img/user.svg'
+                  photo: director.mmId ? `https://mm-mpk.ru/api/v4/users/${director.mmId}/image` : '/img/user.svg'
               }
             : null;
     },
@@ -108,7 +118,7 @@ export const DATA_CONVERSION_MAP = {
                   id: executor.idExecutor,
                   mmId: executor.mmId,
                   fullName: executor.fullName || executor.executorName,
-                  photo: '/img/user.svg'
+                  photo: executor.mmId ? `https://mm-mpk.ru/api/v4/users/${executor.mmId}/image` : '/img/user.svg'
               }
             : null;
     }

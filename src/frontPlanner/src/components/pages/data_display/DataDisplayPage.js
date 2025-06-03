@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
-import { Routes, Route, Await, useOutletContext, useNavigate, useLoaderData } from 'react-router-dom';
+import { Routes, Route, Navigate, Await, useOutletContext, useNavigate, useLoaderData } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
@@ -11,6 +11,9 @@ import DataDisplayService from '@services/data_display.service';
 
 // Импорт вспомогательных функций
 import { extractSampleData, simplifyData, getFilteredData } from '@helpers/helper';
+
+// Импорт контекста
+import { useHistoryContext } from '../../../contexts/history.context';
 
 // Импорт стилей
 import './data_display_page.css';
@@ -273,8 +276,10 @@ function HeaderBottom(props) {
 export default function DataDisplayPage({ partition }) {
     const data = useLoaderData();
     const itemSideMenu = useOutletContext();
-    const navigate = useNavigate();
     const [searchElem, setSearchElem] = useState('');
+
+    const navigate = useNavigate();
+    const { clearHistory } = useHistoryContext();
 
     // Режимы отображения
     const [displayModes, setDisplayModes] = useState([]);
@@ -291,15 +296,7 @@ export default function DataDisplayPage({ partition }) {
     // Операции которые можно совершать с данными
     const dataOperations = DataDisplayService.getDataOperations(partition) || [];
 
-    // useEffect(() => {
-    //     const keyData = modeOption[mode?.key]?.keyData;
-    //     const filteredValues = filterData(
-    //         data?.uploadedData[keyData],
-    //         simplifyData(extractSampleData(data?.uploadedData[keyData], valsToDisplay)),
-    //         searchElem
-    //     );
-    //     setFilteredData(filteredValues);
-    // }, [searchElem]);
+    useEffect(() => clearHistory(`${itemSideMenu?.path}/${mode?.key}`), [itemSideMenu]);
 
     useEffect(() => {
         const dataDisplayModes = DataDisplayService.getDisplayModes(partition)?.map(item => {
@@ -375,7 +372,7 @@ export default function DataDisplayPage({ partition }) {
             <div className="page-section-main">
                 {mode && Object.keys(mode).length !== 0 ? (
                     <Routes>
-                        {/* <Route index element={<Navigate to={NAVIGATE_CONF[mode?.key]} replace />} /> */}
+                        <Route index element={<Navigate to={`${itemSideMenu?.path}/${mode?.key}`} replace />} />
                         <Route
                             path="kanban"
                             element={
@@ -577,23 +574,6 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => {
-                                            // const keyData = modeOption[mode?.key]?.keyData;
-                                            // const filteredDataById = getFilteredData(
-                                            //     resolvedData[keyData],
-                                            //     Cookies.get('MMUSERID'),
-                                            //     modeOption?.gantContracts
-                                            // );
-                                            // console.log(
-                                            //     `path gantContracts\nmodeOption: ${JSON.stringify(
-                                            //         modeOption,
-                                            //         null,
-                                            //         4
-                                            //     )}\nresolvedData[keyData]: ${JSON.stringify(
-                                            //         resolvedData[keyData],
-                                            //         null,
-                                            //         4
-                                            //     )}`
-                                            // );
                                             const filteredData = filterData(
                                                 resolvedData?.contracts,
                                                 simplifyData(

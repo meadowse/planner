@@ -43,7 +43,7 @@ const loadData = async (partition, idEmployee) => {
                             // Информация о сотруднике
                             const userData = {
                                 fullName: employee?.FIO || 'Нет данных',
-                                photo: employee?.photo || null,
+                                photo: idEmployee ? `https://mm-mpk.ru/api/v4/users/${idEmployee}/image` : null,
                                 post: employee?.job || 'Нет данных',
                                 personalPhone: employee?.telephone || 'Нет данных',
                                 mail: employee?.email || 'Нет данных',

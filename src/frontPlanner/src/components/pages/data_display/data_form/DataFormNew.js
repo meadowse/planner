@@ -23,6 +23,10 @@ function FormHeader(props) {
         startTransition(() => {
             // alert(`prevpath: ${config?.prevPath}`);
             // navigate(`../../${config?.prevPath}`);
+            setTimeout(() => {
+                backToPrevPath();
+            }, 1000);
+
             navigate(`../../${history[history.length - 1]}`);
         });
     }

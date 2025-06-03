@@ -27,7 +27,7 @@ function User(props) {
 
     return (
         <li className="popup__user-list-item" onClick={onSelectUser}>
-            <img className="popup-user__photo" src="/img/user.svg" alt="" />
+            <img className="popup-user__photo" src={user?.photo || '/img/user.svg'} alt="" />
             <div className="popup-user-info">
                 <h3
                     className="popup-user-info__fullname"
@@ -71,6 +71,13 @@ export default function UsersPopupWindow(props) {
             if (response?.status === 200) {
                 if (response?.data && response?.data.length !== 0) {
                     const sortedData = response.data.sort((a, b) => a?.fullName.localeCompare(b.fullName));
+                    sortedData.forEach(
+                        elem =>
+                            (elem.photo = elem.mmId
+                                ? `https://mm-mpk.ru/api/v4/users/${elem.mmId}/image`
+                                : '/img/user.svg')
+                    );
+
                     setUsersData(sortedData);
                     setFilteredUsers(sortedData);
                     setLoading(false);

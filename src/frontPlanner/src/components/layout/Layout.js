@@ -52,7 +52,14 @@ export default function Layout() {
             <div className="app__left-column">
                 <SideMenu items={menuItems} itemSideMenu={itemSideMenu} setItemSideMenu={setItemSideMenu} />
                 <figure className="app__user" onClick={onRetrieveUser}>
-                    <img src="/img/user.svg" alt="#" />
+                    <img
+                        src={
+                            Cookies.get('MMUSERID')
+                                ? `https://mm-mpk.ru/api/v4/users/${Cookies.get('MMUSERID')}/image`
+                                : '/img/user.svg'
+                        }
+                        alt="#"
+                    />
                 </figure>
             </div>
             <div className="app__right-column">

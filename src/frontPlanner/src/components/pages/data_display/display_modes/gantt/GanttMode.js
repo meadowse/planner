@@ -36,16 +36,18 @@ function AssignedUser({ employee }) {
     const navigate = useNavigate();
 
     function showInfoEmployee() {
-        const navigationArg = {
-            state: {
-                idEmployee: employee?.mmId,
-                path: `${window.location.pathname}`
-            }
-        };
-        startTransition(() => {
-            addToHistory(`${window.location.pathname}`);
-            navigate(`../../user/${employee?.mmId}/profile/profile/`, navigationArg);
-        });
+        if (employee?.mmId && employee?.mmId !== -1) {
+            const navigationArg = {
+                state: {
+                    idEmployee: employee?.mmId,
+                    path: `${window.location.pathname}`
+                }
+            };
+            startTransition(() => {
+                addToHistory(`${window.location.pathname}`);
+                navigate(`../../user/${employee?.mmId}/profile/profile/`, navigationArg);
+            });
+        }
     }
 
     return employee && Object.keys(employee).length !== 0 ? (
@@ -197,50 +199,56 @@ function TaskRow(props) {
 
         const NAVIGATION_CONF = {
             user: () => {
-                const navigationArg = {
-                    state: {
-                        idEmployee: task?.idEmployee,
-                        path: `${window.location.pathname}`
-                    }
-                };
-                startTransition(() => {
-                    addToHistory(`${window.location.pathname}`);
-                    navigate(`../../user/${task?.idEmployee}/profile/profile/`, navigationArg);
-                });
+                if (task?.idEmployee && task?.idEmployee !== -1) {
+                    const navigationArg = {
+                        state: {
+                            idEmployee: task?.idEmployee,
+                            path: `${window.location.pathname}`
+                        }
+                    };
+                    startTransition(() => {
+                        addToHistory(`${window.location.pathname}`);
+                        navigate(`../../user/${task?.idEmployee}/profile/profile/`, navigationArg);
+                    });
+                }
             },
             contract: () => {
-                const navigationArg = {
-                    state: {
-                        idContract: task?.contractId,
-                        tabForm: { key: 'general', title: 'Общие' },
-                        partition: partition,
-                        path: `${window.location.pathname}`,
-                        dataOperation: findNestedObj(dataOperations, 'key', operationVal)
-                    }
-                };
-                startTransition(() => {
-                    addToHistory(`${window.location.pathname}`);
-                    navigate('../../dataform/general/', navigationArg);
-                });
-                localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
+                if (task?.contractId && task?.contractId !== -1) {
+                    const navigationArg = {
+                        state: {
+                            idContract: task?.contractId,
+                            tabForm: { key: 'general', title: 'Общие' },
+                            partition: partition,
+                            path: `${window.location.pathname}`,
+                            dataOperation: findNestedObj(dataOperations, 'key', operationVal)
+                        }
+                    };
+                    startTransition(() => {
+                        addToHistory(`${window.location.pathname}`);
+                        navigate('../../dataform/general/', navigationArg);
+                    });
+                    localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
+                }
             },
             task: () => {
-                const navigationArg = {
-                    state: {
-                        idContract: task?.contractId,
-                        tabForm: { key: 'works', title: 'Работа и задачи' },
-                        partition: partition,
-                        path: `${window.location.pathname}`,
-                        dataOperation: findNestedObj(dataOperations, 'key', operationVal)
-                    }
-                };
+                if (task?.contractId && task?.contractId !== -1) {
+                    const navigationArg = {
+                        state: {
+                            idContract: task?.contractId,
+                            tabForm: { key: 'works', title: 'Работа и задачи' },
+                            partition: partition,
+                            path: `${window.location.pathname}`,
+                            dataOperation: findNestedObj(dataOperations, 'key', operationVal)
+                        }
+                    };
 
-                startTransition(() => {
-                    addToHistory(`${window.location.pathname}`);
-                    navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
-                });
+                    startTransition(() => {
+                        addToHistory(`${window.location.pathname}`);
+                        navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
+                    });
 
-                localStorage.setItem('selectedTab', JSON.stringify({ key: 'works', title: 'Работа и задачи' }));
+                    localStorage.setItem('selectedTab', JSON.stringify({ key: 'works', title: 'Работа и задачи' }));
+                }
             }
         };
         return task?.navKey in NAVIGATION_CONF ? NAVIGATION_CONF[task?.navKey]() : null;
@@ -313,7 +321,6 @@ function TaskRow(props) {
                                                   duration: daysDiff,
                                                   bgColorTask: task?.bgColorTask,
                                                   assignedUsers: task?.assignedUsers
-                                                  //   authorizedUser: task?.authorizedUser
                                               }}
                                           />
                                       ) : null}

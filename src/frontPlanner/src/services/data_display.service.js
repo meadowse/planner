@@ -33,7 +33,9 @@ const formData = (data, partition, key) => {
                             newItem['responsible'] = {
                                 mmId: item?.mmId,
                                 fullName: item?.fullName,
-                                photo: '/img/user.svg'
+                                photo: item?.mmId
+                                    ? `https://mm-mpk.ru/api/v4/users/${item?.mmId}/image`
+                                    : '/img/user.svg'
                             };
                             newItem['post'] = item?.post;
                             // newItem['subsection'] = item?.subsection;

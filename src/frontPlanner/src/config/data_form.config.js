@@ -22,7 +22,7 @@ export const DATA_CONVERSION_MAP = {
         return director && Object.keys(director).length !== 0
             ? {
                   ...director,
-                  photo: '/img/user.svg'
+                  photo: director?.mmId ? `https://mm-mpk.ru/api/v4/users/${director?.mmId}/image` : '/img/user.svg'
               }
             : null;
     },
@@ -30,7 +30,7 @@ export const DATA_CONVERSION_MAP = {
         return executor && Object.keys(executor).length !== 0
             ? {
                   ...executor,
-                  photo: '/img/user.svg'
+                  photo: executor?.mmId ? `https://mm-mpk.ru/api/v4/users/${executor?.mmId}/image` : '/img/user.svg'
               }
             : null;
     }

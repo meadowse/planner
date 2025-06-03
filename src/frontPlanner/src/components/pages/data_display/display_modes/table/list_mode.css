@@ -229,6 +229,7 @@
     width: 2rem;
     height: 2rem;
     display: block;
+    border-radius: 50%;
 }
 
 /* .cell__person-fullname {

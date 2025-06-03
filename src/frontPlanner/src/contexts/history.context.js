@@ -21,20 +21,71 @@ export const HistoryProvider = ({ children }) => {
         });
 
         setRoute(routeVal);
-        setHistory(tempData);
+        setHistory(() => {
+            localStorage.setItem('history', JSON.stringify(tempData));
+            return tempData;
+        });
     };
 
+    // const backToPrevPath = () => {
+    //     if (!history || history.length === 0) {
+    //         setHistory(() => {
+    //             localStorage.setItem('history', JSON.stringify(['/department']));
+    //             return ['/department'];
+    //         });
+    //     } else {
+    //         const tempData = Array.from(history);
+    //         tempData.splice(tempData.length - 1, 1);
+    //         setHistory(tempData);
+    //     }
+    // };
+
     const backToPrevPath = () => {
-        if (!history || history.length === 0) {
-            setHistory(() => {
-                localStorage.setItem('history', JSON.stringify(['/department']));
-                return ['/department'];
-            });
-        } else {
-            const tempData = Array.from(history);
-            tempData.splice(tempData.length - 1, 1);
-            setHistory(tempData);
+        let updatedHistory = [];
+
+        // alert(`backToPrevPath history: ${JSON.stringify(history, null, 4)}`);
+
+        if (!history || history.length === 0) updatedHistory = ['/department'];
+        else {
+            updatedHistory = Array.from(history);
+            updatedHistory.splice(updatedHistory.length - 1, 1);
         }
+
+        setHistory(() => {
+            localStorage.setItem('history', JSON.stringify(updatedHistory));
+            return updatedHistory;
+        });
+
+        return updatedHistory;
+
+        // alert(`backToPrevPath newHistory: ${JSON.stringify(newHistory, null, 4)}`);
+    };
+
+    const getUpdatedHistory = () => {
+        let updatedHistory = [];
+
+        // alert(`backToPrevPath history: ${JSON.stringify(history, null, 4)}`);
+
+        if (!history || history.length === 0) updatedHistory = ['/department'];
+        else {
+            updatedHistory = Array.from(history);
+            updatedHistory.splice(updatedHistory.length - 1, 1);
+        }
+
+        setHistory(() => {
+            localStorage.setItem('history', JSON.stringify(updatedHistory));
+            return updatedHistory;
+        });
+
+        return updatedHistory;
+
+        // alert(`backToPrevPath newHistory: ${JSON.stringify(newHistory, null, 4)}`);
+    };
+
+    const clearHistory = path => {
+        const newHistory = [path];
+        setHistory(newHistory);
+        localStorage.setItem('history', JSON.stringify([path]));
     };
 
     useEffect(() => {
@@ -54,6 +105,8 @@ export const HistoryProvider = ({ children }) => {
     }, [route]);
 
     return (
-        <HistoryContext.Provider value={{ history, addToHistory, backToPrevPath }}>{children}</HistoryContext.Provider>
+        <HistoryContext.Provider value={{ history, addToHistory, backToPrevPath, getUpdatedHistory, clearHistory }}>
+            {children}
+        </HistoryContext.Provider>
     );
 };

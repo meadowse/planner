@@ -98,7 +98,7 @@ export default function UserInfoNew() {
         startTransition(() => {
             setTimeout(() => {
                 backToPrevPath();
-            }, 2000);
+            }, 1000);
 
             navigate(history[history.length - 1]);
         });
@@ -315,73 +315,3 @@ export default function UserInfoNew() {
         </div>
     );
 }
-
-// {isLoading ? (
-//                     <Preloader />
-//                 ) : userInfo.tab?.key in TABS_CONF ? (
-//                     <Routes>{TABS_CONF[userInfo.tab?.key]()}</Routes>
-//                 ) : null}
-
-// const TABS_CONF = {
-//     profile: () => {
-//         const employee = Object.assign({}, uploadedData?.employee);
-//         return (
-//             <Route
-//                 path="profile"
-//                 element={
-//                     employee && Object.keys(employee).length !== 0 ? (
-//                         <div className="user__profile">
-//                             <CardProfile
-//                                 profileData={{
-//                                     photo: employee?.photo,
-//                                     fullName: employee?.fullName
-//                                 }}
-//                             />
-//                             <CardInfo config={UserService.getEmployeeConfig()} userData={employee} />
-//                         </div>
-//                     ) : null
-//                 }
-//             />
-//         );
-//     },
-//     tasks: () => {
-//         // const filteredData = getFilteredData(data?.tabData, state?.idEmployee, userInfo?.tabOption) || [];
-//         const filteredData = getFilteredData(uploadedData?.tabData, idEmployee, userInfo?.tabOption) || [];
-//         return (
-//             <Route
-//                 path="tasks"
-//                 element={
-//                     <ListMode
-//                         testData={filteredData || []}
-//                         modeConfig={{
-//                             keys: userInfo.valsToDisplay,
-//                             partition: userInfo.tab?.key,
-//                             dataOperations: userInfo.dataOperations,
-//                             idContract: null
-//                         }}
-//                     />
-//                 }
-//             />
-//         );
-//     }
-//     contracts: () => {
-//         // const filteredData = getFilteredData(data?.tabData, state?.idEmployee, userInfo?.tabOption) || [];
-//         const filteredData = getFilteredData(uploadedData?.tabData, idEmployee, userInfo?.tabOption) || [];
-//         return (
-//             <Route
-//                 path="contracts"
-//                 element={
-//                     <ListMode
-//                         testData={filteredData || []}
-//                         modeConfig={{
-//                             keys: userInfo.valsToDisplay,
-//                             partition: userInfo.tab?.key,
-//                             dataOperations: userInfo.dataOperations,
-//                             idContract: null
-//                         }}
-//                     />
-//                 }
-//             />
-//         );
-//     }
-// };

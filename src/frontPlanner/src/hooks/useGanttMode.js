@@ -227,7 +227,9 @@ export const useGanttMode = args => {
                                           authorizedUser: mmIdDirector === authorizedUserId ? true : false,
                                           fullName: task?.director?.fullName || '',
                                           role: 'Постановщик',
-                                          photo: '/img/user.svg'
+                                          photo: task?.director?.mmId
+                                              ? `https://mm-mpk.ru/api/v4/users/${task?.director?.mmId}/image`
+                                              : '/img/user.svg'
                                       });
 
                                       // Добавление Исполнителя
@@ -236,7 +238,9 @@ export const useGanttMode = args => {
                                           authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
                                           fullName: task?.executor?.fullName || '',
                                           role: 'Исполнитель',
-                                          photo: '/img/user.svg'
+                                          photo: task?.executor?.mmId
+                                              ? `https://mm-mpk.ru/api/v4/users/${task?.executor?.mmId}/image`
+                                              : '/img/user.svg'
                                       });
                                   }
                               }
@@ -332,7 +336,12 @@ export const useGanttMode = args => {
                                                           : false,
                                                   fullName: task?.executor?.fullName || '',
                                                   role: 'Исполнитель / Постановщик',
-                                                  photo: '/img/user.svg'
+                                                  photo:
+                                                      task?.executor?.mmId || task?.director?.mmId
+                                                          ? `https://mm-mpk.ru/api/v4/users/${
+                                                                task?.executor?.mmId || task?.director?.mmId
+                                                            }/image`
+                                                          : '/img/user.svg'
                                               });
                                           } else {
                                               // Добавление Постановщика
@@ -341,7 +350,9 @@ export const useGanttMode = args => {
                                                   authorizedUser: mmIdDirector === authorizedUserId ? true : false,
                                                   fullName: task?.director?.fullName || '',
                                                   role: 'Постановщик',
-                                                  photo: '/img/user.svg'
+                                                  photo: task?.director?.mmId
+                                                      ? `https://mm-mpk.ru/api/v4/users/${task?.director?.mmId}/image`
+                                                      : '/img/user.svg'
                                               });
 
                                               // Добавление Исполнителя
@@ -350,7 +361,9 @@ export const useGanttMode = args => {
                                                   authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
                                                   fullName: task?.executor?.fullName || '',
                                                   role: 'Исполнитель',
-                                                  photo: '/img/user.svg'
+                                                  photo: task?.executor?.mmId
+                                                      ? `https://mm-mpk.ru/api/v4/users/${task?.executor?.mmId}/image`
+                                                      : '/img/user.svg'
                                               });
                                           }
                                       }
@@ -442,33 +455,3 @@ export const useGanttMode = args => {
         formData
     };
 };
-
-//   let assignedUsersTask = [];
-//   let authorizedUserData = {};
-
-//   if (task?.director && task?.executor) {
-//       if (
-//           Object.keys(task?.director).length !== 0 &&
-//           Object.keys(task?.executor).length !== 0
-//       ) {
-//           assignedUsersTask = [
-//               ...(Object?.values(task?.director) || null),
-//               ...(Object?.values(task?.executor) || null)
-//           ];
-//       }
-//   }
-
-//   if (assignedUsersTask.length !== 0) {
-//       const mmIdDirector = assignedUsersTask[0];
-//       const mmIdExecutor = assignedUsersTask[1];
-
-//       if (assignedUsersTask.includes(authorizedUserId)) {
-//           authorizedUserData.fullName = 'Фамилия Имя';
-//           authorizedUserData.photo = '/img/user.svg';
-
-//           if (mmIdDirector === authorizedUserId) authorizedUserData.role = 'Постановщик';
-//           if (mmIdExecutor === authorizedUserId) authorizedUserData.role = 'Исполнитель';
-//           if (authorizedUserId === mmIdExecutor && authorizedUserId === mmIdDirector)
-//               authorizedUserData.role = 'Исполнитель / Постановщик';
-//       }
-//   }
