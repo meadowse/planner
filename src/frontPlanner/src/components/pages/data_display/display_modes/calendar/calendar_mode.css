@@ -9,7 +9,8 @@
 
 .calendar__table,
 .calendar__table-tbody-td {
-    border: 1px solid #dfdfdf;
+    /* border: 1px solid #dfdfdf; */
+    border: 1px solid var(--border-color-calendar-cell);
     border-collapse: collapse;
 }
 
@@ -37,7 +38,8 @@
 
 .calendar__table-thead-week {
     text-align: center;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
+    background-color: var(--bg-color-calendar-table-thead);
 }
 
 .calendar__table-thead-day-th {
@@ -55,12 +57,13 @@
     top: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, white 85%);
+    background: var(--bg-gradient-calendar);
     pointer-events: none;
 }
 
 .calendar__table-tbody-td_active {
-    background-color: #dfdfdf;
+    /* background-color: #dfdfdf; */
+    background-color: var(--bg-color-calendar-table-cell-active);
 }
 
 .calendar__table-td-list {
@@ -117,6 +120,7 @@
     overflow: hidden;
     border-radius: 0.3125rem;
     background-color: #f1f1f1;
+    background-color: var(--bg-color-calendar-sidepanel);
 }
 
 .calendar__sidepanel-main {
@@ -165,5 +169,6 @@
 }
 
 .calendar__sidepanel-list-cards .kanban-card {
-    background-color: #fff;
+    /* background-color: #fff; */
+    background-color: var(--bg-color-calendar-sidepanel-card);
 }

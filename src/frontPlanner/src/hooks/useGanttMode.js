@@ -218,7 +218,9 @@ export const useGanttMode = args => {
                                                   : false,
                                           fullName: task?.executor?.fullName || '',
                                           role: 'Исполнитель / Постановщик',
-                                          photo: '/img/user.svg'
+                                          photo: task?.executor?.mmId
+                                              ? `https://mm-mpk.ru/api/v4/users/${task?.executor?.mmId}/image`
+                                              : '/img/user.svg'
                                       });
                                   } else {
                                       // Добавление Постановщика
@@ -255,7 +257,8 @@ export const useGanttMode = args => {
                                   done: +task?.done,
                                   dateOfStart: task?.dateOfStart,
                                   dateOfEnding: task?.dateOfEnding,
-                                  bgColorTask: item?.stage?.color,
+                                  //   bgColorTask: item?.stage?.color,
+                                  bgColorTask: +task?.done ? '#8ac926' : '#e63946',
                                   assignedUsers: assignedUsersData
                               };
                           })
@@ -377,7 +380,8 @@ export const useGanttMode = args => {
                                           done: +task?.done,
                                           dateOfStart: task?.dateOfStart,
                                           dateOfEnding: task?.dateOfEnding,
-                                          bgColorTask: contract?.stage?.color,
+                                          //   bgColorTask: contract?.stage?.color,
+                                          bgColorTask: +task?.done ? '#8ac926' : '#e63946',
                                           assignedUsers: assignedUsersData
                                       };
                                   })

@@ -5,12 +5,102 @@ html {
     font-family: 'Montserrat-Regular';
 }
 
+/* Светлая тема */
+html[data-theme='light'] {
+    --text-color: #000;
+    --hr-line-color: #dfdfdf;
+    /* Задний фон */
+    --bg-color: transparent;
+    --bg-color-side-menu-item-active: #d9d9d9;
+    --bg-color-app-options: #fff;
+    --bg-color-app-option-active: #f1f1f1;
+    /* Канбан */
+    --bg-gradient-kanban-col-top: linear-gradient(90deg, #f1f1f1, #fff0 98.09%);
+    --border-color-kanban-col: #dfdfdf;
+    --color-card: #000;
+    --text-color-card-stage: #000;
+    --text-color-card-figcaption: #000;
+    --text-color-card-participant: #666666;
+    --bg-color-fill-text: #e3e3e3;
+    --bg-color-card: #f1f1f1;
+    /* Режим отображения  Список*/
+    --bg-color-table-mode-header-reset-filters: #fff;
+    --bg-color-table-mode-header: #f1f1f1;
+    --border-color-table-mode-cell: #dfdfdf;
+    /* Режим отображения Календарь */
+    --bg-gradient-calendar: linear-gradient(90deg, #fff0 0, #fff 85%);
+    --bg-color-popup-calendaryymm: #fff;
+    --bg-color-calendar-table-thead: #f1f1f1;
+    --bg-color-calendar-table-cell-active: #dfdfdf;
+    --border-color-calendar-cell: #dfdfdf;
+    --bg-color-calendar-sidepanel: #f1f1f1;
+    --bg-color-calendar-sidepanel-card: #fff;
+    /* --text-shadow-card: none; */
+    /* Режим отображения Гант */
+    --bg-color-gantt-filter-stage: #f2f3f4;
+    --bg-color-gantt-time-months: #f1f1f1;
+    --text-color-gantt-time-months: #000;
+    --bg-color-gantt-time-year: #fff;
+    --bg-color-gantt-task-main-title: #e4e4e4;
+    --text-color-gantt-task-main-title: #000;
+    --text-color-gantt-task-title-done: #000;
+    --bg-color-gantt-task-title: #f1f1f1;
+    --color-outline-gantt-time-period: #e9eaeb;
+    --color-border-gantt-time-period-cell: #e9eaeb;
+}
+
+/* Темная тема */
+html[data-theme='dark'] {
+    --text-color: #fff;
+    --hr-line-color: #474a51;
+    /* Задний фон */
+    --bg-color: #2c2b29;
+    --bg-color-side-menu-item-active: #444444;
+    --bg-color-app-options: #272728;
+    --bg-color-app-option-active: #444444;
+    /* Канбан */
+    --bg-gradient-kanban-col-top: linear-gradient(90deg, #323232, #4d4d4d 98.09%);
+    --border-color-kanban-col: #adb5bd;
+    --text-color-card-stage: #000;
+    --text-color-card-figcaption: #000;
+    --text-color-card-participant: #dee2e6;
+    --color-card: #fafaff;
+    --bg-color-fill-text: #646263;
+    --bg-color-card: #454545;
+    /* Режим отображения  Список*/
+    --bg-color-table-mode-header-reset-filters: #2c2b29;
+    --bg-color-table-mode-header: #353535;
+    --border-color-table-mode-cell: #adb5bd;
+    /* Режим отображения Календарь */
+    --bg-gradient-calendar: linear-gradient(90deg, #fff0 0, #2c2b29 85%);
+    --bg-color-popup-calendaryymm: #444444;
+    --bg-color-calendar-table-thead: #353535;
+    --bg-color-calendar-table-cell-active: #444444;
+    --border-color-calendar-cell: #adb5bd;
+    --bg-color-calendar-sidepanel: #353535;
+    --bg-color-calendar-sidepanel-card: #454545;
+    /* --text-shadow-card: 1px 0 1px #110e15, 0 1px 1px #110e15, -1px 0 1px #110e15, 0 -1px 1px #110e15; */
+    /* Режим отображения Гант */
+    --bg-color-gantt-filter-stage: #444444;
+    --bg-color-gantt-time-months: #444444;
+    --text-color-gantt-time-months: #fff;
+    --bg-color-gantt-time-year: #2c2b29;
+    --bg-color-gantt-task-main-title: #515052;
+    --text-color-gantt-task-main-title: #fff;
+    --text-color-gantt-task-title-done: #f1f1f1;
+    --bg-color-gantt-task-title: #222222;
+    --color-outline-gantt-time-period: #454545;
+    --color-border-gantt-time-period-cell: #454545;
+}
+
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     position: relative;
+    color: var(--text-color);
     font-size: calc(0.5rem + 4 * (100vw - 320px) / 1600);
+    background-color: var(--bg-color);
 }
 
 #root {

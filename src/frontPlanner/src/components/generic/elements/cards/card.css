@@ -16,7 +16,10 @@
     border-left-width: 0.5vw;
     border-left-style: solid;
     border-radius: 0.5rem;
-    background-color: #f1f1f1;
+    /* text-shadow: var(--text-shadow-card); */
+    color: var(--color-card);
+    /* background-color: #f1f1f1; */
+    background-color: var(--bg-color-card);
 }
 
 /* Шапка карточки */
@@ -24,6 +27,10 @@
 .kanban-card__header {
     display: flex;
     justify-content: space-between;
+}
+
+.kanban-card__header-stage {
+    color: var(--text-color-card-stage);
 }
 
 /* Главное содержимое */
@@ -39,23 +46,26 @@
     height: 200px;
     overflow: hidden;
     border-radius: 0.5rem;
-    background-color: #dadada;
+    /* background-color: #dadada; */
 }
 
-.kanban-card__image_empty {
+.kanban-card__figure-image {
     width: 100%;
     height: 100%;
-    position: static;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-.kanban-card__image-message {
+.kanban-card__figure-image:empty::before {
+    content: 'No Image';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-transform: uppercase;
     font-family: 'Montserrat-SemiBold';
     font-size: calc(0.875rem + 8 * (100vw - 320px) / 1600);
     color: #a8a9ad;
+    background-color: #dadada;
 }
 
 .kanban-card__image {
@@ -87,6 +97,7 @@
     -webkit-backdrop-filter: blur(8px);
     transition: transform 300ms;
     cursor: default;
+    color: var(--text-color-card-figcaption);
     background-color: rgba(202, 222, 252, 0.5);
 }
 
@@ -106,6 +117,7 @@
     text-overflow: ellipsis;
     font-family: 'Montserrat-SemiBold';
     font-size: calc(0.5rem + 5 * (100vw - 320px) / 1600);
+    color: var(--text-color-card-figcaption);
 }
 
 .kanban-card__figcaption-title:hover,
@@ -256,7 +268,8 @@
     margin-bottom: 0.1875rem;
     font-family: 'Montserrat-SemiBold';
     font-size: calc(0.625rem + 4 * (100vw - 320px) / 1600);
-    color: #666666;
+    color: var(--text-color-card-participant);
+    /* color: #666666; */
 }
 
 /* Пользователи */

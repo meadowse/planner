@@ -2,14 +2,18 @@
 import Popup from '@generic/elements/popup/Popup';
 
 // Импорт стилей
-import './action_selection_popup.css';
+import './modal_window.css';
 
-export default function ActionSelectionPopup(props) {
-    const { additClass, title, statePopup, functionRef, setStatePopup } = props;
+export default function ModalWindow(props) {
+    const { additClass, title, statePopup, actionRef, setStatePopup } = props;
 
     function onConfirmAction() {
-        if (functionRef.current) {
-            functionRef.current();
+        // if (functionRef.current) {
+        //     functionRef.current();
+        //     setStatePopup(false);
+        // }
+        if (actionRef) {
+            actionRef();
             setStatePopup(false);
         }
     }
@@ -24,7 +28,7 @@ export default function ActionSelectionPopup(props) {
             overlay={true}
             statePopup={statePopup}
             setStatePopup={setStatePopup}
-            icon={'cancel_bl.svg'}
+            icon="cancel_bl.svg"
         >
             <div className="popup__content-action-selection popup-content">
                 <h2 className="popup-content__title">{title}</h2>

@@ -6,7 +6,11 @@ export default function BgFillText(props) {
         type,
         {
             className: className,
-            style: { padding: 'calc(3px + 0.3vw)', borderRadius: '5px', backgroundColor: bgColor }
+            style: {
+                padding: 'calc(3px + 0.3vw)',
+                borderRadius: '5px',
+                backgroundColor: bgColor ? bgColor : 'var(--bg-color-fill-text)'
+            }
         },
         text
     );

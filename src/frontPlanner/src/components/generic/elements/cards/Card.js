@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 // Импорт компонетов
 import BgFillText from '../text/BgFillText';
@@ -8,7 +7,7 @@ import BgFillText from '../text/BgFillText';
 // Импорт доп.функционала
 import { isObject, isArray, findNestedObj } from '@helpers/helper';
 
-//
+// Импорт контекста
 import { useHistoryContext } from '../../../../contexts/history.context';
 
 // Импорт стилей
@@ -17,8 +16,13 @@ import './card.css';
 function HeaderCard({ data }) {
     return data && Object.keys(data).length !== 0 ? (
         <div className="kanban-card__header">
-            <BgFillText type="p" text={data?.title || 'Нет данных'} bgColor="#e3e3e3" />
-            <BgFillText type="p" text={data?.condition?.title || 'Нет данных'} bgColor={data?.condition?.color} />
+            <BgFillText type="p" text={data?.title || 'Нет данных'} />
+            <BgFillText
+                className="kanban-card__header-stage"
+                type="p"
+                text={data?.condition?.title || 'Нет данных'}
+                bgColor={data?.condition?.color}
+            />
         </div>
     ) : null;
 }
@@ -141,13 +145,11 @@ function ImageCard(props) {
 
     return (
         <figure className="kanban-card__figure">
-            {image && image.length !== 0 && typeof image === 'string' ? (
-                <img className="kanban-card__image" src={image} alt="" />
-            ) : (
-                <div className="kanban-card__image_empty">
-                    <p className="kanban-card__image-message">No image</p>
-                </div>
-            )}
+            <div className="kanban-card__figure-image">
+                {image && image.length !== 0 && typeof image === 'string' && (
+                    <img className="kanban-card__image" src={image} alt="" />
+                )}
+            </div>
             {partition ? PARTITION_CONF[partition]() : null}
         </figure>
     );
@@ -165,16 +167,10 @@ function MainContentCard({ partition, data }) {
                     className="kanban-card__main-title"
                     type="h2"
                     text={data?.subtitle?.title || 'Нет данных'}
-                    bgColor="#e3e3e3"
                 />
             ) : null}
             {!isObject(data?.subtitle) ? (
-                <BgFillText
-                    className="kanban-card__main-title"
-                    type="h2"
-                    text={data?.subtitle || 'Нет данных'}
-                    bgColor="#e3e3e3"
-                />
+                <BgFillText className="kanban-card__main-title" type="h2" text={data?.subtitle || 'Нет данных'} />
             ) : null}
             <p className="kanban-card__main-subtitle">{data.way}</p>
             <ImageCard

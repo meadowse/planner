@@ -10,7 +10,7 @@
 .gantt-mode__select-list {
     width: 100%;
     padding: 0.3125rem;
-    border: 1px solid #e7e7e7;
+    /* border: 1px solid #e7e7e7; */
     border-radius: 0.3125rem;
 }
 
@@ -47,6 +47,10 @@
     align-items: center;
 }
 
+.gantt-grid__header-row .gantt-time-year {
+    background-color: var(--bg-color-gantt-time-year);
+}
+
 .gantt-empty-row {
     width: 115px;
     height: 40px;
@@ -58,7 +62,8 @@
     font-size: calc(9px + 6 * (100vw - 320px) / 1600);
     border-radius: 0.3125rem 0.3125rem 0 0;
     color: #666;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
+    background-color: var(--bg-color-gantt-time-months);
 }
 
 .gantt-time-months .gantt-time-period {
@@ -73,16 +78,17 @@
     grid-auto-columns: minmax(30px, 1fr);
     align-items: center;
     text-align: center;
-    outline: 1px solid #e9eaeb;
+    /* outline: 1px solid #e9eaeb; */
+    outline: 1px solid var(--color-outline-gantt-time-period);
 }
 
 .gantt-time-period.top-divide {
     border-top: 1.5px solid #ff002b;
 }
 
-.gantt-time-period__day {
+/* .gantt-time-period__day {
     background-color: #fff;
-}
+} */
 
 .gantt-time-period__curr-day {
     position: relative;
@@ -116,7 +122,9 @@
     column-gap: 0.5rem;
     border-radius: 5px 5px 0px 0px;
     font-family: 'Montserrat-SemiBold';
-    color: #000;
+    /* color: #000; */
+    color: var(--text-color-gantt-task-main-title);
+    background-color: var(--bg-color-gantt-task-main-title);
 }
 
 .gantt-task-title {
@@ -130,12 +138,14 @@
     overflow: auto;
     scrollbar-width: none;
     cursor: pointer;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
+    background-color: var(--bg-color-gantt-task-title);
     z-index: 3;
 }
 
 .gantt-task-title_done {
-    text-decoration: line-through 1.5px solid #000;
+    /* text-decoration: line-through 1.5px solid #000; */
+    text-decoration: line-through 1.5px solid var(--text-color-gantt-task-title-done);
 }
 
 .gantt-task-wrapper,
@@ -149,7 +159,8 @@
     align-items: center;
     justify-content: space-between;
     column-gap: 2rem;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
+    background-color: var(--bg-color-gantt-task-title);
     z-index: 3;
 }
 
@@ -159,7 +170,9 @@
 }
 
 .gantt-time-months {
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
+    color: var(--text-color-gantt-time-months);
+    background-color: var(--bg-color-gantt-time-months);
 }
 
 .gantt-task-actions {
@@ -175,7 +188,9 @@
 
 .gantt-time-period-cell {
     height: 100%;
-    border-right: 0.5px solid #e9eaeb;
+    /* border-right: 0.5px solid #e9eaeb; */
+    color: var(--text-color-gantt-time-months);
+    border-right: 0.5px solid var(--color-border-gantt-time-period-cell);
 }
 
 .gantt-time-period-cell__users {

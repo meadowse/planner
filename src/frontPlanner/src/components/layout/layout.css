@@ -12,6 +12,7 @@
     flex-grow: 1;
     display: flex;
     column-gap: calc(20px + 0.9vw);
+    background-color: var(--bg-color);
 }
 
 /* Левый столбец приложения */

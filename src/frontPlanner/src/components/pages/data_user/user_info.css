@@ -80,6 +80,18 @@
     background-color: #cecece;
 }
 
+.user__profile-photo:empty::before {
+    content: 'No Image Available';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.875rem + 8 * (100vw - 320px) / 1600);
+    color: #a8a9ad;
+    background-color: #dadada;
+}
+
 .user__profile-img {
     border-radius: 5px;
     width: 100%;

@@ -1,7 +1,6 @@
 /* Фильтры таблицы */
-
-.table-mode__thead-tr-filters {
-    background-color: #fff;
+.table-mode__thead-tr {
+    background-color: var(--bg-color-table-mode-header);
 }
 
 .table-mode__thead-td {
@@ -14,8 +13,10 @@
     outline: none;
 }
 
-.table-mode__thead-tr-reset-filters {
-    background-color: #fff;
+.table-mode__thead-tr-reset-filters,
+.table-mode__thead-tr-filters {
+    /* background-color: #fff; */
+    background-color: var(--bg-color-table-mode-header-reset-filters);
 }
 
 .table-mode__thead-td-reset-filters {

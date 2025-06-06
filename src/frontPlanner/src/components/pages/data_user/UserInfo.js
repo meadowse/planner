@@ -33,7 +33,7 @@ function CardProfile({ profileData }) {
     return (
         <div className="user__profile-top">
             <figure className="user__profile-photo">
-                <img className="user__profile-img" src={profileData.photo} alt="" />
+                {profileData.photo ? <img className="user__profile-img" src={profileData.photo} alt="" /> : null}
             </figure>
             <h2 className="user__fullname">{profileData.fullName}</h2>
         </div>

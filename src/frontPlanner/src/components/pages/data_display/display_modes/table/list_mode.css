@@ -45,7 +45,8 @@
 }
 
 .table-mode__thead-tr {
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
+    background-color: var(--bg-color-table-mode-header);
 }
 
 .table-mode__thead-th:first-child {
@@ -66,7 +67,8 @@
 }
 
 .table-mode__tbody-tr:not(:last-child) td {
-    border-bottom: 1px solid #dfdfdf;
+    /* border-bottom: 1px solid #dfdfdf; */
+    border-bottom: 1px solid var(--border-color-table-mode-cell);
 }
 
 .table-mode__thead th,

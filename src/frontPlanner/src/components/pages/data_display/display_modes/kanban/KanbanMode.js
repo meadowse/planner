@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 // Импорт компонетов
 import Card from '@generic/elements/cards/Card';
-import ActionSelectionPopup from '@generic/elements/popup/ActionSelectionPopup';
+// import ActionSelectionPopup from '@generic/elements/popup/ActionSelectionPopup';
 
 // Импорт конфигураций
 import { FILTERS_CONF_MAP, DRAG_AND_DROP_CONF_MAP } from '@config/kanban.config';
@@ -274,7 +274,7 @@ export default function KanbanMode(props) {
                 ) : (
                     <p className="kanban__info-message">Данные отсутствуют</p>
                 )}
-                {stateActionSelectionPopup
+                {/* {stateActionSelectionPopup
                     ? createPortal(
                           <ActionSelectionPopup
                               additClass="action-selection"
@@ -284,7 +284,7 @@ export default function KanbanMode(props) {
                           />,
                           document.getElementById('portal')
                       )
-                    : null}
+                    : null} */}
             </div>
         </div>
     );

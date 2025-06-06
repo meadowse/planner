@@ -105,8 +105,8 @@ function TotalTaskRow(props) {
     return (
         <div className="gantt-grid__main-row">
             <div
-                className="gantt-task-main-title gantt-task-title"
-                style={{ backgroundColor: `${bgColorTask}` }}
+                className="gantt-task-title gantt-task-main-title"
+                // style={{ backgroundColor: `${bgColorTask}` }}
                 onClick={onHideTasks}
             >
                 {ganttConfig && Object.keys(ganttConfig).length !== 0 ? (

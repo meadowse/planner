@@ -12,6 +12,9 @@ import DataDisplayService from '@services/data_display.service';
 // Импорт вспомогательных функций
 import { extractSampleData, simplifyData, getFilteredData } from '@helpers/helper';
 
+// Импорт кастомных хуков
+import { useTheme } from '@hooks/useTheme';
+
 // Импорт контекста
 import { useHistoryContext } from '../../../contexts/history.context';
 
@@ -98,11 +101,26 @@ function ModeOptions(props) {
     );
 }
 
-function HeaderTop({ itemSideMenu }) {
+function HeaderTop(props) {
+    const { itemSideMenu, theme, setTheme } = props;
+
+    // Изменить тему приложения
+    function onChangeTheme(e) {
+        if (e.currentTarget.checked) setTheme('dark');
+        else setTheme('light');
+    }
+
     return (
         <div className="page-section-header__top">
             <h2 className="page-section-header__top-title">{itemSideMenu}</h2>
             <hr className="page-section-header__hr-line" />
+            <input
+                id="checkbox-app-theme"
+                className="page-section-header__btn-theme"
+                type="checkbox"
+                onChange={onChangeTheme}
+            />
+            <label className="page-section-header__theme-label" for="checkbox-app-theme" />
         </div>
     );
 }
@@ -276,11 +294,15 @@ function HeaderBottom(props) {
 export default function DataDisplayPage({ partition }) {
     const data = useLoaderData();
     const itemSideMenu = useOutletContext();
-    const [searchElem, setSearchElem] = useState('');
 
     const navigate = useNavigate();
     const { clearHistory } = useHistoryContext();
 
+    // Тема приложения
+    const { theme, setTheme } = useTheme();
+
+    // Элемент поиска
+    const [searchElem, setSearchElem] = useState('');
     // Режимы отображения
     const [displayModes, setDisplayModes] = useState([]);
     // Режим отображения
@@ -354,7 +376,7 @@ export default function DataDisplayPage({ partition }) {
     return (
         <section className="page__section-department page-section">
             <div className="page-section-header">
-                <HeaderTop itemSideMenu={itemSideMenu.title} />
+                <HeaderTop itemSideMenu={itemSideMenu.title} theme={theme} setTheme={setTheme} />
                 <HeaderBottom
                     itemSideMenu={itemSideMenu.title}
                     partition={partition}

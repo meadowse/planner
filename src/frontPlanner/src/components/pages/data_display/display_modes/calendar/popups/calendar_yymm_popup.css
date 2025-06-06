@@ -9,6 +9,7 @@
     left: 0;
     transform: translate(0);
     font-size: calc(8px + 4 * (100vw - 320px) / 1600);
+    background-color: var(--bg-color-popup-calendaryymm);
 }
 
 .popup__calendaryymm .popup__btn-close-popup {

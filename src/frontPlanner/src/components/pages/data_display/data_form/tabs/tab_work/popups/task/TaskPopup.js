@@ -11,7 +11,7 @@ import DropdownMenu from '@generic/elements/dropdown_menu/DropdownMenu';
 import CalendarWindow from '@generic/elements/calendar/CalendarWindow';
 import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
 import InputDataPopup from '@generic/elements/popup/InputDataPopup';
-import ActionSelectionPopup from '@generic/elements/popup/ActionSelectionPopup';
+import ModalWindow from '@generic/elements/popup/ModalWindow';
 
 // Импорт контекстов
 import { SocketContext } from '../../../../../../../../contexts/socket.context';
@@ -571,7 +571,9 @@ export default function TaskPopup(props) {
     const { additClass, title, data, operation, addTaskState, setAddTaskState } = props;
     const dataOperation = TaskService.getDataFormOperation(operation);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
     const [idContract, setIdContract] = useState(data?.idContract ? data?.idContract : null);
     const [contractsIDs, setContractsIDs] = useState({});
 
@@ -589,6 +591,7 @@ export default function TaskPopup(props) {
     // Удаление задачи
     function onDeleteTask() {
         // const idContract = JSON.parse(localStorage.getItem('idContract'));
+        // setIsModalOpen(true);
         if (data?.task && Object.keys(data?.task).length !== 0) {
             TaskService.deleteTask(data?.task?.id);
 
@@ -730,11 +733,20 @@ export default function TaskPopup(props) {
                     </div>
                 </form>
                 {data?.task && Object.keys(data?.task).length !== 0 ? (
-                    <button className="popup__content-del-task" onClick={onDeleteTask}>
+                    <button className="popup__content-del-task" onClick={() => setIsModalOpen(true)}>
                         Удалить
                     </button>
                 ) : null}
             </InputDataPopup>
+            {isModalOpen ? (
+                <ModalWindow
+                    additClass="action-selection"
+                    title="Вы действительно хотите удалить эту задачу?"
+                    statePopup={isModalOpen}
+                    actionRef={onDeleteTask}
+                    setStatePopup={setIsModalOpen}
+                />
+            ) : null}
         </>
     );
 }
