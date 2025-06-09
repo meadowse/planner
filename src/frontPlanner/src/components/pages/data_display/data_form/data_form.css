@@ -7,7 +7,7 @@
     /* align-items: stretch; */
     row-gap: calc(1.25rem + 0.3vw);
     border-radius: 0.3125rem;
-    background-color: #f1f1f1;
+    background-color: var(--bg-color-section-dataform);
 }
 
 /* Шапка формы  */
@@ -88,7 +88,8 @@
 .section__dataform-tab-btn_active {
     border-top-left-radius: 0.3125rem;
     border-top-right-radius: 0.3125rem;
-    background-color: #fff;
+    /* background-color: #fff; */
+    background-color: var(--bg-color-section-dataform-tab-active);
 }
 
 .section__dataform-tabs-content {

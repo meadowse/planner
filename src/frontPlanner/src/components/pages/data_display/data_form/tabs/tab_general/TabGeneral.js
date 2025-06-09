@@ -22,7 +22,7 @@ import { getDateInSpecificFormat } from '@helpers/calendar';
 // Импорт сервисов
 import TabGeneralService from '@services/tabs/tab_general.service';
 
-//
+// Импорт контекста
 import { useHistoryContext } from '../../../../../../contexts/history.context';
 
 // Импорт кастомных хуков

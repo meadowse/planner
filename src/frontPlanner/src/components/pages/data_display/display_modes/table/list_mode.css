@@ -82,6 +82,11 @@
     column-gap: 0.625rem;
 }
 
+.table-mode__thead-th-btn-sorting {
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
 .table-mode__tbody-td {
 }
 

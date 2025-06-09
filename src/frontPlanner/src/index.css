@@ -14,6 +14,7 @@ html[data-theme='light'] {
     --bg-color-side-menu-item-active: #d9d9d9;
     --bg-color-app-options: #fff;
     --bg-color-app-option-active: #f1f1f1;
+    --bg-color-btn-app-theme: #dee2e6;
     /* Канбан */
     --bg-gradient-kanban-col-top: linear-gradient(90deg, #f1f1f1, #fff0 98.09%);
     --border-color-kanban-col: #dfdfdf;
@@ -47,6 +48,14 @@ html[data-theme='light'] {
     --bg-color-gantt-task-title: #f1f1f1;
     --color-outline-gantt-time-period: #e9eaeb;
     --color-border-gantt-time-period-cell: #e9eaeb;
+    /* Формы заполнения данных */
+    --bg-color-section-dataform: #f1f1f1;
+    --bg-color-section-dataform-tab-active: #fff;
+    /* Раздел Общие данные по договору */
+    --bg-color-tab-general: #f1f1f1;
+    --bg-color-tab-general-column: #fff;
+    --text-color-tab-general-row-title: #666666;
+    --bg-color-tab-general-row-item-user: #f1f1f1;
 }
 
 /* Темная тема */
@@ -58,6 +67,7 @@ html[data-theme='dark'] {
     --bg-color-side-menu-item-active: #444444;
     --bg-color-app-options: #272728;
     --bg-color-app-option-active: #444444;
+    --bg-color-btn-app-theme: #495057;
     /* Канбан */
     --bg-gradient-kanban-col-top: linear-gradient(90deg, #323232, #4d4d4d 98.09%);
     --border-color-kanban-col: #adb5bd;
@@ -91,6 +101,14 @@ html[data-theme='dark'] {
     --bg-color-gantt-task-title: #222222;
     --color-outline-gantt-time-period: #454545;
     --color-border-gantt-time-period-cell: #454545;
+    /* Формы заполнения данных */
+    --bg-color-section-dataform: #2c2b29;
+    --bg-color-section-dataform-tab-active: #353535;
+    /* Раздел Общие данные по договору */
+    --bg-color-tab-general: #2c2b29;
+    --bg-color-tab-general-column: #353535;
+    --text-color-tab-general-row-title: #bec3c6;
+    --bg-color-tab-general-row-item-user: #4c4c4e;
 }
 
 body {

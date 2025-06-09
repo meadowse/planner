@@ -19,12 +19,15 @@ export default function Popup(props) {
             <div className={classNames(`popup__${additClass}`, 'popup')} ref={popupRef}>
                 <div className={classNames(additClass, 'popup__wrapper')}>
                     {icon ? (
-                        <IconButton
-                            nameClass="popup__btn-close-popup btn-close-popup"
-                            icon={icon}
-                            onClick={() => setStatePopup(false)}
-                        />
-                    ) : null}
+                        <button className="popup__btn-close-popup btn-close-popup" onClick={() => setStatePopup(false)}>
+                            &#10006;
+                        </button>
+                    ) : // <IconButton
+                    //     nameClass="popup__btn-close-popup btn-close-popup"
+                    //     icon={icon}
+                    //     onClick={() => setStatePopup(false)}
+                    // />
+                    null}
                     {children}
                 </div>
             </div>

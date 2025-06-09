@@ -5,7 +5,8 @@
     grid-template-columns: repeat(2, 1fr);
     column-gap: calc(20px + 0.3vw);
     border-radius: 0.325rem;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
+    background-color: var(--bg-color-tab-general);
 }
 
 /* Общие стили */
@@ -13,7 +14,8 @@
 .tab-general__column {
     padding: calc(10px + 0.3vw);
     border-radius: 0.3125rem;
-    background-color: #fff;
+    /* background-color: #fff; */
+    background-color: var(--bg-color-tab-general-column);
 }
 
 .tab-general-row {
@@ -24,7 +26,8 @@
 
 .tab-general-row__title {
     font-family: 'Montserrat-SemiBold';
-    color: #666666;
+    /* color: #666666; */
+    color: var(--text-color-tab-general-row-title);
 }
 
 [data-error]::after,
@@ -242,6 +245,7 @@
     display: flex;
     align-items: center;
     column-gap: 0.625rem;
+    background-color: var(--bg-color-tab-general-row-item-user);
 }
 
 .tab-general-row-item__user .tab-general-row__ic-btn {

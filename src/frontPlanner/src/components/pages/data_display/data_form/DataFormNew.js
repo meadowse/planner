@@ -43,7 +43,13 @@ function FormHeader(props) {
                 {/* <img className="section__dataform-header-img" src="/img/edit.svg" alt="Edit" /> */}
             </div>
             <div className="section__dataform-header-right">
-                <IconButton
+                <button className="icon-btn__save icon-btn" form="general_form">
+                    Сохранить<span>&#10003;</span>
+                </button>
+                <button className="icon-btn__cancel icon-btn" onClick={onCancelAction}>
+                    Отменить<span>&#10006;</span>
+                </button>
+                {/* <IconButton
                     nameClass="icon-btn__save icon-btn"
                     idForm="general_form"
                     type="submit"
@@ -56,7 +62,7 @@ function FormHeader(props) {
                     text="Отменить"
                     icon="cancel_bl.svg"
                     onClick={onCancelAction}
-                />
+                /> */}
             </div>
         </div>
     );

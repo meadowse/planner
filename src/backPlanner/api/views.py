@@ -46,7 +46,7 @@ def getAgreements(request):
         LEFT JOIN T218 ON T218.F4691 = T212.ID
         LEFT JOIN T3 director ON T218.F4693 = director.ID
         LEFT JOIN T3 executor ON T218.F4694 = executor.ID
-        WHERE T212.ID > 2700
+        WHERE T212.ID > 3000
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)

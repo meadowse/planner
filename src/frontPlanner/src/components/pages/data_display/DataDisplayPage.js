@@ -118,6 +118,7 @@ function HeaderTop(props) {
                 id="checkbox-app-theme"
                 className="page-section-header__btn-theme"
                 type="checkbox"
+                checked={theme === 'dark' ? true : false}
                 onChange={onChangeTheme}
             />
             <label className="page-section-header__theme-label" for="checkbox-app-theme" />
@@ -293,13 +294,14 @@ function HeaderBottom(props) {
 
 export default function DataDisplayPage({ partition }) {
     const data = useLoaderData();
-    const itemSideMenu = useOutletContext();
+    // const itemSideMenu = useOutletContext();
+    const { itemSideMenu, theme, setTheme } = useOutletContext();
 
     const navigate = useNavigate();
     const { clearHistory } = useHistoryContext();
 
     // Тема приложения
-    const { theme, setTheme } = useTheme();
+    // const { theme, setTheme } = useTheme();
 
     // Элемент поиска
     const [searchElem, setSearchElem] = useState('');

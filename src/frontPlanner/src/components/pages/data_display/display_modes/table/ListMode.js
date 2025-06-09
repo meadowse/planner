@@ -137,9 +137,8 @@ export default function ListMode(props) {
                                                     ? HEAD_CELL_CONF[column.id](cellData)
                                                     : HEAD_CELL_CONF.default(cellData)}
                                                 {column.sortable && (
-                                                    <IconButton
-                                                        nameClass={classNames('ic_btn', 'sorting')}
-                                                        icon="sort.svg"
+                                                    <button
+                                                        className="table-mode__thead-th-btn-sorting"
                                                         onClick={() =>
                                                             column?.sortable &&
                                                             sortData(
@@ -151,7 +150,9 @@ export default function ListMode(props) {
                                                                 setData
                                                             )
                                                         }
-                                                    />
+                                                    >
+                                                        &#8693;
+                                                    </button>
                                                 )}
                                             </div>
                                         </th>

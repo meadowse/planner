@@ -49,6 +49,13 @@
 
 /* Стили для кнопки "Сохранить" */
 
+.icon-btn__save,
+.icon-btn__cancel {
+    flex-direction: row;
+    font-size: 0.875rem;
+    color: var(--text-color);
+}
+
 .icon-btn__save {
     font-family: 'Montserrat-SemiBold';
     background-color: #e0e8b2;
@@ -268,10 +275,10 @@
 
 /* Стили кнопки "Сортировка" */
 
-.ic_btn.sorting {
+/* .ic_btn.sorting {
     width: 10px;
     height: 10px;
-}
+} */
 
 /* Стили кнопки "Вид работы" */
 

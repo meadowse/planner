@@ -258,7 +258,7 @@ export const useGanttMode = args => {
                                   dateOfStart: task?.dateOfStart,
                                   dateOfEnding: task?.dateOfEnding,
                                   //   bgColorTask: item?.stage?.color,
-                                  bgColorTask: +task?.done ? '#8ac926' : '#e63946',
+                                  bgColorTask: +task?.done ? '#8ac926' : '#d90429',
                                   assignedUsers: assignedUsersData
                               };
                           })
@@ -381,7 +381,7 @@ export const useGanttMode = args => {
                                           dateOfStart: task?.dateOfStart,
                                           dateOfEnding: task?.dateOfEnding,
                                           //   bgColorTask: contract?.stage?.color,
-                                          bgColorTask: +task?.done ? '#8ac926' : '#e63946',
+                                          bgColorTask: +task?.done ? '#8ac926' : '#d90429',
                                           assignedUsers: assignedUsersData
                                       };
                                   })
