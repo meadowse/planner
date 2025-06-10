@@ -33,10 +33,11 @@ import './tab_general.css';
 
 // Стадия
 function Stage(props) {
-    const { additClass, presetValue, disabledElem, stageError, onClick } = props;
+    const { additClass, appTheme, presetValue, disabledElem, stageError, onClick } = props;
+
     const [stage, setStage] = useState(presetValue ? presetValue : {});
 
-    console.log(`Stage presetValue: ${JSON.stringify(presetValue, null, 4)}`);
+    // console.log(`Stage presetValue: ${JSON.stringify(presetValue, null, 4)}`);
 
     // Выбор статуса
     function onClickItemStage(value) {
@@ -49,7 +50,7 @@ function Stage(props) {
         <div className="tab-general__stage">
             <DropdownMenu
                 additClass={additClass}
-                icon="arrow_down_sm.svg"
+                icon={appTheme === 'dark' ? 'arrow_down_sm_wh.svg' : 'arrow_down_sm.svg'}
                 keyMenu="stages"
                 nameMenu="Статус"
                 disabledElem={disabledElem}
@@ -63,7 +64,7 @@ function Stage(props) {
 
 // Цвет карточки
 function ColorCard(props) {
-    const { additClass, disabledElem, onClick, onSelectColor } = props;
+    const { additClass, appTheme, disabledElem, onClick, onSelectColor } = props;
 
     // Установка цвета карточки
     function setColorCard(value) {
@@ -74,7 +75,7 @@ function ColorCard(props) {
     return (
         <ColorPaletteMenu
             additClass={additClass}
-            icon="arrow_down_sm.svg"
+            icon={appTheme === 'dark' ? 'arrow_down_sm_wh.svg' : 'arrow_down_sm.svg'}
             keyMenu="colors"
             nameMenu="Цвет"
             disabledElem={disabledElem}
@@ -143,12 +144,13 @@ function ImageBuilding(props) {
 
 // Блок "Шапка левого столбца"
 function HeaderLeftCol(props) {
-    const { additClass, presetValue, dataOperation, error, onClick, onSelectColor } = props;
+    const { additClass, appTheme, presetValue, dataOperation, error, onClick, onSelectColor } = props;
 
     return (
         <div className="tab-general-row__top tab-general-row">
             <Stage
                 additClass="stage"
+                appTheme={appTheme}
                 presetValue={presetValue.condition}
                 disabledElem={dataOperation?.disabledFields?.condition}
                 stageError={error}
@@ -162,9 +164,10 @@ function HeaderLeftCol(props) {
                 />
                 <ColorCard
                     additClass="color"
+                    appTheme={appTheme}
+                    disabledElem={dataOperation?.disabledFields?.color}
                     onClick={onClick}
                     onSelectColor={onSelectColor}
-                    disabledElem={dataOperation?.disabledFields?.color}
                 />
             </div>
         </div>
@@ -173,7 +176,7 @@ function HeaderLeftCol(props) {
 
 // Блок "Менеджер"
 function Manager(props) {
-    const { additClass, presetValue, managerError, disabledElem, onClick } = props;
+    const { additClass, appTheme, presetValue, managerError, disabledElem, onClick } = props;
 
     const [statePopup, setStatePopup] = useState(false);
     const [manager, setManager] = useState(presetValue ? presetValue : {});
@@ -213,17 +216,28 @@ function Manager(props) {
                         {manager && Object.keys(manager)?.length !== 0 ? (
                             <li className="tab-general-row__item-manager tab-general-row-item__user" onClick={null}>
                                 <p onClick={() => onClickUser(manager)}>{manager?.fullName}</p>
-                                <IconButton
+                                <button
+                                    className="tab-general-row__ic-btn icon-btn"
+                                    disabled={disabledElem}
+                                    onClick={onDeleteUser}
+                                >
+                                    &#10006;
+                                </button>
+                                {/* <IconButton
                                     nameClass="tab-general-row__ic-btn icon-btn"
                                     type="button"
                                     icon="cancel_bl.svg"
                                     disabled={disabledElem}
                                     onClick={onDeleteUser}
-                                />
+                                /> */}
                             </li>
                         ) : (
                             <li>
-                                <BgFillText type="p" text="Добавить" bgColor="#f1f1f1" />
+                                <BgFillText
+                                    type="p"
+                                    text="Добавить"
+                                    bgColor={appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                                />
                             </li>
                         )}
                     </ul>
@@ -254,7 +268,7 @@ function Manager(props) {
 
 // Блок "Ответственный"
 function Responsible(props) {
-    const { additClass, presetValue, responsibleError, disabledElem, onClick } = props;
+    const { additClass, appTheme, presetValue, responsibleError, disabledElem, onClick } = props;
     const { addToHistory } = useHistoryContext();
 
     const [statePopup, setStatePopup] = useState(false);
@@ -293,17 +307,28 @@ function Responsible(props) {
                         {responsible && Object.keys(responsible)?.length !== 0 ? (
                             <li className="tab-general-row__item-manager tab-general-row-item__user">
                                 <p onClick={() => onClickUser(responsible)}>{responsible?.fullName}</p>
-                                <IconButton
+                                <button
+                                    className="tab-general-row__ic-btn icon-btn"
+                                    disabled={disabledElem}
+                                    onClick={onDeleteUser}
+                                >
+                                    &#10006;
+                                </button>
+                                {/* <IconButton
                                     nameClass="tab-general-row__ic-btn icon-btn"
                                     type="button"
                                     icon="cancel_bl.svg"
                                     disabled={disabledElem}
                                     onClick={onDeleteUser}
-                                />
+                                /> */}
                             </li>
                         ) : (
                             <li>
-                                <BgFillText type="p" text="Добавить" bgColor={'#f1f1f1'} />
+                                <BgFillText
+                                    type="p"
+                                    text="Добавить"
+                                    bgColor={appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                                />
                             </li>
                         )}
                     </ul>
@@ -334,7 +359,7 @@ function Responsible(props) {
 
 // Блок "Участники"
 function Participants(props) {
-    const { additClass, presetValue, participantsError, disabledElem, onClick } = props;
+    const { additClass, appTheme, presetValue, participantsError, disabledElem, onClick } = props;
 
     const [statePopup, setStatePopup] = useState(false);
     // const [participants, setParticipants] = useState(presetValue && presetValue.length !== 0 ? presetValue : []);
@@ -399,18 +424,29 @@ function Participants(props) {
                                     className="tab-general-row-item__participant tab-general-row-item__user"
                                 >
                                     <p onClick={() => onClickUser(participant)}>{participant?.fullName}</p>
-                                    <IconButton
+                                    <button
+                                        className="tab-general-row__ic-btn icon-btn"
+                                        disabled={disabledElem}
+                                        onClick={onDeleteUser}
+                                    >
+                                        &#10006;
+                                    </button>
+                                    {/* <IconButton
                                         nameClass="tab-general-row__ic-btn icon-btn"
                                         type="button"
                                         icon="cancel_bl.svg"
                                         disabled={disabledElem}
                                         onClick={() => onDeleteUser(index)}
-                                    />
+                                    /> */}
                                 </li>
                             ))
                         ) : (
                             <li>
-                                <BgFillText type="p" text="Добавить" bgColor="#f1f1f1" />
+                                <BgFillText
+                                    type="p"
+                                    text="Добавить"
+                                    bgColor={appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                                />
                             </li>
                         )}
                         <li>
@@ -803,7 +839,7 @@ function Contacts(props) {
 
 // Левый столбец
 function LeftColTab(props) {
-    const { presetValues, dataOperation, errors, onClick, onChange, onChangeByInd } = props;
+    const { presetValues, dataOperation, errors, appTheme, onClick, onChange, onChangeByInd } = props;
     const [colorCard, setColorCard] = useState('#69AABE');
 
     // console.log(`presetValues: ${JSON.stringify(presetValues, null, 4)}`);
@@ -815,6 +851,7 @@ function LeftColTab(props) {
             <div className="tab-general__left-rows tab-general-rows">
                 <HeaderLeftCol
                     additClass="header_left_col"
+                    appTheme={appTheme}
                     presetValue={{
                         contractNum: presetValues?.contractNum,
                         condition: presetValues?.stage,
@@ -827,12 +864,14 @@ function LeftColTab(props) {
                 />
                 <Manager
                     additClass="manager"
+                    appTheme={appTheme}
                     presetValue={presetValues?.manager}
                     managerError={errors?.manager}
                     disabledElem={dataOperation?.disabledFields?.manager}
                     onClick={onClick}
                 />
                 <Responsible
+                    appTheme={appTheme}
                     additClass="responsible"
                     presetValue={presetValues?.responsible}
                     responsibleError={errors?.responsible}
@@ -840,6 +879,7 @@ function LeftColTab(props) {
                     onClick={onClick}
                 />
                 <Participants
+                    appTheme={appTheme}
                     additClass="participants"
                     presetValue={presetValues?.participants}
                     participantsError={errors?.participants}
@@ -894,6 +934,7 @@ function LeftColTab(props) {
                 />
                 <Service
                     additClass="services"
+                    appTheme={appTheme}
                     presetValue={presetValues?.services[0]}
                     serviceError={errors?.services}
                     disabledElem={dataOperation?.disabledFields?.services}
@@ -1001,7 +1042,7 @@ function Deadlines(props) {
 
 // Блок "Услуга"
 function Service(props) {
-    const { additClass, presetValue, serviceError, disabledElem, onClick } = props;
+    const { additClass, appTheme, presetValue, serviceError, disabledElem, onClick } = props;
     const [services, setServices] = useState(presetValue ? presetValue[0] : {});
 
     // console.log(`presetValue: ${JSON.stringify(presetValue, null, 4)}`);
@@ -1029,7 +1070,7 @@ function Service(props) {
             <div className="tab-general-row__wrapper">
                 <DropdownMenu
                     additClass={additClass}
-                    icon="arrow_down_sm.svg"
+                    icon={appTheme === 'dark' ? 'arrow_down_sm_wh.svg' : 'arrow_down_sm.svg'}
                     keyMenu="services"
                     nameMenu="Выбрать услугу"
                     option={true}
@@ -1072,9 +1113,10 @@ function MattermostIntegration({ channelId }) {
 }
 
 export default function TabGeneral() {
-    const { data, dataOperation } = useOutletContext();
     let resultData;
+    const theme = localStorage.getItem('appTheme') || 'light';
 
+    const { data, dataOperation } = useOutletContext();
     const { values, onClick, onChange, onСhangeByIndex, checkData, errorsInfo } = useGeneralForm(
         TabGeneralService.getGeneralData(data, dataOperation?.disabledFields),
         dataOperation?.disabledFields
@@ -1139,6 +1181,7 @@ export default function TabGeneral() {
                 presetValues={data}
                 dataOperation={dataOperation}
                 errors={errorsInfo}
+                appTheme={theme}
                 onClick={onClick}
                 onChange={onChange}
                 onChangeByInd={onСhangeByIndex}

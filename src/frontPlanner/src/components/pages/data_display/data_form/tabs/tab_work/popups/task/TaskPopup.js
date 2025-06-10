@@ -85,30 +85,9 @@ function ContractNumber(props) {
     ) : null;
 }
 
-{
-    /* <select
-                            value={!contractNum ? 'Выбрать номер договора' : null}
-                            onChange={e => onSelectContractNum(e.target.value)}
-                        >
-                            <option value="">Выбрать номер договора</option>
-                            {Object.keys(contractsIDs).map(keyVal => (
-                                <option key={keyVal} value={keyVal}>
-                                    {keyVal}
-                                </option>
-                            ))}
-                        </select> */
-}
-
 // Вид работы
 function TypeWork(props) {
-    const {
-        idContract,
-        contractNum,
-        contractsIDs,
-        config,
-        onSelect
-        //  setIdContract
-    } = props;
+    const { idContract, config, onSelect } = props;
 
     // const [idContract, setIdContract] = useState(presetValue ? presetValue : null);
     const [typeWork, setTypeWork] = useState({});
@@ -234,7 +213,11 @@ function Director(props) {
                 {director && Object.keys(director).length !== 0 ? (
                     <ul className="popup__director-list popup__users-list">
                         <li className="popup__director-list-item" onClick={onClickUser}>
-                            <BgFillText type="p" text={director.fullName} bgColor="#f1f1f1" />
+                            <BgFillText
+                                type="p"
+                                text={director.fullName}
+                                bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                            />
                         </li>
                         <li className="popup__director-list-item">
                             <IconButton
@@ -246,7 +229,11 @@ function Director(props) {
                         </li>
                     </ul>
                 ) : (
-                    <BgFillText type="p" text="Добавить" bgColor="#f1f1f1" />
+                    <BgFillText
+                        type="p"
+                        text="Добавить"
+                        bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                    />
                 )}
                 <IconButton
                     nameClass="icon-btn__add-director icon-btn__add-user"
@@ -268,6 +255,13 @@ function Executor(props) {
 
     const navigate = useNavigate();
     const { addToHistory } = useHistoryContext();
+
+    // Загрузка исполнителя по умолчанию
+    async function fetchDefaultExecutor() {
+        const employee = await TaskService.getAuthorizedEmployee(Cookies.get('MMUSERID'));
+        setExecutor(employee);
+        onSelect('executor', employee);
+    }
 
     // Выбор пользователя
     function onSelectExecutor(user) {
@@ -295,6 +289,10 @@ function Executor(props) {
         });
     }
 
+    useEffect(() => {
+        if (!executor || Object.keys(executor).length === 0) fetchDefaultExecutor();
+    }, []);
+
     return !config?.hidden ? (
         <li className="popup__content-user popup-content-item">
             <h2 className="popup-content-title">Исполнитель</h2>
@@ -314,7 +312,11 @@ function Executor(props) {
                 {executor && Object.keys(executor).length !== 0 ? (
                     <ul className="popup__executor-list popup__users-list">
                         <li className="popup__executor-list-item" onClick={onClickUser}>
-                            <BgFillText type="p" text={executor.fullName} bgColor="#f1f1f1" />
+                            <BgFillText
+                                type="p"
+                                text={executor.fullName}
+                                bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                            />
                         </li>
                         <li className="popup__executor-list-item">
                             <IconButton
@@ -326,7 +328,11 @@ function Executor(props) {
                         </li>
                     </ul>
                 ) : (
-                    <BgFillText type="p" text="Добавить" bgColor="#f1f1f1" />
+                    <BgFillText
+                        type="p"
+                        text="Добавить"
+                        bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                    />
                 )}
                 <IconButton
                     nameClass="icon-btn__add-executor icon-btn__add-user"
@@ -569,6 +575,8 @@ function Comment(props) {
 
 export default function TaskPopup(props) {
     const { additClass, title, data, operation, addTaskState, setAddTaskState } = props;
+
+    const theme = localStorage.getItem('appTheme');
     const dataOperation = TaskService.getDataFormOperation(operation);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -695,12 +703,12 @@ export default function TaskPopup(props) {
                         />
                         <Director
                             presetValue={data?.task?.director}
-                            config={{ hidden: dataOperation?.hiddenFields?.director ? true : false }}
+                            config={{ appTheme: theme, hidden: dataOperation?.hiddenFields?.director ? true : false }}
                             onSelect={onClick}
                         />
                         <Executor
                             presetValue={data?.task?.executor}
-                            config={{ hidden: dataOperation?.hiddenFields?.executor ? true : false }}
+                            config={{ appTheme: theme, hidden: dataOperation?.hiddenFields?.executor ? true : false }}
                             onSelect={onClick}
                         />
                         <TaskName

@@ -16,7 +16,8 @@
     border: 1.5px solid #e7e7e7;
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    background-color: #fff;
+    /* background-color: #fff; */
+    background-color: var(--bg-color-popup);
     z-index: 20;
 }
 
@@ -76,4 +77,8 @@
     width: max-content;
     align-self: flex-end;
     cursor: pointer;
+}
+
+.task-calendar .react-calendar {
+    background-color: var(--bg-color-popup);
 }

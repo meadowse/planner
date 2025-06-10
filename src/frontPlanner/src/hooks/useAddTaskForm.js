@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function getTaskConfig(initialData, disabledFields) {
     const template = {};
@@ -19,19 +19,23 @@ export const useTaskForm = (initialData, disabledFields) => {
     console.log(`initialData: ${JSON.stringify(initialData, null, 4)}`);
 
     let config = Object.assign({}, getTaskConfig(initialData, disabledFields));
-    let dataForm = Object.assign({}, values);
+    // let dataForm = Object.assign({}, values);
 
     const validate = () => {};
 
     const onChange = e => {
-        dataForm = { ...values, [e.target.name]: e.target.value };
-        setValues(dataForm);
+        // dataForm = { ...values, [e.target.name]: e.target.value };
+        setValues(prevState => {
+            return { ...prevState, [e.target.name]: e.target.value };
+        });
     };
 
     const onClick = (key, value) => {
-        dataForm = { ...values, [key]: value };
-        // console.info(value);
-        setValues(dataForm);
+        // dataForm = { ...values, [key]: value };
+        // console.log(`useTaskForm onClick vals: ${JSON.stringify(dataForm, null, 4)}`);
+        setValues(prevState => {
+            return { ...prevState, [key]: value };
+        });
     };
 
     return {

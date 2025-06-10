@@ -58,7 +58,8 @@
 
 .icon-btn__save {
     font-family: 'Montserrat-SemiBold';
-    background-color: #e0e8b2;
+    /* background-color: #e0e8b2; */
+    background-color: var(--bg-color-icon-btn-save);
 }
 
 /* Стили для кнопки "Отмена" */
@@ -85,7 +86,8 @@
 .icon-btn__delete-img {
     padding: 0.3vw;
     border-radius: 5px;
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
+    background-color: var(--bg-color-tab-general-image-actions);
 }
 
 /* Стили кнопки для выпадающего меню "Цвет" */
@@ -94,7 +96,8 @@
     padding: 0.3vw;
     width: auto;
     border-radius: 5px;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
+    background-color: var(--bg-color-icon-btn-color);
 }
 
 .icon-btn__color_active {

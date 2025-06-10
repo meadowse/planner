@@ -24,10 +24,15 @@ html[data-theme='light'] {
     --text-color-card-participant: #666666;
     --bg-color-fill-text: #e3e3e3;
     --bg-color-card: #f1f1f1;
-    /* Режим отображения  Список*/
+    /* Режим отображения Список*/
     --bg-color-table-mode-header-reset-filters: #fff;
     --bg-color-table-mode-header: #f1f1f1;
+    --bg-color-table-mode-filter-dropdown-list: #fff;
     --border-color-table-mode-cell: #dfdfdf;
+    /* Режим отображения Список в разделе просмотра договора*/
+    --bg-color-tab-work-table-mode-header-reset-filters: #fff;
+    --bg-color-tab-work-table-mode-header: #f1f1f1;
+    /* --bg-color-:  */
     /* Режим отображения Календарь */
     --bg-gradient-calendar: linear-gradient(90deg, #fff0 0, #fff 85%);
     --bg-color-popup-calendaryymm: #fff;
@@ -53,9 +58,19 @@ html[data-theme='light'] {
     --bg-color-section-dataform-tab-active: #fff;
     /* Раздел Общие данные по договору */
     --bg-color-tab-general: #f1f1f1;
+    --bg-color-icon-btn-save: #e0e8b2;
     --bg-color-tab-general-column: #fff;
+    --bg-color-icon-btn-color: #f1f1f1;
     --text-color-tab-general-row-title: #666666;
+    --bg-color-tab-general-image-actions: #fff;
+    --text-color-dropdown-menu-services: #666666;
     --bg-color-tab-general-row-item-user: #f1f1f1;
+    /* Раздел Работа и задачи */
+    --bg-color-tab-work: #fff;
+    --text-color-popup-content-title: #666;
+    /* Общие стили */
+    --bg-color-popup: #fff;
+    --bg-color-dropdown-menu-list: #e3e3e3;
 }
 
 /* Темная тема */
@@ -77,10 +92,14 @@ html[data-theme='dark'] {
     --color-card: #fafaff;
     --bg-color-fill-text: #646263;
     --bg-color-card: #454545;
-    /* Режим отображения  Список*/
+    /* Режим отображения Список*/
     --bg-color-table-mode-header-reset-filters: #2c2b29;
     --bg-color-table-mode-header: #353535;
+    --bg-color-table-mode-filter-dropdown-list: #444444;
     --border-color-table-mode-cell: #adb5bd;
+    /* Режим отображения Список в разделе просмотра договора*/
+    --bg-color-tab-work-table-mode-header-reset-filters: #353535;
+    --bg-color-tab-work-table-mode-header: #2d2c2a;
     /* Режим отображения Календарь */
     --bg-gradient-calendar: linear-gradient(90deg, #fff0 0, #2c2b29 85%);
     --bg-color-popup-calendaryymm: #444444;
@@ -106,9 +125,19 @@ html[data-theme='dark'] {
     --bg-color-section-dataform-tab-active: #353535;
     /* Раздел Общие данные по договору */
     --bg-color-tab-general: #2c2b29;
+    --bg-color-icon-btn-save: #3da35d;
     --bg-color-tab-general-column: #353535;
+    --bg-color-icon-btn-color: #444444;
     --text-color-tab-general-row-title: #bec3c6;
+    --bg-color-tab-general-image-actions: #4c4c4e;
+    --text-color-dropdown-menu-services: #f1f1f1;
     --bg-color-tab-general-row-item-user: #4c4c4e;
+    /* Раздел Работа и задачи */
+    --bg-color-tab-work: #353535;
+    --text-color-popup-content-title: #bec3c6;
+    /* Общие стили */
+    --bg-color-popup: #2c2b29;
+    --bg-color-dropdown-menu-list: #444444;
 }
 
 body {

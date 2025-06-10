@@ -1,6 +1,7 @@
 .popup__add-task {
     max-width: 50%;
     width: 100%;
+    color: var(--text-color);
 }
 
 .popup__wrapper-add-task {
@@ -37,7 +38,8 @@
 
 .popup-content-title {
     font-family: 'Montserrat-SemiBold';
-    color: #666666;
+    /* color: #666666; */
+    color: var(--text-color-popup-content-title);
 }
 
 /* Элементы формы */

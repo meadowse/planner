@@ -3,7 +3,8 @@
     display: flex;
     flex-direction: column;
     row-gap: 1vw;
-    background-color: #fff;
+    /* background-color: #fff; */
+    background-color: var(--bg-color-tab-work);
 }
 
 .tab-work__main {
@@ -12,4 +13,13 @@
     display: flex;
     flex-direction: column;
     row-gap: 1.25rem;
+}
+
+.tab-work .table-mode__thead-td-reset-filters,
+.tab-work .table-mode__thead-tr-filters {
+    background-color: var(--bg-color-tab-work-table-mode-header-reset-filters);
+}
+
+.tab-work .table-mode__thead-tr {
+    background-color: var(--bg-color-tab-work-table-mode-header);
 }
