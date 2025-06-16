@@ -8,7 +8,10 @@ import { ROUTES_FOR_NOT_AUTH, ROUTES_FOR_AUTH } from './routes/Routes';
 // Импорт контекстов
 import { socket, SocketContext } from './contexts/socket.context';
 import { authContext } from './contexts/auth.context';
+
+// Импорт
 import { HistoryProvider } from './contexts/history.context';
+import { ThemeProvider } from './contexts/theme.context';
 
 // Импорт стилей
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,8 +29,10 @@ export default function App() {
     return (
         <SocketContext.Provider value={socket}>
             <HistoryProvider>
-                <RouterProvider router={router} />
-                <ToastContainer />
+                <ThemeProvider>
+                    <RouterProvider router={router} />
+                    <ToastContainer />
+                </ThemeProvider>
             </HistoryProvider>
         </SocketContext.Provider>
     );

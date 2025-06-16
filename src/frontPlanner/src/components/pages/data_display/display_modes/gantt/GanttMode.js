@@ -35,6 +35,7 @@ function AssignedUser({ employee }) {
     const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
 
+    // Переход к разделу с инфой о пользователе
     function showInfoEmployee() {
         if (employee?.mmId && employee?.mmId !== -1) {
             const navigationArg = {
@@ -114,7 +115,12 @@ function TotalTaskRow(props) {
                         {ganttConfig?.map((headline, index) => {
                             if (isObject(headline) && Object.keys(headline).length !== 0) {
                                 return (
-                                    <option key={headline?.title} value={index} selected={selectedItemInd === index}>
+                                    <option
+                                        key={headline?.title}
+                                        className="gantt-mode__select-list-option"
+                                        value={index}
+                                        selected={selectedItemInd === index}
+                                    >
                                         {headline[modeConfig?.modeOption?.uniqueness]}
                                     </option>
                                 );

@@ -11,7 +11,12 @@
 .dropdown_filter {
     width: 100%;
     outline: none;
-    background-color: var(--bg-color-table-mode-filter-dropdown-list);
+    background-color: inherit;
+    /* background-color: var(--bg-color-table-mode-filter-dropdown-list); */
+}
+
+.dropdown_filter option {
+    background-color: var(--bg-color-dropdown-menu-option);
 }
 
 .table-mode__thead-tr-reset-filters,

@@ -276,14 +276,14 @@ export default function Card(props) {
 
     // console.log(`cardData: ${JSON.stringify(cardData, null, 4)}`);
 
-    function onShowInfoCard(operationVal) {
+    function onShowInfoCard() {
         const navigationArg = {
             state: {
                 idContract: data?.contractId,
                 tabForm: { key: 'general', title: 'Общие' },
                 partition: partition,
                 path: `${window.location.pathname}`,
-                dataOperation: findNestedObj(dataOperations, 'key', operationVal)
+                dataOperation: findNestedObj(dataOperations, 'key', 'update')
             }
         };
 
@@ -298,7 +298,7 @@ export default function Card(props) {
         <div
             className="kanban-card"
             style={{ borderLeftColor: data.color ? data.color : 'rgba(109, 109, 109, 0.745098)' }}
-            onClick={() => onShowInfoCard('update')}
+            onClick={onShowInfoCard}
         >
             <HeaderCard data={cardData?.headerContent} />
             <MainContentCard partition={partition} data={cardData?.mainContent} />

@@ -6,14 +6,16 @@
     grid-template-columns: max-content 1fr;
     grid-template-rows: max-content 1fr;
     border-radius: 5px;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
+    background-color: var(--bg-color-user-info);
 }
 
 .user__side-menu-content {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: #f8f9fa;
+    /* background-color: #f8f9fa; */
+    background-color: var(--bg-color-user-side-menu-content);
 }
 
 .user__side-menu {
@@ -34,7 +36,8 @@
     font-family: 'Montserrat-SemiBold';
     font-size: calc(12px + 6 * (100vw - 320px) / 1600);
     cursor: pointer;
-    color: #000;
+    /* color: #000; */
+    color: var(--text-color);
 }
 
 .user__side-menu-item_active {
@@ -42,7 +45,8 @@
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    background-color: #ced4da;
+    /* background-color: #ced4da; */
+    background-color: var(--bg-color-user-side-menu-item-active);
 }
 
 .user__side-menu-img {
@@ -105,7 +109,8 @@
     word-spacing: 100vw;
     font-family: 'Montserrat-SemiBold';
     font-size: calc(16px + 6 * (100vw - 320px) / 1600);
-    color: #000;
+    /* color: #000; */
+    color: var(--text-color);
 }
 
 .user__profile-bottom {
@@ -124,7 +129,8 @@
     display: grid;
     gap: 25px;
     border-radius: 5px;
-    background-color: #f2f3f4;
+    /* background-color: #f2f3f4; */
+    background-color: var(--bg-color-user-personal-data);
 }
 
 .user__data-item {
@@ -136,7 +142,8 @@
 
 .user__item-title {
     font-family: 'Montserrat-SemiBold';
-    color: #666666;
+    /* color: #666666; */
+    color: var(--text-color-user-item-title);
 }
 
 .user__item-value {
@@ -145,6 +152,7 @@
     overflow-x: auto;
     scrollbar-width: none;
     text-overflow: ellipsis;
+    color: var(--text-color);
 }
 
 .user__item-value:hover {
@@ -217,7 +225,12 @@
     display: flex;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    background-color: #fff;
+    /* background-color: #fff; */
+    background-color: var(--bg-color-user-options-content);
+}
+
+.user__option-item {
+    color: var(--text-color);
 }
 
 .user__option-item,

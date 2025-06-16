@@ -9,19 +9,19 @@ import SideMenu from './side_menu/SideMenu';
 // Импорт контекстов
 import { useHistoryContext } from '../../contexts/history.context';
 import { SocketContext } from '../../contexts/socket.context';
+import { ThemeContext } from '../../contexts/theme.context';
 
 // Импорт данных
 import menuItems from '@data/sideMenuData.json';
 
 // Импорт стилей
 import './layout.css';
-import { useTheme } from '../../hooks/useTheme';
 
 export default function Layout() {
     const navigate = useNavigate();
 
     const socket = useContext(SocketContext);
-    const { theme, setTheme } = useTheme();
+    const { theme, onToggleAppTheme } = useContext(ThemeContext);
     const { addToHistory } = useHistoryContext();
 
     const [itemSideMenu, setItemSideMenu] = useState({});
@@ -68,7 +68,7 @@ export default function Layout() {
                 <main className="main">
                     <div id="portal" />
                     <Suspense fallback={<Preloader />}>
-                        <Outlet context={{ itemSideMenu, theme, setTheme }} />
+                        <Outlet context={{ itemSideMenu, theme, onToggleAppTheme }} />
                     </Suspense>
                 </main>
             </div>

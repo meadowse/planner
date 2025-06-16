@@ -20,6 +20,12 @@ function User(props) {
     const refFullNameUser = useRef(null);
     const refPostUser = useRef(null);
 
+    // Перейти к началу текстового содержимого
+    function onScrollTo() {
+        refFullNameUser?.current.scrollTo(0, 0);
+    }
+
+    // Выбор пользователя
     function onSelectUser() {
         setStatePopup(false);
         setUser(user);
@@ -29,18 +35,10 @@ function User(props) {
         <li className="popup__user-list-item" onClick={onSelectUser}>
             <img className="popup-user__photo" src={user?.photo || '/img/user.svg'} alt="" />
             <div className="popup-user-info">
-                <h3
-                    className="popup-user-info__fullname"
-                    ref={refFullNameUser}
-                    onMouseLeave={() => refFullNameUser?.current.scrollTo(0, 0)}
-                >
+                <h3 className="popup-user-info__fullname" ref={refFullNameUser} onMouseLeave={onScrollTo}>
                     <span>{user?.fullName}</span>
                 </h3>
-                <p
-                    className="popup-user-info__post"
-                    ref={refPostUser}
-                    onMouseLeave={() => refPostUser?.current.scrollTo(0, 0)}
-                >
+                <p className="popup-user-info__post" ref={refPostUser} onMouseLeave={onScrollTo}>
                     <span>{user?.post}</span>
                 </p>
             </div>

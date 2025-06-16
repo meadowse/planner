@@ -49,10 +49,12 @@ html[data-theme='light'] {
     --bg-color-gantt-time-year: #fff;
     --bg-color-gantt-task-main-title: #e4e4e4;
     --text-color-gantt-task-main-title: #000;
+    --border-color-gantt-task-main-title: #c0c0c0;
     --text-color-gantt-task-title-done: #000;
     --bg-color-gantt-task-title: #f1f1f1;
     --color-outline-gantt-time-period: #e9eaeb;
     --color-border-gantt-time-period-cell: #e9eaeb;
+    --bg-color-gantt-task-assigned-user: #dcdcdc;
     /* Формы заполнения данных */
     --bg-color-section-dataform: #f1f1f1;
     --bg-color-section-dataform-tab-active: #fff;
@@ -68,9 +70,17 @@ html[data-theme='light'] {
     /* Раздел Работа и задачи */
     --bg-color-tab-work: #fff;
     --text-color-popup-content-title: #666;
+    /* Раздел Аккаунт пользователя */
+    --bg-color-user-info: #f1f1f1;
+    --bg-color-user-side-menu-content: #f8f9fa;
+    --bg-color-user-side-menu-item-active: #ced4da;
+    --bg-color-user-personal-data: #f2f3f4;
+    --bg-color-user-options-content: #fff;
+    --text-color-user-item-title: #666;
     /* Общие стили */
     --bg-color-popup: #fff;
     --bg-color-dropdown-menu-list: #e3e3e3;
+    --bg-color-dropdown-menu-option: #fff;
 }
 
 /* Темная тема */
@@ -116,10 +126,12 @@ html[data-theme='dark'] {
     --bg-color-gantt-time-year: #2c2b29;
     --bg-color-gantt-task-main-title: #515052;
     --text-color-gantt-task-main-title: #fff;
+    --border-color-gantt-task-main-title: #dfdfdf;
     --text-color-gantt-task-title-done: #f1f1f1;
     --bg-color-gantt-task-title: #222222;
     --color-outline-gantt-time-period: #454545;
     --color-border-gantt-time-period-cell: #454545;
+    --bg-color-gantt-task-assigned-user: #444444;
     /* Формы заполнения данных */
     --bg-color-section-dataform: #2c2b29;
     --bg-color-section-dataform-tab-active: #353535;
@@ -135,9 +147,17 @@ html[data-theme='dark'] {
     /* Раздел Работа и задачи */
     --bg-color-tab-work: #353535;
     --text-color-popup-content-title: #bec3c6;
+    /* Раздел Аккаунт пользователя */
+    --bg-color-user-info: #2c2b29;
+    --bg-color-user-side-menu-content: #2a2a2a;
+    --bg-color-user-side-menu-item-active: #454545;
+    --bg-color-user-personal-data: #454545;
+    --bg-color-user-options-content: #2c2b29;
+    --text-color-user-item-title: #bec3c6;
     /* Общие стили */
     --bg-color-popup: #2c2b29;
     --bg-color-dropdown-menu-list: #444444;
+    --bg-color-dropdown-menu-option: #474a51;
 }
 
 body {

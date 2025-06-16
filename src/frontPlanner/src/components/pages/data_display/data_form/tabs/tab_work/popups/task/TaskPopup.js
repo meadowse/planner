@@ -164,6 +164,10 @@ function Director(props) {
         onSelect('director', employee);
     }
 
+    function onShowPopup() {
+        setStatePopup(true);
+    }
+
     // Выбор пользователя
     function onSelectDirector(user) {
         setDirector(user);
@@ -239,7 +243,7 @@ function Director(props) {
                     nameClass="icon-btn__add-director icon-btn__add-user"
                     type="button"
                     icon="edit.svg"
-                    onClick={() => setStatePopup(true)}
+                    onClick={onShowPopup}
                 />
             </div>
         </li>
@@ -255,6 +259,10 @@ function Executor(props) {
 
     const navigate = useNavigate();
     const { addToHistory } = useHistoryContext();
+
+    function onShowPopup() {
+        setStatePopup(true);
+    }
 
     // Загрузка исполнителя по умолчанию
     async function fetchDefaultExecutor() {
@@ -338,7 +346,7 @@ function Executor(props) {
                     nameClass="icon-btn__add-executor icon-btn__add-user"
                     type="button"
                     icon="edit.svg"
-                    onClick={() => setStatePopup(true)}
+                    onClick={onShowPopup}
                 />
             </div>
         </li>
@@ -409,6 +417,10 @@ function CommencementDate(props) {
     const [calendarState, setCalendarState] = useState(false);
     const [startDate, setStartDate] = useState(presetValue ? presetValue : currDateYYYYMMDD);
 
+    function onShowCalendar() {
+        setCalendarState(true);
+    }
+
     // Удаление даты
     function onDeleteDate() {
         setStartDate('');
@@ -442,7 +454,7 @@ function CommencementDate(props) {
                         type="button"
                         icon="calendar.svg"
                         // disabled={disabledElem}
-                        onClick={() => setCalendarState(true)}
+                        onClick={onShowCalendar}
                     />
                     {calendarState
                         ? createPortal(
@@ -480,6 +492,10 @@ function DeadlineTask(props) {
     const [calendarState, setCalendarState] = useState(false);
     const [deadline, setDeadline] = useState(presetValue ? presetValue : { value: currDateYYYYMMDD });
     // const [deadline, setDeadline] = useState(presetValue ? presetValue : '');
+
+    function onShowCalendar() {
+        setCalendarState(true);
+    }
 
     // Удаление даты
     function onDeleteDate() {
@@ -523,7 +539,7 @@ function DeadlineTask(props) {
                         type="button"
                         icon="calendar.svg"
                         // disabled={disabledElem}
-                        onClick={() => setCalendarState(true)}
+                        onClick={onShowCalendar}
                     />
                     {calendarState
                         ? createPortal(
@@ -595,6 +611,10 @@ export default function TaskPopup(props) {
     // console.log(`dataOperation: ${JSON.stringify(dataOperation, null, 4)}`);
     console.log(`values: ${JSON.stringify(values, null, 4)}`);
     // console.log(`TaskPopup data: ${JSON.stringify(data, null, 4)}`);
+
+    function onShowModal() {
+        setIsModalOpen(true);
+    }
 
     // Удаление задачи
     function onDeleteTask() {
@@ -741,7 +761,7 @@ export default function TaskPopup(props) {
                     </div>
                 </form>
                 {data?.task && Object.keys(data?.task).length !== 0 ? (
-                    <button className="popup__content-del-task" onClick={() => setIsModalOpen(true)}>
+                    <button className="popup__content-del-task" onClick={onShowModal}>
                         Удалить
                     </button>
                 ) : null}

@@ -65,6 +65,7 @@ function CardInfo({ config, userData }) {
 
 export default function UserInfoNew() {
     const lastSegmentPath = `${window.location.href.match(/([^\/]*)\/*$/)[1]}`;
+    const theme = localStorage.getItem('appTheme');
 
     const { idEmployee } = useParams();
     const data = useLoaderData();
@@ -220,7 +221,15 @@ export default function UserInfoNew() {
                             })}
                             onClick={() => onSelectTab(indTab, tabData)}
                         >
-                            <img className="user__side-menu-img" src={`/img/${tabData?.key}.svg`} alt="Profile" />
+                            <img
+                                className="user__side-menu-img"
+                                src={
+                                    theme === 'dark'
+                                        ? `/img/side_menu/employee_${tabData?.key}_wh.svg`
+                                        : `/img/side_menu/employee_${tabData?.key}.svg`
+                                }
+                                alt="Profile"
+                            />
                             {tabData.value}
                         </li>
                     ))}

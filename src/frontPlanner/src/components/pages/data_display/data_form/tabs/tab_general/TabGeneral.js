@@ -184,6 +184,10 @@ function Manager(props) {
     const navigate = useNavigate();
     const { addToHistory } = useHistoryContext();
 
+    function onShowPopup() {
+        setStatePopup(true);
+    }
+
     function onSelectManager(user) {
         setManager(user);
         onClick('manager', user);
@@ -246,7 +250,7 @@ function Manager(props) {
                         type="button"
                         icon="plus_gr.svg"
                         disabled={disabledElem}
-                        onClick={() => setStatePopup(true)}
+                        onClick={onShowPopup}
                     />
                     {statePopup
                         ? createPortal(
@@ -275,6 +279,20 @@ function Responsible(props) {
     const [responsible, setResponsible] = useState(presetValue ? presetValue : {});
     const navigate = useNavigate();
 
+    function onShowPopup() {
+        setStatePopup(true);
+    }
+
+    function onSelectManager(user) {
+        setResponsible(user);
+        onClick('responsible', user);
+    }
+
+    function onDeleteUser() {
+        setResponsible(null);
+        onClick('responsible', null);
+    }
+
     function onClickUser(user) {
         startTransition(() => {
             addToHistory(`${window.location.pathname}`);
@@ -286,16 +304,6 @@ function Responsible(props) {
             //     state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
             // });
         });
-    }
-
-    function onSelectManager(user) {
-        setResponsible(user);
-        onClick('responsible', user);
-    }
-
-    function onDeleteUser() {
-        setResponsible(null);
-        onClick('responsible', null);
     }
 
     return (
@@ -337,7 +345,7 @@ function Responsible(props) {
                         type="button"
                         icon="plus_gr.svg"
                         disabled={disabledElem}
-                        onClick={() => setStatePopup(true)}
+                        onClick={onShowPopup}
                     />
                     {statePopup
                         ? createPortal(
@@ -370,6 +378,10 @@ function Participants(props) {
 
     const listParticipants = [...participants];
     let participant;
+
+    function onShowPopup() {
+        setStatePopup(true);
+    }
 
     function onClickUser(user) {
         startTransition(() => {
@@ -455,7 +467,7 @@ function Participants(props) {
                                 type="button"
                                 icon="plus_gr.svg"
                                 disabled={disabledElem}
-                                onClick={() => setStatePopup(true)}
+                                onClick={onShowPopup}
                             />
                         </li>
                     </ul>
@@ -823,7 +835,6 @@ function Contacts(props) {
                 <div className="tab-general-row__contacts tab-general-row">
                     <span></span>
                     <IconButton
-                        // nameClass={classNames(`icon-btn__add-contact`, 'icon-btn')}
                         nameClass="ic-btn__add-contact tab-general-row__ic-btn icon-btn"
                         type="button"
                         text="Добавить контакт"
@@ -964,6 +975,10 @@ function Deadline(props) {
     //     presetValue && Object.keys(presetValue).length !== 0 && presetValue?.value ? presetValue?.value : null
     // );
 
+    function onShowCalendar() {
+        setCalendarState(true);
+    }
+
     function onSelectDate(date) {
         dateYYYYMMDD = getDateInSpecificFormat(new Date(date.getFullYear(), date.getMonth(), date.getDate()), {
             format: 'YYYYMMDD',
@@ -991,7 +1006,7 @@ function Deadline(props) {
                     type="button"
                     icon="calendar.svg"
                     disabled={disabledElem}
-                    onClick={() => setCalendarState(true)}
+                    onClick={onShowCalendar}
                 />
                 {calendarState ? (
                     <CalendarWindow

@@ -12,9 +12,6 @@ import DataDisplayService from '@services/data_display.service';
 // Импорт вспомогательных функций
 import { extractSampleData, simplifyData, getFilteredData } from '@helpers/helper';
 
-// Импорт кастомных хуков
-import { useTheme } from '@hooks/useTheme';
-
 // Импорт контекста
 import { useHistoryContext } from '../../../contexts/history.context';
 
@@ -102,13 +99,7 @@ function ModeOptions(props) {
 }
 
 function HeaderTop(props) {
-    const { itemSideMenu, theme, setTheme } = props;
-
-    // Изменить тему приложения
-    function onChangeTheme(e) {
-        if (e.currentTarget.checked) setTheme('dark');
-        else setTheme('light');
-    }
+    const { itemSideMenu, theme, onToggleAppTheme } = props;
 
     return (
         <div className="page-section-header__top">
@@ -119,7 +110,7 @@ function HeaderTop(props) {
                 className="page-section-header__btn-theme"
                 type="checkbox"
                 checked={theme === 'dark' ? true : false}
-                onChange={onChangeTheme}
+                onChange={onToggleAppTheme}
             />
             <label className="page-section-header__theme-label" for="checkbox-app-theme" />
         </div>
@@ -295,7 +286,7 @@ function HeaderBottom(props) {
 export default function DataDisplayPage({ partition }) {
     const data = useLoaderData();
     // const itemSideMenu = useOutletContext();
-    const { itemSideMenu, theme, setTheme } = useOutletContext();
+    const { itemSideMenu, theme, onToggleAppTheme } = useOutletContext();
 
     const navigate = useNavigate();
     const { clearHistory } = useHistoryContext();
@@ -378,7 +369,7 @@ export default function DataDisplayPage({ partition }) {
     return (
         <section className="page__section-department page-section">
             <div className="page-section-header">
-                <HeaderTop itemSideMenu={itemSideMenu.title} theme={theme} setTheme={setTheme} />
+                <HeaderTop itemSideMenu={itemSideMenu.title} theme={theme} onToggleAppTheme={onToggleAppTheme} />
                 <HeaderBottom
                     itemSideMenu={itemSideMenu.title}
                     partition={partition}
