@@ -494,7 +494,7 @@ function GanttChart(props) {
 }
 
 export default function GanttMode({ data, modeConfig }) {
-    console.log(`GanttMode data: ${JSON.stringify(data, null, 4)}`);
+    // console.log(`GanttMode data: ${JSON.stringify(data, null, 4)}`);
     // Сохраненные значения выпадающего списка
     const [ganttFilters, setGanttFilters] = useState(
         JSON.parse(localStorage.getItem('gantt-filters')) || {

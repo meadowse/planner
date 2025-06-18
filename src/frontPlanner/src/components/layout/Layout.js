@@ -50,7 +50,7 @@ export default function Layout() {
 
     return (
         <div className="app">
-            <img class="logo" src="/img/logo.svg" alt="Logo" />
+            <img class="logo" src={theme === 'dark' ? '/img/logo_dark.svg' : '/img/logo.svg'} alt="Logo" />
             <div className="app__left-column">
                 <SideMenu items={menuItems} itemSideMenu={itemSideMenu} setItemSideMenu={setItemSideMenu} />
                 <figure className="app__user" onClick={onRetrieveUser}>

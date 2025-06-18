@@ -21,7 +21,7 @@ export const useGanttMode = args => {
                 }
             });
             if (tempData && tempData.length !== 0) tempData?.forEach(item => (item ? headlinesGantt.push(item) : null));
-            console.log(`headlinesGantt: ${JSON.stringify(headlinesGantt, null, 4)}`);
+            // console.log(`headlinesGantt: ${JSON.stringify(headlinesGantt, null, 4)}`);
             return headlinesGantt;
         }
         return [];
@@ -153,12 +153,15 @@ export const useGanttMode = args => {
         const tasks = [];
 
         let filteredData = getFilteredData(),
+            range = [],
             dateRanges = [],
+            // newDateRanges = [],
             daysBetweenTwoDate = [];
 
+        let tempData = [];
         let newItem = {};
         let totalCount = 0;
-        let dateStart, dateEnd;
+        let dateStart, dateEnd, diffDates;
 
         const KEYS_DATA_CONF = {
             // Данные по договорам
@@ -416,7 +419,10 @@ export const useGanttMode = args => {
                     getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
                 );
 
-                if (daysBetweenTwoDate && daysBetweenTwoDate.length !== 0) dateRanges.push(daysBetweenTwoDate);
+                if (daysBetweenTwoDate && daysBetweenTwoDate.length !== 0)
+                    daysBetweenTwoDate.forEach(dateVal => tempData.push(dateVal));
+
+                // dateRanges.push(daysBetweenTwoDate);
 
                 if (item?.tasks && item?.tasks.length !== 0) {
                     item?.tasks.map(task => {
@@ -427,11 +433,38 @@ export const useGanttMode = args => {
                             getDateInSpecificFormat(date, { format: 'YYYYMMDD', separator: '-' })
                         );
 
-                        if (daysBetweenTwoDate && daysBetweenTwoDate.length !== 0) dateRanges.push(daysBetweenTwoDate);
+                        if (daysBetweenTwoDate && daysBetweenTwoDate.length !== 0)
+                            daysBetweenTwoDate.forEach(dateVal => tempData.push(dateVal));
+                        // dateRanges.push(daysBetweenTwoDate);
                     });
                 }
             });
         }
+
+        const sortedDates = Array.from(new Set(tempData)).sort((a, b) => {
+            return new Date(getDateFromString(a)) - new Date(getDateFromString(b));
+        });
+
+        sortedDates.forEach((_, ind) => {
+            if (ind + 1 <= sortedDates.length) {
+                diffDates =
+                    getDaysBetweenTwoDates(getDateFromString(sortedDates[ind]), getDateFromString(sortedDates[ind + 1]))
+                        .length - 1;
+
+                if (diffDates === 0) {
+                    if (range.length !== 0) dateRanges.push(Array.from(new Set(range)));
+                    range = [];
+                }
+                if (diffDates === 1) range.push(sortedDates[ind], sortedDates[ind + 1]);
+                if (diffDates > 1) {
+                    if (range.length === 0) dateRanges.push([sortedDates[ind]]);
+                    else {
+                        if (range.length !== 0) dateRanges.push(Array.from(new Set(range)));
+                        range = [];
+                    }
+                }
+            }
+        });
 
         // Все задачи
         newData.totalTasks = dateRanges;

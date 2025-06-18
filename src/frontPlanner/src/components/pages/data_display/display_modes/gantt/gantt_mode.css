@@ -10,6 +10,7 @@
 .gantt-mode__select-list {
     width: 100%;
     padding: 0.3125rem;
+    outline: none;
     /* border: 1px solid #e7e7e7; */
     border-radius: 0.3125rem;
 }

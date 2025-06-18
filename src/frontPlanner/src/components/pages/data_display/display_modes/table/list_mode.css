@@ -163,6 +163,7 @@
     width: max-content;
     padding: 0.3rem;
     border-radius: 0.3125rem;
+    color: var(--text-color-cell-stage);
 }
 
 /* Ячейка "Выезды", "Сроки" */

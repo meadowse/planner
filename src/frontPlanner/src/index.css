@@ -29,6 +29,7 @@ html[data-theme='light'] {
     --bg-color-table-mode-header: #f1f1f1;
     --bg-color-table-mode-filter-dropdown-list: #fff;
     --border-color-table-mode-cell: #dfdfdf;
+    --text-color-cell-stage: #000;
     /* Режим отображения Список в разделе просмотра договора*/
     --bg-color-tab-work-table-mode-header-reset-filters: #fff;
     --bg-color-tab-work-table-mode-header: #f1f1f1;
@@ -107,6 +108,7 @@ html[data-theme='dark'] {
     --bg-color-table-mode-header: #353535;
     --bg-color-table-mode-filter-dropdown-list: #444444;
     --border-color-table-mode-cell: #adb5bd;
+    --text-color-cell-stage: #000;
     /* Режим отображения Список в разделе просмотра договора*/
     --bg-color-tab-work-table-mode-header-reset-filters: #353535;
     --bg-color-tab-work-table-mode-header: #2d2c2a;
