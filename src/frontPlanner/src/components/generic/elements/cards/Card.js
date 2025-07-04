@@ -6,6 +6,7 @@ import BgFillText from '../text/BgFillText';
 
 // Импорт доп.функционала
 import { isObject, isArray, findNestedObj } from '@helpers/helper';
+import { getDateFromString } from '@helpers/calendar';
 
 // Импорт контекста
 import { useHistoryContext } from '../../../../contexts/history.context';
@@ -16,7 +17,7 @@ import './card.css';
 function HeaderCard({ data }) {
     return data && Object.keys(data).length !== 0 ? (
         <div className="kanban-card__header">
-            <BgFillText type="p" text={data?.title || 'Нет данных'} />
+            <BgFillText className="kanban-card__header-title" type="p" text={data?.title || 'Нет данных'} />
             <BgFillText
                 className="kanban-card__header-stage"
                 type="p"
@@ -90,31 +91,29 @@ function FigcaptionImage({ partition, data }) {
         },
         equipment: () => {
             if (data.dates) {
-                if (isObject(data.dates) && Object.keys(data.dates).length !== 0) {
+                if (isArray(data.dates) && data.dates.length !== 0) {
+                    const sortedDates = data.dates.sort((dateA, dateB) => {
+                        return new Date(getDateFromString(dateB?.end)) - new Date(getDateFromString(dateA?.end));
+                    });
+
+                    console.log(`sortedDates: ${JSON.stringify(sortedDates, null, 4)}`);
+
+                    const dateLastVerf = sortedDates[1]?.end ?? 'Нет данных';
+                    const dateNextVerf = sortedDates[0]?.end ?? 'Нет данных';
+
                     return (
                         <ul className={`kanban-card__figcaption-list_${partition} kanban-card__figcaption-list`}>
                             <li className="kanban-card__figcaption-list-item">
                                 <h3>Дата последней поверки:</h3>
-                                <p className="kanban-card__figcaption-date">{data.dates?.start || 'Нет данных'}</p>
+                                <p className="kanban-card__figcaption-date">{dateLastVerf}</p>
                             </li>
                             <li className="kanban-card__figcaption-list-item">
                                 <h3>Дата следующей поверки:</h3>
                                 <p className="kanban-card__figcaption-date kanban-card__figcaption-date_next">
-                                    {data.dates?.end || 'Нет данных'}
+                                    {dateNextVerf}
                                 </p>
                             </li>
                         </ul>
-                    );
-                }
-                if (isArray(data.dates) && data.dates.length !== 0) {
-                    return (
-                        <div className="kanban-card__figcaption-list-wrapper">
-                            <ul className={`kanban-card__figcaption-list_${partition}s kanban-card__figcaption-list`}>
-                                {data.dates.map(date => (
-                                    <li className="kanban-card__figcaption-date">{date}</li>
-                                ))}
-                            </ul>
-                        </div>
                     );
                 }
             }
@@ -127,6 +126,33 @@ function FigcaptionImage({ partition, data }) {
         </figcaption>
     );
 }
+
+// return (
+//     <div className="kanban-card__figcaption-list-wrapper">
+//         <ul className={`kanban-card__figcaption-list_${partition}s kanban-card__figcaption-list`}>
+//             {data.dates.map(date => (
+//                 <li className="kanban-card__figcaption-date">{date}</li>
+//             ))}
+//         </ul>
+//     </div>
+// );
+
+// if (isObject(data.dates) && Object.keys(data.dates).length !== 0) {
+//     return (
+//         <ul className={`kanban-card__figcaption-list_${partition} kanban-card__figcaption-list`}>
+//             <li className="kanban-card__figcaption-list-item">
+//                 <h3>Дата последней поверки:</h3>
+//                 <p className="kanban-card__figcaption-date">{data.dates?.start || 'Нет данных'}</p>
+//             </li>
+//             <li className="kanban-card__figcaption-list-item">
+//                 <h3>Дата следующей поверки:</h3>
+//                 <p className="kanban-card__figcaption-date kanban-card__figcaption-date_next">
+//                     {data.dates?.end || 'Нет данных'}
+//                 </p>
+//             </li>
+//         </ul>
+//     );
+// }
 
 // Изображение карточки
 function ImageCard(props) {

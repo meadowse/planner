@@ -394,12 +394,24 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => {
-                                            const keyData = modeOption[mode?.key]?.keyData;
+                                            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
                                             const kanbanData = filterData(
-                                                resolvedData[keyData],
-                                                simplifyData(extractSampleData(resolvedData[keyData], valsToDisplay)),
+                                                keyData ? resolvedData[keyData] : resolvedData[keyData],
+                                                simplifyData(
+                                                    extractSampleData(
+                                                        keyData ? resolvedData[keyData] : resolvedData[keyData],
+                                                        valsToDisplay
+                                                    )
+                                                ),
                                                 searchElem
                                             );
+                                            // console.log(
+                                            //     `kanbanData resolvedData[${keyData}]: ${JSON.stringify(
+                                            //         resolvedData,
+                                            //         null,
+                                            //         4
+                                            //     )}`
+                                            // );
                                             return (
                                                 <KanbanMode
                                                     partition={partition}
@@ -419,9 +431,23 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => {
+                                            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
+                                            // console.log(
+                                            //     `listmode keyData: ${keyData}\nresolvedData: ${JSON.stringify(
+                                            //         resolvedData,
+                                            //         null,
+                                            //         4
+                                            //     )}`
+                                            // );
                                             const tableData = filterData(
-                                                resolvedData?.contracts,
-                                                simplifyData(extractSampleData(resolvedData?.contracts, valsToDisplay)),
+                                                // resolvedData?.contracts,
+                                                keyData ? resolvedData[keyData] : resolvedData,
+                                                simplifyData(
+                                                    extractSampleData(
+                                                        keyData ? resolvedData[keyData] : resolvedData,
+                                                        valsToDisplay
+                                                    )
+                                                ),
                                                 searchElem
                                             );
                                             return (
@@ -444,12 +470,16 @@ export default function DataDisplayPage({ partition }) {
                             element={
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
-                                        {resolvedData => (
-                                            <CalendarMode
-                                                testData={resolvedData?.contracts}
-                                                dataOperations={dataOperations}
-                                            />
-                                        )}
+                                        {resolvedData => {
+                                            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
+                                            return (
+                                                <CalendarMode
+                                                    partition={partition}
+                                                    testData={keyData ? resolvedData[keyData] : resolvedData}
+                                                    dataOperations={dataOperations}
+                                                />
+                                            );
+                                        }}
                                     </Await>
                                 </Suspense>
                             }
@@ -460,16 +490,26 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => {
-                                            const keyData = modeOption[mode?.key]?.keyData;
+                                            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
                                             // const ganttData = extractSampleData(
                                             //     resolvedData[keyData],
                                             //     valsToDisplay
                                             // )?.sort((a, b) => b?.id - a?.id);
+                                            console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
+                                            // console.log(
+                                            //     `keyData: ${keyData}\nresolvedData: ${JSON.stringify(
+                                            //         resolvedData,
+                                            //         null,
+                                            //         4
+                                            //     )}`
+                                            // );
                                             return (
                                                 <GanttMode
-                                                    data={resolvedData[keyData]}
+                                                    partition={partition}
+                                                    data={keyData ? resolvedData[keyData] : resolvedData}
                                                     modeConfig={{
-                                                        resolvedData: resolvedData,
+                                                        // resolvedData: resolvedData,
+                                                        resolvedData: keyData ? resolvedData[keyData] : resolvedData,
                                                         modeOptions: modeOptions,
                                                         modeOption: modeOption[mode?.key],
                                                         dataOperations: dataOperations
@@ -609,6 +649,7 @@ export default function DataDisplayPage({ partition }) {
                                             return (
                                                 <GanttMode
                                                     // data={resolvedData?.contracts || []}
+                                                    partition={partition}
                                                     data={filteredData}
                                                     modeConfig={{
                                                         resolvedData: resolvedData?.contracts,

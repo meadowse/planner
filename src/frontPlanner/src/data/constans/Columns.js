@@ -8,6 +8,9 @@ import TaskPopup from '@components/pages/data_display/data_form/tabs/tab_work/po
 
 // Импорт доп.функционала
 import { isObject, isArray } from '@helpers/helper';
+import { getDateFromString } from '@helpers/calendar';
+
+//
 import { useHistoryContext } from '../../contexts/history.context';
 
 const CELLS = {
@@ -141,7 +144,7 @@ const COLUMNS = [
         sortBy: 'title',
         Cell: props => {
             return props?.value ? (
-                <p className="cell__stage cell" style={{ backgroundColor: props?.value?.color }}>
+                <p className="cell__status cell" style={{ backgroundColor: props?.value?.color }}>
                     {props?.value?.title}
                 </p>
             ) : (
@@ -296,23 +299,28 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            if (isObject(props.value) && Object.keys(props.value).length !== 0) {
+            if (isArray(props.value) && props.value.length !== 0) {
+                const sortedDates = props.value.sort((dateA, dateB) => {
+                    return new Date(getDateFromString(dateB?.end)) - new Date(getDateFromString(dateA?.end));
+                });
+
                 return (
                     <ul className="cell__dates cell">
-                        <li className="cell__dates-item">c{CELLS['text'](props?.value?.start, 'dates-item-value')}</li>
-                        <li className="cell__dates-item">по{CELLS['text'](props?.value?.end, 'dates-item-value')}</li>
+                        <li className="cell__dates-item">
+                            <h2>Дата последней поверки:</h2>
+                            <div className="cell__dates-item-wrapper">
+                                {CELLS['text'](sortedDates[1]?.start ?? 'Нет данных', 'dates-item-value')}
+                                {CELLS['text'](sortedDates[1]?.end ?? 'Нет данных', 'dates-item-value')}
+                            </div>
+                        </li>
+                        <li className="cell__dates-item">
+                            <h2>Дата следующей поверки:</h2>
+                            <div className="cell__dates-item-wrapper">
+                                {CELLS['text'](sortedDates[0]?.start ?? 'Нет данных', 'dates-item-value')}
+                                {CELLS['text'](sortedDates[0]?.end ?? 'Нет данных', 'dates-item-value')}
+                            </div>
+                        </li>
                     </ul>
-                );
-            }
-            if (isArray(props.value) && props.value.length !== 0) {
-                return (
-                    <div className="cell__dates-wrapper">
-                        <ul className="cell__dates cell">
-                            {props.value.map(item => (
-                                <li className="cell__dates-item">{CELLS['text'](item, 'dates-item-value')}</li>
-                            ))}
-                        </ul>
-                    </div>
                 );
             }
         }
@@ -327,7 +335,7 @@ const COLUMNS = [
                 <div className="cell__locations-wrapper cell">
                     <ul className="cell__locations cell">
                         {props?.value.map(item => (
-                            <li className="cell__location">{item}</li>
+                            <li className="cell__location">{item ?? 'Нет данных'}</li>
                         ))}
                     </ul>
                 </div>

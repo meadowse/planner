@@ -221,6 +221,7 @@ export const extractSampleData = (data, keys) => {
 
 export const dataLoader = async path => {
     const config = {
+        // timeout: 120000,
         headers: {
             'Content-Type': 'application/json'
         }

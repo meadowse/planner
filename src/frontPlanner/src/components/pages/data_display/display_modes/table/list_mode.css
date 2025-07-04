@@ -166,6 +166,15 @@
     color: var(--text-color-cell-stage);
 }
 
+/* Ячейка "Статус" */
+.cell__status {
+    width: max-content;
+    padding: 0.3rem;
+    border-radius: 0.3125rem;
+    background-color: #adb5bd;
+    color: var(--text-color-cell-stage);
+}
+
 /* Ячейка "Выезды", "Сроки" */
 
 .cell__date {
@@ -287,10 +296,23 @@
 }
 
 .cell__dates,
-.cell__dates-item {
+.cell__dates-item,
+.cell__dates-item-wrapper {
     display: flex;
+}
+
+.cell__dates {
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.cell__dates-item {
+    column-gap: 20px;
     align-items: center;
-    column-gap: 5px;
+}
+
+.cell__dates-item-wrapper {
+    column-gap: 10px;
 }
 
 .cell__dates-item-value {

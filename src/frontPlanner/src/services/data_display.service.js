@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // Импорт доп.функционала
-import { isObject, dataLoader, findNestedObj } from '@helpers/helper';
+import { isObject, isArray, dataLoader, findNestedObj } from '@helpers/helper';
 
 // Импорт конфигураций
 import {
@@ -51,7 +51,7 @@ const formData = (data, partition, key) => {
             return key ? COMPANY_CONF[key]() : [];
         },
         default: () => {
-            return data && data.length !== 0
+            return data && isArray(data) && data.length !== 0
                 ? data?.map(item => {
                       const newItem = {};
                       Object.keys(item).map(key => {
@@ -111,7 +111,9 @@ const loadData = async partition => {
         },
         // Оборудование
         equipment: async () => {
-            return formData(await dataLoader(`${window.location.origin}/equipment.json`), partition, null);
+            return {
+                equipment: formData(await dataLoader(`${window.location.origin}/equipment.json`), partition, null)
+            };
         },
         // Компания
         company: async () => {

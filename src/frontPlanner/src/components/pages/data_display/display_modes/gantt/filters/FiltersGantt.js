@@ -45,7 +45,7 @@ function DropDownFilter(props) {
 
 export default function FiltersGantt(props) {
     const { activeFilters, optionsFilter, keys, data, onChangeFilter } = props;
-    // console.log(`FiltersGantt activeFilters: ${JSON.stringify(activeFilters, null, 4)}`);
+    console.log(`FiltersGantt activeFilters: ${JSON.stringify(activeFilters, null, 4)}`);
 
     const [toggleState, setToggleState] = useState(false);
 

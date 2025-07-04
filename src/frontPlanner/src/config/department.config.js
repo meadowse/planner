@@ -236,10 +236,7 @@ export const EQUIPMENT_DATA_CONF = {
         {
             mode: 'Канбан',
             keyMode: 'kanban',
-            modeOptions: [
-                { value: 'Статусы', key: 'status', uniqueness: 'title' },
-                { value: 'Люди', key: 'responsible', uniqueness: 'fullName' }
-            ],
+            modeOptions: [{ value: 'Тип оборудования', key: 'equipment', keyData: 'equipment', uniqueness: 'title' }],
             keys: []
         },
         {
@@ -258,8 +255,8 @@ export const EQUIPMENT_DATA_CONF = {
             mode: 'Гант',
             keyMode: 'gant',
             modeOptions: [
-                { value: 'Оборудование', key: 'equipment', uniqueness: '_' },
-                { value: 'Поверка', key: 'verification', uniqueness: '_' }
+                // { value: 'Оборудование', key: 'equipment', uniqueness: '_' },
+                // { value: 'Поверка', key: 'verification', uniqueness: '_' }
             ],
             keys: []
         }

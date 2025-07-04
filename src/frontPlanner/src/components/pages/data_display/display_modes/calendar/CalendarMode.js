@@ -12,6 +12,7 @@ import AddDeparturePopup from './popups/AddDeparturePopup';
 import { WEEK_DAYS, MONTHS, YEARS } from '@config/calendar.config';
 
 // Импорт вспомогательного функционала
+import { isArray } from '@helpers/helper';
 import { getDateFromString, getDateInSpecificFormat, getMonthDays } from '@helpers/calendar';
 
 // Импорт стилей
@@ -19,11 +20,31 @@ import './calendar_mode.css';
 
 // Функция для получения списка данных, даты выездов которых совпадают
 // со значениями из списка monthDaysInfo
-function getDataByMonth(testData, monthDaysInfo) {
+function getDataByMonth(partition, testData, monthDaysInfo) {
     let dataByMonth = {};
     let dataByDay = [];
     let dayOfMonth = null,
         date = null;
+
+    console.log(`partition: ${partition}\ntestData: ${JSON.stringify(testData, null, 4)}`);
+
+    const PARTITION_DATA_CONF = {
+        department: item => {
+            return item?.dateOfEnding?.value;
+        },
+        equipment: item => {
+            if (item?.dates && isArray(item?.dates) && item?.dates.length !== 0) {
+                const sortedDates = item?.dates.sort((dateA, dateB) => {
+                    return new Date(getDateFromString(dateB?.end)) - new Date(getDateFromString(dateA?.end));
+                });
+                const dateNextVerf = sortedDates[0]?.end ?? '';
+
+                return dateNextVerf;
+            }
+
+            return '';
+        }
+    };
 
     monthDaysInfo.some(day => {
         dayOfMonth = getDateInSpecificFormat(new Date(day?.year, day?.month, day?.number), {
@@ -31,12 +52,8 @@ function getDataByMonth(testData, monthDaysInfo) {
             separator: '-'
         });
         dataByDay = [];
-        dataByDay = testData.filter(item => {
-            date = getDateFromString(item?.dateOfEnding?.value);
-            date = getDateInSpecificFormat(date, {
-                format: 'YYYYMMDD',
-                separator: '-'
-            });
+        dataByDay = testData?.filter(item => {
+            date = PARTITION_DATA_CONF[partition](item) ?? 'Нет данных';
             return dayOfMonth === date;
         });
         if (dataByDay && dataByDay.length !== 0) dataByMonth[dayOfMonth] = dataByDay;
@@ -105,6 +122,9 @@ function Calendar(props) {
                                                         data.title =
                                                             card?.car?.numCar?.replace(/\D/g, '') ||
                                                             card?.address ||
+                                                            card?.equipment?.title +
+                                                                String.fromCharCode(8194) +
+                                                                card?.equipment?.model ||
                                                             null;
 
                                                         return (
@@ -140,7 +160,7 @@ function Calendar(props) {
 
 // Всплывающая область с карточками
 function SideSectionCards(props) {
-    const {partition, selectedDate, cardsData, dataOperations, setCards, setSelectedDate, setSideSection } = props;
+    const { partition, selectedDate, cardsData, dataOperations, setCards, setSelectedDate, setSideSection } = props;
 
     function onCloseSideSection() {
         setCards([]);
@@ -178,8 +198,9 @@ function SideSectionCards(props) {
     );
 }
 
-export default function CalendarMode({ partition, testData, dataOperations }) {
+export default function CalendarMode(props) {
     // console.log(`testData: ${JSON.stringify(testData, null, 4)}`);
+    const { partition, testData, dataOperations } = props;
 
     const [stateCalendarPopup, setStateCalendarPopup] = useState(false);
     const [stateInputPopup, setStateInputPopup] = useState(false);
@@ -195,7 +216,7 @@ export default function CalendarMode({ partition, testData, dataOperations }) {
     // дата в формате ГодМесяцДень
     let dateYYYYMMDD = '';
     // список карточек содержимое которых совпадает с датой выезда
-    let dataByMonth = getDataByMonth(testData, monthDaysInfo);
+    let dataByMonth = getDataByMonth(partition, testData, monthDaysInfo);
     let state = Object.values(useParams())[0] === 'true';
 
     function changeLink() {

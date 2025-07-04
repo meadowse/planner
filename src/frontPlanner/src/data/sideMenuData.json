@@ -1,15 +1,24 @@
 [
     {
+        "key": "contracts",
         "title": "Производство",
         "path": "department/",
         "imgName": "department"
     },
     {
+        "key": "equipment",
+        "title": "Оборудование",
+        "path": "equipment/",
+        "imgName": "equipment"
+    },
+    {
+        "key": "company",
         "title": "Компания",
         "path": "company/",
         "imgName": "company"
     },
     {
+        "key": "tasks",
         "title": "Мои задачи и договоры",
         "path": "tasks/",
         "imgName": "tasks"

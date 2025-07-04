@@ -20,6 +20,20 @@ function applyFilters(keyData, data, filters) {
                 return filteredData.length !== 0 ? filteredData : data;
             }
         },
+        equipment: () => {
+            if (data && data.length !== 0) {
+                if (filters && Object.keys(filters).length !== 0) {
+                    const filteredData = data?.filter(item =>
+                        Object.keys(filters).every(key => {
+                            const handler = FILTER_HANDLERS_CONF.get(key);
+                            return !handler || handler(filters[key], item[key]);
+                        })
+                    );
+                    return filteredData;
+                }
+                return data;
+            }
+        },
         sections: () => {
             const newData = data.map(item => {
                 return { section: item.section, employee: item.employee };
@@ -46,17 +60,17 @@ function applyFilters(keyData, data, filters) {
     return FILTER_DATA_CONF[keyData] ? FILTER_DATA_CONF[keyData]() : data;
 }
 
-export const useFiltersGantt = (modeOption, data) => {
-    const [activeFilters, setActiveFilters] = useState(Object.assign({}, INITIAL_FILTERS));
+export const useFiltersGantt = (partition, modeOption, data) => {
+    const [activeFilters, setActiveFilters] = useState(Object.assign({}, INITIAL_FILTERS[partition] ?? {}));
     const [filteredData, setFilteredData] = useState(applyFilters(modeOption?.keyData, data, activeFilters) || []);
 
     const OPTIONS_FILTER_CONF = {
         stage: () => {
             if (modeOption?.keyData === 'contracts')
-                return ['Все', ...Array.from(new Set(data.map(item => item?.stage?.title)))];
+                return ['Все', ...Array.from(new Set(data?.map(item => item?.stage?.title)))];
             if (modeOption?.keyData === 'sections') {
                 const newData = [];
-                data.forEach(item => {
+                data?.forEach(item => {
                     if (item.contracts && item.contracts.length !== 0) {
                         item.contracts.forEach(contract => newData.push(contract?.stage?.title));
                     }
@@ -77,8 +91,8 @@ export const useFiltersGantt = (modeOption, data) => {
     };
 
     useEffect(() => {
-        setActiveFilters(Object.assign({}, INITIAL_FILTERS));
-        setFilteredData(applyFilters(modeOption?.keyData, data, Object.assign({}, INITIAL_FILTERS)));
+        setActiveFilters(Object.assign({}, INITIAL_FILTERS[partition]));
+        setFilteredData(applyFilters(modeOption?.keyData, data, Object.assign({}, INITIAL_FILTERS[partition])));
     }, [modeOption]);
 
     return { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter };

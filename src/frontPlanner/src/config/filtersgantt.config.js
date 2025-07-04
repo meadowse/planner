@@ -1,9 +1,11 @@
-export const DEFAULT_FILTERS = {
-    stage: 'Все'
-};
+// export const DEFAULT_FILTERS = {
+//     stage: 'Все'
+// };
 
 export const INITIAL_FILTERS = {
-    stage: 'В работе'
+    department: { stage: 'В работе' },
+    equipment: {},
+    tasks: { stage: 'В работе' }
 };
 
 export const FILTER_HANDLERS_CONF = new Map([

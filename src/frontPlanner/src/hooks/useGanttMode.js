@@ -2,25 +2,40 @@ import { getDaysYear, getDaysBetweenTwoDates, getDateFromString, getDateInSpecif
 import { isObject, isArray, getUniqueData, extractSampleData, simplifyData } from '@helpers/helper';
 
 export const useGanttMode = args => {
-    const { data, filteredData, selectedItemInd, modeOption, authorizedUserId } = args;
+    const { partition, data, filteredData, selectedItemInd, modeOption, authorizedUserId } = args;
 
     // Получение заголовков Ганта
     const getHeadlinesGantt = () => {
         // console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
         if (data && data.length !== 0) {
             const headlinesGantt = [];
-            // Формирование заголовков по которым будут отфильтрованы данные для диаграммы Ганта
-            const tempData = getUniqueData(data, modeOption)?.map(item => {
-                if (modeOption && Object.keys(modeOption).length !== 0) {
+
+            if (modeOption && Object.keys(modeOption).length !== 0) {
+                // Формирование заголовков по которым будут отфильтрованы данные для диаграммы Ганта
+                const tempData = getUniqueData(data, modeOption)?.map(item => {
                     // console.log(`getHeadlinesGantt item: ${JSON.stringify(item, null, 4)}`);
-                    if (item && item[modeOption?.key] && modeOption?.key) {
+                    if (item && modeOption?.key && item[modeOption?.key]) {
                         if (isObject(item[modeOption?.key]) && Object.keys(item[modeOption?.key]).length !== 0)
                             return item[modeOption?.key];
                         else return item[modeOption?.key];
                     }
-                }
-            });
-            if (tempData && tempData.length !== 0) tempData?.forEach(item => (item ? headlinesGantt.push(item) : null));
+                });
+                if (tempData && tempData.length !== 0)
+                    tempData?.forEach(item => (item ? headlinesGantt.push(item) : null));
+            }
+
+            // Формирование заголовков по которым будут отфильтрованы данные для диаграммы Ганта
+            // const tempData = getUniqueData(data, modeOption)?.map(item => {
+            //     if (modeOption && Object.keys(modeOption).length !== 0) {
+            //         // console.log(`getHeadlinesGantt item: ${JSON.stringify(item, null, 4)}`);
+            //         if (item && modeOption?.key && item[modeOption?.key]) {
+            //             if (isObject(item[modeOption?.key]) && Object.keys(item[modeOption?.key]).length !== 0)
+            //                 return item[modeOption?.key];
+            //             else return item[modeOption?.key];
+            //         }
+            //     }
+            // });
+            // if (tempData && tempData.length !== 0) tempData?.forEach(item => (item ? headlinesGantt.push(item) : null));
             // console.log(`headlinesGantt: ${JSON.stringify(headlinesGantt, null, 4)}`);
             return headlinesGantt;
         }
@@ -89,9 +104,15 @@ export const useGanttMode = args => {
         const timeLine = [];
         let years = [];
 
-        // console.log(`formTimeline data: ${JSON.stringify(data, null, 4)}`);
+        // console.log(`partition : ${JSON.stringify(partition, null, 4)}`);
 
+        const keyData = modeOption?.keyData ?? partition;
         const DATA_CONF = {
+            equipment: () => {
+                // console.log(`SampleData ${JSON.stringify(extractSampleData(data, ['dates']), null, 4)}`);
+                console.log(`SampleData  ${JSON.stringify(extractSampleData(data, ['dates']), null, 4)}`);
+                return extractSampleData(data, ['dates']);
+            },
             contracts: () => {
                 return extractSampleData(data, ['dateOfStart', 'dateOfEnding', 'tasks']);
             },
@@ -111,8 +132,8 @@ export const useGanttMode = args => {
             }
         };
 
-        if (modeOption?.keyData in DATA_CONF) {
-            DATA_CONF[modeOption?.keyData]().forEach(item => {
+        if (keyData in DATA_CONF) {
+            DATA_CONF[keyData]().forEach(item => {
                 if (item && Object.keys(item).length !== 0) {
                     if (item?.dateOfStart && Object.keys(item?.dateOfStart).length !== 0 && item?.dateOfStart.value)
                         years.push(getDateFromString(item?.dateOfStart.value)?.getFullYear());
@@ -122,6 +143,12 @@ export const useGanttMode = args => {
                         item.tasks.forEach(elem => {
                             if (elem?.dateOfStart) years.push(getDateFromString(elem?.dateOfStart)?.getFullYear());
                             if (elem?.dateOfEnding) years.push(getDateFromString(elem?.dateOfEnding)?.getFullYear());
+                        });
+                    }
+                    if (item?.dates && isArray(item?.dates) && item?.dates.length !== 0) {
+                        item?.dates?.forEach(elem => {
+                            if (elem?.start) years.push(getDateFromString(elem?.start)?.getFullYear());
+                            if (elem?.end) years.push(getDateFromString(elem?.end)?.getFullYear());
                         });
                     }
                 }
@@ -140,6 +167,17 @@ export const useGanttMode = args => {
                 timeLine.push(dateVal);
             });
         });
+
+        // console.log(
+        //     `formTimeline: ${JSON.stringify(
+        //         {
+        //             years: years,
+        //             data: timeLine
+        //         },
+        //         null,
+        //         4
+        //     )}`
+        // );
 
         return {
             years: years,
@@ -164,6 +202,38 @@ export const useGanttMode = args => {
         let dateStart, dateEnd, diffDates;
 
         const KEYS_DATA_CONF = {
+            equipment: item => {
+                // console.log(`sortedDates: ${JSON.stringify(sortedDates, null, 4)}`);
+
+                // const dateLastVerf = sortedDates[1]?.end ?? 'Нет данных';
+                // const dateNextVerf = sortedDates[0]?.end ?? 'Нет данных';
+
+                // Заголовок задачи
+                newItem.title =
+                    (item?.equipment?.title || 'Название отсутствует') +
+                    String.fromCodePoint(8212) +
+                    (item?.equipment?.model || 'Модель отсутствует');
+
+                // Номер договора
+                newItem.contractNum = item?.equipment?.model;
+
+                // Задний фон
+                newItem.bgColorTask = '#ced4da';
+                // Навигация
+                newItem.navKey = 'equipment';
+
+                if (item?.dates && isArray(item?.dates) && item?.dates.length !== 0) {
+                    const sortedDates = item?.dates.sort((dateA, dateB) => {
+                        return new Date(getDateFromString(dateB?.end)) - new Date(getDateFromString(dateA?.end));
+                    });
+                    // Даты (Начало и Конец)
+                    newItem.dateOfStart = sortedDates[0]?.start ?? 'Нет данных';
+                    newItem.dateOfEnding = sortedDates[0]?.end ?? 'Нет данных';
+                }
+
+                tasks.push(newItem);
+                newItem = {};
+            },
             // Данные по договорам
             contracts: item => {
                 // id
@@ -472,8 +542,12 @@ export const useGanttMode = args => {
         newData.bgColorTask = '#E4E4E4';
 
         if (filteredData && isArray(filteredData) && filteredData.length !== 0) {
+            console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}\npartition: ${partition}`);
             filteredData.forEach(item => {
-                if (item && Object.keys(item).length !== 0) KEYS_DATA_CONF[modeOption?.keyData](item);
+                if (item && Object.keys(item).length !== 0) {
+                    if (modeOption?.keyData) KEYS_DATA_CONF[modeOption?.keyData](item);
+                    else if (KEYS_DATA_CONF[partition]) KEYS_DATA_CONF[partition](item);
+                }
             });
         }
 

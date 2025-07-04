@@ -14,6 +14,7 @@ import { useGanttMode } from '@hooks/useGanttMode';
 import { useFiltersGantt } from '@hooks/useFiltersGantt';
 
 // Импорт дополнительного функционала
+import { isObject, findNestedObj } from '@helpers/helper';
 import {
     getDaysBetweenTwoDates,
     getLastDayOfMonth,
@@ -23,7 +24,6 @@ import {
     getDayInYear,
     getAddedDay
 } from '@helpers/calendar';
-import { isObject, findNestedObj } from '@helpers/helper';
 
 //
 import { useHistoryContext } from '../../../../../contexts/history.context';
@@ -493,8 +493,10 @@ function GanttChart(props) {
     ) : null;
 }
 
-export default function GanttMode({ data, modeConfig }) {
+export default function GanttMode(props) {
     // console.log(`GanttMode data: ${JSON.stringify(data, null, 4)}`);
+    const { partition, data, modeConfig } = props;
+
     // Сохраненные значения выпадающего списка
     const [ganttFilters, setGanttFilters] = useState(
         JSON.parse(localStorage.getItem('gantt-filters')) || {
@@ -504,10 +506,12 @@ export default function GanttMode({ data, modeConfig }) {
         }
     );
     const { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter } = useFiltersGantt(
+        partition,
         modeConfig?.modeOption,
         data
     );
     const { timeLine, ganttConfig, formData } = useGanttMode({
+        partition,
         data,
         filteredData,
         selectedItemInd: ganttFilters[modeConfig?.modeOption?.key],
@@ -551,12 +555,14 @@ export default function GanttMode({ data, modeConfig }) {
 
     return (
         <div className="gantt-mode">
-            <FiltersGantt
-                activeFilters={activeFilters}
-                optionsFilter={OPTIONS_FILTER_CONF}
-                keys={['stage']}
-                onChangeFilter={onChangeFilter}
-            />
+            {activeFilters && Object.keys(activeFilters).length !== 0 ? (
+                <FiltersGantt
+                    activeFilters={activeFilters}
+                    optionsFilter={OPTIONS_FILTER_CONF}
+                    keys={['stage']}
+                    onChangeFilter={onChangeFilter}
+                />
+            ) : null}
             <GanttChart
                 timeLine={timeLine}
                 gantt={{ config: ganttConfig, data: ganttData }}

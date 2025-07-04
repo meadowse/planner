@@ -51,7 +51,7 @@ function getConfigKanban(modeOption, data) {
 
 // Функция инициализации данных для режима отображения Канбан
 function initKanbanData(headerData, data) {
-    // console.log(`headerData: ${JSON.stringify(headerData, null, 4)}`);
+    console.log(`headerData: ${JSON.stringify(headerData, null, 4)}`);
 
     if (Object.keys(headerData).length !== 0 && headerData?.data.length !== 0) {
         const newData = {};
