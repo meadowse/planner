@@ -59,6 +59,16 @@
     background: var(--bg-gradient-kanban-col-top);
 }
 
+.kanban__col-top-btn {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.kanban__col-top-btn img {
+    cursor: pointer;
+}
+
 .kanban__col-top-title {
     font-family: 'Montserrat-SemiBold';
     font-size: calc(0.625rem + 5 * (100vw - 320px) / 1600);
@@ -145,6 +155,33 @@
     transition: all 0.1s ease-in-out;
 }
 
+/* Канбан с возможностью раскрытия содержимого столбца */
+
+.kanban__row-top-content {
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 10px;
+    border-left: 0.5vw solid hsla(0, 0%, 43%, 0.745);
+    border-right: 0.5vw solid hsla(0, 0%, 43%, 0.745);
+    border-radius: 5px;
+    background: var(--bg-gradient-kanban-col-top);
+}
+
+.kanban__row-top-title {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.625rem + 15 * (100vw - 320px) / 1600);
+}
+
+.kanban__row-top-btn {
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    background-color: #646464;
+}
+
 .kanban-disclose__cards {
     width: 100%;
     height: 100%;
@@ -154,14 +191,13 @@
     scrollbar-width: none;
 }
 
-.kanban-disclose__cards-content {
+/* .kanban-disclose__cards-content {
     min-width: 100vw;
     width: 100%;
     height: 100%;
     display: grid;
     grid-template-columns: repeat(5, calc(21.5% - 0.8vw));
-    /* column-gap: 0.8vw; */
     gap: 0.8vw;
     position: absolute;
     inset: 0;
-}
+} */

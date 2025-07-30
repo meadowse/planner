@@ -281,9 +281,9 @@ export const DEPARTMENT_DATA_CONF = {
             mode: 'Канбан',
             keyMode: 'kanban',
             modeOptions: [
-                { value: 'Услуги', key: 'services', keyData: 'contracts', uniqueness: 'title' },
-                { value: 'Стадии', key: 'stage', keyData: 'contracts', uniqueness: 'title' },
-                { value: 'Дни', key: 'date', keyData: 'contracts', uniqueness: 'value' }
+                { value: 'Услуги', key: 'services', keyData: 'contracts', uniqueness: 'title', disclose: null },
+                { value: 'Стадии', key: 'stage', keyData: 'contracts', uniqueness: 'title', disclose: null },
+                { value: 'Дни', key: 'date', keyData: 'contracts', uniqueness: 'value', disclose: null }
             ],
             keys: [
                 'id',

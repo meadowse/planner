@@ -1,5 +1,7 @@
 database = 'MPK'
+# database = 'C:\\Users\\user\\Downloads\\MPK.DXDB'
 host = '10.199.1.11'
+# host = '10.199.2.138'
 user = 'sysdba'
 password = 'F409mZu5'
 charset = 'UTF8'
