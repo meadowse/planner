@@ -3,16 +3,25 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    /* align-items: flex-end; */
     row-gap: 1.25rem;
 }
 
+.gantt-mode-filters {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 25px;
+}
+
 .gantt-mode__select-list {
-    width: 100%;
+    /* width: 100%; */
     padding: 0.3125rem;
     outline: none;
-    /* border: 1px solid #e7e7e7; */
+    border: 1px solid #e7e7e7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     border-radius: 0.3125rem;
+    cursor: pointer;
 }
 
 .gantt-mode__select-list-option {
@@ -129,7 +138,7 @@
     font-family: 'Montserrat-SemiBold';
     /* color: #000; */
     color: var(--text-color-gantt-task-main-title);
-    border: 1px solid var(--border-color-gantt-task-main-title);
+    /* border: 1px solid var(--border-color-gantt-task-main-title); */
     background-color: var(--bg-color-gantt-task-main-title);
 }
 
@@ -152,6 +161,10 @@
 .gantt-task-title_done {
     /* text-decoration: line-through 1.5px solid #000; */
     text-decoration: line-through 1.5px solid var(--text-color-gantt-task-title-done);
+}
+
+.gantt-task-title__span {
+    font-weight: bold;
 }
 
 .gantt-task-wrapper,

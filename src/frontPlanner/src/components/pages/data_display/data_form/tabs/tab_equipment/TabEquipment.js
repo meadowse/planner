@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { startTransition, useState } from 'react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 
 // Импорт компонентов
@@ -8,6 +9,9 @@ import BgFillText from '@generic/elements/text/BgFillText';
 
 import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
 import CalendarWindow from '@generic/elements/calendar/CalendarWindow';
+
+//
+import { useHistoryContext } from '../../../../../../contexts/history.context';
 
 // Импорт доп.функционала
 import { getDateInSpecificFormat } from '@helpers/calendar';
@@ -396,7 +400,8 @@ function PurchaseLink(props) {
 function MiddleLeftColTab() {
     return (
         <div className="tab-equipment__middle-left tab-equipment__column">
-            <h2 className="tab-equipment__header-title">Общие</h2>
+            {/* <h2 className="tab-equipment__header-title">Общие</h2> */}
+            <h2 className="tab-equipment__column-title">Общие</h2>
             <div className="tab-equipment__middle-rows">
                 <Status additClass="stage" />
                 <DateEquipment config={{ title: 'Дата' }} />
@@ -470,7 +475,7 @@ function PlanEquipment() {
                 <h2 className="tab-equipment-row__title">Местоположение</h2>
                 <p className="tab-equipment__location">г. Москва, ул. Коломенская, 3</p>
             </div>
-            <div className="hr-line"></div>
+            <div className="tab-equipment__hr-line"></div>
         </li>
     );
 }
@@ -479,7 +484,8 @@ function PlanEquipment() {
 function RightColTab() {
     return (
         <div className="tab-equipment__right tab-equipment__column">
-            <h2 className="tab-equipment__header-title">Планы</h2>
+            {/* <h2 className="tab-equipment__header-title">Планы</h2> */}
+            <h2 className="tab-equipment__column-title">Планы</h2>
             <div className="tab-equipment__right-wrapper">
                 <ul className="tab-equipment__right-rows">
                     <PlanEquipment />
@@ -494,11 +500,52 @@ function RightColTab() {
 }
 
 export default function TabEquipment() {
+    const { data } = useOutletContext();
+    const navigate = useNavigate();
+    const { history } = useHistoryContext();
+
+    console.log(`TabEquipment datra: ${JSON.stringify(data, null, 4)}`);
+
+    function onCancelAction() {
+        startTransition(() => {
+            // alert(`prevpath: ${config?.prevPath}`);
+            // navigate(`../../${config?.prevPath}`);
+            // setTimeout(() => {
+            //     backToPrevPath();
+            // }, 1000);
+
+            navigate(`../../${history[history.length - 1]}`);
+        });
+    }
+
     return (
         <form id="equipment_form" className="tab-equipment section__tab" action="#">
-            <LeftColTab />
-            <MiddleColTab />
+            <LeftColTab data={{ img: data?.equipment?.image, desc: data?.equipment?.description }} />
+            <MiddleColTab data={{status: data?.status, }}/>
             <RightColTab />
         </form>
     );
 }
+
+// return (
+//         <form id="equipment_form" className="tab-equipment section__tab" action="#">
+//             <div class="tab-equipment__header">
+//                 <h2 className="tab-equipment__header-title">
+//                     Георадар <span>Proceq GP 8000</span>
+//                 </h2>
+//                 <div class="tab-equipment__actions">
+//                     <button className="icon-btn__save icon-btn" form="equipment_form">
+//                         Сохранить<span>&#10003;</span>
+//                     </button>
+//                     <button className="icon-btn__cancel icon-btn" onClick={onCancelAction}>
+//                         Отменить<span>&#10006;</span>
+//                     </button>
+//                 </div>
+//             </div>
+//             <div class="tab-equipment__content">
+//                 <LeftColTab />
+//                 <MiddleColTab />
+//                 <RightColTab />
+//             </div>
+//         </form>
+//     );

@@ -25,6 +25,7 @@ const ChatPage = lazy(() => import('@components/pages/chat/ChatPage'));
 // const UserInfoNew = lazy(() => import('@components/pages/data_user/UserInfoNew'));
 const TabGeneral = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_general/TabGeneral'));
 const TabWorkNew = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_work/TabWorkNew'));
+const TabEquipment = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_equipment/TabEquipment'));
 
 // Маршруты для пользователей, которые не зарегестрированы
 const ROUTES_FOR_NOT_AUTH = [
@@ -104,8 +105,27 @@ const ROUTES_FOR_AUTH = [
                     // },
                     {
                         path: 'dataform/*',
+                        // path: 'dataform/:key/*',
                         element: <DataFormNew />,
-                        loader: async () => {
+                        loader: async ({ params }) => {
+                            const { key } = params;
+                            // console.log(`DataFormNew key: ${key}`);
+
+                            // const LOAD_DATA_CONF = {
+                            //     contract: async () => {
+                            //         return await DataFormService.loadData('general', {
+                            //             contractId: JSON.parse(localStorage.getItem('idContract'))
+                            //         });
+                            //     },
+                            //     tool: () => {
+                            //         return DataFormService.loadData('equipment', {
+                            //             equipmentId: -1
+                            //         });
+                            //     }
+                            // };
+
+                            // return LOAD_DATA_CONF[key] ? LOAD_DATA_CONF[key]() : {};
+
                             return await DataFormService.loadData('general', {
                                 contractId: JSON.parse(localStorage.getItem('idContract'))
                             });
@@ -130,6 +150,14 @@ const ROUTES_FOR_AUTH = [
                                 element: (
                                     <Suspense fallback={<Preloader />}>
                                         <TabWorkNew />
+                                    </Suspense>
+                                )
+                            },
+                            {
+                                path: 'equipment',
+                                element: (
+                                    <Suspense fallback={<Preloader />}>
+                                        <TabEquipment />
                                     </Suspense>
                                 )
                             }

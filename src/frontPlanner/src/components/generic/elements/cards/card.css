@@ -27,6 +27,7 @@
 .kanban-card__header {
     display: flex;
     justify-content: space-between;
+    column-gap: 20px;
 }
 
 .kanban-card__header-title {
@@ -50,6 +51,7 @@
 .kanban-card__figure {
     width: 100%;
     height: 200px;
+    position: relative;
     overflow: hidden;
     border-radius: 0.5rem;
     /* background-color: #dadada; */
@@ -80,8 +82,6 @@
     border-radius: 0.5rem;
     object-fit: cover;
     position: relative;
-    top: 0;
-    left: 0;
     transition: all 300ms;
 }
 
@@ -99,9 +99,13 @@
     grid-template-columns: repeat(2, 1fr);
     align-items: center;
     column-gap: 1.25rem;
+    position: absolute;
+    bottom: -100%;
+    left: 0;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    transition: transform 300ms;
+    /* transition: transform 300ms; */
+    transition: all 300ms;
     cursor: default;
     color: var(--text-color-card-figcaption);
     background-color: rgba(202, 222, 252, 0.5);
@@ -112,7 +116,8 @@
 }
 
 .kanban-card__figure:hover .kanban-card__figcaption {
-    transform: translateY(-100%);
+    bottom: 0;
+    /* transform: translateY(-100%); */
 }
 
 .kanban-card__figcaption-title {

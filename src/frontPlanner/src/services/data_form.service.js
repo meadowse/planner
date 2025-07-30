@@ -68,6 +68,33 @@ const loadData = (tab, payload) => {
                 works: worksData || [],
                 tasks: tasksData || []
             };
+        },
+        equipment: async () => {
+            return {
+                id: 1,
+                description: null,
+                status: {
+                    title: null
+                },
+                responsible: {
+                    fullName: null
+                },
+                dates: [
+                    { start: '2025-04-26', end: '2025-05-15' },
+                    { start: '2025-05-26', end: '2025-07-15' }
+                ],
+                equipment: {
+                    // title: 'Тепловизор Тепловизор Тепловизор Тепловизор Тепловизор Тепловизор Тепловизор Тепловизор Тепловизор',
+                    title: 'Тепловизор',
+                    model: 'RGK мод. TL-80',
+                    manufacturer: 'Proceq',
+                    serialNumber: '0127315',
+                    cost: null,
+                    image: '/img/equipment/georadar.jpg',
+                    link: null
+                },
+                location: null
+            };
         }
     };
 

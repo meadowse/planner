@@ -1,3 +1,4 @@
+// Импорт доп.функционала
 import { getDaysYear, getDaysBetweenTwoDates, getDateFromString, getDateInSpecificFormat } from '@helpers/calendar';
 import { isObject, isArray, getUniqueData, extractSampleData, simplifyData } from '@helpers/helper';
 
@@ -101,11 +102,12 @@ export const useGanttMode = args => {
 
     // Формирование временной шкалы
     function formTimeline() {
-        const timeLine = [];
         let years = [];
 
         // console.log(`partition : ${JSON.stringify(partition, null, 4)}`);
 
+        // Временная шкала
+        const timeLine = [];
         const keyData = modeOption?.keyData ?? partition;
         const DATA_CONF = {
             equipment: () => {
@@ -203,16 +205,18 @@ export const useGanttMode = args => {
 
         const KEYS_DATA_CONF = {
             equipment: item => {
-                // console.log(`sortedDates: ${JSON.stringify(sortedDates, null, 4)}`);
-
-                // const dateLastVerf = sortedDates[1]?.end ?? 'Нет данных';
-                // const dateNextVerf = sortedDates[0]?.end ?? 'Нет данных';
-
+                newItem.moveElemId = item?.serialNumber;
                 // Заголовок задачи
-                newItem.title =
-                    (item?.equipment?.title || 'Название отсутствует') +
-                    String.fromCodePoint(8212) +
-                    (item?.equipment?.model || 'Модель отсутствует');
+                // newItem.title =
+                //     (item?.equipment?.title || 'Название отсутствует') +
+                //     String.fromCodePoint(8212) +
+                //     (item?.equipment?.model || 'Модель отсутствует');
+                newItem.title = {
+                    name:
+                        `${item?.equipment?.title} ${String.fromCodePoint(8212)}` + ' ' ??
+                        `Название отсутствует ${String.fromCodePoint(8212)}` + ' ',
+                    model: item?.equipment?.model ?? 'Модель отсутствует'
+                };
 
                 // Номер договора
                 newItem.contractNum = item?.equipment?.model;
@@ -241,12 +245,21 @@ export const useGanttMode = args => {
                 // id договора
                 newItem.contractId = item?.contractId;
                 // Заголовок задачи
-                newItem.title =
-                    (item?.contractNum || 'Номер договора отсутствует') +
-                    ` ${String.fromCodePoint(8212)} ` +
-                    (item?.address || 'Адрес отсутствует') +
-                    ` ${String.fromCodePoint(8212)} ` +
-                    (item?.company || 'Заказчик отсутствует');
+                // newItem.title =
+                //     (item?.contractNum || 'Номер договора отсутствует') +
+                //     ` ${String.fromCodePoint(8212)} ` +
+                //     (item?.address || 'Адрес отсутствует') +
+                //     ` ${String.fromCodePoint(8212)} ` +
+                //     (item?.company || 'Заказчик отсутствует');
+                newItem.title = {
+                    contractNum:
+                        `${item?.contractNum} ${String.fromCodePoint(8212)}` + ' ' ??
+                        `Номер договора отсутствует ${String.fromCodePoint(8212)}` + ' ',
+                    address:
+                        `${item?.address} ${String.fromCodePoint(8212)}` + ' ' ??
+                        `Адрес отсутствует ${String.fromCodePoint(8212)}` + ' ',
+                    company: item?.company ?? 'Заказчик отсутствует'
+                };
                 // Номер договора
                 newItem.contractNum = item?.contractNum;
 
@@ -362,12 +375,21 @@ export const useGanttMode = args => {
                         // id договора
                         taskItem.contractId = +contract?.contractId;
                         // Заголовок задачи
-                        taskItem.title =
-                            (contract?.contractNum || 'Номер договора отсутствует') +
-                            ` ${String.fromCodePoint(8212)} ` +
-                            (contract?.address || 'Адрес отсутствует') +
-                            ` ${String.fromCodePoint(8212)} ` +
-                            (contract?.company || 'Заказчик отсутствует');
+                        // taskItem.title =
+                        //     (contract?.contractNum || 'Номер договора отсутствует') +
+                        //     ` ${String.fromCodePoint(8212)} ` +
+                        //     (contract?.address || 'Адрес отсутствует') +
+                        //     ` ${String.fromCodePoint(8212)} ` +
+                        //     (contract?.company || 'Заказчик отсутствует');
+                        taskItem.title = {
+                            contractNum:
+                                `${contract?.contractNum} ${String.fromCodePoint(8212)}` + ' ' ??
+                                `Номер договора отсутствует ${String.fromCodePoint(8212)}` + ' ',
+                            address:
+                                `${contract?.address} ${String.fromCodePoint(8212)}` + ' ' ??
+                                `Адрес отсутствует ${String.fromCodePoint(8212)}` + ' ',
+                            company: contract?.company || 'Заказчик отсутствует'
+                        };
                         // Ключ навигации
                         taskItem.navKey = 'contract';
                         // Номер договора

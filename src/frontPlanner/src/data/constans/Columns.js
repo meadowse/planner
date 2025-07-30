@@ -61,7 +61,7 @@ const COLUMNS = [
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
 
-            function onShowInfoCard() {
+            function onShowInfoCard(event) {
                 const navigationArg = {
                     state: {
                         idContract: props?.config?.idContract,
@@ -75,11 +75,17 @@ const COLUMNS = [
                 localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
 
                 addToHistory(`${window.location.pathname}`);
-                navigate('../../dataform/general/', navigationArg);
+
+                if (event.button === 1) {
+                    const url = `../../dataform/general?data=${encodeURIComponent(
+                        JSON.stringify(navigationArg.state)
+                    )}`;
+                    window.open(url, '_blank');
+                } else navigate('../../dataform/general/', navigationArg);
             }
 
             return (
-                <p className="cell__num" onClick={onShowInfoCard}>
+                <p className="cell__num" onClick={e => onShowInfoCard(e)} onMouseDown={e => onShowInfoCard(e)}>
                     {props.value ? props.value : 'Нет данных'}
                 </p>
             );

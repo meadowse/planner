@@ -1,7 +1,6 @@
 [
     {
         "id": 1,
-        "description": null,
         "status": {
             "title": null
         },
@@ -14,6 +13,7 @@
         ],
         "equipment": {
             "title": "Тепловизор",
+            "description": null,
             "model": "RGK мод. TL-80",
             "manufacturer": "Proceq",
             "serialNumber": "0127315",
@@ -40,6 +40,7 @@
         ],
         "equipment": {
             "title": "Измеритель плотности ударно-импульсный",
+            "description": null,
             "model": "ОНИКС 2.6",
             "manufacturer": null,
             "serialNumber": "511",
@@ -61,6 +62,7 @@
         "dates": null,
         "equipment": {
             "title": "Измеритель плотности ударно-импульсный",
+            "description": null,
             "model": "ОНИКС 2.6",
             "manufacturer": null,
             "serialNumber": "В198",
@@ -87,6 +89,7 @@
         ],
         "equipment": {
             "title": "Дрель-Шуруповерт",
+            "description": null,
             "model": "PATRIOT BR189 UES",
             "manufacturer": null,
             "serialNumber": "2023/10/20131333/02368",
@@ -108,6 +111,7 @@
         "dates": null,
         "equipment": {
             "title": "Перфоратор",
+            "description": null,
             "model": "WORX",
             "manufacturer": null,
             "serialNumber": "0200926347",
@@ -129,9 +133,10 @@
         "dates": null,
         "equipment": {
             "title": "Перфоратор",
+            "description": null,
             "model": "ЗУБР",
             "manufacturer": null,
-            "serialNumber": null,
+            "serialNumber": "",
             "cost": null,
             "link": null,
             "image": "/img/equipment/flaw_detector_tomograph.jpg"
@@ -150,6 +155,7 @@
         "dates": null,
         "equipment": {
             "title": "Анализатор шума и вибрации",
+            "description": null,
             "model": "АССИСТЕНТ",
             "manufacturer": null,
             "serialNumber": "341720",

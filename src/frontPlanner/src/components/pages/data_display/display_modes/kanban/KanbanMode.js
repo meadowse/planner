@@ -91,42 +91,63 @@ function DropArea(props) {
     );
 }
 
-function HeaderColumn(props) {
-    const { keyFilter, header, lenData } = props;
+// function HeaderColumn(props) {
+//     const { keyFilter, header, lenData } = props;
 
-    const COLUMN_CONTENT_MAP = {
-        user: (header, lenData) => {
-            return (
-                <>
-                    <div className="kanban__col-top-info">
-                        <img className="kanban__col-top-img" src={header?.photo} alt="" />
-                        <h2 className="kanban__col-top-title">{header?.title}</h2>
-                    </div>
-                    <p className="kanban__col-top-subtitle">{lenData + ' ' + 'карточек'}</p>
-                </>
-            );
-        },
-        car: (header, lenData) => {
-            return (
-                <>
-                    <h2 className="header_col_title">{header?.stamp + ' ' + header?.numCar}</h2>
-                    <p className="kanban__col-top-subtitle">{lenData + ' ' + 'карточек'}</p>
-                </>
-            );
-        }
-    };
+//     const COLUMN_CONTENT_MAP = {
+//         user: (header, lenData) => {
+//             return (
+//                 <>
+//                     <div className="kanban__col-top-info">
+//                         <img className="kanban__col-top-img" src={header?.photo} alt="" />
+//                         <h2 className="kanban__col-top-title">{header?.title}</h2>
+//                     </div>
+//                     <p className="kanban__col-top-subtitle">{lenData + ' ' + 'карточек'}</p>
+//                 </>
+//             );
+//         },
+//         car: (header, lenData) => {
+//             return (
+//                 <>
+//                     <h2 className="header_col_title">{header?.stamp + ' ' + header?.numCar}</h2>
+//                     <p className="kanban__col-top-subtitle">{lenData + ' ' + 'карточек'}</p>
+//                 </>
+//             );
+//         }
+//     };
+
+//     return (
+//         <div className="kanban__col-top">
+//             <div className="kanban__col-top-content">
+//                 {COLUMN_CONTENT_MAP[keyFilter] ? (
+//                     COLUMN_CONTENT_MAP[keyFilter](header, lenData)
+//                 ) : (
+//                     <>
+//                         <h2 className="kanban__col-top-title">{header?.title}</h2>
+//                         <p className="kanban__col-top-subtitle">{lenData + ' ' + 'карточек'}</p>
+//                     </>
+//                 )}
+//             </div>
+//         </div>
+//     );
+// }
+
+function HeaderColumn(props) {
+    const { keyFilter, header, lenData, setDiscloseContent } = props;
+
+    function onDiscloseContent() {
+        setDiscloseContent({ disclose: true, ...header });
+        // alert(`Header: ${JSON.stringify(header, null, 4)}`);
+    }
 
     return (
         <div className="kanban__col-top">
             <div className="kanban__col-top-content">
-                {COLUMN_CONTENT_MAP[keyFilter] ? (
-                    COLUMN_CONTENT_MAP[keyFilter](header, lenData)
-                ) : (
-                    <>
-                        <h2 className="kanban__col-top-title">{header?.title}</h2>
-                        <p className="kanban__col-top-subtitle">{lenData + ' ' + 'карточек'}</p>
-                    </>
-                )}
+                <h2 className="kanban__col-top-title">{header?.title}</h2>
+                <p className="kanban__col-top-subtitle">{lenData + ' ' + 'карточек'}</p>
+                <button className="kanban__col-top-btn" onClick={onDiscloseContent}>
+                    Раскрыть содержимое
+                </button>
             </div>
         </div>
     );
@@ -176,7 +197,8 @@ function ColumnContent(props) {
 }
 
 function Column(props) {
-    const { partition, filterVal, modeOption, cards, dataOperations, setDraggedItem, dropHandler } = props;
+    const { partition, filterVal, modeOption, cards, dataOperations, setDraggedItem, dropHandler, setDiscloseContent } =
+        props;
     // console.log(`itemHeader = ${JSON.stringify(itemHeader, null, 4)}`);
     // console.log(`data: ${JSON.stringify(data, null, 4)}`);
 
@@ -187,6 +209,7 @@ function Column(props) {
                 keyFilter={modeOption?.key}
                 header={filterVal}
                 lenData={cards.length}
+                setDiscloseContent={setDiscloseContent}
             />
             <ColumnContent
                 key={filterVal?.title}
@@ -201,6 +224,70 @@ function Column(props) {
     );
 }
 
+function Kanban(props) {
+    const { partition, configKanban, modeOption, boardCards, dataOperations, setDiscloseContent } = props;
+
+    return (
+        <div
+            className={classNames('kanban__wrapper', {
+                'kanban__wrapper_empty': !boardCards || Object.keys(boardCards).length === 0
+            })}
+        >
+            {Object.keys(boardCards).map((key, index) => {
+                return (
+                    <Column
+                        key={`${index}-${key}-${modeOption?.value}`}
+                        partition={partition}
+                        filterVal={configKanban?.data[index]}
+                        modeOption={modeOption}
+                        cards={boardCards[key]}
+                        dataOperations={dataOperations}
+                        setDiscloseContent={setDiscloseContent}
+                    />
+                );
+            })}
+        </div>
+    );
+}
+
+function DiscloseKanban(props) {
+    const { partition, cards, dataOperations, discloseContent, setDiscloseContent } = props;
+
+    function onDiscloseContent() {
+        setDiscloseContent(null);
+    }
+
+    return (
+        <div
+            className={classNames('kanban-disclose__wrapper', {
+                'kanban-disclose__wrapper_empty': !cards || Object.keys(cards).length === 0
+            })}
+        >
+            <div className="kanban__col-top-content">
+                <h2 className="kanban__col-top-title">{discloseContent?.title}</h2>
+                <p className="kanban__col-top-subtitle">{0 + ' ' + 'карточек'}</p>
+                <button className="kanban__col-top-btn" onClick={onDiscloseContent}>
+                    Скрыть содержимое
+                </button>
+            </div>
+            <div className="kanban-disclose__cards">
+                <div className="kanban-disclose__cards-content">
+                    {cards && cards.length !== 0
+                        ? cards?.map(card => (
+                              <Card
+                                  partition={partition}
+                                  key={`${card?.id}-${card?.contractNum}`}
+                                  data={card}
+                                  dataOperations={dataOperations}
+                              />
+                          ))
+                        : null}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function KanbanMode(props) {
     const { partition, data, modeOption, dataOperations } = props;
     // console.log(`KanbanMode modeOption: ${JSON.stringify(modeOption, null, 4)}`);
@@ -208,9 +295,10 @@ export default function KanbanMode(props) {
 
     const [boardCards, setBoardCards] = useState({});
     const [configKanban, setConfigKanban] = useState({});
-
     const [stateActionSelectionPopup, setStateActionSelectionPopup] = useState(false);
     const [draggedItem, setDraggedItem] = useState({ id: -1, nameColOut: null });
+    const [discloseContent, setDiscloseContent] = useState(null);
+
     const dropHandlerRef = useRef(null);
 
     function dropHandler(e, position, nameColIn) {
@@ -242,6 +330,8 @@ export default function KanbanMode(props) {
     //     )}`
     // );
 
+    console.log(`boardCards: ${JSON.stringify(boardCards, null, 4)}`);
+
     useEffect(() => {
         const confKanban = getConfigKanban(modeOption, data);
 
@@ -251,41 +341,24 @@ export default function KanbanMode(props) {
 
     return (
         <div className="kanban">
-            <div
-                className={classNames('kanban__wrapper', {
-                    'kanban__wrapper_empty': !boardCards || Object.keys(boardCards).length === 0
-                })}
-            >
-                {boardCards && Object.keys(boardCards).length !== 0 ? (
-                    Object.keys(boardCards).map((key, index) => {
-                        return (
-                            <Column
-                                key={`${index}-${key}-${modeOption?.value}`}
-                                partition={partition}
-                                filterVal={configKanban?.data[index]}
-                                modeOption={modeOption}
-                                cards={boardCards[key]}
-                                dataOperations={dataOperations}
-                                setDraggedItem={setDraggedItem}
-                                dropHandler={dropHandler}
-                            />
-                        );
-                    })
-                ) : (
-                    <p className="kanban__info-message">Данные отсутствуют</p>
-                )}
-                {/* {stateActionSelectionPopup
-                    ? createPortal(
-                          <ActionSelectionPopup
-                              additClass="action-selection"
-                              statePopup={stateActionSelectionPopup}
-                              functionRef={dropHandlerRef}
-                              setStatePopup={setStateActionSelectionPopup}
-                          />,
-                          document.getElementById('portal')
-                      )
-                    : null} */}
-            </div>
+            {discloseContent && Object.keys(discloseContent).length !== 0 && discloseContent.disclose ? (
+                <DiscloseKanban
+                    partition={partition}
+                    cards={boardCards[discloseContent?.title]}
+                    dataOperations={dataOperations}
+                    discloseContent={discloseContent}
+                    setDiscloseContent={setDiscloseContent}
+                />
+            ) : (
+                <Kanban
+                    partition={partition}
+                    configKanban={configKanban}
+                    modeOption={modeOption}
+                    boardCards={boardCards}
+                    dataOperations={dataOperations}
+                    setDiscloseContent={setDiscloseContent}
+                />
+            )}
         </div>
     );
 }

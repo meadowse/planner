@@ -34,11 +34,17 @@ function FormHeader(props) {
     return (
         <div className="section__dataform-header">
             <div className="section__dataform-header-left">
-                <h2 className="section__dataform-title-contract section__dataform-header-title">
-                    {data?.contractNum ? data.contractNum : 'Нет данных'}
+                <h2
+                    // className="section__dataform-title-contract section__dataform-header-title">
+                    className="section__dataform-header-title"
+                >
+                    {data?.title ?? 'Нет данных'}
                 </h2>
-                <h3 className="section__dataform-title-address section__dataform-header-title">
-                    <span>{data?.contractNum ? data.address : 'Нет данных'}</span>
+                <h3
+                    // className="section__dataform-title-address section__dataform-header-title">
+                    className="section__dataform-header-subtitle"
+                >
+                    <span>{data?.subTitle ?? 'Нет данных'}</span>
                 </h3>
                 {/* <img className="section__dataform-header-img" src="/img/edit.svg" alt="Edit" /> */}
             </div>
@@ -117,10 +123,16 @@ function Tabs(props) {
         if (savedTab && Object.keys(savedTab).length !== 0) setTab(savedTab);
     }, []);
 
+    // const PARTITION_CONF = {
+    //     equipment: () => {},
+    //     default: () => <TabsHeader tabs={tabs} tab={tab} config={config} tabClick={setTab} navigate={navigate} />
+    // };
+
     return (
         <div className="section__dataform-tabs">
             <TabsHeader tabs={tabs} tab={tab} config={config} tabClick={setTab} navigate={navigate} />
             <Outlet context={config} />
+            {/* {PARTITION_CONF[config?.partition] ? PARTITION_CONF[config?.partition]() : PARTITION_CONF?.default()} */}
         </div>
     );
 }
@@ -128,26 +140,63 @@ function Tabs(props) {
 export default function DataFormNew() {
     const uploadedData = useLoaderData();
     const navigate = useNavigate();
-    const { state } = useLocation();
-    const [prevPath] = useState(state?.path);
+    // const { state } = useLocation();
+    const location = useLocation();
+    // const [prevPath] = useState(state?.path);
+    const [prevPath] = useState(location?.state?.path);
 
-    const configData = {
-        idContract: state?.idContract || localStorage.getItem('idContract') || -1,
-        partition: state?.partition,
-        dataOperation: state?.dataOperation,
-        tabForm: state?.tabForm,
-        data: uploadedData
-    };
-    // console.log(`DataFormNew state: ${JSON.stringify(state, null, 4)}`);
+    // console.log(`DataFormNew state args: ${JSON.stringify(state, null, 4)}`);
+    // console.log(`DataFormNew configData: ${JSON.stringify(configData, null, 4)}`);
+
+    console.log(`DataFormNew state: ${JSON.stringify(location?.state, null, 4)}`);
+    // console.log(`DataFormNew uploadedData: ${JSON.stringify(uploadedData, null, 4)}`);
+
+    function getConfigData() {
+        const queryParams = new URLSearchParams(location.search);
+        const queryData = JSON.parse(decodeURIComponent(queryParams.get('data')));
+
+        if (queryData && Object.keys(queryData).length !== 0) {
+            return {
+                idContract: queryData?.idContract || localStorage.getItem('idContract') || -1,
+                partition: queryData?.partition,
+                dataOperation: queryData?.dataOperation,
+                tabForm: queryData?.tabForm,
+                data: uploadedData
+            };
+        } else {
+            return {
+                idContract: location?.state?.idContract || localStorage.getItem('idContract') || -1,
+                partition: location?.state?.partition,
+                dataOperation: location?.state?.dataOperation,
+                tabForm: location?.state?.tabForm,
+                data: uploadedData
+            };
+        }
+    }
+
+    //
 
     return (
         <section className="section__dataform">
             <FormHeader
-                data={{ contractNum: uploadedData?.contractNum, address: uploadedData?.address }}
+                // data={{ contractNum: uploadedData?.contractNum, address: uploadedData?.address }}
+                data={{
+                    title: uploadedData?.address || uploadedData?.equipment?.title,
+                    subTitle: uploadedData?.contractNum || uploadedData?.equipment?.model
+                }}
                 config={{ prevPath }}
                 navigate={navigate}
             />
-            <Tabs tabs={DataFormService.getOptions('tabs')} config={configData} navigate={navigate} />
+            {/* {PARTITION_CONF[state?.partition] ? PARTITION_CONF[state?.partition]() : PARTITION_CONF?.default()} */}
+            <Tabs tabs={DataFormService.getOptions('tabs')} config={getConfigData()} navigate={navigate} />
         </section>
     );
 }
+
+// const configData = {
+//     idContract: state?.idContract || localStorage.getItem('idContract') || -1,
+//     partition: state?.partition,
+//     dataOperation: state?.dataOperation,
+//     tabForm: state?.tabForm,
+//     data: uploadedData
+// };

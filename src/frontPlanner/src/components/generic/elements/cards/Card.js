@@ -302,22 +302,51 @@ export default function Card(props) {
 
     // console.log(`cardData: ${JSON.stringify(cardData, null, 4)}`);
 
-    function onShowInfoCard() {
-        const navigationArg = {
-            state: {
-                idContract: data?.contractId,
-                tabForm: { key: 'general', title: 'Общие' },
-                partition: partition,
-                path: `${window.location.pathname}`,
-                dataOperation: findNestedObj(dataOperations, 'key', 'update')
+    function onShowInfoCard(event) {
+        // console.log(`onShowInfoCard partition: ${partition}`);
+
+        const NAV_CONF = {
+            equipment: () => {
+                // const navigationArg = {
+                //     state: {
+                //         partition: partition
+                //     }
+                // };
+                // console.log(`equipment card data: ${JSON.stringify(data, null, 4)}`);
+                // addToHistory(`${window.location.pathname}`);
+                // navigate('../../dataform/tool/equipment/', navigationArg);
+                // navigate('../../dataform/equipment/', navigationArg);
+            },
+            default: () => {
+                const navigationArg = {
+                    state: {
+                        idContract: data?.contractId,
+                        tabForm: { key: 'general', title: 'Общие' },
+                        partition: partition,
+                        path: `${window.location.pathname}`,
+                        dataOperation: findNestedObj(dataOperations, 'key', 'update')
+                    }
+                };
+
+                localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
+                localStorage.setItem('idContract', JSON.stringify(data?.contractId));
+
+                addToHistory(`${window.location.pathname}`);
+
+                if (event && event.button === 1) {
+                    // Открытие договора в новой вкладке
+                    const url = `../../dataform/general?data=${encodeURIComponent(
+                        JSON.stringify(navigationArg.state)
+                    )}`;
+                    window.open(url, '_blank');
+                } else navigate('../../dataform/general/', navigationArg);
+
+                // navigate('../../dataform/contract/general/', navigationArg);
+                // navigate('../../dataform/general/', navigationArg);
             }
         };
-
-        localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
-        localStorage.setItem('idContract', JSON.stringify(data?.contractId));
-
-        addToHistory(`${window.location.pathname}`);
-        navigate('../../dataform/general/', navigationArg);
+        return NAV_CONF[partition] ? NAV_CONF[partition]() : NAV_CONF.default();
+        // return NAV_CONF[partition]() ?? NAV_CONF.default();
     }
 
     return (
@@ -325,6 +354,7 @@ export default function Card(props) {
             className="kanban-card"
             style={{ borderLeftColor: data.color ? data.color : 'rgba(109, 109, 109, 0.745098)' }}
             onClick={onShowInfoCard}
+            onMouseDown={e => onShowInfoCard(e)}
         >
             <HeaderCard data={cardData?.headerContent} />
             <MainContentCard partition={partition} data={cardData?.mainContent} />

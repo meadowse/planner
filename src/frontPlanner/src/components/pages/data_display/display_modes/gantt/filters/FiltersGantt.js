@@ -4,6 +4,18 @@ import { useState } from 'react';
 import './filters_gantt.css';
 
 const FILTERS_CONF = {
+    // services: (options, activeOption, toggleState, onChange) => {
+    //     return (
+    //         <DropDownFilter
+    //             id="services"
+    //             className="gantt-filter__stage gantt-filter"
+    //             defaultVal={activeOption}
+    //             options={options}
+    //             toggle={toggleState}
+    //             onChange={onChange}
+    //         />
+    //     );
+    // },
     stage: (options, activeOption, toggleState, onChange) => {
         return (
             <DropDownFilter
