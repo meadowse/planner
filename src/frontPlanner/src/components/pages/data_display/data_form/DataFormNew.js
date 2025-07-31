@@ -3,10 +3,6 @@ import { useLocation, useLoaderData, useNavigate, Outlet } from 'react-router-do
 import classNames from 'classnames';
 import axios from 'axios';
 
-// Импорт компонетов
-import Preloader from '../../../auxiliary_pages/loader/Preloader';
-import IconButton from '@generic/elements/buttons/IcButton';
-
 // Импорт сервисов
 import DataFormService from '@services/data_form.service';
 
@@ -14,6 +10,19 @@ import { useHistoryContext } from '../../../../contexts/history.context';
 
 // Импорт стилей
 import './data_form.css';
+
+// Интеграция с Mattermost
+function MattermostIntegration({ channelId }) {
+    return (
+        <div className="section__dataform-frame-wrapper">
+            <iframe
+                title="Mattermost"
+                src={`https://mm-mpk.ru/mosproektkompleks/channels/${channelId}`}
+                style={{ width: '100%', height: '100%', border: 'none' }}
+            />
+        </div>
+    );
+}
 
 function FormHeader(props) {
     const { data, config, navigate } = props;
@@ -55,20 +64,6 @@ function FormHeader(props) {
                 <button className="icon-btn__cancel icon-btn" onClick={onCancelAction}>
                     Отменить<span>&#10006;</span>
                 </button>
-                {/* <IconButton
-                    nameClass="icon-btn__save icon-btn"
-                    idForm="general_form"
-                    type="submit"
-                    text="Сохранить"
-                    icon="check_mark.svg"
-                />
-                <IconButton
-                    nameClass="icon-btn__cancel icon-btn"
-                    type="button"
-                    text="Отменить"
-                    icon="cancel_bl.svg"
-                    onClick={onCancelAction}
-                /> */}
             </div>
         </div>
     );
@@ -114,7 +109,7 @@ function TabsHeader(props) {
 
 function Tabs(props) {
     const { tabs, config, navigate } = props;
-    // console.log(`config: ${JSON.stringify(config, null, 4)}`);
+    console.log(`config: ${JSON.stringify(config, null, 4)}`);
 
     const [tab, setTab] = useState(tabs[0] || {});
 
@@ -131,7 +126,10 @@ function Tabs(props) {
     return (
         <div className="section__dataform-tabs">
             <TabsHeader tabs={tabs} tab={tab} config={config} tabClick={setTab} navigate={navigate} />
-            <Outlet context={config} />
+            <div className="section__dataform-tabs-content">
+                <Outlet context={config} />
+                <MattermostIntegration channelId={config?.data?.channelId} />
+            </div>
             {/* {PARTITION_CONF[config?.partition] ? PARTITION_CONF[config?.partition]() : PARTITION_CONF?.default()} */}
         </div>
     );
@@ -147,9 +145,7 @@ export default function DataFormNew() {
 
     // console.log(`DataFormNew state args: ${JSON.stringify(state, null, 4)}`);
     // console.log(`DataFormNew configData: ${JSON.stringify(configData, null, 4)}`);
-
-    console.log(`DataFormNew state: ${JSON.stringify(location?.state, null, 4)}`);
-    // console.log(`DataFormNew uploadedData: ${JSON.stringify(uploadedData, null, 4)}`);
+    // console.log(`DataFormNew state: ${JSON.stringify(location?.state, null, 4)}`);
 
     function getConfigData() {
         const queryParams = new URLSearchParams(location.search);
@@ -192,11 +188,3 @@ export default function DataFormNew() {
         </section>
     );
 }
-
-// const configData = {
-//     idContract: state?.idContract || localStorage.getItem('idContract') || -1,
-//     partition: state?.partition,
-//     dataOperation: state?.dataOperation,
-//     tabForm: state?.tabForm,
-//     data: uploadedData
-// };

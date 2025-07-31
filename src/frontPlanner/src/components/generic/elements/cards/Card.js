@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // Импорт компонетов
@@ -156,7 +156,10 @@ function FigcaptionImage({ partition, data }) {
 
 // Изображение карточки
 function ImageCard(props) {
-    const { partition, image, company, contacts, date, dates } = props;
+    const { partition, contractNum, company, contacts, date, dates } = props;
+    const extensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+    const [image, setImage] = useState(null);
 
     const PARTITION_CONF = {
         department: () => {
@@ -169,12 +172,39 @@ function ImageCard(props) {
         }
     };
 
+    // useEffect(() => {
+    //     for (let extension in extensions) {
+    //         const path = `N:/6. Технологии/11. Изображения для карточек договоров/${contractNum}.${extension}`;
+    //         if (
+    //             require
+    //                 .context(
+    //                     'N:/6. Технологии/11. Изображения для карточек договоров/',
+    //                     false,
+    //                     new RegExp(`^\.${path}$`)
+    //                 )
+    //                 .keys()
+    //                 .includes(`./${path}`)
+    //         ) {
+    //             setImage(path);
+    //             break;
+    //         }
+    //     }
+    // }, []);
+
     return (
         <figure className="kanban-card__figure">
             <div className="kanban-card__figure-image">
-                {image && image.length !== 0 && typeof image === 'string' && (
-                    <img className="kanban-card__image" src={image} alt="" />
+                {/* {image && <img className="kanban-card__image" src={image} alt="" />} */}
+                {image && (
+                    <img
+                        className="kanban-card__image"
+                        src={'N:/6. Технологии/11. Изображения для карточек договоров/2025-06-375-РНС.JPEG'}
+                        alt=""
+                    />
                 )}
+                {/* {image && image.length !== 0 && typeof image === 'string' && (
+                    <img className="kanban-card__image" src={image} alt="" />
+                )} */}
             </div>
             {partition ? PARTITION_CONF[partition]() : null}
         </figure>
@@ -201,7 +231,7 @@ function MainContentCard({ partition, data }) {
             <p className="kanban-card__main-subtitle">{data.way}</p>
             <ImageCard
                 partition={partition}
-                image={data.image}
+                contractNum={data.contractNum}
                 company={data.company}
                 contacts={data.contacts}
                 date={data.date}
@@ -284,6 +314,7 @@ export default function Card(props) {
             condition: data?.stage || data?.status || null
         },
         mainContent: {
+            contractNum: data?.contractNum || null,
             subtitle: data?.services || data?.equipment?.model || null,
             way: data?.pathToFolder || null,
             image: data?.imgBuilding || data?.equipment?.image || null,

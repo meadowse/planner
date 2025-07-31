@@ -1116,18 +1116,6 @@ function Comment(props) {
     );
 }
 
-function MattermostIntegration({ channelId }) {
-    return (
-        <div className="tab-general__mattermost tab-general__column">
-            <iframe
-                title="Mattermost"
-                src={`https://mm-mpk.ru/mosproektkompleks/channels/${channelId}`}
-                style={{ width: '100%', height: '100%', border: 'none' }}
-            ></iframe>
-        </div>
-    );
-}
-
 export default function TabGeneral() {
     let resultData;
     const theme = localStorage.getItem('appTheme') || 'light';
@@ -1202,7 +1190,6 @@ export default function TabGeneral() {
                 onChange={onChange}
                 onChangeByInd={onСhangeByIndex}
             />
-            <MattermostIntegration channelId={data?.channelId} />
         </form>
     );
 }

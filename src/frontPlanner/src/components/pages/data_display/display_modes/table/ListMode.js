@@ -90,7 +90,8 @@ export default function ListMode(props) {
         task: cellData => {
             const config = {
                 idContract: data[cellData?.indRow]?.contractId,
-                task: data[cellData?.indRow] || {}
+                contractNum: data[cellData?.indRow]?.contractNum,
+                task: data[cellData?.indRow] ? { contractNum } : {}
                 // idContract: filteredData[cellData?.indRow]?.contractId,
                 // task: filteredData[cellData?.indRow] || {}
             };
