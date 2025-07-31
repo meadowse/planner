@@ -282,6 +282,7 @@ function TaskRow(props) {
                             onClick={() => onShowInfo(null, task, 'update')}
                             onMouseDown={e => onShowInfo(e, task, 'update')}
                         >
+                            {task?.title?.fullName ?? null}
                             <span className="gantt-task-title__span">
                                 {task?.title?.contractNum ?? task?.title?.name}
                             </span>

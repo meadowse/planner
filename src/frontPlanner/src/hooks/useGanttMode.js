@@ -361,7 +361,10 @@ export const useGanttMode = args => {
                 // id договора
                 // newItem.contractId = item?.contractId;
                 // Заголовок задачи
-                newItem.title = item?.employee?.fullName || 'Сотрудник отсутствует';
+                // newItem.title = item?.employee?.fullName || 'Сотрудник отсутствует';
+                newItem.title = {
+                    fullName: item?.employee?.fullName || 'Сотрудник отсутствует'
+                };
                 // Идентификатор пользователя
                 newItem.idEmployee = item?.employee?.id;
                 // Ключ навигации
