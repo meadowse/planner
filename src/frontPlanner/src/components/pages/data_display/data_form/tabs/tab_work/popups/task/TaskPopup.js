@@ -31,8 +31,13 @@ import './task_popup.css';
 
 // Идентификатор договора
 function ContractNumber(props) {
-    const { isLoading, contractsIDs, config, setIdContract, onSelect } = props;
-    const [contractNum, setContractNum] = useState('');
+    const { presetValue, isLoading, contractsIDs, config, setIdContract, onSelect } = props;
+    const [contractNum, setContractNum] = useState(() => {
+        if (presetValue === 'Нет данных') return null;
+        return presetValue;
+    });
+
+    console.log(`ContractNumber presetValue: ${presetValue}`);
 
     // Выбор номера договора
     function onSelectContractNum(value) {
@@ -43,7 +48,8 @@ function ContractNumber(props) {
 
     // Удаление номера договора
     function onDeleteContractNum() {
-        setContractNum('');
+        // setContractNum('');
+        setContractNum(null);
         onSelect('contractNum', '');
         setIdContract(null);
     }
@@ -63,9 +69,13 @@ function ContractNumber(props) {
                             icon="arrow_down_gr.svg"
                             nameMenu="Выбрать номер договора"
                             specifiedVal={!contractNum ? { title: 'Выбрать номер договора' } : { title: contractNum }}
-                            dataSource={Object.keys(contractsIDs).map(key => {
-                                return { title: key };
-                            })}
+                            dataSource={
+                                contractNum
+                                    ? [{ title: contractNum }]
+                                    : Object.keys(contractsIDs).map(key => {
+                                          return { title: key };
+                                      })
+                            }
                             onItemClick={onSelectContractNum}
                         />
                     ) : null
@@ -686,8 +696,10 @@ export default function TaskPopup(props) {
     }
 
     useEffect(() => {
-        if (!data?.idContract) fetchContractsIDs();
-    }, []);
+        console.log(`TaskPopup idContract: ${data?.idContract}`);
+        // if (!data?.idContract) fetchContractsIDs();
+        if (!idContract) fetchContractsIDs();
+    }, [idContract]);
 
     return (
         <>
@@ -706,7 +718,7 @@ export default function TaskPopup(props) {
                     onSubmit={e => onOnSubmitData(e)}
                 >
                     <ul className="popup__content-add-task-left">
-                        {!data?.idContract ? (
+                        {/* {!data?.idContract ? (
                             <ContractNumber
                                 isLoading={isLoading}
                                 contractsIDs={contractsIDs}
@@ -714,7 +726,15 @@ export default function TaskPopup(props) {
                                 setIdContract={setIdContract}
                                 onSelect={onClick}
                             />
-                        ) : null}
+                        ) : null} */}
+                        <ContractNumber
+                            presetValue={data?.task?.contractNum}
+                            isLoading={isLoading}
+                            contractsIDs={contractsIDs}
+                            config={{ hidden: dataOperation?.hiddenFields?.typeWork ? true : false }}
+                            setIdContract={setIdContract}
+                            onSelect={onClick}
+                        />
                         <TypeWork
                             idContract={idContract}
                             config={{ hidden: dataOperation?.hiddenFields?.typeWork ? true : false }}
