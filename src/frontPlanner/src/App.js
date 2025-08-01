@@ -27,13 +27,22 @@ export default function App() {
     const router = createBrowserRouter([...(!authState.accessToken ? ROUTES_FOR_NOT_AUTH : []), ...ROUTES_FOR_AUTH]);
 
     return (
-        <SocketContext.Provider value={socket}>
-            <HistoryProvider>
-                <ThemeProvider>
-                    <RouterProvider router={router} />
-                    <ToastContainer />
-                </ThemeProvider>
-            </HistoryProvider>
-        </SocketContext.Provider>
+        <HistoryProvider>
+            <ThemeProvider>
+                <RouterProvider router={router} />
+                <ToastContainer />
+            </ThemeProvider>
+        </HistoryProvider>
     );
+
+    // return (
+    //     <SocketContext.Provider value={socket}>
+    //         <HistoryProvider>
+    //             <ThemeProvider>
+    //                 <RouterProvider router={router} />
+    //                 <ToastContainer />
+    //             </ThemeProvider>
+    //         </HistoryProvider>
+    //     </SocketContext.Provider>
+    // );
 }

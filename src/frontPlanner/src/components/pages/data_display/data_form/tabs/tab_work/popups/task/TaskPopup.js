@@ -14,7 +14,7 @@ import InputDataPopup from '@generic/elements/popup/InputDataPopup';
 import ModalWindow from '@generic/elements/popup/ModalWindow';
 
 // Импорт контекстов
-import { SocketContext } from '../../../../../../../../contexts/socket.context';
+// import { SocketContext } from '../../../../../../../../contexts/socket.context';
 import { useHistoryContext } from '../../../../../../../../contexts/history.context';
 
 // Импорт кастомных хуков
@@ -615,7 +615,7 @@ export default function TaskPopup(props) {
         TaskService.getTaskData(data?.task, dataOperation?.disabledFields),
         dataOperation?.disabledFields
     );
-    const socket = useContext(SocketContext);
+    // const socket = useContext(SocketContext);
     const navigate = useNavigate();
 
     // console.log(`dataOperation: ${JSON.stringify(dataOperation, null, 4)}`);
@@ -668,10 +668,10 @@ export default function TaskPopup(props) {
                 comment: values?.comment
             };
 
-            await TaskService.addTask(resultData, socket, {
-                director: values?.director,
-                executor: values?.executor
-            });
+            // await TaskService.addTask(resultData, socket, {
+            //     director: values?.director,
+            //     executor: values?.executor
+            // });
         }
         // Редактирование задачи
         else {

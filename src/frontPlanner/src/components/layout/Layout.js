@@ -8,7 +8,7 @@ import SideMenu from './side_menu/SideMenu';
 
 // Импорт контекстов
 import { useHistoryContext } from '../../contexts/history.context';
-import { SocketContext } from '../../contexts/socket.context';
+// import { SocketContext } from '../../contexts/socket.context';
 import { ThemeContext } from '../../contexts/theme.context';
 
 // Импорт данных
@@ -20,7 +20,7 @@ import './layout.css';
 export default function Layout() {
     const navigate = useNavigate();
 
-    const socket = useContext(SocketContext);
+    // const socket = useContext(SocketContext);
     const { theme, onToggleAppTheme } = useContext(ThemeContext);
     const { addToHistory } = useHistoryContext();
 
@@ -39,7 +39,7 @@ export default function Layout() {
     }
 
     useEffect(() => {
-        socket.emit('register', Cookies.get('MMUSERID'));
+        // socket.emit('register', Cookies.get('MMUSERID'));
 
         const savedMenu = JSON.parse(localStorage.getItem('itemSideMenu'));
         if (!savedMenu || Object.keys(savedMenu).length === 0) {
