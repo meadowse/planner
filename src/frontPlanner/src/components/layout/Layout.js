@@ -45,7 +45,15 @@ export default function Layout() {
         if (!savedMenu || Object.keys(savedMenu).length === 0) {
             setItemSideMenu(menuItems[0]);
             localStorage.setItem('itemSideMenu', JSON.stringify(menuItems[0]));
-        } else setItemSideMenu(savedMenu);
+        } else {
+            const menuItemLen = Object.keys(itemSideMenu);
+            const savedMenuItemLen = Object.keys(savedMenu);
+
+            if (menuItemLen > savedMenuItemLen) {
+                setItemSideMenu(itemSideMenu);
+                localStorage.setItem('itemSideMenu', JSON.stringify(itemSideMenu));
+            } else setItemSideMenu(savedMenu);
+        }
     }, []);
 
     return (
