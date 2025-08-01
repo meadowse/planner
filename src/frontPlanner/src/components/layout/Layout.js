@@ -52,7 +52,7 @@ export default function Layout() {
             console.log(`menuItem Len: ${menuItemLen}\nsavedMenuItem Len: ${savedMenuItemLen}`);
 
             if (menuItemLen > savedMenuItemLen) {
-                setItemSideMenu(itemSideMenu);
+                setItemSideMenu(menuItems[0]);
                 localStorage.setItem('itemSideMenu', JSON.stringify(itemSideMenu));
             } else setItemSideMenu(savedMenu);
         }
