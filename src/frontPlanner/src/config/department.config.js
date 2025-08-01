@@ -250,16 +250,16 @@ export const EQUIPMENT_DATA_CONF = {
             modeOptions: [],
             keyMode: 'calendar',
             keys: []
-        },
-        {
-            mode: 'Гант',
-            keyMode: 'gant',
-            modeOptions: [
-                // { value: 'Оборудование', key: 'equipment', uniqueness: '_' },
-                // { value: 'Поверка', key: 'verification', uniqueness: '_' }
-            ],
-            keys: []
         }
+        // {
+        //     mode: 'Гант',
+        //     keyMode: 'gant',
+        //     modeOptions: [
+        //         // { value: 'Оборудование', key: 'equipment', uniqueness: '_' },
+        //         // { value: 'Поверка', key: 'verification', uniqueness: '_' }
+        //     ],
+        //     keys: []
+        // }
     ],
     dataOperations: [
         {
