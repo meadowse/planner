@@ -46,8 +46,10 @@ export default function Layout() {
             setItemSideMenu(menuItems[0]);
             localStorage.setItem('itemSideMenu', JSON.stringify(menuItems[0]));
         } else {
-            const menuItemLen = Object.keys(itemSideMenu);
-            const savedMenuItemLen = Object.keys(savedMenu);
+            const menuItemLen = Object.keys(menuItems[0]).length;
+            const savedMenuItemLen = Object.keys(savedMenu).length;
+
+            console.log(`menuItem Len: ${menuItemLen}\nsavedMenuItem Len: ${savedMenuItemLen}`);
 
             if (menuItemLen > savedMenuItemLen) {
                 setItemSideMenu(itemSideMenu);
