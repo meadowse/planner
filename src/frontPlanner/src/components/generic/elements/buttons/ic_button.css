@@ -315,6 +315,7 @@
 /* Стили кнопки "Удалить пользователя", "Удалить дату" */
 
 .icon-btn__delete-type .icon-btn__image,
+.icon-btn__open-contract .icon-btn__image,
 .icon-btn__delete-user .icon-btn__image,
 .icon-btn__delete-date .icon-btn__image {
     width: calc(16px + 0.24vw);

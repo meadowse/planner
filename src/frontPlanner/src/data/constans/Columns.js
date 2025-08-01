@@ -15,7 +15,7 @@ import { useHistoryContext } from '../../contexts/history.context';
 
 const CELLS = {
     text: (value, additClass) => {
-        return <p className={`cell__${additClass}`}>{value ? value : 'Нет данных'}</p>;
+        return <p className={`cell__${additClass}`}>{value ?? 'Нет данных'}</p>;
     },
     longtext: (value, additClass, refCell) => {
         return value ? (

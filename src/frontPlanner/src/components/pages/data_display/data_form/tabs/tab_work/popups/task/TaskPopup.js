@@ -36,6 +36,7 @@ function ContractNumber(props) {
         if (presetValue === 'Нет данных') return null;
         return presetValue;
     });
+    const navigate = useNavigate();
 
     console.log(`ContractNumber presetValue: ${presetValue}`);
 
@@ -45,6 +46,8 @@ function ContractNumber(props) {
         setContractNum(value?.title);
         onSelect('contractNum', value?.title);
     }
+
+    function onOpenContract(event) {}
 
     // Удаление номера договора
     function onDeleteContractNum() {
@@ -83,12 +86,20 @@ function ContractNumber(props) {
                     'Загрузка данных...'
                 )}
                 {contractNum ? (
-                    <IconButton
-                        nameClass="icon-btn__delete-type"
-                        type="button"
-                        icon="cancel.svg"
-                        onClick={onDeleteContractNum}
-                    />
+                    <div className="popup__menu-actions">
+                        <IconButton
+                            nameClass="icon-btn__open-contract"
+                            type="button"
+                            icon="contract.svg"
+                            onClick={e => onOpenContract(e)}
+                        />
+                        <IconButton
+                            nameClass="icon-btn__delete-type"
+                            type="button"
+                            icon="cancel.svg"
+                            onClick={onDeleteContractNum}
+                        />
+                    </div>
                 ) : null}
             </div>
         </li>

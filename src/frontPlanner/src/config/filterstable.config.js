@@ -226,7 +226,14 @@ export const FILTER_HANDLERS_CONF = new Map([
     ['car', (filterVal, car) => Object.values(car).some(item => item.toLowerCase().includes(filterVal.toLowerCase()))],
     // ['subsection', (filterVal, subsection) => subsection?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['phone', (filterVal, phone) => phone?.toLowerCase().includes(filterVal?.toLowerCase())],
-    ['email', (filterVal, email) => email?.toLowerCase().includes(filterVal?.toLowerCase())],
+    // ['email', (filterVal, email) => email?.toLowerCase().includes(filterVal?.toLowerCase())],
+    [
+        'email',
+        (filterVal, email) => {
+            console.log(`FILTER_HANDLERS_CONF\nfilterVal: ${filterVal}\nemail: ${email}`);
+            return email?.toLowerCase().includes(filterVal?.toLowerCase());
+        }
+    ],
     ['typeWork', (filterVal, typeWork) => typeWork?.toLowerCase().includes(filterVal?.toLowerCase())],
     [
         'stage',
