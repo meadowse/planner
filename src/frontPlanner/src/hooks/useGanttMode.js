@@ -362,6 +362,7 @@ export const useGanttMode = args => {
                 // Задачи
                 newItem.tasks = [];
 
+                // Формирование договоров
                 if (item?.contracts && item?.contracts.length !== 0) {
                     item?.contracts.forEach(contract => {
                         taskItem.moveElemId = +contract?.contractId;
@@ -388,86 +389,89 @@ export const useGanttMode = args => {
                         taskItem.dateOfStart = contract?.dateOfStart?.value;
                         taskItem.dateOfEnding = contract?.dateOfEnding?.value;
 
-                        taskItem.tasks =
-                            contract?.tasks && contract?.tasks.length !== 0
-                                ? contract?.tasks.map((task, ind) => {
-                                      const assignedUsersData = [];
-                                      let users = [];
+                        taskItem.tasks = [];
 
-                                      if (task?.director && task?.executor) {
-                                          if (
-                                              Object.keys(task?.director).length !== 0 &&
-                                              Object.keys(task?.executor).length !== 0
-                                          ) {
-                                              users = [
-                                                  ...(Object?.values(task?.director) || null),
-                                                  ...(Object?.values(task?.executor) || null)
-                                              ];
-                                          }
-                                      }
+                        if (contract?.tasks && contract?.tasks.length !== 0) {
+                            contract?.tasks.forEach((task, ind) => {
+                                if (item?.employee?.id === task?.executor?.mmId) {
+                                    const assignedUsersData = [];
+                                    let users = [];
 
-                                      if (users.length !== 0) {
-                                          const mmIdDirector = task?.director?.mmId;
-                                          const mmIdExecutor = task?.executor?.mmId;
+                                    if (task?.director && task?.executor) {
+                                        if (
+                                            Object.keys(task?.director).length !== 0 &&
+                                            Object.keys(task?.executor).length !== 0
+                                        ) {
+                                            users = [
+                                                ...(Object?.values(task?.director) || null),
+                                                ...(Object?.values(task?.executor) || null)
+                                            ];
+                                        }
+                                    }
 
-                                          if (mmIdDirector === mmIdExecutor) {
-                                              //
-                                              assignedUsersData.push({
-                                                  mmId: task?.executor?.mmId || task?.director?.mmId,
-                                                  authorizedUser:
-                                                      authorizedUserId === mmIdExecutor &&
-                                                      authorizedUserId === mmIdDirector
-                                                          ? true
-                                                          : false,
-                                                  fullName: task?.executor?.fullName || '',
-                                                  role: 'Исполнитель / Постановщик',
-                                                  photo:
-                                                      task?.executor?.mmId || task?.director?.mmId
-                                                          ? `https://mm-mpk.ru/api/v4/users/${
-                                                                task?.executor?.mmId || task?.director?.mmId
-                                                            }/image`
-                                                          : '/img/user.svg'
-                                              });
-                                          } else {
-                                              // Добавление Постановщика
-                                              assignedUsersData.push({
-                                                  mmId: task?.director?.mmId,
-                                                  authorizedUser: mmIdDirector === authorizedUserId ? true : false,
-                                                  fullName: task?.director?.fullName || '',
-                                                  role: 'Постановщик',
-                                                  photo: task?.director?.mmId
-                                                      ? `https://mm-mpk.ru/api/v4/users/${task?.director?.mmId}/image`
-                                                      : '/img/user.svg'
-                                              });
+                                    if (users.length !== 0) {
+                                        const mmIdDirector = task?.director?.mmId;
+                                        const mmIdExecutor = task?.executor?.mmId;
 
-                                              // Добавление Исполнителя
-                                              assignedUsersData.push({
-                                                  mmId: task?.executor?.mmId,
-                                                  authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
-                                                  fullName: task?.executor?.fullName || '',
-                                                  role: 'Исполнитель',
-                                                  photo: task?.executor?.mmId
-                                                      ? `https://mm-mpk.ru/api/v4/users/${task?.executor?.mmId}/image`
-                                                      : '/img/user.svg'
-                                              });
-                                          }
-                                      }
+                                        if (mmIdDirector === mmIdExecutor) {
+                                            //
+                                            assignedUsersData.push({
+                                                mmId: task?.executor?.mmId || task?.director?.mmId,
+                                                authorizedUser:
+                                                    authorizedUserId === mmIdExecutor &&
+                                                    authorizedUserId === mmIdDirector
+                                                        ? true
+                                                        : false,
+                                                fullName: task?.executor?.fullName || '',
+                                                role: 'Исполнитель / Постановщик',
+                                                photo:
+                                                    task?.executor?.mmId || task?.director?.mmId
+                                                        ? `https://mm-mpk.ru/api/v4/users/${
+                                                              task?.executor?.mmId || task?.director?.mmId
+                                                          }/image`
+                                                        : '/img/user.svg'
+                                            });
+                                        } else {
+                                            // Добавление Постановщика
+                                            assignedUsersData.push({
+                                                mmId: task?.director?.mmId,
+                                                authorizedUser: mmIdDirector === authorizedUserId ? true : false,
+                                                fullName: task?.director?.fullName || '',
+                                                role: 'Постановщик',
+                                                photo: task?.director?.mmId
+                                                    ? `https://mm-mpk.ru/api/v4/users/${task?.director?.mmId}/image`
+                                                    : '/img/user.svg'
+                                            });
 
-                                      return {
-                                          moveElemId: +contract?.contractId + (ind + 1),
-                                          contractId: +contract?.contractId,
-                                          title: task?.title || 'Нет данных',
-                                          contractNum: `${contract?.contractNum}_${ind + 1}`,
-                                          navKey: 'task',
-                                          done: +task?.done,
-                                          dateOfStart: task?.dateOfStart,
-                                          dateOfEnding: task?.dateOfEnding,
-                                          //   bgColorTask: contract?.stage?.color,
-                                          bgColorTask: +task?.done ? '#8ac926' : '#d53032',
-                                          assignedUsers: assignedUsersData
-                                      };
-                                  })
-                                : [];
+                                            // Добавление Исполнителя
+                                            assignedUsersData.push({
+                                                mmId: task?.executor?.mmId,
+                                                authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
+                                                fullName: task?.executor?.fullName || '',
+                                                role: 'Исполнитель',
+                                                photo: task?.executor?.mmId
+                                                    ? `https://mm-mpk.ru/api/v4/users/${task?.executor?.mmId}/image`
+                                                    : '/img/user.svg'
+                                            });
+                                        }
+                                    }
+
+                                    taskItem.tasks.push({
+                                        moveElemId: +contract?.contractId + (ind + 1),
+                                        contractId: +contract?.contractId,
+                                        title: task?.title || 'Нет данных',
+                                        contractNum: `${contract?.contractNum}_${ind + 1}`,
+                                        navKey: 'task',
+                                        done: +task?.done,
+                                        dateOfStart: task?.dateOfStart,
+                                        dateOfEnding: task?.dateOfEnding,
+                                        //   bgColorTask: contract?.stage?.color,
+                                        bgColorTask: +task?.done ? '#8ac926' : '#d53032',
+                                        assignedUsers: assignedUsersData
+                                    });
+                                }
+                            });
+                        }
                         // console.log(`sections\ntaskItem: ${JSON.stringify(taskItem, null, 4)}`);
                         newItem.tasks.push(taskItem);
                         taskItem = {};

@@ -40,7 +40,7 @@ function ContractNumber(props) {
     const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
 
-    console.log(`ContractNumber contractsIDs: ${JSON.stringify(contractsIDs, null, 4)}`);
+    // console.log(`ContractNumber contractsIDs: ${JSON.stringify(contractsIDs, null, 4)}`);
 
     // Выбор номера договора
     function onSelectContractNum(value) {
