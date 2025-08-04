@@ -207,10 +207,6 @@ export const useGanttMode = args => {
             equipment: item => {
                 newItem.moveElemId = item?.serialNumber;
                 // Заголовок задачи
-                // newItem.title =
-                //     (item?.equipment?.title || 'Название отсутствует') +
-                //     String.fromCodePoint(8212) +
-                //     (item?.equipment?.model || 'Модель отсутствует');
                 newItem.title = {
                     name:
                         `${item?.equipment?.title} ${String.fromCodePoint(8212)}` + ' ' ??
@@ -245,12 +241,6 @@ export const useGanttMode = args => {
                 // id договора
                 newItem.contractId = item?.contractId;
                 // Заголовок задачи
-                // newItem.title =
-                //     (item?.contractNum || 'Номер договора отсутствует') +
-                //     ` ${String.fromCodePoint(8212)} ` +
-                //     (item?.address || 'Адрес отсутствует') +
-                //     ` ${String.fromCodePoint(8212)} ` +
-                //     (item?.company || 'Заказчик отсутствует');
                 newItem.title = {
                     contractNum:
                         `${item?.contractNum} ${String.fromCodePoint(8212)}` + ' ' ??
@@ -378,12 +368,6 @@ export const useGanttMode = args => {
                         // id договора
                         taskItem.contractId = +contract?.contractId;
                         // Заголовок задачи
-                        // taskItem.title =
-                        //     (contract?.contractNum || 'Номер договора отсутствует') +
-                        //     ` ${String.fromCodePoint(8212)} ` +
-                        //     (contract?.address || 'Адрес отсутствует') +
-                        //     ` ${String.fromCodePoint(8212)} ` +
-                        //     (contract?.company || 'Заказчик отсутствует');
                         taskItem.title = {
                             contractNum:
                                 `${contract?.contractNum} ${String.fromCodePoint(8212)}` + ' ' ??

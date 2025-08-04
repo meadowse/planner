@@ -201,18 +201,18 @@ const addTask = async (data, socket, notificationData) => {
                 if (response.status === 200) {
                     const employee = user.data && user.data.length !== 0 ? user.data[0] : {};
 
-                    socket.emit('addTask', {
-                        task: {
-                            title: data?.task,
-                            director: {
-                                mmId: employee?.id,
-                                fullName: employee?.FIO
-                            },
-                            deadline: data?.deadline?.value,
-                            comment: data?.comment
-                        },
-                        assigneeId: notificationData?.executor?.mmId
-                    });
+                    // socket.emit('addTask', {
+                    //     task: {
+                    //         title: data?.task,
+                    //         director: {
+                    //             mmId: employee?.id,
+                    //             fullName: employee?.FIO
+                    //         },
+                    //         deadline: data?.deadline?.value,
+                    //         comment: data?.comment
+                    //     },
+                    //     assigneeId: notificationData?.executor?.mmId
+                    // });
 
                     // setAddTaskState(false);
                     // navigate(window.location.pathname);

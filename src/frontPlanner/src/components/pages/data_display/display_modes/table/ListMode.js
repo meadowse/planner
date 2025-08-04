@@ -90,11 +90,11 @@ export default function ListMode(props) {
         task: cellData => {
             const config = {
                 idContract: data[cellData?.indRow]?.contractId,
+                partition: modeConfig?.partition,
                 task: data[cellData?.indRow]
                     ? { ...data[cellData?.indRow], contractNum: data[cellData?.indRow]?.contractNum }
-                    : {}
-                // idContract: filteredData[cellData?.indRow]?.contractId,
-                // task: filteredData[cellData?.indRow] || {}
+                    : {},
+                dataOperation: findNestedObj(modeConfig?.dataOperations, 'key', 'update')
             };
             return <Cell cellData={cellData} cellConfig={config} />;
         },

@@ -62,26 +62,28 @@ const COLUMNS = [
             const { addToHistory } = useHistoryContext();
 
             function onShowInfoCard(event) {
-                const navigationArg = {
-                    state: {
-                        idContract: props?.config?.idContract,
-                        tabForm: { key: 'general', title: 'Общие' },
-                        partition: props?.config?.partition,
-                        dataOperation: props?.config?.dataOperation
-                    }
-                };
+                if (props?.config?.idContract) {
+                    const navigationArg = {
+                        state: {
+                            idContract: props?.config?.idContract,
+                            tabForm: { key: 'general', title: 'Общие' },
+                            partition: props?.config?.partition,
+                            dataOperation: props?.config?.dataOperation
+                        }
+                    };
 
-                localStorage.setItem('idContract', JSON.stringify(props?.config?.idContract));
-                localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
+                    localStorage.setItem('idContract', JSON.stringify(props?.config?.idContract));
+                    localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
 
-                addToHistory(`${window.location.pathname}`);
+                    addToHistory(`${window.location.pathname}`);
 
-                if (event.button === 1) {
-                    const url = `../../dataform/general?data=${encodeURIComponent(
-                        JSON.stringify(navigationArg.state)
-                    )}`;
-                    window.open(url, '_blank');
-                } else navigate('../../dataform/general/', navigationArg);
+                    if (event.button === 1) {
+                        const url = `../../dataform/general?data=${encodeURIComponent(
+                            JSON.stringify(navigationArg.state)
+                        )}`;
+                        window.open(url, '_blank');
+                    } else navigate('../../dataform/general/', navigationArg);
+                }
             }
 
             return (
@@ -460,10 +462,12 @@ const COLUMNS = [
                                 title="Редактирование задачи"
                                 data={{
                                     idContract: props?.config?.idContract,
-                                    task: props?.config?.task
+                                    partition: props?.config?.partition,
+                                    task: props?.config?.task,
+                                    contractOperations: props?.config?.dataOperation
                                     // contractsIDs: props?.config?.contractsIDs
                                 }}
-                                operation="update"
+                                taskOperation="update"
                                 addTaskState={addTaskState}
                                 setAddTaskState={setAddTaskState}
                             />,
