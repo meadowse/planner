@@ -365,7 +365,8 @@ export const useGanttMode = args => {
                 // Формирование договоров
                 if (item?.contracts && item?.contracts.length !== 0) {
                     item?.contracts.forEach(contract => {
-                        taskItem.moveElemId = +contract?.contractId;
+                        taskItem.moveElemId = `${contract?.contractId}-${Date.now() + Math.random()}`;
+                        // taskItem.moveElemId = +contract?.contractId;
                         // id договора
                         taskItem.contractId = +contract?.contractId;
                         // Заголовок задачи
@@ -381,7 +382,8 @@ export const useGanttMode = args => {
                         // Ключ навигации
                         taskItem.navKey = 'contract';
                         // Номер договора
-                        taskItem.contractNum = contract?.contractNum;
+                        // taskItem.contractNum = contract?.contractNum;
+                        taskItem.contractNum = `${contract?.contractNum}-${Date.now() + Math.random()}`;
                         // Задний фон
                         taskItem.bgColorTask = contract?.stage?.color;
 
