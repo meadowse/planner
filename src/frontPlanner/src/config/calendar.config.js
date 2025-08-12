@@ -7,6 +7,15 @@ export const WEEK_DAYS = {
     Saturday: 'Суббота',
     Sunday: 'Воскресенье'
 };
+export const SHORT_WEEK_DAYS = {
+    Monday: 'Пн',
+    Tuesday: 'Вт',
+    Wednesday: 'Ср',
+    Thursday: 'Чт',
+    Friday: 'Пт',
+    Saturday: 'Сб',
+    Sunday: 'Вс'
+};
 export const MONTHS = [
     'Январь',
     'Февраль',

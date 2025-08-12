@@ -23,6 +23,7 @@ const ListMode = lazy(() => import('./display_modes/table/ListMode'));
 const CalendarMode = lazy(() => import('./display_modes/calendar/CalendarMode'));
 const GanttMode = lazy(() => import('./display_modes/gantt/GanttMode'));
 const CompanyStructure = lazy(() => import('./display_modes/structure/CompanyStructure'));
+const TimeTableMode = lazy(() => import('./display_modes/timetable/TimeTableMode'));
 
 // Отфильтровать данные
 function filterData(data, simplifiedData, filter) {
@@ -491,18 +492,7 @@ export default function DataDisplayPage({ partition }) {
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => {
                                             const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
-                                            // const ganttData = extractSampleData(
-                                            //     resolvedData[keyData],
-                                            //     valsToDisplay
-                                            // )?.sort((a, b) => b?.id - a?.id);
                                             console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
-                                            // console.log(
-                                            //     `keyData: ${keyData}\nresolvedData: ${JSON.stringify(
-                                            //         resolvedData,
-                                            //         null,
-                                            //         4
-                                            //     )}`
-                                            // );
                                             return (
                                                 <GanttMode
                                                     partition={partition}
@@ -672,6 +662,18 @@ export default function DataDisplayPage({ partition }) {
                                                     }}
                                                 />
                                             );
+                                        }}
+                                    </Await>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="timetable"
+                            element={
+                                <Suspense fallback={<Preloader />}>
+                                    <Await resolve={data?.uploadedData}>
+                                        {resolvedData => {
+                                            return <TimeTableMode />;
                                         }}
                                     </Await>
                                 </Suspense>
