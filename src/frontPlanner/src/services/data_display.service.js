@@ -37,10 +37,10 @@ const formData = (data, partition, key) => {
                                     ? `https://mm-mpk.ru/api/v4/users/${item?.mmId}/image`
                                     : '/img/user.svg'
                             };
-                            newItem['post'] = item?.post;
+                            newItem['post'] = item?.post ?? 'Нет данных';
                             // newItem['subsection'] = item?.subsection;
-                            newItem['phone'] = item?.phone;
-                            newItem['email'] = item?.email;
+                            newItem['phone'] = item?.phone ?? 'Нет данных';
+                            newItem['email'] = item?.email ?? 'Нет данных';
                         }
                         return newItem;
                     });

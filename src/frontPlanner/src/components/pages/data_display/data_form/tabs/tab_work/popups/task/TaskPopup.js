@@ -14,7 +14,7 @@ import InputDataPopup from '@generic/elements/popup/InputDataPopup';
 import ModalWindow from '@generic/elements/popup/ModalWindow';
 
 // Импорт контекстов
-import { SocketContext } from '../../../../../../../../contexts/socket.context';
+// import { SocketContext } from '../../../../../../../../contexts/socket.context';
 import { useHistoryContext } from '../../../../../../../../contexts/history.context';
 
 // Импорт кастомных хуков
@@ -31,19 +31,54 @@ import './task_popup.css';
 
 // Идентификатор договора
 function ContractNumber(props) {
-    const { isLoading, contractsIDs, config, setIdContract, onSelect } = props;
-    const [contractNum, setContractNum] = useState('');
+    const { contract, isLoading, contractsIDs, config, setIdContract, onSelect } = props;
+    const [contractNum, setContractNum] = useState(() => {
+        if (contract?.number === 'Нет данных') return null;
+        return contract?.number;
+    });
+
+    const { addToHistory } = useHistoryContext();
+    const navigate = useNavigate();
+
+    // console.log(`ContractNumber contractsIDs: ${JSON.stringify(contractsIDs, null, 4)}`);
 
     // Выбор номера договора
     function onSelectContractNum(value) {
-        // alert(`onSelectContractNum ${JSON.stringify(value, null, 4)}`);
-        setContractNum(value?.title);
-        onSelect('contractNum', value?.title);
+        // setContractNum(value?.title);
+        // onSelect('contractNum', value?.title);
+
+        setContractNum(value);
+        onSelect('contractNum', value);
+    }
+
+    // Переход к договору для редактирования
+    function onOpenContract(event) {
+        const navigationArg = {
+            state: {
+                idContract: contract?.id,
+                tabForm: { key: 'general', title: 'Общие' },
+                partition: config?.partition,
+                path: `${window.location.pathname}`,
+                dataOperation: config?.contractOperations
+            }
+        };
+
+        localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
+        localStorage.setItem('idContract', JSON.stringify(contract?.id));
+
+        addToHistory(`${window.location.pathname}`);
+
+        if (event && event.button === 1) {
+            // Открытие договора в новой вкладке
+            const url = `../../dataform/general?data=${encodeURIComponent(JSON.stringify(navigationArg.state))}`;
+            window.open(url, '_blank');
+        } else navigate('../../dataform/general/', navigationArg);
     }
 
     // Удаление номера договора
     function onDeleteContractNum() {
-        setContractNum('');
+        // setContractNum('');
+        setContractNum(null);
         onSelect('contractNum', '');
         setIdContract(null);
     }
@@ -58,27 +93,45 @@ function ContractNumber(props) {
             <div className="popup__menu-wrapper">
                 {!isLoading ? (
                     contractsIDs ? (
-                        <DropdownMenu
-                            additClass="contract-num"
-                            icon="arrow_down_gr.svg"
-                            nameMenu="Выбрать номер договора"
-                            specifiedVal={!contractNum ? { title: 'Выбрать номер договора' } : { title: contractNum }}
-                            dataSource={Object.keys(contractsIDs).map(key => {
-                                return { title: key };
-                            })}
-                            onItemClick={onSelectContractNum}
-                        />
+                        <div class="dropdown-menu-search">
+                            <datalist id="suggestions" class="dropdown-menu-search__suggestions">
+                                {Object.keys(contractsIDs)
+                                    .map(key => {
+                                        return { title: key };
+                                    })
+                                    .map((item, index) => (
+                                        <option key={index} value={item.title} />
+                                    ))}
+                            </datalist>
+                            <input
+                                type="text"
+                                class="dropdown-menu-search__input"
+                                list="suggestions"
+                                placeholder="Выбрать номер договора"
+                                value={contractNum}
+                                onChange={e => onSelectContractNum(e.target.value)}
+                            />
+                        </div>
                     ) : null
                 ) : (
                     'Загрузка данных...'
                 )}
                 {contractNum ? (
-                    <IconButton
-                        nameClass="icon-btn__delete-type"
-                        type="button"
-                        icon="cancel.svg"
-                        onClick={onDeleteContractNum}
-                    />
+                    <div className="popup__menu-actions">
+                        <IconButton
+                            nameClass="icon-btn__open-contract"
+                            type="button"
+                            icon="contract.svg"
+                            onClick={e => onOpenContract(e)}
+                            onMouseDown={e => onOpenContract(e)}
+                        />
+                        <IconButton
+                            nameClass="icon-btn__delete-type"
+                            type="button"
+                            icon="cancel.svg"
+                            onClick={onDeleteContractNum}
+                        />
+                    </div>
                 ) : null}
             </div>
         </li>
@@ -590,10 +643,10 @@ function Comment(props) {
 }
 
 export default function TaskPopup(props) {
-    const { additClass, title, data, operation, addTaskState, setAddTaskState } = props;
+    const { additClass, title, data, taskOperation, addTaskState, setAddTaskState } = props;
 
     const theme = localStorage.getItem('appTheme');
-    const dataOperation = TaskService.getDataFormOperation(operation);
+    const dataTaskOperation = TaskService.getDataFormOperation(taskOperation);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -602,13 +655,13 @@ export default function TaskPopup(props) {
     const [contractsIDs, setContractsIDs] = useState({});
 
     const { values, onChange, onClick } = useTaskForm(
-        TaskService.getTaskData(data?.task, dataOperation?.disabledFields),
-        dataOperation?.disabledFields
+        TaskService.getTaskData(data?.task, dataTaskOperation?.disabledFields),
+        dataTaskOperation?.disabledFields
     );
-    const socket = useContext(SocketContext);
+    // const socket = useContext(SocketContext);
     const navigate = useNavigate();
 
-    // console.log(`dataOperation: ${JSON.stringify(dataOperation, null, 4)}`);
+    // console.log(`dataTaskOperation: ${JSON.stringify(dataTaskOperation, null, 4)}`);
     console.log(`values: ${JSON.stringify(values, null, 4)}`);
     // console.log(`TaskPopup data: ${JSON.stringify(data, null, 4)}`);
 
@@ -658,7 +711,7 @@ export default function TaskPopup(props) {
                 comment: values?.comment
             };
 
-            await TaskService.addTask(resultData, socket, {
+            await TaskService.addTask(resultData, null, {
                 director: values?.director,
                 executor: values?.executor
             });
@@ -686,8 +739,10 @@ export default function TaskPopup(props) {
     }
 
     useEffect(() => {
-        if (!data?.idContract) fetchContractsIDs();
-    }, []);
+        console.log(`TaskPopup idContract: ${data?.idContract}`);
+        // if (!data?.idContract) fetchContractsIDs();
+        if (!idContract) fetchContractsIDs();
+    }, [idContract]);
 
     return (
         <>
@@ -706,56 +761,68 @@ export default function TaskPopup(props) {
                     onSubmit={e => onOnSubmitData(e)}
                 >
                     <ul className="popup__content-add-task-left">
-                        {!data?.idContract ? (
-                            <ContractNumber
-                                isLoading={isLoading}
-                                contractsIDs={contractsIDs}
-                                config={{ hidden: dataOperation?.hiddenFields?.typeWork ? true : false }}
-                                setIdContract={setIdContract}
-                                onSelect={onClick}
-                            />
-                        ) : null}
+                        <ContractNumber
+                            contract={{
+                                id: idContract,
+                                number: data?.task?.contractNum
+                            }}
+                            isLoading={isLoading}
+                            contractsIDs={contractsIDs}
+                            config={{
+                                partition: data?.partition,
+                                hidden: dataTaskOperation?.hiddenFields?.typeWork ? true : false,
+                                contractOperations: data?.contractOperations
+                            }}
+                            setIdContract={setIdContract}
+                            onSelect={onClick}
+                        />
                         <TypeWork
                             idContract={idContract}
-                            config={{ hidden: dataOperation?.hiddenFields?.typeWork ? true : false }}
+                            config={{ hidden: dataTaskOperation?.hiddenFields?.typeWork ? true : false }}
                             setIdContract={setIdContract}
                             onSelect={onClick}
                         />
                         <Director
                             presetValue={data?.task?.director}
-                            config={{ appTheme: theme, hidden: dataOperation?.hiddenFields?.director ? true : false }}
+                            config={{
+                                appTheme: theme,
+                                hidden: dataTaskOperation?.hiddenFields?.director ? true : false
+                            }}
                             onSelect={onClick}
                         />
                         <Executor
                             presetValue={data?.task?.executor}
-                            config={{ appTheme: theme, hidden: dataOperation?.hiddenFields?.executor ? true : false }}
+                            config={{
+                                appTheme: theme,
+                                hidden: dataTaskOperation?.hiddenFields?.executor ? true : false
+                            }}
                             onSelect={onClick}
                         />
                         <TaskName
                             presetValue={data?.task?.task}
-                            config={{ hidden: dataOperation?.hiddenFields?.task ? true : false }}
+                            config={{ hidden: dataTaskOperation?.hiddenFields?.task ? true : false }}
                             onChange={onChange}
                         />
                         <CommencementDate
                             presetValue={data?.task?.dateStart || data?.task?.startDate}
-                            config={{ hidden: dataOperation?.hiddenFields?.dateStart ? true : false }}
+                            config={{ hidden: dataTaskOperation?.hiddenFields?.dateStart ? true : false }}
                             onSelect={onClick}
                         />
                         <DeadlineTask
                             presetValue={data?.task?.deadlineTask}
-                            config={{ hidden: dataOperation?.hiddenFields?.deadlineTask ? true : false }}
+                            config={{ hidden: dataTaskOperation?.hiddenFields?.deadlineTask ? true : false }}
                             onSelect={onClick}
                         />
                         <Completeness
                             presetValue={data?.task?.done}
-                            config={{ hidden: dataOperation?.hiddenFields?.done ? true : false }}
+                            config={{ hidden: dataTaskOperation?.hiddenFields?.done ? true : false }}
                             onSelect={onClick}
                         />
                     </ul>
                     <div className="popup__content-add-task-right">
                         <Comment
                             presetValue={null}
-                            config={{ hidden: dataOperation?.hiddenFields?.comment ? true : false }}
+                            config={{ hidden: dataTaskOperation?.hiddenFields?.comment ? true : false }}
                             onChange={onChange}
                         />
                     </div>

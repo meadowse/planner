@@ -52,6 +52,6 @@ io.on('connection', socket => {
     });
 });
 
-server.listen(process.env.PORT, process.env.HOST, error => {
-    error ? console.log(error) : console.log(`Server listening on: ${process.env.HOST}:${process.env.PORT}`);
-});
+// server.listen(process.env.PORT, process.env.HOST, error => {
+//     error ? console.log(error) : console.log(`Server listening on: ${process.env.HOST}:${process.env.PORT}`);
+// });

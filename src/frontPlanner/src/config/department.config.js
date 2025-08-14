@@ -215,6 +215,11 @@ export const COMPANY_DATA_CONF = {
             keyMode: 'employees',
             keys: ['id', 'responsible', 'post', 'phone', 'email']
             // keys: ['id', 'responsible', 'subsection', 'phone', 'email']
+        },
+        {
+            mode: 'График отпусков',
+            keyMode: 'timetable',
+            keys: ['id', 'responsible', 'post', 'phone', 'email']
         }
     ],
     dataOperations: [
@@ -250,16 +255,16 @@ export const EQUIPMENT_DATA_CONF = {
             modeOptions: [],
             keyMode: 'calendar',
             keys: []
-        },
-        {
-            mode: 'Гант',
-            keyMode: 'gant',
-            modeOptions: [
-                // { value: 'Оборудование', key: 'equipment', uniqueness: '_' },
-                // { value: 'Поверка', key: 'verification', uniqueness: '_' }
-            ],
-            keys: []
         }
+        // {
+        //     mode: 'Гант',
+        //     keyMode: 'gant',
+        //     modeOptions: [
+        //         // { value: 'Оборудование', key: 'equipment', uniqueness: '_' },
+        //         // { value: 'Поверка', key: 'verification', uniqueness: '_' }
+        //     ],
+        //     keys: []
+        // }
     ],
     dataOperations: [
         {
@@ -281,9 +286,9 @@ export const DEPARTMENT_DATA_CONF = {
             mode: 'Канбан',
             keyMode: 'kanban',
             modeOptions: [
-                { value: 'Услуги', key: 'services', keyData: 'contracts', uniqueness: 'title' },
-                { value: 'Стадии', key: 'stage', keyData: 'contracts', uniqueness: 'title' },
-                { value: 'Дни', key: 'date', keyData: 'contracts', uniqueness: 'value' }
+                { value: 'Услуги', key: 'services', keyData: 'contracts', uniqueness: 'title', disclose: null },
+                { value: 'Стадии', key: 'stage', keyData: 'contracts', uniqueness: 'title', disclose: null },
+                { value: 'Дни', key: 'date', keyData: 'contracts', uniqueness: 'value', disclose: null }
             ],
             keys: [
                 'id',

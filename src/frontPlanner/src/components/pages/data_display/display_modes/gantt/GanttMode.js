@@ -94,23 +94,19 @@ function TotalTaskRow(props) {
     const {
         timeLine,
         totalTasks,
-        selectedItemInd,
-        dateState,
-        modeConfig,
-        ganttConfig,
+        // selectedItemInd,
+        // dateState,
+        // modeConfig,
+        // ganttConfig,
         bgColorTask,
-        onHideTasks,
-        onSelectItem
+        onHideTasks
+        // onSelectItem
     } = props;
 
     return (
         <div className="gantt-grid__main-row">
-            <div
-                className="gantt-task-title gantt-task-main-title"
-                // style={{ backgroundColor: `${bgColorTask}` }}
-                onClick={onHideTasks}
-            >
-                {ganttConfig && Object.keys(ganttConfig).length !== 0 ? (
+            <div className="gantt-task-title gantt-task-main-title" onClick={onHideTasks}>
+                {/* {ganttConfig && Object.keys(ganttConfig).length !== 0 ? (
                     <select className="gantt-mode__select-list" onChange={onSelectItem}>
                         {ganttConfig?.map((headline, index) => {
                             if (isObject(headline) && Object.keys(headline).length !== 0) {
@@ -127,7 +123,7 @@ function TotalTaskRow(props) {
                             }
                         })}
                     </select>
-                ) : null}
+                ) : null} */}
             </div>
             <div className="gantt-empty-row"></div>
             <ul className="gantt-time-period">
@@ -172,7 +168,7 @@ function TaskRow(props) {
         getDateFromString(task?.dateOfEnding)
     ).length;
 
-    const [showTasks, setShowTasks] = useState(true);
+    const [showTasks, setShowTasks] = useState(false);
 
     // console.log(`tasks: ${JSON.stringify(tasks, null, 4)}`);
 
@@ -199,7 +195,7 @@ function TaskRow(props) {
     }
 
     // Просмотр подробной информации о ...
-    function onShowInfo(task, operationVal) {
+    function onShowInfo(event, task, operationVal) {
         console.log(`task: ${JSON.stringify(task, null, 4)}`);
         localStorage.setItem('idContract', JSON.stringify(task?.contractId));
 
@@ -231,7 +227,13 @@ function TaskRow(props) {
                     };
                     startTransition(() => {
                         addToHistory(`${window.location.pathname}`);
-                        navigate('../../dataform/general/', navigationArg);
+                        if (event && event.button === 1) {
+                            const url = `../../dataform/general?data=${encodeURIComponent(
+                                JSON.stringify(navigationArg.state)
+                            )}`;
+                            window.open(url, '_blank');
+                        } else navigate('../../dataform/general/', navigationArg);
+                        // window.open('../../dataform/general/', '_blank');
                     });
                     localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
                 }
@@ -250,6 +252,7 @@ function TaskRow(props) {
 
                     startTransition(() => {
                         addToHistory(`${window.location.pathname}`);
+                        // window.open(`../../dataform/works/${task?.contractId}`, '_blank');
                         navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
                     });
 
@@ -267,11 +270,23 @@ function TaskRow(props) {
             <div className="gantt-grid__main-row">
                 {containTasks ? (
                     <div className="gantt-task-title-wrapper" style={{ paddingLeft: `${config.indent / 16}rem` }}>
-                        {/* <input type="checkbox" /> */}
-                        {/* <button className="">&#8942;</button> */}
-                        <div className="gantt-task-title" onClick={() => onShowInfo(task, 'update')}>
+                        {/* <div
+                            className="gantt-task-title"
+                            onClick={() => onShowInfo(null, task, 'update')}
+                            onMouseDown={e => onShowInfo(e, task, 'update')}
+                        >
                             <span>{task?.title}</span>
-                        </div>
+                        </div> */}
+                        <p
+                            className="gantt-task-title"
+                            onClick={() => onShowInfo(null, task, 'update')}
+                            onMouseDown={e => onShowInfo(e, task, 'update')}
+                        >
+                            {task?.title?.fullName ?? null}
+                            <span className="gantt-task-title__span">{task?.title?.contractNum}</span>
+                            {task?.title?.address}
+                            {task?.title?.company}
+                        </p>
                         <div className="gantt-task-actions">
                             <button
                                 className="gantt-task-actions__btn-hide gantt-task-btn-action"
@@ -294,8 +309,11 @@ function TaskRow(props) {
                             className={classNames('gantt-task-title', {
                                 'gantt-task-title_done': task?.done
                             })}
-                            onClick={() => onShowInfo(task, 'update')}
+                            onClick={() => onShowInfo(null, task, 'update')}
                         >
+                            {/* <span>{task?.title?.contractNum ?? task?.title?.name}</span>
+                            {task?.title?.address ?? task?.title?.model}
+                            {task?.title?.company} */}
                             <span>{task?.title}</span>
                         </div>
                         {task?.dateOfStart && task?.dateOfEnding ? (
@@ -466,13 +484,13 @@ function GanttChart(props) {
                     <TotalTaskRow
                         timeLine={timeLine}
                         totalTasks={gantt?.data?.totalTasks}
-                        selectedItemInd={selectedItemInd}
-                        dateState={dateState}
-                        modeConfig={modeConfig}
-                        ganttConfig={gantt?.config}
+                        // selectedItemInd={selectedItemInd}
+                        // dateState={dateState}
+                        // modeConfig={modeConfig}
+                        // ganttConfig={gantt?.config}
                         bgColorTask={gantt?.data?.bgColorTask}
                         onHideTasks={onHideTasks}
-                        onSelectItem={onSelectItem}
+                        // onSelectItem={onSelectItem}
                     />
                     {/* Отображение задач */}
                     {gantt?.data?.tasks?.length !== 0
@@ -555,14 +573,36 @@ export default function GanttMode(props) {
 
     return (
         <div className="gantt-mode">
-            {activeFilters && Object.keys(activeFilters).length !== 0 ? (
-                <FiltersGantt
-                    activeFilters={activeFilters}
-                    optionsFilter={OPTIONS_FILTER_CONF}
-                    keys={['stage']}
-                    onChangeFilter={onChangeFilter}
-                />
-            ) : null}
+            {/* Создать отдельный компонент */}
+            <div class="gantt-mode-filters">
+                {ganttConfig && Object.keys(ganttConfig).length !== 0 ? (
+                    <select className="gantt-mode__select-list" onChange={onSelectItem}>
+                        {ganttConfig?.map((headline, index) => {
+                            const selectedItemInd = ganttFilters[modeConfig?.modeOption?.key];
+                            if (isObject(headline) && Object.keys(headline).length !== 0) {
+                                return (
+                                    <option
+                                        key={headline?.title}
+                                        className="gantt-mode__select-list-option"
+                                        value={index}
+                                        selected={selectedItemInd === index}
+                                    >
+                                        {headline[modeConfig?.modeOption?.uniqueness]}
+                                    </option>
+                                );
+                            }
+                        })}
+                    </select>
+                ) : null}
+                {activeFilters && Object.keys(activeFilters).length !== 0 ? (
+                    <FiltersGantt
+                        activeFilters={activeFilters}
+                        optionsFilter={OPTIONS_FILTER_CONF}
+                        keys={['services', 'stage']}
+                        onChangeFilter={onChangeFilter}
+                    />
+                ) : null}
+            </div>
             <GanttChart
                 timeLine={timeLine}
                 gantt={{ config: ganttConfig, data: ganttData }}

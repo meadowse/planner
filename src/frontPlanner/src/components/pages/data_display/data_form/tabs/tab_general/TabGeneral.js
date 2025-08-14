@@ -946,7 +946,8 @@ function LeftColTab(props) {
                 <Service
                     additClass="services"
                     appTheme={appTheme}
-                    presetValue={presetValues?.services[0]}
+                    // presetValue={presetValues?.services[0]}
+                    presetValue={presetValues?.services}
                     serviceError={errors?.services}
                     disabledElem={dataOperation?.disabledFields?.services}
                     onClick={onClick}
@@ -1058,7 +1059,7 @@ function Deadlines(props) {
 // Блок "Услуга"
 function Service(props) {
     const { additClass, appTheme, presetValue, serviceError, disabledElem, onClick } = props;
-    const [services, setServices] = useState(presetValue ? presetValue[0] : {});
+    const [services, setServices] = useState(presetValue && presetValue.length !== 0 ? presetValue[0] : null);
 
     // console.log(`presetValue: ${JSON.stringify(presetValue, null, 4)}`);
 
@@ -1115,18 +1116,6 @@ function Comment(props) {
     );
 }
 
-function MattermostIntegration({ channelId }) {
-    return (
-        <div className="tab-general__mattermost tab-general__column">
-            <iframe
-                title="Mattermost"
-                src={`https://mm-mpk.ru/mosproektkompleks/channels/${channelId}`}
-                style={{ width: '100%', height: '100%', border: 'none' }}
-            ></iframe>
-        </div>
-    );
-}
-
 export default function TabGeneral() {
     let resultData;
     const theme = localStorage.getItem('appTheme') || 'light';
@@ -1138,9 +1127,9 @@ export default function TabGeneral() {
     );
     const navigate = useNavigate();
 
-    // console.log(
-    //     `TabGeneral data: ${JSON.stringify(data, null, 4)}\ndataOperation: ${JSON.stringify(dataOperation, null, 4)}`
-    // );
+    console.log(
+        `TabGeneral data: ${JSON.stringify(data, null, 4)}\ndataOperation: ${JSON.stringify(dataOperation, null, 4)}`
+    );
 
     // getGeneralDataNew(cardData, dataOperation?.disabledFields);
 
@@ -1201,7 +1190,6 @@ export default function TabGeneral() {
                 onChange={onChange}
                 onChangeByInd={onСhangeByIndex}
             />
-            <MattermostIntegration channelId={data?.channelId} />
         </form>
     );
 }

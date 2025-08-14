@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 
+// Импорт доп.функционала
+import { isArray } from '@helpers/helper';
+
 // Импорт конфигураций
 import { INITIAL_FILTERS, FILTER_HANDLERS_CONF } from '@config/filtersgantt.config';
 
@@ -65,6 +68,10 @@ export const useFiltersGantt = (partition, modeOption, data) => {
     const [filteredData, setFilteredData] = useState(applyFilters(modeOption?.keyData, data, activeFilters) || []);
 
     const OPTIONS_FILTER_CONF = {
+        // services: () => {
+        //     if (modeOption?.keyData === 'contracts')
+        //         return ['Все', ...Array.from(new Set(data?.map(item => item?.services?.title)))];
+        // },
         stage: () => {
             if (modeOption?.keyData === 'contracts')
                 return ['Все', ...Array.from(new Set(data?.map(item => item?.stage?.title)))];

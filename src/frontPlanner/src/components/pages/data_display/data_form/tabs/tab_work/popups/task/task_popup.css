@@ -53,6 +53,30 @@
     outline: none;
 }
 
+.popup__content-contractnum .popup__menu-wrapper {
+    row-gap: none;
+    column-gap: 20px;
+}
+
+.dropdown-menu-search {
+    width: 100%;
+    border: 1px solid #e7e7e7;
+    border-radius: 0.3125rem;
+    padding: 0.25vw;
+}
+
+.dropdown-menu-search__input {
+    width: 100%;
+    outline: none;
+}
+
+.popup__menu-actions {
+    display: flex;
+    align-items: center;
+    /* flex-direction: row-reverse; */
+    column-gap: 10px;
+}
+
 /* Блок "Вид работы" */
 
 .popup__menu-wrapper {
@@ -60,6 +84,7 @@
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     row-gap: 0.625rem;
 }
 

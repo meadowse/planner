@@ -2,7 +2,7 @@
 import './ic_button.css';
 
 export default function IconButton(props) {
-    const { nameClass, idForm, type, text, icon, spanColor, disabled, onClick } = props;
+    const { nameClass, idForm, type, text, icon, spanColor, disabled, onClick, onMouseDown } = props;
     return (
         <button
             className={nameClass}
@@ -10,6 +10,7 @@ export default function IconButton(props) {
             form={idForm ? idForm : null}
             disabled={disabled}
             onClick={onClick}
+            onMouseDown={onMouseDown}
         >
             <img className="icon-btn__image" src={'/img/' + icon} alt="" />
             {text && (

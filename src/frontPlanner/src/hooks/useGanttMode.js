@@ -1,3 +1,4 @@
+// Импорт доп.функционала
 import { getDaysYear, getDaysBetweenTwoDates, getDateFromString, getDateInSpecificFormat } from '@helpers/calendar';
 import { isObject, isArray, getUniqueData, extractSampleData, simplifyData } from '@helpers/helper';
 
@@ -101,11 +102,12 @@ export const useGanttMode = args => {
 
     // Формирование временной шкалы
     function formTimeline() {
-        const timeLine = [];
         let years = [];
 
         // console.log(`partition : ${JSON.stringify(partition, null, 4)}`);
 
+        // Временная шкала
+        const timeLine = [];
         const keyData = modeOption?.keyData ?? partition;
         const DATA_CONF = {
             equipment: () => {
@@ -203,16 +205,14 @@ export const useGanttMode = args => {
 
         const KEYS_DATA_CONF = {
             equipment: item => {
-                // console.log(`sortedDates: ${JSON.stringify(sortedDates, null, 4)}`);
-
-                // const dateLastVerf = sortedDates[1]?.end ?? 'Нет данных';
-                // const dateNextVerf = sortedDates[0]?.end ?? 'Нет данных';
-
+                newItem.moveElemId = item?.serialNumber;
                 // Заголовок задачи
-                newItem.title =
-                    (item?.equipment?.title || 'Название отсутствует') +
-                    String.fromCodePoint(8212) +
-                    (item?.equipment?.model || 'Модель отсутствует');
+                newItem.title = {
+                    name:
+                        `${item?.equipment?.title} ${String.fromCodePoint(8212)}` + ' ' ??
+                        `Название отсутствует ${String.fromCodePoint(8212)}` + ' ',
+                    model: item?.equipment?.model ?? 'Модель отсутствует'
+                };
 
                 // Номер договора
                 newItem.contractNum = item?.equipment?.model;
@@ -241,12 +241,15 @@ export const useGanttMode = args => {
                 // id договора
                 newItem.contractId = item?.contractId;
                 // Заголовок задачи
-                newItem.title =
-                    (item?.contractNum || 'Номер договора отсутствует') +
-                    ` ${String.fromCodePoint(8212)} ` +
-                    (item?.address || 'Адрес отсутствует') +
-                    ` ${String.fromCodePoint(8212)} ` +
-                    (item?.company || 'Заказчик отсутствует');
+                newItem.title = {
+                    contractNum:
+                        `${item?.contractNum} ${String.fromCodePoint(8212)}` + ' ' ??
+                        `Номер договора отсутствует ${String.fromCodePoint(8212)}` + ' ',
+                    address:
+                        `${item?.address} ${String.fromCodePoint(8212)}` + ' ' ??
+                        `Адрес отсутствует ${String.fromCodePoint(8212)}` + ' ',
+                    company: item?.company ?? 'Заказчик отсутствует'
+                };
                 // Номер договора
                 newItem.contractNum = item?.contractNum;
 
@@ -348,7 +351,10 @@ export const useGanttMode = args => {
                 // id договора
                 // newItem.contractId = item?.contractId;
                 // Заголовок задачи
-                newItem.title = item?.employee?.fullName || 'Сотрудник отсутствует';
+                // newItem.title = item?.employee?.fullName || 'Сотрудник отсутствует';
+                newItem.title = {
+                    fullName: item?.employee?.fullName || 'Сотрудник отсутствует'
+                };
                 // Идентификатор пользователя
                 newItem.idEmployee = item?.employee?.id;
                 // Ключ навигации
@@ -356,22 +362,28 @@ export const useGanttMode = args => {
                 // Задачи
                 newItem.tasks = [];
 
+                // Формирование договоров
                 if (item?.contracts && item?.contracts.length !== 0) {
                     item?.contracts.forEach(contract => {
-                        taskItem.moveElemId = +contract?.contractId;
+                        taskItem.moveElemId = `${contract?.contractId}-${Date.now() + Math.random()}`;
+                        // taskItem.moveElemId = +contract?.contractId;
                         // id договора
                         taskItem.contractId = +contract?.contractId;
                         // Заголовок задачи
-                        taskItem.title =
-                            (contract?.contractNum || 'Номер договора отсутствует') +
-                            ` ${String.fromCodePoint(8212)} ` +
-                            (contract?.address || 'Адрес отсутствует') +
-                            ` ${String.fromCodePoint(8212)} ` +
-                            (contract?.company || 'Заказчик отсутствует');
+                        taskItem.title = {
+                            contractNum:
+                                `${contract?.contractNum} ${String.fromCodePoint(8212)}` + ' ' ??
+                                `Номер договора отсутствует ${String.fromCodePoint(8212)}` + ' ',
+                            address:
+                                `${contract?.address} ${String.fromCodePoint(8212)}` + ' ' ??
+                                `Адрес отсутствует ${String.fromCodePoint(8212)}` + ' ',
+                            company: contract?.company || 'Заказчик отсутствует'
+                        };
                         // Ключ навигации
                         taskItem.navKey = 'contract';
                         // Номер договора
-                        taskItem.contractNum = contract?.contractNum;
+                        // taskItem.contractNum = contract?.contractNum;
+                        taskItem.contractNum = `${contract?.contractNum}-${Date.now() + Math.random()}`;
                         // Задний фон
                         taskItem.bgColorTask = contract?.stage?.color;
 
@@ -379,86 +391,89 @@ export const useGanttMode = args => {
                         taskItem.dateOfStart = contract?.dateOfStart?.value;
                         taskItem.dateOfEnding = contract?.dateOfEnding?.value;
 
-                        taskItem.tasks =
-                            contract?.tasks && contract?.tasks.length !== 0
-                                ? contract?.tasks.map((task, ind) => {
-                                      const assignedUsersData = [];
-                                      let users = [];
+                        taskItem.tasks = [];
 
-                                      if (task?.director && task?.executor) {
-                                          if (
-                                              Object.keys(task?.director).length !== 0 &&
-                                              Object.keys(task?.executor).length !== 0
-                                          ) {
-                                              users = [
-                                                  ...(Object?.values(task?.director) || null),
-                                                  ...(Object?.values(task?.executor) || null)
-                                              ];
-                                          }
-                                      }
+                        if (contract?.tasks && contract?.tasks.length !== 0) {
+                            contract?.tasks.forEach((task, ind) => {
+                                if (item?.employee?.id === task?.executor?.mmId) {
+                                    const assignedUsersData = [];
+                                    let users = [];
 
-                                      if (users.length !== 0) {
-                                          const mmIdDirector = task?.director?.mmId;
-                                          const mmIdExecutor = task?.executor?.mmId;
+                                    if (task?.director && task?.executor) {
+                                        if (
+                                            Object.keys(task?.director).length !== 0 &&
+                                            Object.keys(task?.executor).length !== 0
+                                        ) {
+                                            users = [
+                                                ...(Object?.values(task?.director) || null),
+                                                ...(Object?.values(task?.executor) || null)
+                                            ];
+                                        }
+                                    }
 
-                                          if (mmIdDirector === mmIdExecutor) {
-                                              //
-                                              assignedUsersData.push({
-                                                  mmId: task?.executor?.mmId || task?.director?.mmId,
-                                                  authorizedUser:
-                                                      authorizedUserId === mmIdExecutor &&
-                                                      authorizedUserId === mmIdDirector
-                                                          ? true
-                                                          : false,
-                                                  fullName: task?.executor?.fullName || '',
-                                                  role: 'Исполнитель / Постановщик',
-                                                  photo:
-                                                      task?.executor?.mmId || task?.director?.mmId
-                                                          ? `https://mm-mpk.ru/api/v4/users/${
-                                                                task?.executor?.mmId || task?.director?.mmId
-                                                            }/image`
-                                                          : '/img/user.svg'
-                                              });
-                                          } else {
-                                              // Добавление Постановщика
-                                              assignedUsersData.push({
-                                                  mmId: task?.director?.mmId,
-                                                  authorizedUser: mmIdDirector === authorizedUserId ? true : false,
-                                                  fullName: task?.director?.fullName || '',
-                                                  role: 'Постановщик',
-                                                  photo: task?.director?.mmId
-                                                      ? `https://mm-mpk.ru/api/v4/users/${task?.director?.mmId}/image`
-                                                      : '/img/user.svg'
-                                              });
+                                    if (users.length !== 0) {
+                                        const mmIdDirector = task?.director?.mmId;
+                                        const mmIdExecutor = task?.executor?.mmId;
 
-                                              // Добавление Исполнителя
-                                              assignedUsersData.push({
-                                                  mmId: task?.executor?.mmId,
-                                                  authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
-                                                  fullName: task?.executor?.fullName || '',
-                                                  role: 'Исполнитель',
-                                                  photo: task?.executor?.mmId
-                                                      ? `https://mm-mpk.ru/api/v4/users/${task?.executor?.mmId}/image`
-                                                      : '/img/user.svg'
-                                              });
-                                          }
-                                      }
+                                        if (mmIdDirector === mmIdExecutor) {
+                                            //
+                                            assignedUsersData.push({
+                                                mmId: task?.executor?.mmId || task?.director?.mmId,
+                                                authorizedUser:
+                                                    authorizedUserId === mmIdExecutor &&
+                                                    authorizedUserId === mmIdDirector
+                                                        ? true
+                                                        : false,
+                                                fullName: task?.executor?.fullName || '',
+                                                role: 'Исполнитель / Постановщик',
+                                                photo:
+                                                    task?.executor?.mmId || task?.director?.mmId
+                                                        ? `https://mm-mpk.ru/api/v4/users/${
+                                                              task?.executor?.mmId || task?.director?.mmId
+                                                          }/image`
+                                                        : '/img/user.svg'
+                                            });
+                                        } else {
+                                            // Добавление Постановщика
+                                            assignedUsersData.push({
+                                                mmId: task?.director?.mmId,
+                                                authorizedUser: mmIdDirector === authorizedUserId ? true : false,
+                                                fullName: task?.director?.fullName || '',
+                                                role: 'Постановщик',
+                                                photo: task?.director?.mmId
+                                                    ? `https://mm-mpk.ru/api/v4/users/${task?.director?.mmId}/image`
+                                                    : '/img/user.svg'
+                                            });
 
-                                      return {
-                                          moveElemId: +contract?.contractId + (ind + 1),
-                                          contractId: +contract?.contractId,
-                                          title: task?.title || 'Нет данных',
-                                          contractNum: `${contract?.contractNum}_${ind + 1}`,
-                                          navKey: 'task',
-                                          done: +task?.done,
-                                          dateOfStart: task?.dateOfStart,
-                                          dateOfEnding: task?.dateOfEnding,
-                                          //   bgColorTask: contract?.stage?.color,
-                                          bgColorTask: +task?.done ? '#8ac926' : '#d53032',
-                                          assignedUsers: assignedUsersData
-                                      };
-                                  })
-                                : [];
+                                            // Добавление Исполнителя
+                                            assignedUsersData.push({
+                                                mmId: task?.executor?.mmId,
+                                                authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
+                                                fullName: task?.executor?.fullName || '',
+                                                role: 'Исполнитель',
+                                                photo: task?.executor?.mmId
+                                                    ? `https://mm-mpk.ru/api/v4/users/${task?.executor?.mmId}/image`
+                                                    : '/img/user.svg'
+                                            });
+                                        }
+                                    }
+
+                                    taskItem.tasks.push({
+                                        moveElemId: +contract?.contractId + (ind + 1),
+                                        contractId: +contract?.contractId,
+                                        title: task?.title || 'Нет данных',
+                                        contractNum: `${contract?.contractNum}_${ind + 1}`,
+                                        navKey: 'task',
+                                        done: +task?.done,
+                                        dateOfStart: task?.dateOfStart,
+                                        dateOfEnding: task?.dateOfEnding,
+                                        //   bgColorTask: contract?.stage?.color,
+                                        bgColorTask: +task?.done ? '#8ac926' : '#d53032',
+                                        assignedUsers: assignedUsersData
+                                    });
+                                }
+                            });
+                        }
                         // console.log(`sections\ntaskItem: ${JSON.stringify(taskItem, null, 4)}`);
                         newItem.tasks.push(taskItem);
                         taskItem = {};

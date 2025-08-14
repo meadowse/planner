@@ -8,13 +8,13 @@ import AddTaskToast from '@generic/elements/notifications/AddTaskToast';
 import Preloader from '../../../../../auxiliary_pages/loader/Preloader';
 
 // Импорт контекста
-import { SocketContext } from '../../../../../../contexts/socket.context';
+// import { SocketContext } from '../../../../../../contexts/socket.context';
 
 // Импорт стилей
 import './tab_worknew.css';
 
 export default function TabWorkNew() {
-    const socket = useContext(SocketContext);
+    // const socket = useContext(SocketContext);
     const { idContract, partition } = useOutletContext();
     const { uploadedData } = useLoaderData();
 
@@ -22,16 +22,16 @@ export default function TabWorkNew() {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        socket.on('taskAssigned', taskData => {
-            toast.info(<AddTaskToast task={taskData} />, { className: 'toast', position: 'bottom-right', icon: false });
-            // alert(` Вам назначена новая задача: "${taskData.task}"`);
-        });
+    // useEffect(() => {
+    //     socket.on('taskAssigned', taskData => {
+    //         toast.info(<AddTaskToast task={taskData} />, { className: 'toast', position: 'bottom-right', icon: false });
+    //         // alert(` Вам назначена новая задача: "${taskData.task}"`);
+    //     });
 
-        return () => {
-            socket.off('taskAssigned');
-        };
-    }, []);
+    //     return () => {
+    //         socket.off('taskAssigned');
+    //     };
+    // }, []);
 
     useEffect(() => {
         // console.log(`loaded data: ${JSON.stringify(uploadedData, null, 4)}`);

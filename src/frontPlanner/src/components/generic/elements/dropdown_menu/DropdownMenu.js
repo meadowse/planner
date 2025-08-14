@@ -10,7 +10,7 @@ import { useDropdownMenu } from '@hooks/useDropdownMenu';
 import './dropdown_menu.css';
 
 export default function DropdownMenu(props) {
-    const { additClass, icon, nameMenu, disabledElem, option } = props;
+    const { additClass, icon, nameMenu, disabledElem } = props;
     const { dropdownState, itemMenu, icBtnRef, info, setDropdownState, onItemMenuClick } = useDropdownMenu(props);
 
     // console.log(`DropdownMenu info: ${JSON.stringify(info, null, 4)}`);
