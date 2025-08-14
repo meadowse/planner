@@ -967,6 +967,7 @@ def getVacations(request):
                 LEFT JOIN T302 ON T302.F5574 = T3.ID
                 WHERE T3.F5383 = 1 AND
                 (T302.F5577 = 'отпуск' OR T302.F5577 = 'отпуск без содержания' OR T302.F5577 = 'удаленная работа' OR T302.F5577 = 'работа в выходной' OR T302.F5577 = 'отсутствие на рабочем месте' OR T302.F5577 = 'больничный' OR T302.F5577 IS NULL)
+                ORDER BY department, employeeFI, vacation
                 """
                 cur.execute(sql)
                 result = cur.fetchall()
