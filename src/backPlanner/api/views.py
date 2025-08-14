@@ -527,6 +527,10 @@ def addTask(request):
             sql = f"""INSERT INTO T218 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
             cur.execute(sql)
             con.commit()
+            sql = f'select F4644 from T212 where ID = {contractId}'
+            cur.execute(sql)
+            idChannel = cur.fetchone()
+            print(idChannel)
         return JsonResponse({'status': 'Ok'}, status=200)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
@@ -938,6 +942,43 @@ def getDataUser(request):
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить данные по сотруднику с id {employeeId}: {ex}")
+                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+def getVacations(request):
+    if request.method == 'POST':
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+            cur = con.cursor()
+            try:
+                sql = """
+                SELECT
+                T5.F26 AS department,
+                T3.ID AS id,
+                T3.F16 AS mmId,
+                T3.F4886 AS employeeFI,
+                T4.F7 AS post,
+                T302.F5577 AS vacation,
+                T302.F5579 AS vacationStart,
+                T302.F5581 AS vacationEnd
+                FROM T3
+                LEFT JOIN T4 ON T4.ID = T3.F11
+                LEFT JOIN T5 ON T5.ID = T3.F27
+                LEFT JOIN T302 ON T302.F5574 = T3.ID
+                WHERE T3.F5383 = 1 AND
+                (T302.F5577 = 'отпуск' OR T302.F5577 = 'отпуск без содержания' OR T302.F5577 = 'удаленная работа' OR T302.F5577 = 'работа в выходной' OR T302.F5577 = 'отсутствие на рабочем месте' OR T302.F5577 = 'больничный' OR T302.F5577 IS NULL)
+                """
+                cur.execute(sql)
+                result = cur.fetchall()
+                columns = (
+                    'department', 'id', 'mmId', 'employeeFI', 'post', 'vacation', 'vacationStart', 'vacationEnd')
+                json_result = [
+                    {col: value for col, value in zip(columns, row)}
+                    for row in result
+                ]  # Создаем список словарей с сериализацией значений
+                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+            except Exception as ex:
+                print(f"НЕ удалось получить данные по календарю отпусков")
                 return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
