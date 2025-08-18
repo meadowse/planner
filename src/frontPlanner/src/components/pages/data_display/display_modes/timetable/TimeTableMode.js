@@ -34,12 +34,12 @@ function TimeTableContent({ timelineConfig }) {
 }
 
 export default function TimeTableMode(props) {
-    const [timelineConfig, setTimeLineConfig] = useState({ option: 'month', year: new Date().getFullYaer() });
+    // const [timelineConfig, setTimeLineConfig] = useState({ option: 'month', year: new Date()?.getFullYaer() });
 
     return (
         <div class="timetable-mode">
             <TimeTableHeader />
-            <TimeTableContent timelineConfig={timelineConfig} />
+            <TimeTableContent />
         </div>
     );
 }

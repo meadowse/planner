@@ -20,7 +20,7 @@
     {
         "key": "tasks",
         "title": "Мои задачи и договоры",
-        "path": "tasks/",
+        "path": "personal/",
         "imgName": "tasks"
     }
 ]

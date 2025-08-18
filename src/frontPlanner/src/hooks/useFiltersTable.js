@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import {
     DEFAULT_FILTERS,
     INITIAL_FILTERS,
+    KEYS_FOR_STORAGE,
     OPTIONS_FILTER_CONF,
     FILTER_HANDLERS_CONF
 } from '@config/filterstable.config';
@@ -14,12 +15,18 @@ function initializeFilters(data, keys) {
 
     if (keys && keys.length !== 0) {
         keys.forEach(key => {
-            if (key in OPTIONS_FILTER_CONF && key in INITIAL_FILTERS) {
+            if (key in DEFAULT_FILTERS) initFilters[key] = DEFAULT_FILTERS[key];
+        });
+
+        Object.keys(INITIAL_FILTERS).map(key => {
+            if (initFilters[key]) {
                 const options = OPTIONS_FILTER_CONF[key](data);
+                console.log(`options[${key}]: ${JSON.stringify(options, null, 4)}`);
                 if (options && options.length !== 0) {
-                    if (options.includes(INITIAL_FILTERS[key])) initFilters[key] = INITIAL_FILTERS[key];
+                    if (!options.includes(INITIAL_FILTERS[key])) initFilters[key] = DEFAULT_FILTERS[key];
+                    else initFilters[key] = INITIAL_FILTERS[key];
                 }
-            } else initFilters[key] = DEFAULT_FILTERS[key];
+            }
         });
     }
 
@@ -38,7 +45,7 @@ function applyFilters(data, filters) {
         })
     );
 
-    console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
+    // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
 
     return filteredData;
 }
@@ -46,13 +53,23 @@ function applyFilters(data, filters) {
 export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleState) => {
     const [activeFilters, setActiveFilters] = useState({});
     const [filteredData, setFilteredData] = useState([]);
+    const { keys, mode, option, partition, dataOperations } = modeConfig;
+
+    const savedFilters = JSON.parse(localStorage.getItem('listmode-filters')) ?? {};
 
     // Сброс фильтров
     const onResetFilters = () => {
         setToggleState(!toggleState);
 
-        setActiveFilters(initializeFilters(tableData, modeConfig?.keys));
-        setFilteredData(applyFilters(tableData, initializeFilters(tableData, modeConfig?.keys)));
+        if (partition in KEYS_FOR_STORAGE) {
+            const keyStorage = KEYS_FOR_STORAGE[partition](mode?.key, option?.key);
+
+            savedFilters[keyStorage] = initializeFilters(tableData, keys);
+            localStorage.setItem('listmode-filters', JSON.stringify(savedFilters));
+
+            setActiveFilters(savedFilters[keyStorage]);
+            setFilteredData(applyFilters(tableData, savedFilters[keyStorage]));
+        }
     };
 
     // Изменение фильтров
@@ -60,16 +77,34 @@ export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleSta
         const tempFilters = Object.assign({}, activeFilters);
         tempFilters[e.target.id] = e.target.value;
 
-        // console.log(`tempFilters: ${JSON.stringify(tempFilters, null, 4)}`);
+        if (partition in KEYS_FOR_STORAGE) {
+            const keyStorage = KEYS_FOR_STORAGE[partition](mode?.key, option?.key);
 
-        setActiveFilters(tempFilters);
-        setFilteredData(applyFilters(tableData, tempFilters));
+            savedFilters[keyStorage] = tempFilters;
+            setActiveFilters(savedFilters[keyStorage]);
+            setFilteredData(applyFilters(tableData, savedFilters[keyStorage]));
+
+            localStorage.setItem('listmode-filters', JSON.stringify(savedFilters));
+        }
     };
 
     useEffect(() => {
         // console.log(`initFilters: ${JSON.stringify(initializeFilters(modeConfig?.keys), null, 4)}`);
-        setActiveFilters(initializeFilters(tableData, modeConfig?.keys));
-        setFilteredData(applyFilters(tableData, initializeFilters(tableData, modeConfig?.keys)));
+        console.log(`modeConfig: ${JSON.stringify(modeConfig, null, 4)}`);
+        // console.log(`savedFilters: ${JSON.stringify(savedFilters, null, 4)}`);
+
+        if (partition in KEYS_FOR_STORAGE) {
+            const keyStorage = KEYS_FOR_STORAGE[partition](mode?.key, option?.key);
+            console.log(`keyStorage: ${keyStorage}`);
+
+            if (!savedFilters[keyStorage] || Object.keys(savedFilters[keyStorage]).length === 0) {
+                savedFilters[keyStorage] = initializeFilters(tableData, keys);
+                localStorage.setItem('listmode-filters', JSON.stringify(savedFilters));
+            }
+
+            setActiveFilters(savedFilters[keyStorage]);
+            setFilteredData(applyFilters(tableData, savedFilters[keyStorage]));
+        }
     }, [modeConfig]);
 
     return { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter, onResetFilters };

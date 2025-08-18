@@ -282,7 +282,12 @@ export default function UserInfoNew() {
                                                 testData={filteredData || []}
                                                 modeConfig={{
                                                     keys: userInfo.valsToDisplay,
-                                                    partition: userInfo.tab?.key,
+                                                    // partition: userInfo.tab?.key,
+                                                    partition: 'user',
+                                                    mode: {
+                                                        key: 'listTasks'
+                                                    },
+                                                    option: userInfo?.tabOption,
                                                     dataOperations: userInfo.dataOperations,
                                                     idContract: null
                                                 }}
@@ -308,7 +313,12 @@ export default function UserInfoNew() {
                                                 testData={filteredData || []}
                                                 modeConfig={{
                                                     keys: userInfo.valsToDisplay,
-                                                    partition: userInfo.tab?.key,
+                                                    // partition: userInfo.tab?.key,
+                                                    partition: 'user',
+                                                    mode: {
+                                                        key: 'listContracts'
+                                                    },
+                                                    option: userInfo?.tabOption,
                                                     dataOperations: userInfo.dataOperations,
                                                     idContract: null
                                                 }}

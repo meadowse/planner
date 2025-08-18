@@ -119,17 +119,19 @@ const loadData = async partition => {
         company: async () => {
             const endpoints = [
                 `${window.location.origin}/structure_company.json`,
-                `${window.location.origin}/api/employee/`
+                `${window.location.origin}/api/employee/`,
+                `${window.location.origin}/api/getVacations/`
             ];
             const resolvedData = {};
 
             await axios
                 .all(endpoints.map(endpoint => dataLoader(endpoint)))
                 .then(
-                    axios.spread((structureData, employeesData) => {
+                    axios.spread((structureData, employeesData, vacationsData) => {
                         if (structureData && structureData.length !== 0) resolvedData.structure = structureData;
                         if (employeesData && employeesData.length !== 0)
                             resolvedData.employees = formData(employeesData, partition, 'employees');
+                        if (vacationsData && vacationsData.length !== 0) resolvedData.vacationsData = vacationsData;
                     })
                 )
                 .catch(error => {
@@ -202,8 +204,8 @@ const getDisplayModes = partition => {
             const displayModes = COMPANY_DATA_CONF?.displayModes;
             return displayModes && displayModes.length !== 0 ? displayModes : [];
         },
-        // Задачи
-        tasks: () => {
+        // Персональные Задачи и Договоры
+        personal: () => {
             const displayModes = TASKS_DATA_CONF?.displayModes;
             return displayModes && displayModes.length !== 0 ? displayModes : [];
         }
@@ -262,8 +264,8 @@ const getDataOperations = partition => {
             const dataOperations = COMPANY_DATA_CONF?.dataOperations;
             return dataOperations && dataOperations.length !== 0 ? dataOperations : [];
         },
-        // Задачи
-        tasks: () => {
+        // Персональные Задачи и Договоры
+        personal: () => {
             const dataOperations = TASKS_DATA_CONF?.dataOperations;
             return dataOperations && dataOperations.length !== 0 ? dataOperations : [];
         }

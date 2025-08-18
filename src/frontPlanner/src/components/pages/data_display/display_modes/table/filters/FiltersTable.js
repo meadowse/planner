@@ -10,37 +10,113 @@ const FILTERS_CONF = {
     // Текстовые поля
     contractNum: (_, activeOption, toggleState, onChange) => {
         return (
-            <InputTextFilter id="contractNum" placeholder="Номер договора" toggle={toggleState} onChange={onChange} />
+            <InputTextFilter
+                id="contractNum"
+                placeholder="Номер договора"
+                defaultVal={activeOption}
+                toggle={toggleState}
+                onChange={onChange}
+            />
         );
     },
     address: (_, activeOption, toggleState, onChange) => {
-        return <InputTextFilter id="address" placeholder="Адрес" toggle={toggleState} onChange={onChange} />;
+        return (
+            <InputTextFilter
+                id="address"
+                placeholder="Адрес"
+                defaultVal={activeOption}
+                toggle={toggleState}
+                onChange={onChange}
+            />
+        );
     },
     company: (_, activeOption, toggleState, onChange) => {
-        return <InputTextFilter id="company" placeholder="Заказчик" toggle={toggleState} onChange={onChange} />;
+        return (
+            <InputTextFilter
+                id="company"
+                placeholder="Заказчик"
+                defaultVal={activeOption}
+                toggle={toggleState}
+                onChange={onChange}
+            />
+        );
     },
     group: (_, activeOption, toggleState, onChange) => {
-        return <InputTextFilter id="group" placeholder="Группа" toggle={toggleState} onChange={onChange} />;
+        return (
+            <InputTextFilter
+                id="group"
+                placeholder="Группа"
+                defaultVal={activeOption}
+                toggle={toggleState}
+                onChange={onChange}
+            />
+        );
     },
     departure: (_, activeOption, toggleState, onChange) => {
-        return <InputTextFilter id="departure" placeholder="00.00.00" toggle={toggleState} onChange={onChange} />;
+        return (
+            <InputTextFilter
+                id="departure"
+                placeholder="00.00.00"
+                defaultVal={activeOption}
+                toggle={toggleState}
+                onChange={onChange}
+            />
+        );
     },
     pathToFolder: (_, activeOption, toggleState, onChange) => {
         return (
-            <InputTextFilter id="pathToFolder" placeholder="Путь к папке" toggle={toggleState} onChange={onChange} />
+            <InputTextFilter
+                id="pathToFolder"
+                placeholder="Путь к папке"
+                defaultVal={activeOption}
+                toggle={toggleState}
+                onChange={onChange}
+            />
         );
     },
     car: (_, activeOption, toggleState, onChange) => {
-        return <InputTextFilter id="car" placeholder="Марка" toggle={toggleState} onChange={onChange} />;
+        return (
+            <InputTextFilter
+                id="car"
+                placeholder="Марка"
+                defaultVal={activeOption}
+                toggle={toggleState}
+                onChange={onChange}
+            />
+        );
     },
     subsection: (_, activeOption, toggleState, onChange) => {
-        return <InputTextFilter id="subsection" placeholder="Подразделение" toggle={toggleState} onChange={onChange} />;
+        return (
+            <InputTextFilter
+                id="subsection"
+                placeholder="Подразделение"
+                defaultVal={activeOption}
+                toggle={toggleState}
+                onChange={onChange}
+            />
+        );
     },
     phone: (_, activeOption, toggleState, onChange) => {
-        return <InputTextFilter id="phone" placeholder="Телефон" toggle={toggleState} onChange={onChange} />;
+        return (
+            <InputTextFilter
+                id="phone"
+                placeholder="Телефон"
+                defaultVal={activeOption}
+                toggle={toggleState}
+                onChange={onChange}
+            />
+        );
     },
     email: (_, activeOption, toggleState, onChange) => {
-        return <InputTextFilter id="email" placeholder="Почта" toggle={toggleState} onChange={onChange} />;
+        return (
+            <InputTextFilter
+                id="email"
+                placeholder="Почта"
+                defaultVal={activeOption}
+                toggle={toggleState}
+                onChange={onChange}
+            />
+        );
     },
     // Выпадающие списки
     stage: (options, activeOption, toggleState, onChange) => {
@@ -168,8 +244,9 @@ const FILTERS_CONF = {
 
 // Компонент текстового поля
 function InputTextFilter(props) {
-    const { id, placeholder, toggle, onChange } = props;
-    const [enteredText, setEnteredText] = useState('');
+    const { id, placeholder, defaultVal, toggle, onChange } = props;
+    // console.log(`InputTextFilter[${id}] defaultVal: ${defaultVal}`);
+    const [enteredText, setEnteredText] = useState(defaultVal ?? null);
 
     function onChangeText(e) {
         onChange(e);
@@ -185,7 +262,8 @@ function InputTextFilter(props) {
             id={id}
             className="table-mode__filters-inpt-filter"
             type="text"
-            value={enteredText}
+            // value={enteredText}
+            value={defaultVal}
             placeholder={placeholder}
             onChange={e => onChangeText(e)}
         />
@@ -224,11 +302,11 @@ function DropDownFilter(props) {
 }
 
 function Cell(props) {
-    const { keyVal, options, activeFilters, toggleState, onChangeFilter } = props;
+    const { keyVal, options, activeFilter, toggleState, onChangeFilter } = props;
 
     return FILTERS_CONF[keyVal] ? (
         <td className="table-mode__thead-td">
-            {FILTERS_CONF[keyVal](options, activeFilters[keyVal], toggleState, onChangeFilter)}
+            {FILTERS_CONF[keyVal](options, activeFilter, toggleState, onChangeFilter)}
         </td>
     ) : (
         <td className="table-mode__thead-td"></td>
@@ -253,7 +331,7 @@ export default function FiltersTable(props) {
                             key={key}
                             keyVal={key}
                             options={options}
-                            activeFilters={activeFilters}
+                            activeFilter={activeFilters[key]}
                             toggleState={toggleState}
                             onChangeFilter={onChangeFilter}
                         />

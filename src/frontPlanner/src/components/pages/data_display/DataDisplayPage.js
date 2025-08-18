@@ -215,8 +215,8 @@ function HeaderBottom(props) {
                 </div>
             );
         },
-        // Задачи
-        tasks: () => {
+        // Персональные Задачи и Договоры
+        personal: () => {
             return (
                 <div className="page-section-header__bottom">
                     <div className="page-section-header__bottom-left">
@@ -456,6 +456,8 @@ export default function DataDisplayPage({ partition }) {
                                                     testData={tableData}
                                                     modeConfig={{
                                                         keys: valsToDisplay,
+                                                        mode: mode,
+                                                        option: modeOption[mode?.key],
                                                         partition: partition,
                                                         dataOperations: dataOperations
                                                     }}
@@ -537,6 +539,8 @@ export default function DataDisplayPage({ partition }) {
                                                     testData={tableData}
                                                     modeConfig={{
                                                         keys: valsToDisplay,
+                                                        mode: mode,
+                                                        option: modeOption[mode?.key],
                                                         partition: partition,
                                                         dataOperations: dataOperations
                                                     }}
@@ -571,6 +575,8 @@ export default function DataDisplayPage({ partition }) {
                                                     testData={filteredData}
                                                     modeConfig={{
                                                         keys: valsToDisplay,
+                                                        mode: mode,
+                                                        option: modeOption[mode?.key],
                                                         // contractsIDs: resolvedData?.contractsIDs,
                                                         partition: partition,
                                                         dataOperations: dataOperations
@@ -603,6 +609,8 @@ export default function DataDisplayPage({ partition }) {
                                                     testData={filteredData}
                                                     modeConfig={{
                                                         keys: valsToDisplay,
+                                                        mode: mode,
+                                                        option: modeOption[mode?.key],
                                                         partition: partition,
                                                         dataOperations: dataOperations
                                                     }}

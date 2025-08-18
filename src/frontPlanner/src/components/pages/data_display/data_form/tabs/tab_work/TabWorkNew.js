@@ -53,7 +53,10 @@ export default function TabWorkNew() {
                         testData={works.sort((a, b) => parseInt(a?.number) - parseInt(b?.number))}
                         modeConfig={{
                             keys: ['number', 'typeWork', 'deadline', 'dateDone', 'done'],
-                            partition: partition,
+                            mode: {
+                                key: 'listWorks'
+                            },
+                            partition: 'dataform',
                             path: `${window.location.pathname}`,
                             dataOperations: [],
                             idContract: idContract
@@ -64,7 +67,10 @@ export default function TabWorkNew() {
                         testData={tasks.sort((a, b) => parseInt(a?.id) - parseInt(b?.id))}
                         modeConfig={{
                             keys: ['task', 'director', 'executor', 'deadlineTask', 'done'],
-                            partition: partition,
+                            mode: {
+                                key: 'listTasks'
+                            },
+                            partition: 'dataform',
                             path: `${window.location.pathname}`,
                             dataOperations: [],
                             idContract: idContract

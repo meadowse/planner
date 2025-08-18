@@ -88,12 +88,12 @@ const ROUTES_FOR_AUTH = [
                         element: <DataDisplayPage partition="company" additClass="company" />
                     },
                     {
-                        path: 'tasks/*',
+                        path: 'personal/*',
                         loader: () => {
                             return defer({ uploadedData: DataDisplayService.loadData('tasks') });
                         },
                         // shouldRevalidate: () => false,
-                        element: <DataDisplayPage partition="tasks" additClass="tasks" />
+                        element: <DataDisplayPage partition="personal" additClass="tasks" />
                     },
                     // {
                     //     path: 'user/',

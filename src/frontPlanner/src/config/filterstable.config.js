@@ -28,6 +28,15 @@ export const INITIAL_FILTERS = {
     done: 'Не завершено'
 };
 
+export const KEYS_FOR_STORAGE = {
+    department: (keyMode, keyOption) => `department${keyMode ? `-${keyMode}` : ''}${keyOption ? `_${keyOption}` : ''}`,
+    equipment: (keyMode, keyOption) => `equipment${keyMode ? `-${keyMode}` : ''}${keyOption ? `_${keyOption}` : ''}`,
+    company: (keyMode, keyOption) => `company${keyMode ? `-${keyMode}` : ''}${keyOption ? `_${keyOption}` : ''}`,
+    personal: (keyMode, keyOption) => `personal${keyMode ? `-${keyMode}` : ''}${keyOption ? `_${keyOption}` : ''}`,
+    user: (keyMode, keyOption) => `user${keyMode ? `-${keyMode}` : ''}${keyOption ? `_${keyOption}` : ''}`,
+    dataform: (keyMode, keyOption) => `dataform${keyMode ? `-${keyMode}` : ''}${keyOption ? `_${keyOption}` : ''}`
+};
+
 export const OPTIONS_FILTER_CONF = {
     services: data => {
         const newData = [];
@@ -227,13 +236,7 @@ export const FILTER_HANDLERS_CONF = new Map([
     // ['subsection', (filterVal, subsection) => subsection?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['phone', (filterVal, phone) => phone?.toLowerCase().includes(filterVal?.toLowerCase())],
     // ['email', (filterVal, email) => email?.toLowerCase().includes(filterVal?.toLowerCase())],
-    [
-        'email',
-        (filterVal, email) => {
-            console.log(`FILTER_HANDLERS_CONF\nfilterVal: ${filterVal}\nemail: ${email}`);
-            return email?.toLowerCase().includes(filterVal?.toLowerCase());
-        }
-    ],
+    ['email', (filterVal, email) => email?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['typeWork', (filterVal, typeWork) => typeWork?.toLowerCase().includes(filterVal?.toLowerCase())],
     [
         'stage',
