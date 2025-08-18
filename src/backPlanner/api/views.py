@@ -617,7 +617,6 @@ def auth(request):
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
- AND T212.ID >= 3000
 @csrf_exempt
 def getAllDepartmentsStaffAndTasks(request):
     with (firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con):
