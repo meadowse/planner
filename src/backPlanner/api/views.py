@@ -617,9 +617,10 @@ def auth(request):
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
+ AND T212.ID >= 3000
 @csrf_exempt
 def getAllDepartmentsStaffAndTasks(request):
-    with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+    with (firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con):
         cur = con.cursor()
         try:
             sql = """
@@ -642,7 +643,7 @@ def getAllDepartmentsStaffAndTasks(request):
             T212.F4610 AS dateOfStart,
             T212.F4566 AS dateOfEnding,
             T212.F4544 AS contractStage,
-            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886, '*') AS tasks
+            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886 || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END, '*') AS tasks
             FROM T5
             LEFT JOIN T3 ON T5.ID = T3.F27
             LEFT JOIN T253 ON T3.ID = T253.F5022
@@ -666,7 +667,8 @@ def getAllDepartmentsStaffAndTasks(request):
                 obj.update(section)
                 obj.pop('sectionId')
                 obj.pop('sectionName')
-                employee = {'employee': {'fullName': obj.get('employeeName'), 'id': obj.get('employeeId'), 'photo': obj.get('photo')}}
+                employee = {'employee': {'fullName': obj.get('employeeName'), 'id': obj.get('employeeId'),
+                                         'photo': obj.get('photo')}}
                 obj.update(employee)
                 obj.pop('employeeName')
                 obj.pop('employeeId')
@@ -694,12 +696,27 @@ def getAllDepartmentsStaffAndTasks(request):
                                 list2[0].strip()
                                 if list2[0] == '' and list2[1] == '' and list2[2] == '':
                                     continue
-                                else:
+                                elif list2[9] == '':
                                     contracts.get('contracts')[count].get('tasks').append(
-                                        {'id': list2[6],'title': list2[0], 'dateOfStart': list2[1],
+                                        {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
                                          'dateOfEnding': list2[2], 'done': list2[3],
                                          'director': {'mmId': list2[4], 'fullName': list2[7]},
-                                         'executor': {'mmId': list2[5], 'fullName': list2[8]}})
+                                         'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'tasks': []})
+                            for allData in List:
+                                list2 = allData.split(';')
+                                list2[0].strip()
+                                if list2[0] == '' and list2[1] == '' and list2[2] == '':
+                                    continue
+                                elif list2[9] != '':
+                                    i = 0
+                                    for item in contracts.get('contracts')[count].get('tasks'):
+                                        if list2[9] == item.get('id'):
+                                            contracts.get('contracts')[count].get('tasks')[i].get('tasks').append(
+                                                {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
+                                                 'dateOfEnding': list2[2], 'done': list2[3],
+                                                 'director': {'mmId': list2[4], 'fullName': list2[7]},
+                                                 'executor': {'mmId': list2[5], 'fullName': list2[8]}})
+                                        i += 1
                 obj.update(contracts)
             return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
         except Exception as ex:
