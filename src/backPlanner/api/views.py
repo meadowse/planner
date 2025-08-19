@@ -33,7 +33,7 @@ def getAgreements(request):
         responsible.F4886 AS responsible,
         manager.F16 AS idManager,
         manager.F4886 AS manager,
-        LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886, '*') AS tasks
+        LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886 || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END, '*') AS tasks
         FROM T212
         LEFT JOIN T237 ON T212.F4948 = T237.ID
         LEFT JOIN T205 ON T212.F4540 = T205.ID
@@ -46,7 +46,7 @@ def getAgreements(request):
         LEFT JOIN T218 ON T218.F4691 = T212.ID
         LEFT JOIN T3 director ON T218.F4693 = director.ID
         LEFT JOIN T3 executor ON T218.F4694 = executor.ID
-        WHERE T212.ID > 3050
+        -- WHERE T212.ID > 3050
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15
         """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
@@ -89,16 +89,19 @@ def getAgreements(request):
                 responsible = {'responsible': {'idResponsible': obj.get('idResponsible'), 'fullName': responsible}}
             obj.update(responsible)
             obj.pop('idResponsible')
-            dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
+            if obj.get('dateOfStart') is not None:
+                dateOfStart = {'dateOfStart': {'title': '', 'value': datetime.datetime.strftime(obj.get('dateOfStart'), '%Y/%m/%d')}}
+            else:
+                dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
             obj.update(dateOfStart)
             dateOfEnding = obj.get('dateOfEnding')
             if dateOfEnding is not None:
                 if status == 'В работе' and dateOfEnding < today:
                     dateOfEnding = {
-                        'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': True}}
+                        'dateOfEnding': {'title': 'Срок работы', 'value': datetime.datetime.strftime(obj.get('dateOfEnding'), '%Y-%m-%d'), 'expired': True}}
                 else:
                     dateOfEnding = {
-                        'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': False}}
+                        'dateOfEnding': {'title': 'Срок работы', 'value': datetime.datetime.strftime(obj.get('dateOfEnding'), '%Y-%m-%d'), 'expired': False}}
             else:
                 dateOfEnding = {
                     'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': False}}
@@ -126,11 +129,27 @@ def getAgreements(request):
                     list2[0].strip()
                     if list2[0] == '' and list2[1] == '' and list2[2] == '':
                         continue
-                    else:
-                        tasks.get('tasks').append({'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
-                                                   'dateOfEnding': list2[2], 'done': list2[3],
-                                                   'director': {'mmId': list2[4], 'fullName': list2[7]},
-                                                   'executor': {'mmId': list2[5], 'fullName': list2[8]}})
+                    elif list2[9] == '':
+                        tasks.get('tasks').append(
+                            {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
+                             'dateOfEnding': list2[2], 'done': list2[3],
+                             'director': {'mmId': list2[4], 'fullName': list2[7]},
+                             'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'tasks': []})
+                for allData in List:
+                    list2 = allData.split(';')
+                    list2[0].strip()
+                    if list2[0] == '' and list2[1] == '' and list2[2] == '':
+                        continue
+                    elif list2[9] != '':
+                        i = 0
+                        for item in tasks.get('tasks'):
+                            if list2[9] == item.get('id'):
+                                tasks.get('tasks')[i].get('tasks').append(
+                                    {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
+                                     'dateOfEnding': list2[2], 'done': list2[3],
+                                     'director': {'mmId': list2[4], 'fullName': list2[7]},
+                                     'executor': {'mmId': list2[5], 'fullName': list2[8]}})
+                            i += 1
             obj.update(tasks)
         end = perf_counter()
         print(end - start)
