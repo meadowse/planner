@@ -593,6 +593,7 @@ def editTask(request):
         directorId = obj.get('directorId')
         executorId = obj.get('executorId')
         done = obj.get('done')
+        parenId = obj.get('parentId')
         with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                  charset=charset) as con:
             cur = con.cursor()
@@ -608,6 +609,7 @@ def editTask(request):
                 'F4708': datetime.date.today().strftime('%Y-%m-%d'),
                 'F4693': directorId,  # должно быть ID пользователя
                 'F4694': executorId,
+                'F5646': parenId,
             }
             # Преобразование значений в SQL-формат
             set_clause = []
