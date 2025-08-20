@@ -532,7 +532,7 @@ def addTask(request):
         comment = obj.get('comment')
         typeWorkId = obj.get('typeWorkId')
         dateStart = obj.get('dateStart')
-        deadline = obj.get('deadline').get('value')
+        deadline = obj.get('deadline')
         directorId = obj.get('directorId')
         executorId = obj.get('executorId')
         parenId = obj.get('parentId')
