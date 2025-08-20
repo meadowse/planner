@@ -454,45 +454,69 @@ def getTasksContracts(request):
                 EXECUTOR.ID AS ID_OF_EXECUTOR,
                 EXECUTOR.F16 AS ID_MM_EXECUTOR,
                 EXECUTOR.F4886 AS EXECUTOR_NAME, 
-                T218.F4697 AS DONE
+                T218.F4697 AS DONE,
+                T218.F5646 AS parent
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
                 WHERE T218.F4691 = {contractId}"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = ('id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'idDirector', 'idMMDirector', 'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done')
+                columns = (
+                'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'idDirector', 'idMMDirector',
+                'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parent')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
                 ]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
+                copy = []
                 for row in json_result:
                     status = row.get('done')
-                    row.update({'director': {'id': row.get('idDirector'), 'mmId': row.get('idMMDirector'), 'fullName': row.get('directorFIO')}})
-                    row.update({'executor': {'id': row.get('idExecutor'), 'mmId': row.get('idMMExecutor'), 'fullName': row.get('executorFIO')}})
+                    row.update({'director': {'id': row.get('idDirector'), 'mmId': row.get('idMMDirector'),
+                                             'fullName': row.get('directorFIO')}})
+                    row.update({'executor': {'id': row.get('idExecutor'), 'mmId': row.get('idMMExecutor'),
+                                             'fullName': row.get('executorFIO')}})
                     deadlineTask = row.get('deadlineTask')
                     if deadlineTask is not None:
                         if status == 0 and deadlineTask < today:
                             deadlineTask = {
-                                'deadlineTask': {'title': 'Срок работы', 'value': deadlineTask,
+                                'deadlineTask': {'title': 'Срок работы',
+                                                 'value': datetime.datetime.strftime(deadlineTask, '%Y-%m-%d'),
                                                  'expired': True}}
                         else:
                             deadlineTask = {
-                                'deadlineTask': {'title': 'Срок работы', 'value': deadlineTask,
+                                'deadlineTask': {'title': 'Срок работы',
+                                                 'value': datetime.datetime.strftime(deadlineTask, '%Y-%m-%d'),
                                                  'expired': False}}
                     else:
                         deadlineTask = {
                             'deadlineTask': {'title': 'Срок работы', 'value': deadlineTask,
                                              'expired': False}}
                     row.update(deadlineTask)
+                    dateStart = row.get('dateStart')
+                    if dateStart is not None:
+                        dateStart = {'dateStart': datetime.datetime.strftime(dateStart, '%Y-%m-%d')}
+                    else:
+                        dateStart = {'dateStart': dateStart}
+                    row.update(dateStart)
                     row.pop('idDirector')
                     row.pop('idExecutor')
                     row.pop('idMMDirector')
                     row.pop('idMMExecutor')
                     row.pop('executorFIO')
                     row.pop('directorFIO')
-                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+                    if row.get('parent') is None:
+                        row.pop('parent')
+                        subtasks = {'subtasks': []}
+                        row.update(subtasks)
+                        copy.append(row)
+                        json_result.remove(row)
+                for row in json_result:
+                    for item in copy:
+                        if item.get('id') == row.get('parent'):
+                            item.get('subtasks').append(row)
+                return JsonResponse(copy, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")
                 result = None
