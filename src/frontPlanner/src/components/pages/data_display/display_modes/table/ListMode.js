@@ -16,6 +16,9 @@ import { findNestedObj } from '@helpers/helper';
 // Импорт данных
 import getSampleColumns from '@data/constans/Columns';
 
+// Импорт сервисов
+import DataDisplayService from '@services/data_display.service.js';
+
 // Импорт стилей
 import './list_mode.css';
 
@@ -56,7 +59,7 @@ export default function ListMode(props) {
         {
             columns,
             data,
-            getSubRows: row => row.subtasks || []
+            getSubRows: row => DataDisplayService.formData(row.subtasks) || []
         },
         useExpanded
     );
