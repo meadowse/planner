@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useTable } from 'react-table';
+import { useTable, useExpanded } from 'react-table';
 import classNames from 'classnames';
 
 // Импорт компонетов
@@ -15,6 +15,9 @@ import { findNestedObj } from '@helpers/helper';
 
 // Импорт данных
 import getSampleColumns from '@data/constans/Columns';
+
+// Импорт сервисов
+import DataDisplayService from '@services/data_display.service.js';
 
 // Импорт стилей
 import './list_mode.css';
@@ -52,7 +55,14 @@ export default function ListMode(props) {
 
     const { sortData } = useListMode(data);
     const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+        {
+            columns,
+            data,
+            getSubRows: row => DataDisplayService.formData(row.subtasks) || []
+        },
+        useExpanded
+    );
     const { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter, onResetFilters } = useFiltersTable(
         modeConfig,
         testData,
@@ -66,6 +76,7 @@ export default function ListMode(props) {
             const config = {
                 idContract: modeConfig?.idContract,
                 // contractsIDs: modeConfig?.contractsIDs,
+                tasks: data,
                 task: {}
             };
             return <HeadCell cellData={headData} cellConfig={config} />;
@@ -91,9 +102,10 @@ export default function ListMode(props) {
             const config = {
                 idContract: data[cellData?.indRow]?.contractId,
                 partition: modeConfig?.partition,
-                task: data[cellData?.indRow]
-                    ? { ...data[cellData?.indRow], contractNum: data[cellData?.indRow]?.contractNum }
-                    : {},
+                tasks: data,
+                // task: data[cellData?.indRow]
+                //     ? { ...data[cellData?.indRow], contractNum: data[cellData?.indRow]?.contractNum }
+                //     : {},
                 dataOperation: findNestedObj(modeConfig?.dataOperations, 'key', 'update')
             };
             return <Cell cellData={cellData} cellConfig={config} />;

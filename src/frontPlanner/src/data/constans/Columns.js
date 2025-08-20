@@ -27,6 +27,7 @@ const CELLS = {
         );
     },
     user: (value, additClass, onClick) => {
+        console.log(`CELL USER: ${JSON.stringify(value, null, 4)}`);
         return (
             <div className={`cell__${additClass}`} onClick={onClick}>
                 <img className={`cell__${additClass}-photo`} src={value?.photo} alt="" />
@@ -427,6 +428,7 @@ const COLUMNS = [
                                 title="Новая задача"
                                 data={{
                                     idContract: props?.config?.idContract,
+                                    tasks: props?.config?.tasks,
                                     task: props?.config?.task
                                     // contractsIDs: props?.config?.contractsIDs
                                 }}
@@ -447,23 +449,39 @@ const COLUMNS = [
             const [addTaskState, setAddTaskState] = useState(false);
             return (
                 <>
-                    <p
-                        className="cell__task"
-                        ref={refCell}
-                        onMouseLeave={() => refCell?.current.scrollTo(0, 0)}
-                        onClick={() => setAddTaskState(true)}
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            columnGap: '5px',
+                            paddingLeft: `${props?.row?.depth * 20}px`
+                        }}
                     >
-                        <span>{props?.value || 'Нет данных'}</span>
-                    </p>
+                        <p
+                            className="cell__task"
+                            ref={refCell}
+                            onMouseLeave={() => refCell?.current.scrollTo(0, 0)}
+                            onClick={() => setAddTaskState(true)}
+                        >
+                            <span>{props?.value || 'Нет данных'}</span>
+                        </p>
+                        {props?.row.canExpand ? (
+                            <span className="cell__expand" {...props?.row.getToggleRowExpandedProps()}>
+                                {props?.row?.isExpanded ? '▼' : '▶'}
+                            </span>
+                        ) : null}
+                    </div>
                     {addTaskState &&
                         createPortal(
                             <TaskPopup
                                 additClass="add-task"
                                 title="Редактирование задачи"
                                 data={{
-                                    idContract: props?.config?.idContract,
+                                    // idContract: props?.config?.idContract,
+                                    idContract: props?.row?.original?.contractId,
                                     partition: props?.config?.partition,
-                                    task: props?.config?.task,
+                                    tasks: props?.config?.tasks,
+                                    task: props?.row?.original,
                                     contractOperations: props?.config?.dataOperation
                                     // contractsIDs: props?.config?.contractsIDs
                                 }}

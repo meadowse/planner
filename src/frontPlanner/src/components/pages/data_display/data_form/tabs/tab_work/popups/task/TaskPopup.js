@@ -433,6 +433,74 @@ function Completeness(props) {
     ) : null;
 }
 
+// Родительская задача
+function ParentsTasks(props) {
+    const { presetValue, config, onSelect } = props;
+
+    const [parentTask, setParentTask] = useState({});
+    const parentTasks = Array.from(TaskService.getAllTasks(config?.tasksData, []) ?? []);
+
+    // Выбор род.задачи
+    function onSelectParentTask(value) {
+        setParentTask(value);
+        onSelect('parentTask', value);
+    }
+
+    // Удалить род.задачу
+    function onDeleteParentTask() {
+        setParentTask(null);
+        onSelect('parentTask', null);
+    }
+
+    useEffect(() => {
+        let parentTaskData = {};
+        if (presetValue) {
+            for (let i = 0; i < parentTasks.length; i++) {
+                if (parentTasks[i] && Object.keys(parentTasks[i]).length !== 0) {
+                    if (parentTasks[i]?.id === presetValue) {
+                        parentTaskData = parentTasks[i];
+                        setParentTask(parentTasks[i]);
+                        break;
+                    }
+                }
+            }
+        }
+        // console.log(
+        //     `parentTaskData: ${JSON.stringify(parentTaskData, null, 4)}\nparentTasksData: ${JSON.stringify(
+        //         parentTasks,
+        //         null,
+        //         4
+        //     )}`
+        // );
+    }, []);
+
+    console.log(`ParentsTasks hidden: ${config?.hidden}`);
+
+    return !config?.hidden ? (
+        <li className="popup__content-parent-tasks popup-content-item">
+            <h2 className="popup-content-title">Родительская задача</h2>
+            <div className="popup__menu-wrapper">
+                <DropdownMenu
+                    additClass="parent-tasks"
+                    icon="arrow_down_gr.svg"
+                    nameMenu="Выбрать родительскую задачу"
+                    specifiedVal={parentTask}
+                    dataSource={parentTasks}
+                    onItemClick={onSelectParentTask}
+                />
+                {parentTask && Object.keys(parentTask).length !== 0 ? (
+                    <IconButton
+                        nameClass="icon-btn__delete-type"
+                        type="button"
+                        icon="cancel.svg"
+                        onClick={onDeleteParentTask}
+                    />
+                ) : null}
+            </div>
+        </li>
+    ) : null;
+}
+
 // Задача
 function TaskName(props) {
     const { presetValue, config, onChange } = props;
@@ -460,15 +528,10 @@ function TaskName(props) {
 // Дата начала
 function CommencementDate(props) {
     const { presetValue, config, onSelect } = props;
-    const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
-        format: 'YYYYMMDD',
-        separator: '-'
-    });
-
     // console.log(`CommencementDate presetValue: ${presetValue}`);
 
     const [calendarState, setCalendarState] = useState(false);
-    const [startDate, setStartDate] = useState(presetValue ? presetValue : currDateYYYYMMDD);
+    const [startDate, setStartDate] = useState(presetValue ? presetValue : {});
 
     function onShowCalendar() {
         setCalendarState(true);
@@ -489,6 +552,17 @@ function CommencementDate(props) {
         setStartDate(dateYYYYMMDD);
         onSelect('dateStart', dateYYYYMMDD);
     }
+
+    useEffect(() => {
+        if (!presetValue || Object.keys(presetValue).length === 0) {
+            const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
+                format: 'YYYYMMDD',
+                separator: '-'
+            });
+            setStartDate(currDateYYYYMMDD);
+            onSelect('dateStart', currDateYYYYMMDD);
+        }
+    }, []);
 
     return !config?.hidden ? (
         <li className="popup__content-start-date popup-content-item">
@@ -537,25 +611,13 @@ function CommencementDate(props) {
 // Дедлайн
 function DeadlineTask(props) {
     const { presetValue, config, onSelect } = props;
-    const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
-        format: 'YYYYMMDD',
-        separator: '-'
-    });
 
     const [calendarState, setCalendarState] = useState(false);
-    const [deadline, setDeadline] = useState(presetValue ? presetValue : { value: currDateYYYYMMDD });
+    const [deadline, setDeadline] = useState(presetValue ? presetValue : {});
     // const [deadline, setDeadline] = useState(presetValue ? presetValue : '');
 
     function onShowCalendar() {
         setCalendarState(true);
-    }
-
-    // Удаление даты
-    function onDeleteDate() {
-        setDeadline({ value: '' });
-        onSelect('deadlineTask', { value: '' });
-        // setDeadline('');
-        // onSelect('deadlineTask', '');
     }
 
     // Выбор даты
@@ -570,10 +632,24 @@ function DeadlineTask(props) {
         // onSelect('deadlineTask', dateYYYYMMDD);
     }
 
-    // function onDeleteSelectedDate() {
-    //     setDeadline(dateDDMMYY);
-    //     onClick('Deadline', null);
-    // }
+    // Удаление даты
+    function onDeleteDate() {
+        // setDeadline({ value: '' });
+        // onSelect('deadlineTask', { value: '' });
+        setDeadline(null);
+        onSelect('deadlineTask', null);
+    }
+
+    useEffect(() => {
+        if (!presetValue || Object.keys(presetValue).length === 0) {
+            const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
+                format: 'YYYYMMDD',
+                separator: '-'
+            });
+            setDeadline({ value: currDateYYYYMMDD });
+            onSelect('deadlineTask', { value: currDateYYYYMMDD });
+        }
+    }, []);
 
     return !config?.hidden ? (
         <li className="popup__content-deadline popup-content-item">
@@ -630,7 +706,7 @@ function Comment(props) {
     }
 
     return !config?.hidden ? (
-        <li className="popup__content-comment popup-content-item">
+        <div className="popup__content-comment popup-content-item">
             <h2 className="popup-content-title">Комментарий</h2>
             <textarea
                 className="txt-area"
@@ -638,7 +714,7 @@ function Comment(props) {
                 value={comment}
                 onChange={e => onChangeTaskName(e)}
             ></textarea>
-        </li>
+        </div>
     ) : null;
 }
 
@@ -661,8 +737,8 @@ export default function TaskPopup(props) {
     // const socket = useContext(SocketContext);
     const navigate = useNavigate();
 
-    // console.log(`dataTaskOperation: ${JSON.stringify(dataTaskOperation, null, 4)}`);
     console.log(`values: ${JSON.stringify(values, null, 4)}`);
+    // console.log(`dataTaskOperation: ${JSON.stringify(dataTaskOperation, null, 4)}`);
     // console.log(`TaskPopup data: ${JSON.stringify(data, null, 4)}`);
 
     function onShowModal() {
@@ -702,11 +778,12 @@ export default function TaskPopup(props) {
         if (!data?.task || Object.keys(data?.task).length === 0) {
             const resultData = {
                 typeWorkId: values?.typeWork?.id,
-                contractId: idContract,
+                contractId: +idContract,
                 directorId: values?.director?.id,
                 executorId: values?.executor?.id,
                 dateStart: values?.dateStart,
-                deadline: values?.deadlineTask,
+                deadline: values?.deadlineTask?.value,
+                parentId: values?.parentTask?.id,
                 task: values?.task,
                 comment: values?.comment
             };
@@ -725,7 +802,7 @@ export default function TaskPopup(props) {
                 executorId: values?.executor?.id,
                 taskId: data?.task?.id,
                 dateStart: values?.dateStart,
-                deadline: values?.deadlineTask,
+                deadline: values?.deadlineTask?.value,
                 done: +values?.done,
                 task: values?.task,
                 comment: values?.comment
@@ -761,21 +838,23 @@ export default function TaskPopup(props) {
                     onSubmit={e => onOnSubmitData(e)}
                 >
                     <ul className="popup__content-add-task-left">
-                        <ContractNumber
-                            contract={{
-                                id: idContract,
-                                number: data?.task?.contractNum
-                            }}
-                            isLoading={isLoading}
-                            contractsIDs={contractsIDs}
-                            config={{
-                                partition: data?.partition,
-                                hidden: dataTaskOperation?.hiddenFields?.typeWork ? true : false,
-                                contractOperations: data?.contractOperations
-                            }}
-                            setIdContract={setIdContract}
-                            onSelect={onClick}
-                        />
+                        {!data?.idContract ? (
+                            <ContractNumber
+                                contract={{
+                                    id: idContract,
+                                    number: data?.task?.contractNum
+                                }}
+                                isLoading={isLoading}
+                                contractsIDs={contractsIDs}
+                                config={{
+                                    partition: data?.partition,
+                                    hidden: dataTaskOperation?.hiddenFields?.typeWork ? true : false,
+                                    contractOperations: data?.contractOperations
+                                }}
+                                setIdContract={setIdContract}
+                                onSelect={onClick}
+                            />
+                        ) : null}
                         <TypeWork
                             idContract={idContract}
                             config={{ hidden: dataTaskOperation?.hiddenFields?.typeWork ? true : false }}
@@ -795,6 +874,14 @@ export default function TaskPopup(props) {
                             config={{
                                 appTheme: theme,
                                 hidden: dataTaskOperation?.hiddenFields?.executor ? true : false
+                            }}
+                            onSelect={onClick}
+                        />
+                        <ParentsTasks
+                            presetValue={data?.task?.parent}
+                            config={{
+                                hidden: dataTaskOperation?.hiddenFields?.parentTask,
+                                tasksData: data?.tasks
                             }}
                             onSelect={onClick}
                         />
@@ -829,7 +916,7 @@ export default function TaskPopup(props) {
                 </form>
                 {data?.task && Object.keys(data?.task).length !== 0 ? (
                     <button className="popup__content-del-task" onClick={onShowModal}>
-                        Удалить
+                        Удалить задачу
                     </button>
                 ) : null}
             </InputDataPopup>

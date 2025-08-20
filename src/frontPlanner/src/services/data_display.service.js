@@ -284,6 +284,7 @@ const getDataOperations = partition => {
 // };
 
 const DataDisplayService = {
+    formData,
     loadData,
     getDisplayModes,
     getModeOptions,
