@@ -511,7 +511,6 @@ def getTasksContracts(request):
                         subtasks = {'subtasks': []}
                         row.update(subtasks)
                         copy.append(row)
-                        json_result.remove(row)
                 for row in json_result:
                     for item in copy:
                         if item.get('id') == row.get('parent'):
@@ -793,7 +792,8 @@ def getTasksEmployee(request):
             T212.ID AS contractId,
             T212.F4538 AS CONTRACT_NUMBER,
             T212.F4946 AS OBJECT_ADDRESS,
-            T205.F4331 AS CUSTOMER_NAME
+            T205.F4331 AS CUSTOMER_NAME,
+            T218.F5646 AS parentId
             FROM T218
             LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
             LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
@@ -802,15 +802,21 @@ def getTasksEmployee(request):
             WHERE DIRECTOR.F16 = '{employeeId}' OR EXECUTOR.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = ('id', 'task', 'comment', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'idDirector', 'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId', 'contractNum', 'address', 'customer')
+                columns = (
+                'id', 'task', 'comment', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'idDirector',
+                'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId',
+                'contractNum', 'address', 'customer', 'parentId')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
                 ]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
+                copy = []
                 for task in json_result:
-                    director = {'director': {'idDirector': task.get('idDirector'), 'mmId': task.get('idMMDirector'), 'directorName': task.get('directorName')}}
-                    executor = {'executor': {'idExecutor': task.get('idExecutor'), 'mmId': task.get('idMMExecutor'), 'executorName': task.get('executorName')}}
+                    director = {'director': {'idDirector': task.get('idDirector'), 'mmId': task.get('idMMDirector'),
+                                             'directorName': task.get('directorName')}}
+                    executor = {'executor': {'idExecutor': task.get('idExecutor'), 'mmId': task.get('idMMExecutor'),
+                                             'executorName': task.get('executorName')}}
                     task.update(director)
                     task.update(executor)
                     task.pop('idDirector')
@@ -823,17 +829,38 @@ def getTasksEmployee(request):
                     if deadlineTask is not None:
                         if task.get('done') == 0 and deadlineTask < today:
                             deadlineTask = {
-                                'deadlineTask': {'value': deadlineTask,
+                                'deadlineTask': {'value': datetime.datetime.strftime(deadlineTask, '%Y-%m-%d'),
                                                  'expired': True}}
                         else:
                             deadlineTask = {
-                                'deadlineTask': {'value': deadlineTask,
+                                'deadlineTask': {'value': datetime.datetime.strftime(deadlineTask, '%Y-%m-%d'),
                                                  'expired': False}}
                     else:
                         deadlineTask = {
                             'deadlineTask': {'value': deadlineTask,
                                              'expired': False}}
                     task.update(deadlineTask)
+                    startDate = task.get('startDate')
+                    if startDate is not None:
+                        startDate = {'startDate': datetime.datetime.strftime(startDate, '%Y-%m-%d')}
+                    else:
+                        startDate = {'startDate': startDate}
+                    task.update(startDate)
+                    dateDone = task.get('dateDone')
+                    if dateDone is not None:
+                        dateDone = {'dateDone': datetime.datetime.strftime(dateDone, '%Y-%m-%d')}
+                    else:
+                        dateDone = {'dateDone': dateDone}
+                    task.update(dateDone)
+                    if task.get('parentId') is None:
+                        task.pop('parentId')
+                        subtasks = {'subtasks': []}
+                        task.update(subtasks)
+                        copy.append(task)
+                for row in json_result:
+                    for item in copy:
+                        if item.get('id') == row.get('parentId'):
+                            item.get('subtasks').append(row)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")
