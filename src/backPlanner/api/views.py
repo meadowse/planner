@@ -134,7 +134,7 @@ def getAgreements(request):
                             {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
                              'dateOfEnding': list2[2], 'done': list2[3],
                              'director': {'mmId': list2[4], 'fullName': list2[7]},
-                             'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'subtasks': []})
+                             'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'tasks': []})
                 for allData in List:
                     list2 = allData.split(';')
                     list2[0].strip()
@@ -144,7 +144,7 @@ def getAgreements(request):
                         i = 0
                         for item in tasks.get('tasks'):
                             if list2[9] == item.get('id'):
-                                tasks.get('tasks')[i].get('subtasks').append(
+                                tasks.get('tasks')[i].get('tasks').append(
                                     {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
                                      'dateOfEnding': list2[2], 'done': list2[3],
                                      'director': {'mmId': list2[4], 'fullName': list2[7]},
@@ -719,7 +719,7 @@ def getAllDepartmentsStaffAndTasks(request):
                                         {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
                                          'dateOfEnding': list2[2], 'done': list2[3],
                                          'director': {'mmId': list2[4], 'fullName': list2[7]},
-                                         'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'subtasks': []})
+                                         'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'tasks': []})
                             for allData in List:
                                 list2 = allData.split(';')
                                 list2[0].strip()
@@ -729,7 +729,7 @@ def getAllDepartmentsStaffAndTasks(request):
                                     i = 0
                                     for item in contracts.get('contracts')[count].get('tasks'):
                                         if list2[9] == item.get('id'):
-                                            contracts.get('contracts')[count].get('tasks')[i].get('subtasks').append(
+                                            contracts.get('contracts')[count].get('tasks')[i].get('tasks').append(
                                                 {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
                                                  'dateOfEnding': list2[2], 'done': list2[3],
                                                  'director': {'mmId': list2[4], 'fullName': list2[7]},
