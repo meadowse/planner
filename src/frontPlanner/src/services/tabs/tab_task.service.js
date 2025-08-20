@@ -22,6 +22,10 @@ const getTaskData = (data, disabledFields) => {
         typeWork: value => {
             return value && Object.keys(value).length !== 0 ? value : null;
         },
+        // Родительcкая Задача
+        parentTask: value => {
+            return value && Object.keys(value).length !== 0 ? value : null;
+        },
         // Задача
         task: value => {
             return value && Object.keys(value).length !== 0 ? value : '';
@@ -95,6 +99,21 @@ const getTaskData = (data, disabledFields) => {
     }
 
     return dataConf;
+};
+
+// Получение всех задач
+const getAllTasks = (tasks, newTasks) => {
+    const tasksData = newTasks;
+
+    tasks?.forEach(item => {
+        const { id, task, subtasks } = item;
+        if (subtasks && subtasks.length !== 0) {
+            tasksData.push({ id, title: task });
+            return getAllTasks(subtasks, tasksData);
+        } else tasksData.push({ id, title: task });
+    });
+
+    return tasksData;
 };
 
 // Получение всех договоров
@@ -278,6 +297,7 @@ const deleteTask = async idTask => {
 
 const TaskService = {
     getDataFormOperation,
+    getAllTasks,
     getTaskData,
     getContractsIDs,
     getTypesWork,

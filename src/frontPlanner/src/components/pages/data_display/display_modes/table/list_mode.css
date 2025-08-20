@@ -90,6 +90,12 @@
 .table-mode__tbody-td {
 }
 
+.cell__expand {
+    padding: 0 0.3125rem;
+    font-size: calc(1.25rem + 0.25vw - 0.8px);
+    cursor: pointer;
+}
+
 /* Ячейки "Адрес", "Вид работы", "Задача" */
 
 .cell__address,

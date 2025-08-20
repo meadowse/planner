@@ -1,17 +1,21 @@
 /* Общие стили для выпадающих списков */
 
 .dropdown-menu {
+    width: 100%;
+    height: 100%;
     position: relative;
 }
 
 .dropdown-menu-list {
     width: 100%;
+    max-height: 150px;
     display: flex;
     flex-direction: column;
     row-gap: 0.3vw;
     position: absolute;
     border-radius: 5px;
     /* background-color: #e3e3e3; */
+    overflow-y: auto;
     background-color: var(--bg-color-dropdown-menu-list);
     z-index: 11;
 }
@@ -121,13 +125,13 @@
 
 /* Выпадающее меню "Вид работы" */
 
-.dropdown-menu__type-work {
+/* .dropdown-menu__type-work {
     height: 100%;
     flex-grow: 1;
-}
+} */
 
-.dropdown-menu-list-item__type-work {
+/* .dropdown-menu-list-item__type-work {
     white-space: nowrap;
     overflow-x: auto;
     scrollbar-width: none;
-}
+} */

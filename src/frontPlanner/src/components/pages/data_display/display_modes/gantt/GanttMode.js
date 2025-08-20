@@ -105,26 +105,7 @@ function TotalTaskRow(props) {
 
     return (
         <div className="gantt-grid__main-row">
-            <div className="gantt-task-title gantt-task-main-title" onClick={onHideTasks}>
-                {/* {ganttConfig && Object.keys(ganttConfig).length !== 0 ? (
-                    <select className="gantt-mode__select-list" onChange={onSelectItem}>
-                        {ganttConfig?.map((headline, index) => {
-                            if (isObject(headline) && Object.keys(headline).length !== 0) {
-                                return (
-                                    <option
-                                        key={headline?.title}
-                                        className="gantt-mode__select-list-option"
-                                        value={index}
-                                        selected={selectedItemInd === index}
-                                    >
-                                        {headline[modeConfig?.modeOption?.uniqueness]}
-                                    </option>
-                                );
-                            }
-                        })}
-                    </select>
-                ) : null} */}
-            </div>
+            <div className="gantt-task-title gantt-task-main-title" onClick={null}></div>
             <div className="gantt-empty-row"></div>
             <ul className="gantt-time-period">
                 {timeLine && Object.keys(timeLine).length !== 0
@@ -277,25 +258,37 @@ function TaskRow(props) {
                         >
                             <span>{task?.title}</span>
                         </div> */}
-                        <p
-                            className="gantt-task-title"
-                            onClick={() => onShowInfo(null, task, 'update')}
-                            onMouseDown={e => onShowInfo(e, task, 'update')}
-                        >
-                            {task?.title?.fullName ?? null}
-                            <span className="gantt-task-title__span">{task?.title?.contractNum}</span>
-                            {task?.title?.address}
-                            {task?.title?.company}
-                        </p>
-                        <div className="gantt-task-actions">
-                            <button
-                                className="gantt-task-actions__btn-hide gantt-task-btn-action"
-                                onClick={onHideTasks}
+                        {isObject(task?.title) && Object.keys(task?.title).length !== 0 ? (
+                            <p
+                                className="gantt-task-title"
+                                onClick={() => onShowInfo(null, task, 'update')}
+                                onMouseDown={e => onShowInfo(e, task, 'update')}
                             >
-                                {showTasks
-                                    ? String.fromCharCode(parseInt('2212', 16))
-                                    : String.fromCharCode(parseInt('002B', 16))}
-                            </button>
+                                {task?.title?.fullName ?? null}
+                                <span className="gantt-task-title__span">{task?.title?.contractNum}</span>
+                                {task?.title?.address}
+                                {task?.title?.company}
+                            </p>
+                        ) : (
+                            <p
+                                className="gantt-task-title"
+                                onClick={() => onShowInfo(null, task, 'update')}
+                                onMouseDown={e => onShowInfo(e, task, 'update')}
+                            >
+                                {task?.title}
+                            </p>
+                        )}
+                        <div className="gantt-task-actions">
+                            {task?.tasks && task.tasks.length !== 0 ? (
+                                <button
+                                    className="gantt-task-actions__btn-hide gantt-task-btn-action"
+                                    onClick={onHideTasks}
+                                >
+                                    {showTasks
+                                        ? String.fromCharCode(parseInt('2212', 16))
+                                        : String.fromCharCode(parseInt('002B', 16))}
+                                </button>
+                            ) : null}
                             {task?.dateOfStart && task?.dateOfEnding ? (
                                 <button className="gantt-task-btn-action" onClick={e => onMoveToTask(e, task)}>
                                     &#11122;

@@ -16,7 +16,7 @@ function getTaskConfig(initialData, disabledFields) {
 
 export const useTaskForm = (initialData, disabledFields) => {
     const [values, setValues] = useState(initialData);
-    console.log(`initialData: ${JSON.stringify(initialData, null, 4)}`);
+    // console.log(`initialData: ${JSON.stringify(initialData, null, 4)}`);
 
     let config = Object.assign({}, getTaskConfig(initialData, disabledFields));
     // let dataForm = Object.assign({}, values);
@@ -24,14 +24,12 @@ export const useTaskForm = (initialData, disabledFields) => {
     const validate = () => {};
 
     const onChange = e => {
-        // dataForm = { ...values, [e.target.name]: e.target.value };
         setValues(prevState => {
             return { ...prevState, [e.target.name]: e.target.value };
         });
     };
 
     const onClick = (key, value) => {
-        // dataForm = { ...values, [key]: value };
         // console.log(`useTaskForm onClick vals: ${JSON.stringify(dataForm, null, 4)}`);
         setValues(prevState => {
             return { ...prevState, [key]: value };
