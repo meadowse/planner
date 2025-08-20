@@ -536,6 +536,7 @@ def addTask(request):
         deadline = obj.get('deadline').get('value')
         directorId = obj.get('directorId')
         executorId = obj.get('executorId')
+        parenId = obj.get('parentId')
         with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                  charset=charset) as con:
             cur = con.cursor()
@@ -553,7 +554,8 @@ def addTask(request):
                 'F4696': deadline,
                 'F4693': directorId,  # должно быть ID пользователя
                 'F4694': executorId,
-                'F4697': 0
+                'F4697': 0,
+                'F5646': parenId,
             }
             # Преобразование значений в SQL-формат
             sql_values = []
