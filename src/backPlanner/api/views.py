@@ -560,17 +560,29 @@ def getTask(request):
                     {col: value for col, value in zip(columns, row)}
                     for row in result
                 ]  # Создаем список словарей с сериализацией значений
-                jsonResult = {'parent': {}, 'daughters' : []}
+                for task in json_result:
+                    dateStart = task.get('dateStart')
+                    if dateStart is None:
+                        dateStart = {'dateStart': dateStart}
+                    else:
+                        dateStart = {'dateStart': datetime.datetime.strftime(dateStart, '%Y-%m-%d')}
+                    task.update(dateStart)
+                    deadlineTask = task.get('deadlineTask')
+                    if deadlineTask is None:
+                        deadlineTask = {'deadlineTask': deadlineTask}
+                    else:
+                        deadlineTask = {'deadlineTask': datetime.datetime.strftime(deadlineTask, '%Y-%m-%d')}
+                    task.update(deadlineTask)
+                jsonResult = {'parent': {}, 'daughters': []}
                 for row in json_result:
                     if row.get('id') == parentId:
                         jsonResult.get('parent').update(row)
                     else:
                         jsonResult.get('daughters').append(row)
-                JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+                JsonResponse(jsonResult, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по задаче {taskId}: {ex}")
-                result = None
-                return result
+                return ex
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
