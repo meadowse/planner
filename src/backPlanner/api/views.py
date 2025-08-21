@@ -455,7 +455,7 @@ def getTasksContracts(request):
                 EXECUTOR.F16 AS ID_MM_EXECUTOR,
                 EXECUTOR.F4886 AS EXECUTOR_NAME, 
                 T218.F4697 AS DONE,
-                T218.F5646 AS parent
+                T218.F5646 AS parentId
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
@@ -464,7 +464,7 @@ def getTasksContracts(request):
                 result = cur.fetchall()
                 columns = (
                 'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'idDirector', 'idMMDirector',
-                'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parent')
+                'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
@@ -506,14 +506,14 @@ def getTasksContracts(request):
                     row.pop('idMMExecutor')
                     row.pop('executorFIO')
                     row.pop('directorFIO')
-                    if row.get('parent') is None:
-                        row.pop('parent')
+                    if row.get('parentId') is None:
+                        row.pop('parentId')
                         subtasks = {'subtasks': []}
                         row.update(subtasks)
                         copy.append(row)
                 for row in json_result:
                     for item in copy:
-                        if item.get('id') == row.get('parent'):
+                        if item.get('id') == row.get('parentId'):
                             item.get('subtasks').append(row)
                 return JsonResponse(copy, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
