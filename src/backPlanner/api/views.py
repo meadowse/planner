@@ -532,6 +532,10 @@ def getTask(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
+                if parentId is None:
+                    parent = ''
+                else:
+                    parent = f'T218.ID = {parentId} OR'
                 sql = f"""SELECT
                                 T218.ID, 
                                 T218.F4691 AS CONRACT_ID, 
@@ -550,7 +554,7 @@ def getTask(request):
                                 FROM T218
                                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                                WHERE T218.ID = {parentId} OR T218.F5646 = {taskId}"""
+                                WHERE {parent} T218.F5646 = {taskId}"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
