@@ -446,6 +446,7 @@ const COLUMNS = [
         Cell: props => {
             const refCell = useRef();
             const [addTaskState, setAddTaskState] = useState(false);
+            console.log(`Original task: ${JSON.stringify(props?.row?.original, null, 4)}`);
             return (
                 <>
                     <div

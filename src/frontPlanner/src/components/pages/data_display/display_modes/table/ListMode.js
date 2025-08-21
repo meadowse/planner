@@ -55,6 +55,11 @@ export default function ListMode(props) {
 
     const { sortData } = useListMode(data);
     const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
+    // const columns = useMemo(() => {
+    //     // Формируем колонки, которые есть в массиве columns
+    //     const columnsMap = new Map(getSampleColumns(modeConfig?.keys).map(col => [col.accessor, col]));
+    //     return modeConfig?.keys.filter(key => columnsMap.has(key)).map(key => columnsMap.get(key));
+    // }, [testData]);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
@@ -128,6 +133,7 @@ export default function ListMode(props) {
                     {modeConfig?.keys && modeConfig?.keys.length !== 0 ? (
                         <FiltersTable
                             keys={modeConfig?.keys}
+                            // keys={columns.map(col => col.accessor)}
                             activeFilters={activeFilters}
                             optionsFilter={OPTIONS_FILTER_CONF}
                             data={testData}
