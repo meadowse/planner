@@ -36,4 +36,5 @@ urlpatterns = [
     path('getContractsEmployee', getContractsEmployee, name='getContractsEmployee'),
     path('getDataUser', getDataUser, name='getDataUser'),
     path('getVacations', getVacations, name='getVacations'),
+    path('getTask', getTask, name='getTask'),
 ]

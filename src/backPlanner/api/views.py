@@ -524,7 +524,7 @@ def getTasksContracts(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def addTask(request):
+def getTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         taskId = obj.get('taskId')
