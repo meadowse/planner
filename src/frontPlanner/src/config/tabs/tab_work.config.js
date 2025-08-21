@@ -30,7 +30,7 @@ export const DATA_FORM_OPERATIONS = [
             comment: false
         },
         hiddenFields: {
-            parentTask: true,
+            parentTask: false,
             done: false
         }
     }

@@ -27,7 +27,6 @@ const CELLS = {
         );
     },
     user: (value, additClass, onClick) => {
-        console.log(`CELL USER: ${JSON.stringify(value, null, 4)}`);
         return (
             <div className={`cell__${additClass}`} onClick={onClick}>
                 <img className={`cell__${additClass}-photo`} src={value?.photo} alt="" />

@@ -29,6 +29,14 @@ export const useTaskForm = (initialData, disabledFields) => {
         });
     };
 
+    // const onChangeByIndex = (key, index, value) => {
+    //     const valuesTemp = Object.assign({}, values);
+    //     const tempArray = new Array(values[key]);
+
+    //     tempArray[index][key] = value;
+    //     valuesTemp;
+    // };
+
     const onClick = (key, value) => {
         // console.log(`useTaskForm onClick vals: ${JSON.stringify(dataForm, null, 4)}`);
         setValues(prevState => {
