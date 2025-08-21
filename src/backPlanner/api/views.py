@@ -579,7 +579,7 @@ def getTask(request):
                         jsonResult.get('parent').update(row)
                     else:
                         jsonResult.get('daughters').append(row)
-                JsonResponse(jsonResult, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+                return JsonResponse(jsonResult, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по задаче {taskId}: {ex}")
                 return ex
