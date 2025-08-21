@@ -11,6 +11,34 @@ const getDataFormOperation = operation => {
     return findNestedObj(DATA_FORM_OPERATIONS, 'key', operation);
 };
 
+const formData = data => {
+    return {
+        contractId: data?.contractId ?? null,
+        parentId: data?.parentId ?? null,
+        taskId: data?.id ?? null,
+        task: data?.task ?? '',
+        dateStart: data?.dateStart ?? '',
+        deadlineTask: data?.deadlineTask
+            ? {
+                  value: data?.deadlineTask
+              }
+            : null,
+        director: {
+            id: data?.idDirector,
+            mmId: data?.idMMDirector,
+            fullName: data?.directorFIO,
+            photo: `https://mm-mpk.ru/api/v4/users/${data?.idMMDirector}/image`
+        },
+        executor: {
+            id: data?.idExecutor,
+            mmId: data?.idMMExecutor,
+            fullName: data?.executorFIO,
+            photo: `https://mm-mpk.ru/api/v4/users/${data?.idMMExecutor}/image`
+        },
+        done: data?.done
+    };
+};
+
 const getTaskData = (data, disabledFields) => {
     const dataConf = {};
     const DEFAULT_VALUES = {
@@ -114,6 +142,38 @@ const getAllTasks = (tasks, newTasks) => {
     });
 
     return tasksData;
+};
+
+// getTask taskId parentId
+const getTaskInfo = async (idTask, idParent) => {
+    let taskInfoData = {};
+    await axios
+        .post(`${window.location.origin}/api/getTask`, {
+            // contractId: JSON.parse(localStorage.getItem('idContract'))
+            taskId: idTask,
+            parentId: idParent
+        })
+        .then(response => {
+            if (response?.status === 200) {
+                console.log(`typeof taskInfoData: ${typeof taskInfoData}`);
+                // console.log(`id: ${JSON.parse(localStorage.getItem('idContract'))}`);
+                if (response?.data && response?.data.length !== 0) taskInfoData = response?.data;
+            }
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log('server responded');
+                taskInfoData = {};
+            } else if (error.request) {
+                console.log('network error');
+                taskInfoData = {};
+            } else {
+                console.log(error);
+                taskInfoData = {};
+            }
+        });
+
+    return taskInfoData;
 };
 
 // Получение всех договоров
@@ -296,12 +356,14 @@ const deleteTask = async idTask => {
 };
 
 const TaskService = {
+    formData,
     getDataFormOperation,
     getAllTasks,
     getTaskData,
     getContractsIDs,
     getTypesWork,
     getAuthorizedEmployee,
+    getTaskInfo,
     addTask,
     editTask,
     deleteTask

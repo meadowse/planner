@@ -1,5 +1,6 @@
 .popup__add-task {
-    max-width: 50%;
+    /* max-width: 50%; */
+    max-width: 60%;
     width: 100%;
     color: var(--text-color);
 }
@@ -14,14 +15,40 @@
 /* Контент всплывающего окна */
 
 .popup__content-add-task {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2vw;
+    /* display: grid; */
+    /* grid-template-rows: 2fr 1fr; */
+    /* grid-template-rows: 2fr minmax(max-content, 1fr); */
+    /* row-gap: 1vw; */
+}
+
+.popup__content-add-task-top {
     padding: 0;
     max-width: 100%;
     display: grid;
     grid-template-columns: 2fr 1fr;
     column-gap: 2vw;
-    /* grid-template-columns: 1fr 1fr; */
-    /* column-gap: 4vw; */
 }
+
+.popup__content-add-task-bottom {
+    display: flex;
+    flex-direction: column;
+}
+
+/* .popup__content-add-task {
+    padding: 0;
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 2vw;
+} */
+
+/* grid-template-columns: 1fr 1fr; */
+/* column-gap: 4vw; */
 
 /* Левая часть формы */
 
@@ -195,6 +222,105 @@
     flex-direction: column;
     row-gap: 15px;
 }
+
+/* Блок "Информация по задаче" */
+
+.popup__taskinfo {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+}
+
+.popup__taskinfo-actions {
+    display: flex;
+    align-items: center;
+}
+
+.popup__taskinfo-btn-add {
+    background-color: #99ad60;
+    border-radius: 0.3125rem;
+    color: #fff;
+    cursor: pointer;
+    font-size: calc(1.25rem + 0.25vw - 0.8px);
+    padding: 0 0.3125rem;
+}
+
+.popup__taskinfo-content {
+    /* max-height: 150px;
+    height: 100%; */
+    display: grid;
+    grid-template-rows: max-content 1fr;
+}
+
+.popup__taskinfo-list {
+    display: grid;
+    grid-template-columns: 350px repeat(5, minmax(30px, 1fr));
+    /* grid-auto-columns: minmax(30px, 1fr);
+    grid-auto-flow: column; */
+    align-items: center;
+}
+
+.popup__taskinfo-input {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #e7e7e7;
+    outline: none;
+    border-radius: 5px;
+}
+
+.popup__taskinfo-input[type='text'] {
+    padding-left: 10px;
+}
+
+.popup__taskinfo-table-header-item,
+.popup__taskinfo-cell {
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e7e7e7;
+}
+
+.popup__taskinfo-table-header-item {
+    font-family: 'Montserrat-SemiBold';
+    color: var(--text-color-popup-content-title);
+}
+
+.popup__taskinfo-table-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.popup__taskinfo-date {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 5px;
+    border: 1px solid #e7e7e7;
+    border-radius: 0.3125rem;
+}
+
+.popup-taskinfo-date-input {
+    width: 100%;
+    text-align: center;
+}
+
+/* Ячейка "Дата начала" */
+
+.popup__user-inner p {
+    padding: 0;
+}
+
+/* Ячейка "Постановщик" */
+
+/* Ячейка "Исполнитель" */
 
 /* Блок "Комментарий" */
 
