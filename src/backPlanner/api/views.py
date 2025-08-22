@@ -1143,7 +1143,7 @@ def getContracts(request):
                 FROM T212"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = ('id', 'caontractNum')
+                columns = ('id', 'contractNum')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
