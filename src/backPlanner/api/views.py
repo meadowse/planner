@@ -1132,23 +1132,26 @@ def getVacations(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 def getContracts(request):
-    with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
-        cur = con.cursor()
-        try:
-            sql = """
-            SELECT
-            T212.ID AS id,
-            T212.F4538 AS contractNum
-            FROM T212
-            """
-            cur.execute(sql)
-            result = cur.fetchall()
-            columns = ('id', 'caontractNum')
-            json_result = [
-                {col: value for col, value in zip(columns, row)}
-                for row in result
-            ]  # Создаем список словарей с сериализацией значений
-            return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
-        except Exception as ex:
-            print(f"НЕ удалось получить данные по договорам")
-            return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+    if request.method == 'POST':
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+            cur = con.cursor()
+            try:
+                sql = """
+                SELECT
+                T212.ID AS id,
+                T212.F4538 AS contractNum
+                FROM T212
+                """
+                cur.execute(sql)
+                result = cur.fetchall()
+                columns = ('id', 'caontractNum')
+                json_result = [
+                    {col: value for col, value in zip(columns, row)}
+                    for row in result
+                ]  # Создаем список словарей с сериализацией значений
+                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+            except Exception as ex:
+                print(f"НЕ удалось получить данные по договорам")
+                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
