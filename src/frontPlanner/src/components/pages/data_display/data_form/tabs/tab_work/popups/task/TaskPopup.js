@@ -950,8 +950,8 @@ export default function TaskPopup(props) {
     }
 
     useEffect(() => {
-        fetchTaskData(data?.task?.id, data?.task?.parent);
-        // console.log(`TaskInfo: ${JSON.stringify(fetchTaskData(data?.task?.id, data?.task?.parent), null, 4)}`);
+        fetchTaskData(data?.task?.id, data?.task?.parentId);
+        // console.log(`TaskInfo: ${JSON.stringify(fetchTaskData(data?.task?.id, data?.task?.parentId), null, 4)}`);
     }, []);
 
     useEffect(() => {
@@ -1018,7 +1018,7 @@ export default function TaskPopup(props) {
                                 onSelect={onClick}
                             />
                             <ParentsTasks
-                                presetValue={data?.task?.parent}
+                                presetValue={data?.task?.parentId}
                                 config={{
                                     hidden: dataTaskOperation?.hiddenFields?.parentTask,
                                     tasksData: data?.tasks
