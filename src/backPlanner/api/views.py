@@ -528,38 +528,34 @@ def getTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         taskId = obj.get('taskId')
-        parentId = obj.get('parentId')
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                if parentId is None:
-                    parent = ''
-                else:
-                    parent = f'T218.ID = {parentId} OR'
                 sql = f"""SELECT
-                                T218.ID, 
-                                T218.F4691 AS CONRACT_ID, 
-                                T218.F4695 AS TASK,
-                                T218.F5724 AS ID_OF_TYPE_OF_WORK,
-                                T218.F5569 AS dateStart,
-                                T218.F4696 AS DEADLINE,
-                                DIRECTOR.ID AS ID_OF_DIRECTOR,
-                                DIRECTOR.F16 AS ID_MM_DIRECTOR,
-                                DIRECTOR.F4886 AS DIRECTOR_NAME,
-                                EXECUTOR.ID AS ID_OF_EXECUTOR,
-                                EXECUTOR.F16 AS ID_MM_EXECUTOR,
-                                EXECUTOR.F4886 AS EXECUTOR_NAME, 
-                                T218.F4697 AS DONE,
-                                T218.F5646 AS parentId
-                                FROM T218
-                                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
-                                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                                WHERE {parent} T218.F5646 = {taskId}"""
+                T218.ID,
+                T218.F4691 AS CONRACT_ID,
+                T218.F4695 AS TASK,
+                T218.F5724 AS ID_OF_TYPE_OF_WORK,
+                T218.F5569 AS dateStart,
+                T218.F4696 AS DEADLINE,
+                DIRECTOR.ID AS ID_OF_DIRECTOR,
+                DIRECTOR.F16 AS ID_MM_DIRECTOR,
+                DIRECTOR.F4886 AS DIRECTOR_NAME,
+                EXECUTOR.ID AS ID_OF_EXECUTOR,
+                EXECUTOR.F16 AS ID_MM_EXECUTOR,
+                EXECUTOR.F4886 AS EXECUTOR_NAME,
+                T218.F4697 AS DONE,
+                T218.F5646 AS parentId,
+                T218.F4698 AS comment
+                FROM T218
+                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
+                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
+                WHERE T218.F5646 = {taskId}"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
                     'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'idDirector', 'idMMDirector',
-                    'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId')
+                    'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId', 'comment')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
@@ -577,13 +573,7 @@ def getTask(request):
                     else:
                         deadlineTask = {'deadlineTask': datetime.datetime.strftime(deadlineTask, '%Y-%m-%d')}
                     task.update(deadlineTask)
-                jsonResult = {'parent': {}, 'daughters': []}
-                for row in json_result:
-                    if row.get('id') == parentId:
-                        jsonResult.get('parent').update(row)
-                    else:
-                        jsonResult.get('daughters').append(row)
-                return JsonResponse(jsonResult, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по задаче {taskId}: {ex}")
                 return ex
