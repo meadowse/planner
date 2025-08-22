@@ -550,17 +550,17 @@ def getTask(request):
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                WHERE T218.F5646 = {taskId}"""
+                WHERE T218.F5646 = {taskId} OR T218.ID = {taskId}"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
                     'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'idDirector', 'idMMDirector',
                     'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId', 'comment')
-                json_result = [
+                json_result = {'subtasks': [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
-                ]  # Создаем список словарей с сериализацией значений
-                for task in json_result:
+                ]}  # Создаем список словарей с сериализацией значений
+                for task in json_result.get('subtasks'):
                     dateStart = task.get('dateStart')
                     if dateStart is None:
                         dateStart = {'dateStart': dateStart}
@@ -573,6 +573,9 @@ def getTask(request):
                     else:
                         deadlineTask = {'deadlineTask': datetime.datetime.strftime(deadlineTask, '%Y-%m-%d')}
                     task.update(deadlineTask)
+                    if task.get('id') == taskId:
+                        json_result.update(task)
+                        json_result.get('subtasks').remove(task)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по задаче {taskId}: {ex}")
