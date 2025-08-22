@@ -1093,6 +1093,7 @@ def getDataUser(request):
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
+@csrf_exempt
 def getVacations(request):
     if request.method == 'POST':
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
@@ -1131,17 +1132,15 @@ def getVacations(request):
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
+@csrf_exempt
 def getContracts(request):
     if request.method == 'POST':
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                sql = """
-                SELECT
-                T212.ID AS id,
+                sql = """SELECT T212.ID AS id,
                 T212.F4538 AS contractNum
-                FROM T212
-                """
+                FROM T212"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = ('id', 'caontractNum')
