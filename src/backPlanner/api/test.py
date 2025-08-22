@@ -13,6 +13,7 @@ from config import host, database, user, password, charset
 def getTask():
         # taskId = 3668
         # parentId = 2675
+        start = perf_counter()
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
@@ -45,7 +46,8 @@ def getTask():
                 #         jsonResult.get('parent').update(row)
                 #     else:
                 #         jsonResult.get('daughters').append(row)
-
+                end = perf_counter()
+                print(end - start)
                 with open('json.txt', 'w', encoding='utf-8') as f:
                     json.dump(result, f, ensure_ascii=False, indent=4)
                 return json.dumps(result, ensure_ascii=False, indent=4)
