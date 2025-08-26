@@ -16,6 +16,11 @@ export function isDate(value) {
     return typeof value === 'string' ? !isNaN(parseInt(value)) : !isNaN(value);
 }
 
+// Функция получения ключа по значению
+export function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+}
+
 // Функция получения объекта по ключу
 export function getObjectByValue(data, key, value) {
     return data.filter(obj => {

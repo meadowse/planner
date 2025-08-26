@@ -24,6 +24,7 @@ import { useTaskForm } from '@hooks/useAddTaskForm';
 import TaskService from '@services/tabs/tab_task.service';
 
 // Импорт доп.функционала
+import { getKeyByValue } from '@helpers/helper';
 import { getDateInSpecificFormat } from '@helpers/calendar';
 
 // Импорт стилей
@@ -32,10 +33,13 @@ import './task_popup.css';
 // Идентификатор договора
 function ContractNumber(props) {
     const { contract, isLoading, contractsIDs, config, setIdContract, onSelect } = props;
-    const [contractNum, setContractNum] = useState(() => {
-        if (contract?.number === 'Нет данных') return null;
-        return contract?.number;
-    });
+    // console.log(`ContractNumber contract: ${JSON.stringify(contract, null, 4)}`);
+    // console.log(`contractNum: ${JSON.stringify(getKeyByValue(contractsIDs, contract?.id), null, 4)}`);
+    // const [contractNum, setContractNum] = useState(() => {
+    //     if (contract?.number === 'Нет данных') return null;
+    //     return contract?.number;
+    // });
+    const [contractNum, setContractNum] = useState(null);
 
     const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
@@ -82,6 +86,13 @@ function ContractNumber(props) {
         onSelect('contractNum', '');
         setIdContract(null);
     }
+
+    useEffect(() => {
+        if (contractsIDs && Object.keys(contractsIDs).length !== 0) {
+            setContractNum(getKeyByValue(contractsIDs, contract?.id));
+            console.log(`contract number: ${getKeyByValue(contractsIDs, contract?.id)}`);
+        }
+    }, [contractsIDs]);
 
     useEffect(() => {
         if (contractNum && contractNum in contractsIDs) setIdContract(contractsIDs[contractNum]);
@@ -165,7 +176,7 @@ function TypeWork(props) {
     }
 
     useEffect(() => {
-        if (idContract) fetchTypesWork(idContract);
+        if (idContract) setTypeWork(fetchTypesWork(idContract));
         else setTypeWork({});
         // else {
         //     if (contractNum in contractsIDs) {
@@ -203,6 +214,7 @@ function TypeWork(props) {
 // Постановщик
 function Director(props) {
     const { presetValue, config, onSelect } = props;
+    // console.log(`Director presetValue: ${JSON.stringify(presetValue, null, 4)}`);
 
     const [statePopup, setStatePopup] = useState(false);
     const [director, setDirector] = useState(presetValue ? presetValue : {});
@@ -306,6 +318,7 @@ function Director(props) {
 // Исполнитель
 function Executor(props) {
     const { presetValue, config, onSelect } = props;
+    // console.log(`Executor presetValue: ${JSON.stringify(presetValue, null, 4)}`);
 
     const [statePopup, setStatePopup] = useState(false);
     const [executor, setExecutor] = useState(presetValue ? presetValue : {});
@@ -433,47 +446,67 @@ function Completeness(props) {
     ) : null;
 }
 
+// Получение задач
+// async function fetchTaskData(idTask, idParent) {
+//     const taskData = await TaskService.getTaskInfo(idTask, idParent);
+//     if (taskData && taskData.length !== 0) {
+//         const { subtasks, ...otherElems } = taskData;
+//         const newTask = {
+//             ...TaskService.formData(otherElems),
+//             subtasks: subtasks?.map(subtask => TaskService.formData(subtask))
+//         };
+//         // console.log(`newTask: ${JSON.stringify(newTask, null, 4)}`)
+//         setTaskData(newTask);
+//     }
+// }
+
 // Родительская задача
 function ParentsTasks(props) {
-    const { presetValue, config, onSelect } = props;
+    const { presetValue, config, onSelect, switchPopup } = props;
 
     const [parentTask, setParentTask] = useState({});
-    const parentTasks = Array.from(TaskService.getAllTasks(config?.tasksData, []) ?? []);
+    const allTasks = TaskService.getAllTasks(config?.tasksData, {}, config?.taskForDelete);
+    // console.log(`allTasks: ${JSON.stringify(allTasks, null, 4)}`);
 
     // Выбор род.задачи
     function onSelectParentTask(value) {
+        console.log(`onSelectParentTask value: ${JSON.stringify(value, null, 4)}`);
         setParentTask(value);
-        onSelect('parentTask', value);
+        onSelect('parentId', value);
     }
 
     // Удалить род.задачу
     function onDeleteParentTask() {
         setParentTask(null);
-        onSelect('parentTask', null);
+        onSelect('parentId', null);
+    }
+
+    // Открыть задачу
+    function onOpenTask() {
+        const { task, ...otherElems } = config?.popupData;
+        switchPopup('update', 'editTask', { ...otherElems, task: allTasks[parentTask?.value] });
+        // switchPopup('editTask', { ...otherElems, task: allTasks[parentTask?.value] });
+        // console.log(`parentTask: ${JSON.stringify(parentTask, null, 4)}`);
+        // setTaskData(TaskService.formData(allTasks[parentTask?.value]));
+        // setTaskData(allTasks[parentTask?.value]);
+
+        // setEditingTaskId(parentTask?.value);
+        // console.log(`selected task: ${JSON.stringify(allTasks[parentTask?.value], null, 4)}`);
+        // console.log(`config?.taskPopupData: ${JSON.stringify(config?.taskPopupData, null, 4)}`);
     }
 
     useEffect(() => {
+        // if (config?.taskForDelete) delete allTasks[config?.taskForDelete];
         if (presetValue) {
-            for (let i = 0; i < parentTasks.length; i++) {
-                if (parentTasks[i] && Object.keys(parentTasks[i]).length !== 0) {
-                    if (parentTasks[i]?.id === presetValue) {
-                        // parentTaskData = parentTasks[i];
-                        setParentTask(parentTasks[i]);
-                        break;
-                    }
-                }
+            if (presetValue in allTasks) {
+                const parentTaskData = { value: presetValue, title: allTasks[presetValue]?.task ?? 'Нет данных' };
+                setParentTask(parentTaskData);
+                onSelect('parentId', parentTaskData);
             }
         }
-        // console.log(
-        //     `parentTaskData: ${JSON.stringify(parentTaskData, null, 4)}\nparentTasksData: ${JSON.stringify(
-        //         parentTasks,
-        //         null,
-        //         4
-        //     )}`
-        // );
     }, []);
 
-    console.log(`ParentsTasks hidden: ${config?.hidden}`);
+    // console.log(`ParentsTasks hidden: ${config?.hidden}`);
 
     return !config?.hidden ? (
         <li className="popup__content-parent-tasks popup-content-item">
@@ -484,16 +517,26 @@ function ParentsTasks(props) {
                     icon="arrow_down_gr.svg"
                     nameMenu="Выбрать родительскую задачу"
                     specifiedVal={parentTask}
-                    dataSource={parentTasks}
+                    dataSource={Object.keys(allTasks)?.map(key => {
+                        return { value: key, title: allTasks[key]?.task };
+                    })}
                     onItemClick={onSelectParentTask}
                 />
                 {parentTask && Object.keys(parentTask).length !== 0 ? (
-                    <IconButton
-                        nameClass="icon-btn__delete-type"
-                        type="button"
-                        icon="cancel.svg"
-                        onClick={onDeleteParentTask}
-                    />
+                    <div className="popup__menu-actions">
+                        <IconButton
+                            nameClass="icon-btn__open-task"
+                            type="button"
+                            icon="transition.svg"
+                            onClick={onOpenTask}
+                        />
+                        <IconButton
+                            nameClass="icon-btn__delete-type"
+                            type="button"
+                            icon="cancel.svg"
+                            onClick={onDeleteParentTask}
+                        />
+                    </div>
                 ) : null}
             </div>
         </li>
@@ -613,7 +656,6 @@ function DeadlineTask(props) {
 
     const [calendarState, setCalendarState] = useState(false);
     const [deadline, setDeadline] = useState(presetValue ? presetValue : {});
-    // const [deadline, setDeadline] = useState(presetValue ? presetValue : '');
 
     function onShowCalendar() {
         setCalendarState(true);
@@ -694,131 +736,6 @@ function DeadlineTask(props) {
     ) : null;
 }
 
-function TaskItem({ taskItem }) {
-    console.log(`taskItem: ${JSON.stringify(taskItem, null, 4)}`);
-    return (
-        <ul className="popup__taskinfo-row popup__taskinfo-list">
-            {/* Подзадача */}
-            <li className="popup__taskinfo-cell">
-                <input type="text" className="popup__taskinfo-input" value={taskItem?.task ?? 'Нет данных'} />
-            </li>
-            {/* Дата начала */}
-            <li className="popup__taskinfo-cell">
-                <div className="popup__taskinfo-date">
-                    <input
-                        className="popup-taskinfo-date-input"
-                        type="text"
-                        value={taskItem?.dateStart ?? 'Нет данных'}
-                        disabled={true}
-                        // onChange={onChangeStartDate}
-                    />
-                </div>
-            </li>
-            {/* Дедлайн */}
-            <li className="popup__taskinfo-cell">
-                <div className="popup__taskinfo-date">
-                    <input
-                        className="popup-taskinfo-date-input"
-                        type="text"
-                        value={
-                            taskItem?.deadlineTask && Object.keys(taskItem?.deadlineTask).length !== 0
-                                ? taskItem?.deadlineTask?.value
-                                : 'Нет данных'
-                        }
-                        disabled={true}
-                    />
-                </div>
-            </li>
-            {/* Постановщик */}
-            <li className="popup__taskinfo-cell">
-                <div className="popup__user-inner">
-                    {taskItem?.director && Object.keys(taskItem?.director).length !== 0 ? (
-                        <BgFillText
-                            type="p"
-                            text={taskItem?.director.fullName}
-                            // bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
-                        />
-                    ) : (
-                        <BgFillText
-                            type="p"
-                            text="Нет данных"
-                            // bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
-                        />
-                    )}
-                </div>
-            </li>
-            {/* Исполнитель */}
-            <li className="popup__taskinfo-cell">
-                <div className="popup__user-inner">
-                    {taskItem?.executor && Object.keys(taskItem?.executor).length !== 0 ? (
-                        <BgFillText
-                            type="p"
-                            text={taskItem?.executor.fullName}
-                            // bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
-                        />
-                    ) : (
-                        <BgFillText
-                            type="p"
-                            text="Нет данных"
-                            // bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
-                        />
-                    )}
-                </div>
-            </li>
-            {/* Завершено */}
-            <li className="popup__taskinfo-cell">
-                <div className="popup__checkbox-wrapper">
-                    <input
-                        className="popup__inpt-checkbox"
-                        type="checkbox"
-                        checked={taskItem?.done}
-                        // onChange={onChangeCompleteness}
-                    />
-                    <span className="popup__custom-checkbox"></span>
-                </div>
-            </li>
-        </ul>
-    );
-}
-
-function TaskInfo(props) {
-    const { title, taskData } = props;
-
-    // console.log(`TaskInfo\ntaskId: ${taskId}parentId: ${parentId}`);
-
-    return (
-        <div className="popup__taskinfo">
-            <h2 className="popup-content-title">{title}</h2>
-            {/* <div className="popup__taskinfo-actions">
-                Родительская задача
-                <div className="popup__taskinfo-btn-add" onClick={addSubTask}>
-                    +
-                </div>
-                <button className="popup__taskinfo-btn-add">+</button>
-            </div> */}
-            <div className="popup__taskinfo-wrapper">
-                <div className="popup__taskinfo-content">
-                    <ul className="popup__taskinfo-table-header popup__taskinfo-list">
-                        <li className="popup__taskinfo-table-header-item">Задача</li>
-                        <li className="popup__taskinfo-table-header-item">Дата начала</li>
-                        <li className="popup__taskinfo-table-header-item">Дедлайн</li>
-                        <li className="popup__taskinfo-table-header-item">Постановщик</li>
-                        <li className="popup__taskinfo-table-header-item">Исполнитель</li>
-                        <li className="popup__taskinfo-table-header-item">Завершено</li>
-                    </ul>
-                    <div className="popup__taskinfo-table-wrapper">
-                        <div className="popup__taskinfo-table">
-                            {taskData && taskData.length !== 0
-                                ? taskData.map((taskItem, indTask) => <TaskItem key={indTask} taskItem={taskItem} />)
-                                : null}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
 // Комментарий
 function Comment(props) {
     const { presetValue, config, onChange } = props;
@@ -842,8 +759,218 @@ function Comment(props) {
     ) : null;
 }
 
+function TaskItem(props) {
+    const { taskItem, popupData, config, switchPopup } = props;
+    const { navigate, addToHistory, appTheme } = config;
+    // console.log(`taskItem: ${JSON.stringify(taskItem, null, 4)}`);
+
+    // Открыть задачу
+    function onOpenTask() {
+        const { task, ...otherElems } = popupData;
+        // switchPopup('editTask', { ...otherElems, task: taskItem });
+        switchPopup('update', 'editTask', { ...otherElems, task: taskItem });
+        // setTaskData(taskItem);
+        // setEditingTaskId(taskItem?.id);
+    }
+
+    // Переход к профилю пользователя
+    function onClickUser(user) {
+        startTransition(() => {
+            addToHistory(`${window.location.pathname}`);
+            navigate(`../../user/${user?.mmId}/profile/profile/`, {
+                state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+            });
+
+            // navigate(`../../user/profile/`, {
+            //     state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
+            // });
+        });
+    }
+
+    return (
+        <ul key={taskItem?.id} className="popup__taskinfo-row popup__taskinfo-list">
+            {/* Задача */}
+            <li className="popup__taskinfo-cell popup__taskinfo-cell-subtask">
+                <div className="popup__taskinfo-subtask" onClick={onOpenTask}>
+                    {taskItem?.task ?? 'Нет данных'}
+                </div>
+                {/* <input type="text" className="popup__taskinfo-input" value={taskItem?.task ?? 'Нет данных'} /> */}
+                {/* <IconButton nameClass="icon-btn__open-task" type="button" icon="contract.svg" onClick={onOpenTask} /> */}
+            </li>
+            {/* Дата начала */}
+            <li className="popup__taskinfo-cell">
+                <div className="popup__taskinfo-date">
+                    <input
+                        className="popup-taskinfo-date-input"
+                        type="text"
+                        value={taskItem?.dateStart || taskItem?.startDate || 'Нет данных'}
+                        disabled={true}
+                    />
+                </div>
+            </li>
+            {/* Дедлайн */}
+            <li className="popup__taskinfo-cell">
+                <div className="popup__taskinfo-date">
+                    <input
+                        className="popup-taskinfo-date-input"
+                        type="text"
+                        value={
+                            taskItem?.deadlineTask && Object.keys(taskItem?.deadlineTask).length !== 0
+                                ? taskItem?.deadlineTask?.value
+                                : 'Нет данных'
+                        }
+                        disabled={true}
+                    />
+                </div>
+            </li>
+            {/* Постановщик */}
+            <li className="popup__taskinfo-cell">
+                <div className="popup__user-inner">
+                    {taskItem?.director && Object.keys(taskItem?.director).length !== 0 ? (
+                        <div onClick={() => onClickUser(taskItem?.director)}>
+                            <BgFillText
+                                type="p"
+                                text={taskItem?.director.fullName}
+                                bgColor={appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                            />
+                        </div>
+                    ) : (
+                        <BgFillText type="p" text="Нет данных" bgColor={appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'} />
+                    )}
+                </div>
+            </li>
+            {/* Исполнитель */}
+            <li className="popup__taskinfo-cell">
+                <div className="popup__user-inner">
+                    {taskItem?.executor && Object.keys(taskItem?.executor).length !== 0 ? (
+                        <div onClick={() => onClickUser(taskItem?.director)}>
+                            <BgFillText
+                                type="p"
+                                text={taskItem?.executor?.fullName}
+                                bgColor={appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                            />
+                        </div>
+                    ) : (
+                        <BgFillText type="p" text="Нет данных" bgColor={appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'} />
+                    )}
+                </div>
+            </li>
+            {/* Завершено */}
+            <li className="popup__taskinfo-cell">
+                <div className="popup__checkbox-wrapper">
+                    <input
+                        className="popup__inpt-checkbox"
+                        type="checkbox"
+                        checked={taskItem?.done}
+                        disabled={true}
+                        // onChange={onChangeCompleteness}
+                    />
+                    <span className="popup__custom-checkbox"></span>
+                </div>
+            </li>
+        </ul>
+    );
+}
+
+function TaskInfo(props) {
+    const { title, popupData, taskData, config, switchPopup } = props;
+    const { navigate, addToHistory, appTheme } = config;
+    // console.log(`TaskInfo\ntaskId: ${taskId}parentId: ${parentId}`);
+
+    const [subTask, setSubTask] = useState({
+        id: -1,
+        contractId: -1,
+        task: null,
+        idTypeWork: null,
+        dateStart: null,
+        deadlineTask: null,
+        done: null,
+        parentId: -1,
+        director: null,
+        executor: null
+    });
+
+    // Инициализация данных подзадачи
+    async function initSubtask() {
+        const tempSubTask = Object.assign({}, subTask);
+
+        // Установка дат по умолчанию
+        tempSubTask.dateStart = getDateInSpecificFormat(new Date(), {
+            format: 'YYYYMMDD',
+            separator: '-'
+        });
+        tempSubTask.deadlineTask = {
+            value: getDateInSpecificFormat(new Date(), {
+                format: 'YYYYMMDD',
+                separator: '-'
+            })
+        };
+
+        // Установка родителя по умолчанию
+        tempSubTask.parentId = taskData[0]?.parentId;
+
+        // Установка пользователей по умолчанию
+        tempSubTask.director = await TaskService.getAuthorizedEmployee(Cookies.get('MMUSERID'));
+        tempSubTask.executor = await TaskService.getAuthorizedEmployee(Cookies.get('MMUSERID'));
+
+        setSubTask(tempSubTask);
+    }
+
+    // Добавление подзадачи
+    function addSubtask() {
+        const { task, ...otherElems } = popupData;
+        // switchPopup('addSubTask', { ...otherElems, task: subTask });
+        switchPopup('creation', 'addSubTask', { ...otherElems, task: subTask });
+    }
+
+    useEffect(() => {
+        // Инициализация данных подзадачи
+        initSubtask();
+    }, []);
+
+    return (
+        <div className="popup__taskinfo">
+            {/* <h2 className="popup-content-title">{title}</h2> */}
+            <div className="popup__taskinfo-actions">
+                {title}
+                <div className="popup__taskinfo-btn-add" onClick={addSubtask}>
+                    +
+                </div>
+            </div>
+            <div className="popup__taskinfo-wrapper">
+                <div className="popup__taskinfo-content">
+                    <ul className="popup__taskinfo-table-header popup__taskinfo-list">
+                        <li className="popup__taskinfo-table-header-item">Задача</li>
+                        <li className="popup__taskinfo-table-header-item">Дата начала</li>
+                        <li className="popup__taskinfo-table-header-item">Дедлайн</li>
+                        <li className="popup__taskinfo-table-header-item">Постановщик</li>
+                        <li className="popup__taskinfo-table-header-item">Исполнитель</li>
+                        <li className="popup__taskinfo-table-header-item">Завершено</li>
+                    </ul>
+                    <div className="popup__taskinfo-table-wrapper">
+                        <div className="popup__taskinfo-table">
+                            {taskData && taskData.length !== 0
+                                ? taskData.map((taskItem, indTask) => (
+                                      <TaskItem
+                                          key={indTask}
+                                          popupData={popupData}
+                                          taskItem={taskItem}
+                                          config={{ appTheme, navigate, addToHistory }}
+                                          switchPopup={switchPopup}
+                                      />
+                                  ))
+                                : null}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function TaskPopup(props) {
-    const { additClass, title, data, taskOperation, addTaskState, setAddTaskState } = props;
+    // const { additClass, title, data, taskOperation, popupState, setPopupState, setSubTaskState, setTaskData } = props;
+    const { additClass, title, data, taskOperation, popupState, setPopupState, switchPopup } = props;
 
     const theme = localStorage.getItem('appTheme');
     const dataTaskOperation = TaskService.getDataFormOperation(taskOperation);
@@ -851,42 +978,31 @@ export default function TaskPopup(props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const [taskInfo, setTaskInfo] = useState({});
-    const [idContract, setIdContract] = useState(data?.idContract ? data?.idContract : null);
+    const [idContract, setIdContract] = useState(data?.idContract ?? null);
     const [contractsIDs, setContractsIDs] = useState({});
+    const [subTasks, setSubTasks] = useState([]);
 
     const { values, onChange, onClick } = useTaskForm(
         TaskService.getTaskData(data?.task, dataTaskOperation?.disabledFields),
         dataTaskOperation?.disabledFields
     );
     // const socket = useContext(SocketContext);
+    const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
 
-    console.log(`values: ${JSON.stringify(values, null, 4)}`);
+    // console.log(`values: ${JSON.stringify(values, null, 4)}`);
     // console.log(`dataTaskOperation: ${JSON.stringify(dataTaskOperation, null, 4)}`);
     // console.log(`TaskPopup data: ${JSON.stringify(data, null, 4)}`);
 
-    // Показать модальное окно
-    function onShowModal() {
-        setIsModalOpen(true);
-    }
-
     // Удаление задачи
     function onDeleteTask() {
-        // const idContract = JSON.parse(localStorage.getItem('idContract'));
-        // setIsModalOpen(true);
         if (data?.task && Object.keys(data?.task).length !== 0) {
             TaskService.deleteTask(data?.task?.id);
 
-            setAddTaskState(false);
+            setPopupState(false);
             navigate(window.location.pathname);
+            navigate(0);
         }
-    }
-
-    // Получение задач
-    async function fetchTaskData(idTask, idParent) {
-        const taskData = await TaskService.getTaskInfo(idTask, idParent);
-        if (taskData && taskData.length !== 0) setTaskInfo(taskData);
     }
 
     // Получение
@@ -908,7 +1024,8 @@ export default function TaskPopup(props) {
         e.preventDefault();
         // const idContract = JSON.parse(localStorage.getItem('idContract'));
         // Создание новой задачи
-        if (!data?.task || Object.keys(data?.task).length === 0) {
+        // !data?.task || Object.keys(data?.task).length === 0
+        if (taskOperation === 'creation') {
             const resultData = {
                 typeWorkId: values?.typeWork?.id,
                 contractId: +idContract,
@@ -916,10 +1033,12 @@ export default function TaskPopup(props) {
                 executorId: values?.executor?.id,
                 dateStart: values?.dateStart,
                 deadline: values?.deadlineTask?.value,
-                parentId: values?.parentTask?.id,
+                parentId: values?.parentId?.value,
                 task: values?.task,
                 comment: values?.comment
             };
+
+            // alert(`Add task data: ${JSON.stringify(values, null, 4)}`);
 
             await TaskService.addTask(resultData, null, {
                 director: values?.director,
@@ -927,7 +1046,7 @@ export default function TaskPopup(props) {
             });
         }
         // Редактирование задачи
-        else {
+        if (taskOperation === 'update') {
             const resultData = {
                 typeWorkId: values?.typeWork?.id,
                 contractId: idContract,
@@ -936,28 +1055,36 @@ export default function TaskPopup(props) {
                 taskId: data?.task?.id,
                 dateStart: values?.dateStart,
                 deadline: values?.deadlineTask?.value,
-                parentId: values?.parentTask?.id,
+                parentId: values?.parentId?.value,
                 done: +values?.done,
                 task: values?.task,
                 comment: values?.comment
             };
 
+            // alert(`Edit task data: ${JSON.stringify(values, null, 4)}`);
+
             await TaskService.editTask(resultData);
         }
 
-        setAddTaskState(false);
+        setPopupState(false);
         navigate(window.location.pathname);
+        // navigate(0);
+    }
+
+    // Получение информации о задаче
+    async function fetchTaskData(idTask, idParent) {
+        const taskData = await TaskService.getTaskInfo(idTask, idParent);
+        if (taskData && Object.keys(taskData).length !== 0) setSubTasks(TaskService.formData(taskData?.subtasks));
     }
 
     useEffect(() => {
+        // Загрузка информации о подзадач родительской задачи
         fetchTaskData(data?.task?.id, data?.task?.parentId);
-        // console.log(`TaskInfo: ${JSON.stringify(fetchTaskData(data?.task?.id, data?.task?.parentId), null, 4)}`);
     }, []);
 
     useEffect(() => {
-        console.log(`TaskPopup idContract: ${data?.idContract}`);
-        // if (!data?.idContract) fetchContractsIDs();
-        if (!idContract) fetchContractsIDs();
+        // Загрузка номеров договоров
+        fetchContractsIDs();
     }, [idContract]);
 
     return (
@@ -968,8 +1095,8 @@ export default function TaskPopup(props) {
                 title={title}
                 additClass={additClass}
                 overlay={true}
-                statePopup={addTaskState}
-                setStatePopup={setAddTaskState}
+                statePopup={popupState}
+                setStatePopup={setPopupState}
             >
                 <form
                     id="add-task-form"
@@ -978,29 +1105,29 @@ export default function TaskPopup(props) {
                 >
                     <div className="popup__content-add-task-top">
                         <ul className="popup__content-add-task-left">
-                            {!data?.idContract ? (
-                                <ContractNumber
-                                    contract={{
-                                        id: idContract,
-                                        number: data?.task?.contractNum
-                                    }}
-                                    isLoading={isLoading}
-                                    contractsIDs={contractsIDs}
-                                    config={{
-                                        partition: data?.partition,
-                                        hidden: dataTaskOperation?.hiddenFields?.typeWork ? true : false,
-                                        contractOperations: data?.contractOperations
-                                    }}
-                                    setIdContract={setIdContract}
-                                    onSelect={onClick}
-                                />
-                            ) : null}
+                            {/* Номер договора */}
+                            <ContractNumber
+                                contract={{
+                                    id: +idContract
+                                }}
+                                isLoading={isLoading}
+                                contractsIDs={contractsIDs}
+                                config={{
+                                    partition: data?.partition,
+                                    hidden: dataTaskOperation?.hiddenFields?.typeWork ? true : false,
+                                    contractOperations: data?.contractOperations
+                                }}
+                                setIdContract={setIdContract}
+                                onSelect={onClick}
+                            />
+                            {/* Вид работы */}
                             <TypeWork
                                 idContract={idContract}
                                 config={{ hidden: dataTaskOperation?.hiddenFields?.typeWork ? true : false }}
                                 setIdContract={setIdContract}
                                 onSelect={onClick}
                             />
+                            {/* Постановщик */}
                             <Director
                                 presetValue={data?.task?.director}
                                 config={{
@@ -1009,6 +1136,7 @@ export default function TaskPopup(props) {
                                 }}
                                 onSelect={onClick}
                             />
+                            {/* Исполнитель */}
                             <Executor
                                 presetValue={data?.task?.executor}
                                 config={{
@@ -1017,29 +1145,37 @@ export default function TaskPopup(props) {
                                 }}
                                 onSelect={onClick}
                             />
+                            {/* Родительская задача */}
                             <ParentsTasks
                                 presetValue={data?.task?.parentId}
                                 config={{
                                     hidden: dataTaskOperation?.hiddenFields?.parentTask,
+                                    popupData: { ...data },
+                                    taskForDelete: +data?.task?.id,
                                     tasksData: data?.tasks
                                 }}
                                 onSelect={onClick}
+                                switchPopup={switchPopup}
                             />
+                            {/* Название задачи */}
                             <TaskName
                                 presetValue={data?.task?.task}
                                 config={{ hidden: dataTaskOperation?.hiddenFields?.task ? true : false }}
                                 onChange={onChange}
                             />
+                            {/* Дата начала */}
                             <CommencementDate
                                 presetValue={data?.task?.dateStart || data?.task?.startDate}
                                 config={{ hidden: dataTaskOperation?.hiddenFields?.dateStart ? true : false }}
                                 onSelect={onClick}
                             />
+                            {/* Дедлайн */}
                             <DeadlineTask
                                 presetValue={data?.task?.deadlineTask}
                                 config={{ hidden: dataTaskOperation?.hiddenFields?.deadlineTask ? true : false }}
                                 onSelect={onClick}
                             />
+                            {/* Завершенность */}
                             <Completeness
                                 presetValue={data?.task?.done}
                                 config={{ hidden: dataTaskOperation?.hiddenFields?.done ? true : false }}
@@ -1047,32 +1183,33 @@ export default function TaskPopup(props) {
                             />
                         </ul>
                         <div className="popup__content-add-task-right">
+                            {/* Комментарий */}
                             <Comment
-                                presetValue={null}
+                                presetValue={data?.task?.comment}
                                 config={{ hidden: dataTaskOperation?.hiddenFields?.comment ? true : false }}
                                 onChange={onChange}
                             />
                         </div>
                     </div>
-                    {taskInfo && Object.keys(taskInfo).length !== 0 ? (
+                    {subTasks && subTasks.length !== 0 ? (
                         <div className="popup__content-add-task-bottom">
-                            {taskInfo?.parent && Object.keys(taskInfo?.parent).length !== 0 ? (
-                                <TaskInfo
-                                    title="Родительская задача"
-                                    taskData={[{ ...TaskService.formData(taskInfo?.parent) }]}
-                                />
-                            ) : null}
-                            {taskInfo?.daughters && taskInfo?.daughters.length !== 0 ? (
-                                <TaskInfo
-                                    title="Подзадачи"
-                                    taskData={taskInfo?.daughters?.map(item => TaskService.formData(item))}
-                                />
-                            ) : null}
+                            {/* Отображение подзадач */}
+                            <TaskInfo
+                                title="Подзадачи"
+                                popupData={{ ...data }}
+                                taskData={subTasks.map(subTask => TaskService.formItem(subTask))}
+                                config={{
+                                    appTheme: theme,
+                                    navigate,
+                                    addToHistory
+                                }}
+                                switchPopup={switchPopup}
+                            />
                         </div>
                     ) : null}
                 </form>
-                {data?.task && Object.keys(data?.task).length !== 0 ? (
-                    <button className="popup__content-del-task" onClick={onShowModal}>
+                {taskOperation === 'update' ? (
+                    <button className="popup__content-del-task" onClick={() => setIsModalOpen(true)}>
                         Удалить задачу
                     </button>
                 ) : null}
@@ -1089,64 +1226,3 @@ export default function TaskPopup(props) {
         </>
     );
 }
-
-// function SubTasks(props) {
-//     const { presetValue, onClick, onСhangeByIndex } = props;
-//     const [subTasks, setSubTasks] = useState(presetValue && presetValue.length !== 0 ? presetValue : []);
-//     // const [subTasksData, setSubTasksData] = useState([]);
-//     const [subTask, setSubTask] = useState({
-//         task: '',
-//         dateStart: null,
-//         deadlineTask: null,
-//         done: 0,
-//         director: null,
-//         executor: null
-//     });
-
-//     function addSubTask() {
-//         const subTasksData = Array.from(subTasks);
-//         subTasksData.push(subTask);
-//         // subtasks.push(<SubTask subTasksData={subTasksData} setSubTasksData={setSubTasksData} />);
-//         setSubTasks(subTasksData);
-//         onClick('subTasks', subTasksData);
-//     }
-
-//     return (
-//         <div className="popup__subtasks">
-//             {/* <h2 className="popup-content-title">Подзадачи</h2> */}
-//             <div className="popup__subtasks-actions">
-//                 Подзадачи
-//                 <div className="popup__subtasks-btn-add" onClick={addSubTask}>
-//                     +
-//                 </div>
-//                 {/* <button className="popup__subtasks-btn-add">+</button> */}
-//             </div>
-//             <div className="popup__subtasks-wrapper">
-//                 <div className="popup__subtasks-content">
-//                     <ul className="popup__subtasks-table-header popup__subtasks-list">
-//                         <li className="popup__subtasks-table-header-item">Задача</li>
-//                         <li className="popup__subtasks-table-header-item">Дата начала</li>
-//                         <li className="popup__subtasks-table-header-item">Дедлайн</li>
-//                         <li className="popup__subtasks-table-header-item">Постановщик</li>
-//                         <li className="popup__subtasks-table-header-item">Исполнитель</li>
-//                         <li className="popup__subtasks-table-header-item">Завершено</li>
-//                     </ul>
-//                     <div className="popup__subtasks-table-wrapper">
-//                         <div className="popup__subtasks-table">
-//                             {subTasks && subTasks.length !== 0
-//                                 ? subTasks.map((subTask, indTask) => (
-//                                       <TaskItem
-//                                           key={indTask}
-//                                           indTask={indTask}
-//                                           subTask={subTask}
-//                                           onСhangeByIndex={onСhangeByIndex}
-//                                       />
-//                                   ))
-//                                 : null}
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }

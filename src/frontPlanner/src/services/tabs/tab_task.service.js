@@ -1,45 +1,55 @@
 import axios from 'axios';
 
 // Импорт доп.функционала
-import { findNestedObj } from '@helpers/helper';
+import { isArray, findNestedObj } from '@helpers/helper';
 import { getDateInSpecificFormat } from '@helpers/calendar';
 
 // Импорт конфигураций
-import { DATA_FORM_OPERATIONS } from '@config/tabs/tab_work.config';
+import { DATA_CONVERSION_MAP, DATA_FORM_OPERATIONS } from '@config/tabs/tab_work.config';
 
 const getDataFormOperation = operation => {
     return findNestedObj(DATA_FORM_OPERATIONS, 'key', operation);
 };
 
 const formData = data => {
+    return data && isArray(data) && data.length !== 0
+        ? data?.map(item => {
+              const newItem = {};
+              Object.keys(item).map(key => {
+                  newItem[key] = DATA_CONVERSION_MAP[key] ? DATA_CONVERSION_MAP[key](item[key]) : item[key];
+              });
+              return newItem;
+          })
+        : [];
+};
+
+const formItem = data => {
     return {
+        id: data?.id ?? null,
         contractId: data?.contractId ?? null,
+        task: data?.task ?? null,
+        idTypeWork: data?.idTypeWork ?? null,
+        dateStart: data?.dateStart,
+        deadlineTask: data?.deadlineTask ? { value: data.deadlineTask } : null,
+        done: data?.done ?? null,
         parentId: data?.parentId ?? null,
-        taskId: data?.id ?? null,
-        task: data?.task ?? '',
-        dateStart: data?.dateStart ?? '',
-        deadlineTask: data?.deadlineTask
-            ? {
-                  value: data?.deadlineTask
-              }
-            : null,
         director: {
-            id: data?.idDirector,
-            mmId: data?.idMMDirector,
-            fullName: data?.directorFIO,
-            photo: `https://mm-mpk.ru/api/v4/users/${data?.idMMDirector}/image`
+            id: data.idDirector || data.id || null,
+            mmId: data?.idMMDirector || data.mmId || null,
+            fullName: data?.directorFIO || data?.directorName || data?.fullName
+            //   photo: director.mmId ? `https://mm-mpk.ru/api/v4/users/${director.mmId}/image` : '/img/user.svg'
         },
         executor: {
-            id: data?.idExecutor,
-            mmId: data?.idMMExecutor,
-            fullName: data?.executorFIO,
-            photo: `https://mm-mpk.ru/api/v4/users/${data?.idMMExecutor}/image`
-        },
-        done: data?.done
+            id: data.idExecutor || data.id || null,
+            mmId: data?.idMMExecutor || data.mmId || null,
+            fullName: data?.executorFIO || data?.directorName || data?.fullName
+            //   photo: director.mmId ? `https://mm-mpk.ru/api/v4/users/${director.mmId}/image` : '/img/user.svg'
+        }
     };
 };
 
 const getTaskData = (data, disabledFields) => {
+    // console.log(`getTask data: ${JSON.stringify(data, null, 4)}`);
     const dataConf = {};
     const DEFAULT_VALUES = {
         //
@@ -51,8 +61,8 @@ const getTaskData = (data, disabledFields) => {
             return value && Object.keys(value).length !== 0 ? value : null;
         },
         // Родительcкая Задача
-        parentTask: value => {
-            return value && Object.keys(value).length !== 0 ? value : null;
+        parentId: value => {
+            return value ? value : '';
         },
         // Задача
         task: value => {
@@ -90,6 +100,10 @@ const getTaskData = (data, disabledFields) => {
         comment: value => {
             return value ? value : '';
         }
+        // Подзадачи
+        // subtasks: value => {
+        //     return value && value.length !== 0 ? value : [];
+        // }
     };
 
     if (data && Object.keys(data).length !== 0) {
@@ -130,21 +144,32 @@ const getTaskData = (data, disabledFields) => {
 };
 
 // Получение всех задач
-const getAllTasks = (tasks, newTasks) => {
+const getAllTasks = (tasks, newTasks, taskForDelete) => {
     const tasksData = newTasks;
 
     tasks?.forEach(item => {
-        const { id, task, subtasks } = item;
+        const { id, subtasks, ...otherElems } = item;
         if (subtasks && subtasks.length !== 0) {
-            tasksData.push({ id, title: task });
+            tasksData[id] = { id, ...otherElems, subtasks };
             return getAllTasks(subtasks, tasksData);
-        } else tasksData.push({ id, title: task });
+        } else tasksData[id] = { id, ...otherElems, subtasks };
     });
+
+    Object.keys(tasksData).forEach(key => {
+        const newItem = {};
+        Object.keys(tasksData[key]).forEach(keyTask => {
+            newItem[keyTask] = DATA_CONVERSION_MAP[keyTask]
+                ? DATA_CONVERSION_MAP[keyTask](tasksData[key][keyTask])
+                : tasksData[key][keyTask];
+        });
+        tasksData[key] = newItem;
+    });
+
+    if (taskForDelete) delete tasksData[taskForDelete];
 
     return tasksData;
 };
 
-// getTask taskId parentId
 const getTaskInfo = async (idTask, idParent) => {
     let taskInfoData = {};
     await axios
@@ -181,12 +206,12 @@ const getContractsIDs = async () => {
     const contractsIDs = {};
 
     await axios
-        .get(`${window.location.origin}/api/`)
+        .post(`${window.location.origin}/api/getContracts`)
         .then(response => {
             if (response.status === 200) {
                 if (response.data && response.data.length !== 0) {
                     response.data.forEach(contract => {
-                        contractsIDs[contract.contractNum] = contract?.contractId || -1;
+                        contractsIDs[contract.contractNum] = contract?.id || -1;
                     });
                 }
             }
@@ -356,6 +381,7 @@ const deleteTask = async idTask => {
 };
 
 const TaskService = {
+    formItem,
     formData,
     getDataFormOperation,
     getAllTasks,
@@ -368,5 +394,20 @@ const TaskService = {
     editTask,
     deleteTask
 };
+
+// old
+// const getAllTasks = (tasks, newTasks) => {
+//     const tasksData = newTasks;
+
+//     tasks?.forEach(item => {
+//         const { id, task, subtasks } = item;
+//         if (subtasks && subtasks.length !== 0) {
+//             tasksData.push({ id, title: task });
+//             return getAllTasks(subtasks, tasksData);
+//         } else tasksData.push({ id, title: task });
+//     });
+
+//     return tasksData;
+// };
 
 export default TaskService;

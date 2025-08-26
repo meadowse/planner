@@ -1,4 +1,4 @@
-import { startTransition, useRef, useState } from 'react';
+import { startTransition, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
@@ -411,32 +411,29 @@ const COLUMNS = [
     //
     {
         Header: props => {
-            const [addTaskState, setAddTaskState] = useState(false);
+            const { idContract, tasks, task, setPopupState, openPopup } = props?.config;
+
+            // const [addTaskState, setAddTaskState] = useState(false);
+            // const [popupState, setPopupState] = useState(false);
+
+            // Добавить новую задачу
+            const onOpenAddTaskPopup = () => {
+                setPopupState(true);
+                openPopup('creation', 'addTask', {
+                    idContract,
+                    tasks,
+                    task
+                });
+            };
+
             return (
                 <>
                     <div className="cell__task-title">
                         Задача
-                        <button className="cell__task-title-btn" onClick={() => setAddTaskState(true)}>
+                        <button className="cell__task-title-btn" onClick={onOpenAddTaskPopup}>
                             +
                         </button>
                     </div>
-                    {addTaskState &&
-                        createPortal(
-                            <TaskPopup
-                                additClass="add-task"
-                                title="Новая задача"
-                                data={{
-                                    idContract: props?.config?.idContract,
-                                    tasks: props?.config?.tasks,
-                                    task: props?.config?.task
-                                    // contractsIDs: props?.config?.contractsIDs
-                                }}
-                                operation="creation"
-                                addTaskState={addTaskState}
-                                setAddTaskState={setAddTaskState}
-                            />,
-                            document.getElementById('root')
-                        )}
                 </>
             );
         },
@@ -444,9 +441,22 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
+            const { partition, tasks, dataOperation, setPopupState, openPopup } = props?.config;
+
             const refCell = useRef();
-            const [addTaskState, setAddTaskState] = useState(false);
-            console.log(`Original task: ${JSON.stringify(props?.row?.original, null, 4)}`);
+
+            // Открыть окно редактирования задачи
+            const onOpenEditTaskPopup = () => {
+                setPopupState(true);
+                openPopup('update', 'editTask', {
+                    idContract: props?.row?.original?.contractId,
+                    partition,
+                    tasks,
+                    task: props?.row?.original,
+                    contractOperations: dataOperation
+                });
+            };
+
             return (
                 <>
                     <div
@@ -461,7 +471,7 @@ const COLUMNS = [
                             className="cell__task"
                             ref={refCell}
                             onMouseLeave={() => refCell?.current.scrollTo(0, 0)}
-                            onClick={() => setAddTaskState(true)}
+                            onClick={onOpenEditTaskPopup}
                         >
                             <span>{props?.value || 'Нет данных'}</span>
                         </p>
@@ -471,26 +481,6 @@ const COLUMNS = [
                             </span>
                         ) : null}
                     </div>
-                    {addTaskState &&
-                        createPortal(
-                            <TaskPopup
-                                additClass="add-task"
-                                title="Редактирование задачи"
-                                data={{
-                                    // idContract: props?.config?.idContract,
-                                    idContract: props?.row?.original?.contractId,
-                                    partition: props?.config?.partition,
-                                    tasks: props?.config?.tasks,
-                                    task: props?.row?.original,
-                                    contractOperations: props?.config?.dataOperation
-                                    // contractsIDs: props?.config?.contractsIDs
-                                }}
-                                taskOperation="update"
-                                addTaskState={addTaskState}
-                                setAddTaskState={setAddTaskState}
-                            />,
-                            document.getElementById('root')
-                        )}
                 </>
             );
         }

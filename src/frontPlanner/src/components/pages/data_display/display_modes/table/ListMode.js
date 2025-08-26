@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 // Импорт компонетов
 import IconButton from '@generic/elements/buttons/IcButton.js';
+import TaskPopup from '@components/pages/data_display/data_form/tabs/tab_work/popups/task/TaskPopup';
 import FiltersTable from './filters/FiltersTable.js';
 
 // Импорт кастомных хуков
@@ -21,6 +22,7 @@ import DataDisplayService from '@services/data_display.service.js';
 
 // Импорт стилей
 import './list_mode.css';
+import { createPortal } from 'react-dom';
 
 // Ячейка шапки таблицы
 function HeadCell({ cellData, cellConfig }) {
@@ -53,13 +55,15 @@ export default function ListMode(props) {
     const [data, setData] = useState([]);
     const [order, setOrder] = useState('ASC');
 
+    const [popupState, setPopupState] = useState(false);
+    const [popupInfo, setPopupInfo] = useState({
+        operation: null,
+        mode: null,
+        data: null
+    });
+
     const { sortData } = useListMode(data);
     const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
-    // const columns = useMemo(() => {
-    //     // Формируем колонки, которые есть в массиве columns
-    //     const columnsMap = new Map(getSampleColumns(modeConfig?.keys).map(col => [col.accessor, col]));
-    //     return modeConfig?.keys.filter(key => columnsMap.has(key)).map(key => columnsMap.get(key));
-    // }, [testData]);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
@@ -82,7 +86,9 @@ export default function ListMode(props) {
                 idContract: modeConfig?.idContract,
                 // contractsIDs: modeConfig?.contractsIDs,
                 tasks: data,
-                task: {}
+                task: {},
+                setPopupState,
+                openPopup
             };
             return <HeadCell cellData={headData} cellConfig={config} />;
         },
@@ -111,7 +117,9 @@ export default function ListMode(props) {
                 // task: data[cellData?.indRow]
                 //     ? { ...data[cellData?.indRow], contractNum: data[cellData?.indRow]?.contractNum }
                 //     : {},
-                dataOperation: findNestedObj(modeConfig?.dataOperations, 'key', 'update')
+                dataOperation: findNestedObj(modeConfig?.dataOperations, 'key', 'update'),
+                setPopupState,
+                openPopup
             };
             return <Cell cellData={cellData} cellConfig={config} />;
         },
@@ -119,6 +127,64 @@ export default function ListMode(props) {
             return <Cell cellData={cellData} />;
         }
     };
+
+    // Конфигурация по всплывающим окнам
+    const POPUP_CONF = {
+        'addTask': (
+            <TaskPopup
+                key={`key${Date.now().toString(36) + Math.random().toString(36).substr(2)}`}
+                additClass="add-task"
+                title="Новая задача"
+                data={popupInfo?.data}
+                taskOperation={popupInfo?.operation}
+                popupState={popupState}
+                setPopupState={setPopupState}
+                switchPopup={switchPopup}
+            />
+        ),
+        'addSubTask': (
+            <TaskPopup
+                key={`key${
+                    +popupInfo?.data?.editingTask?.id + Date.now().toString(36) + Math.random().toString(36).substr(2)
+                }`}
+                additClass="add-task"
+                title="Новая подзадача"
+                data={popupInfo?.data}
+                taskOperation={popupInfo?.operation}
+                popupState={popupState}
+                setPopupState={setPopupState}
+                switchPopup={switchPopup}
+            />
+        ),
+        'editTask': (
+            <TaskPopup
+                key={`key${
+                    +popupInfo?.data?.editingTask?.id + Date.now().toString(36) + Math.random().toString(36).substr(2)
+                }`}
+                additClass="add-task"
+                title="Редактирование задачи"
+                data={popupInfo?.data}
+                taskOperation={popupInfo?.operation}
+                popupState={popupState}
+                setPopupState={setPopupState}
+                switchPopup={switchPopup}
+            />
+        )
+    };
+
+    // Открыть всплывающее окно
+    function openPopup(operation, mode, data = null) {
+        setPopupInfo({
+            operation,
+            mode,
+            data
+        });
+    }
+
+    // Переключить всплывающее окно
+    function switchPopup(operation, mode, data) {
+        setPopupInfo({ operation, mode, data });
+    }
 
     useEffect(() => {
         // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
@@ -207,6 +273,7 @@ export default function ListMode(props) {
                         })}
                 </tbody>
             </table>
+            {popupState ? createPortal(POPUP_CONF[popupInfo?.mode] ?? null, document.getElementById('root')) : null}
         </div>
     );
 }
