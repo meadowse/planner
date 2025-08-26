@@ -182,7 +182,7 @@ export default function DataFormNew() {
         const queryParams = new URLSearchParams(location.search);
         const queryData = JSON.parse(decodeURIComponent(queryParams.get('data')));
 
-        console.log(`section__dataform: ${JSON.stringify(queryData, null, 4)}`);
+        // console.log(`section__dataform: ${JSON.stringify(queryData, null, 4)}`);
 
         if (queryData && Object.keys(queryData).length !== 0) {
             return {

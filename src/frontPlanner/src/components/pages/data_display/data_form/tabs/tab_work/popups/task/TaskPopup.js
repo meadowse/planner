@@ -422,13 +422,22 @@ function Executor(props) {
 // Завершенность
 function Completeness(props) {
     const { presetValue, config, onSelect } = props;
-    const [checked, setChecked] = useState(presetValue ? presetValue : 0);
+    const [checked, setChecked] = useState(0);
 
     function onChangeCompleteness() {
         // console.log(`res done ${!checked}`);
         setChecked(!checked);
         onSelect('done', !checked);
     }
+
+    useEffect(() => {
+        if (!presetValue || presetValue === null) {
+            setChecked(0);
+            onSelect('done', 0);
+        }
+        setChecked(presetValue);
+        onSelect('done', presetValue);
+    }, []);
 
     return !config?.hidden ? (
         <li className="popup__content-completeness popup-content-item">
@@ -987,7 +996,8 @@ export default function TaskPopup(props) {
     const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
 
-    console.log(`values: ${JSON.stringify(values, null, 4)}`);
+    console.log(`data?.task: ${JSON.stringify(data?.task, null, 4)}`);
+    // console.log(`values: ${JSON.stringify(values, null, 4)}`);
     // console.log(`dataTaskOperation: ${JSON.stringify(dataTaskOperation, null, 4)}`);
     // console.log(`TaskPopup data: ${JSON.stringify(data, null, 4)}`);
 
@@ -1053,12 +1063,12 @@ export default function TaskPopup(props) {
                 dateStart: values?.dateStart,
                 deadline: values?.deadlineTask?.value,
                 parentId: values?.parentId?.value,
-                done: +values?.done,
+                done: !values?.done || values?.done === null ? 0 : values?.done,
                 task: values?.task,
                 comment: values?.comment
             };
 
-            // alert(`Edit task data: ${JSON.stringify(values, null, 4)}`);
+            // alert(`Edit task resultData: ${JSON.stringify(resultData, null, 4)}`);
 
             await TaskService.editTask(resultData);
         }
