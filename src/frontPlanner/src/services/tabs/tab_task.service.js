@@ -31,8 +31,9 @@ const formItem = data => {
         idTypeWork: data?.idTypeWork ?? null,
         dateStart: data?.dateStart,
         deadlineTask: data?.deadlineTask ? { value: data.deadlineTask } : null,
-        done: data?.done ?? null,
+        done: data?.done ?? 0,
         parentId: data?.parentId ?? null,
+        comment: data?.comment ?? null,
         director: {
             id: data.idDirector || data.id || null,
             mmId: data?.idMMDirector || data.mmId || null,

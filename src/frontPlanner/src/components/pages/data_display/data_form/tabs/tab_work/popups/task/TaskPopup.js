@@ -425,7 +425,7 @@ function Completeness(props) {
     const [checked, setChecked] = useState(presetValue ? presetValue : 0);
 
     function onChangeCompleteness() {
-        console.log(`res done ${!checked}`);
+        // console.log(`res done ${!checked}`);
         setChecked(!checked);
         onSelect('done', !checked);
     }
@@ -485,14 +485,6 @@ function ParentsTasks(props) {
     function onOpenTask() {
         const { task, ...otherElems } = config?.popupData;
         switchPopup('update', 'editTask', { ...otherElems, task: allTasks[parentTask?.value] });
-        // switchPopup('editTask', { ...otherElems, task: allTasks[parentTask?.value] });
-        // console.log(`parentTask: ${JSON.stringify(parentTask, null, 4)}`);
-        // setTaskData(TaskService.formData(allTasks[parentTask?.value]));
-        // setTaskData(allTasks[parentTask?.value]);
-
-        // setEditingTaskId(parentTask?.value);
-        // console.log(`selected task: ${JSON.stringify(allTasks[parentTask?.value], null, 4)}`);
-        // console.log(`config?.taskPopupData: ${JSON.stringify(config?.taskPopupData, null, 4)}`);
     }
 
     useEffect(() => {
@@ -768,9 +760,9 @@ function TaskItem(props) {
     function onOpenTask() {
         const { task, ...otherElems } = popupData;
         // switchPopup('editTask', { ...otherElems, task: taskItem });
-        switchPopup('update', 'editTask', { ...otherElems, task: taskItem });
         // setTaskData(taskItem);
         // setEditingTaskId(taskItem?.id);
+        switchPopup('update', 'editTask', { ...otherElems, task: taskItem });
     }
 
     // Переход к профилю пользователя
@@ -878,20 +870,21 @@ function TaskInfo(props) {
     // console.log(`TaskInfo\ntaskId: ${taskId}parentId: ${parentId}`);
 
     const [subTask, setSubTask] = useState({
-        id: -1,
-        contractId: -1,
+        id: null,
+        contractId: null,
         task: null,
         idTypeWork: null,
         dateStart: null,
         deadlineTask: null,
-        done: null,
-        parentId: -1,
+        done: 0,
+        parentId: null,
         director: null,
         executor: null
     });
 
     // Инициализация данных подзадачи
     async function initSubtask() {
+        // console.log(`initSubtask : ${JSON.stringify(taskData, null, 4)}`);
         const tempSubTask = Object.assign({}, subTask);
 
         // Установка дат по умолчанию
@@ -907,7 +900,9 @@ function TaskInfo(props) {
         };
 
         // Установка родителя по умолчанию
-        tempSubTask.parentId = taskData[0]?.parentId;
+        const { task: prevTask } = popupData;
+        tempSubTask.parentId = prevTask?.subtasks[0] ? prevTask.subtasks[0].parentId : null;
+        // tempSubTask.parentId = taskData[0]?.parentId;
 
         // Установка пользователей по умолчанию
         tempSubTask.director = await TaskService.getAuthorizedEmployee(Cookies.get('MMUSERID'));
@@ -937,33 +932,33 @@ function TaskInfo(props) {
                     +
                 </div>
             </div>
-            <div className="popup__taskinfo-wrapper">
-                <div className="popup__taskinfo-content">
-                    <ul className="popup__taskinfo-table-header popup__taskinfo-list">
-                        <li className="popup__taskinfo-table-header-item">Задача</li>
-                        <li className="popup__taskinfo-table-header-item">Дата начала</li>
-                        <li className="popup__taskinfo-table-header-item">Дедлайн</li>
-                        <li className="popup__taskinfo-table-header-item">Постановщик</li>
-                        <li className="popup__taskinfo-table-header-item">Исполнитель</li>
-                        <li className="popup__taskinfo-table-header-item">Завершено</li>
-                    </ul>
-                    <div className="popup__taskinfo-table-wrapper">
-                        <div className="popup__taskinfo-table">
-                            {taskData && taskData.length !== 0
-                                ? taskData.map((taskItem, indTask) => (
-                                      <TaskItem
-                                          key={indTask}
-                                          popupData={popupData}
-                                          taskItem={taskItem}
-                                          config={{ appTheme, navigate, addToHistory }}
-                                          switchPopup={switchPopup}
-                                      />
-                                  ))
-                                : null}
+            {taskData && taskData.length !== 0 ? (
+                <div className="popup__taskinfo-wrapper">
+                    <div className="popup__taskinfo-content">
+                        <ul className="popup__taskinfo-table-header popup__taskinfo-list">
+                            <li className="popup__taskinfo-table-header-item">Задача</li>
+                            <li className="popup__taskinfo-table-header-item">Дата начала</li>
+                            <li className="popup__taskinfo-table-header-item">Дедлайн</li>
+                            <li className="popup__taskinfo-table-header-item">Постановщик</li>
+                            <li className="popup__taskinfo-table-header-item">Исполнитель</li>
+                            <li className="popup__taskinfo-table-header-item">Завершено</li>
+                        </ul>
+                        <div className="popup__taskinfo-table-wrapper">
+                            <div className="popup__taskinfo-table">
+                                {taskData?.map((taskItem, indTask) => (
+                                    <TaskItem
+                                        key={indTask}
+                                        popupData={popupData}
+                                        taskItem={taskItem}
+                                        config={{ appTheme, navigate, addToHistory }}
+                                        switchPopup={switchPopup}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            ) : null}
         </div>
     );
 }
@@ -980,6 +975,8 @@ export default function TaskPopup(props) {
 
     const [idContract, setIdContract] = useState(data?.idContract ?? null);
     const [contractsIDs, setContractsIDs] = useState({});
+
+    const [parentTask, setParentTask] = useState({});
     const [subTasks, setSubTasks] = useState([]);
 
     const { values, onChange, onClick } = useTaskForm(
@@ -990,7 +987,7 @@ export default function TaskPopup(props) {
     const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
 
-    // console.log(`values: ${JSON.stringify(values, null, 4)}`);
+    console.log(`values: ${JSON.stringify(values, null, 4)}`);
     // console.log(`dataTaskOperation: ${JSON.stringify(dataTaskOperation, null, 4)}`);
     // console.log(`TaskPopup data: ${JSON.stringify(data, null, 4)}`);
 
@@ -1001,7 +998,7 @@ export default function TaskPopup(props) {
 
             setPopupState(false);
             navigate(window.location.pathname);
-            navigate(0);
+            // navigate(0);
         }
     }
 
@@ -1074,7 +1071,12 @@ export default function TaskPopup(props) {
     // Получение информации о задаче
     async function fetchTaskData(idTask, idParent) {
         const taskData = await TaskService.getTaskInfo(idTask, idParent);
-        if (taskData && Object.keys(taskData).length !== 0) setSubTasks(TaskService.formData(taskData?.subtasks));
+        if (taskData && Object.keys(taskData).length !== 0) {
+            const { subtasks, ...otherElems } = taskData;
+
+            setParentTask(TaskService.formItem(otherElems));
+            setSubTasks(TaskService.formData(taskData?.subtasks));
+        }
     }
 
     useEffect(() => {
@@ -1185,27 +1187,25 @@ export default function TaskPopup(props) {
                         <div className="popup__content-add-task-right">
                             {/* Комментарий */}
                             <Comment
-                                presetValue={data?.task?.comment}
+                                presetValue={data?.task?.comment ?? parentTask?.comment}
                                 config={{ hidden: dataTaskOperation?.hiddenFields?.comment ? true : false }}
                                 onChange={onChange}
                             />
                         </div>
                     </div>
-                    {subTasks && subTasks.length !== 0 ? (
-                        <div className="popup__content-add-task-bottom">
-                            {/* Отображение подзадач */}
-                            <TaskInfo
-                                title="Подзадачи"
-                                popupData={{ ...data }}
-                                taskData={subTasks.map(subTask => TaskService.formItem(subTask))}
-                                config={{
-                                    appTheme: theme,
-                                    navigate,
-                                    addToHistory
-                                }}
-                                switchPopup={switchPopup}
-                            />
-                        </div>
+                    {/* Отображение подзадач */}
+                    {taskOperation === 'update' ? (
+                        <TaskInfo
+                            title="Подзадачи"
+                            popupData={{ ...data }}
+                            taskData={subTasks.map(subTask => TaskService.formItem(subTask))}
+                            config={{
+                                appTheme: theme,
+                                navigate,
+                                addToHistory
+                            }}
+                            switchPopup={switchPopup}
+                        />
                     ) : null}
                 </form>
                 {taskOperation === 'update' ? (

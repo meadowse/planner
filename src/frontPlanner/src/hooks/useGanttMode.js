@@ -400,7 +400,7 @@ export const useGanttMode = args => {
                                           dateOfEnding: subtask?.dateOfEnding,
                                           //   bgColorTask: item?.stage?.color,
                                           bgColorTask: +subtask?.done ? '#8ac926' : '#d53032',
-                                          assignedUsers: assignedUsersData
+                                          assignedUsers: assignedUsersDataSubTasks
                                       });
                                   });
                               }
@@ -422,6 +422,13 @@ export const useGanttMode = args => {
                               };
                           })
                         : [];
+
+                // сортировка данных, которая отсротирована по done отсортировать по полю dateOfEnding
+                newItem.tasks = Array.from(newItem?.tasks).sort(
+                    (a, b) => getDateFromString(a?.dateOfEnding) - getDateFromString(b?.dateOfEnding)
+                );
+                // сортировка данных по полю done
+                newItem.tasks = Array.from(newItem?.tasks).sort((a, b) => +a?.done - +b?.done);
 
                 totalCount += newItem.tasks.length;
                 tasks.push(newItem);
@@ -641,6 +648,14 @@ export const useGanttMode = args => {
                                 }
                             });
                         }
+
+                        // сортировка данных, которая отсротирована по done отсортировать по полю dateOfEnding
+                        // taskItem.tasks = Array.from(taskItem?.tasks).sort(
+                        //     (a, b) => getDateFromString(a?.dateOfEnding) - getDateFromString(b?.dateOfEnding)
+                        // );
+                        // сортировка данных по полю done
+                        // taskItem.tasks = Array.from(taskItem?.tasks).sort((a, b) => +a?.done - +b?.done);
+
                         // console.log(`sections\ntaskItem: ${JSON.stringify(taskItem, null, 4)}`);
                         newItem.tasks.push(taskItem);
                         taskItem = {};
