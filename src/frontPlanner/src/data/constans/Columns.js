@@ -58,6 +58,7 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
+            // console.log(`props.original.row: ${JSON.stringify(props.original.row, null, 4)}`);
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
 
@@ -65,14 +66,15 @@ const COLUMNS = [
                 if (props?.config?.idContract) {
                     const navigationArg = {
                         state: {
-                            idContract: props?.config?.idContract,
+                            idContract: props.row.original?.contractId,
+                            // idContract: props?.config?.idContract,
                             tabForm: { key: 'general', title: 'Общие' },
                             partition: props?.config?.partition,
                             dataOperation: props?.config?.dataOperation
                         }
                     };
 
-                    localStorage.setItem('idContract', JSON.stringify(props?.config?.idContract));
+                    localStorage.setItem('idContract', JSON.stringify(props.row.original?.contractId));
                     localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
 
                     addToHistory(`${window.location.pathname}`);
@@ -87,7 +89,13 @@ const COLUMNS = [
             }
 
             return (
-                <p className="cell__num" onClick={e => onShowInfoCard(e)} onMouseDown={e => onShowInfoCard(e)}>
+                <p
+                    className="cell__num"
+                    onClick={e => {
+                        e.stopPropagation();
+                        onShowInfoCard(e);
+                    }}
+                >
                     {props.value ? props.value : 'Нет данных'}
                 </p>
             );
@@ -408,7 +416,6 @@ const COLUMNS = [
             );
         }
     },
-    //
     {
         Header: props => {
             const { idContract, tasks, task, setPopupState, openPopup } = props?.config;
@@ -476,7 +483,15 @@ const COLUMNS = [
                             <span>{props?.value || 'Нет данных'}</span>
                         </p>
                         {props?.row.canExpand ? (
-                            <span className="cell__expand" {...props?.row.getToggleRowExpandedProps()}>
+                            <span
+                                className="cell__expand"
+                                {...props?.row.getToggleRowExpandedProps({
+                                    onClick: e => {
+                                        e.stopPropagation(); // блокируем всплытие
+                                        props?.row.toggleRowExpanded(); // вручную триггерим expand/collapse
+                                    }
+                                })}
+                            >
                                 {props?.row?.isExpanded ? '▼' : '▶'}
                             </span>
                         ) : null}
