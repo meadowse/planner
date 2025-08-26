@@ -21,21 +21,15 @@ export const useTaskForm = (initialData, disabledFields) => {
     let config = Object.assign({}, getTaskConfig(initialData, disabledFields));
     // let dataForm = Object.assign({}, values);
 
+    // Валидация формы
     const validate = () => {};
 
+    // Изменение значения
     const onChange = e => {
         setValues(prevState => {
             return { ...prevState, [e.target.name]: e.target.value };
         });
     };
-
-    // const onChangeByIndex = (key, index, value) => {
-    //     const valuesTemp = Object.assign({}, values);
-    //     const tempArray = new Array(values[key]);
-
-    //     tempArray[index][key] = value;
-    //     valuesTemp;
-    // };
 
     const onClick = (key, value) => {
         // console.log(`useTaskForm onClick vals: ${JSON.stringify(dataForm, null, 4)}`);
