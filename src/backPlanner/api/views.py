@@ -455,7 +455,8 @@ def getTasksContracts(request):
                 EXECUTOR.F16 AS ID_MM_EXECUTOR,
                 EXECUTOR.F4886 AS EXECUTOR_NAME, 
                 T218.F4697 AS DONE,
-                T218.F5646 AS parentId
+                T218.F5646 AS parentId,
+                T218.F4698 AS comment
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
@@ -464,7 +465,7 @@ def getTasksContracts(request):
                 result = cur.fetchall()
                 columns = (
                 'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'idDirector', 'idMMDirector',
-                'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId')
+                'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId', 'comment')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
