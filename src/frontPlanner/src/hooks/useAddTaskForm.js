@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 
 function getTaskConfig(initialData, disabledFields) {
+    // console.log(
+    //     `getTaskConfig initialData: ${JSON.stringify(initialData, null, 4)}\ndisabledFields: ${JSON.stringify(
+    //         disabledFields,
+    //         null,
+    //         4
+    //     )}`
+    // );
     const template = {};
 
     if (!disabledFields) {
@@ -9,7 +16,7 @@ function getTaskConfig(initialData, disabledFields) {
         });
     }
 
-    // console.log(`template: ${JSON.stringify(template, null, 4)}`);
+    console.log(`template: ${JSON.stringify(template, null, 4)}`);
 
     return template;
 }

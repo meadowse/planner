@@ -170,8 +170,8 @@ export default function DataFormNew() {
     const uploadedData = useLoaderData();
     const navigate = useNavigate();
     // const { state } = useLocation();
+
     const location = useLocation();
-    // const [prevPath] = useState(state?.path);
     const [prevPath] = useState(location?.state?.path);
 
     // console.log(`DataFormNew state args: ${JSON.stringify(state, null, 4)}`);
@@ -181,6 +181,8 @@ export default function DataFormNew() {
     function getConfigData() {
         const queryParams = new URLSearchParams(location.search);
         const queryData = JSON.parse(decodeURIComponent(queryParams.get('data')));
+
+        // console.log(`section__dataform: ${JSON.stringify(queryData, null, 4)}`);
 
         if (queryData && Object.keys(queryData).length !== 0) {
             return {

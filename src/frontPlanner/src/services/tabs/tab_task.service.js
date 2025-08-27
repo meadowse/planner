@@ -31,8 +31,9 @@ const formItem = data => {
         idTypeWork: data?.idTypeWork ?? null,
         dateStart: data?.dateStart,
         deadlineTask: data?.deadlineTask ? { value: data.deadlineTask } : null,
-        done: data?.done ?? null,
+        done: data?.done ?? 0,
         parentId: data?.parentId ?? null,
+        comment: data?.comment ?? null,
         director: {
             id: data.idDirector || data.id || null,
             mmId: data?.idMMDirector || data.mmId || null,
@@ -62,7 +63,7 @@ const getTaskData = (data, disabledFields) => {
         },
         // Родительcкая Задача
         parentId: value => {
-            return value ? value : '';
+            return value ?? '';
         },
         // Задача
         task: value => {
@@ -94,16 +95,12 @@ const getTaskData = (data, disabledFields) => {
         },
         // Завершено
         done: value => {
-            return value ? value : 0;
+            return !value || value === null ? 0 : value;
         },
         // Комментарий
         comment: value => {
-            return value ? value : '';
+            return value ?? '';
         }
-        // Подзадачи
-        // subtasks: value => {
-        //     return value && value.length !== 0 ? value : [];
-        // }
     };
 
     if (data && Object.keys(data).length !== 0) {
@@ -139,6 +136,8 @@ const getTaskData = (data, disabledFields) => {
             }
         }
     }
+
+    console.log(`getTask dataConf: ${JSON.stringify(dataConf, null, 4)}`);
 
     return dataConf;
 };

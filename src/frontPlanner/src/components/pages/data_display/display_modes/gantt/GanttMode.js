@@ -14,7 +14,7 @@ import { useGanttMode } from '@hooks/useGanttMode';
 import { useFiltersGantt } from '@hooks/useFiltersGantt';
 
 // Импорт дополнительного функционала
-import { isObject, findNestedObj } from '@helpers/helper';
+import { isObject, isArray, findNestedObj } from '@helpers/helper';
 import {
     getDaysBetweenTwoDates,
     getLastDayOfMonth,
@@ -234,7 +234,13 @@ function TaskRow(props) {
                     startTransition(() => {
                         addToHistory(`${window.location.pathname}`);
                         // window.open(`../../dataform/works/${task?.contractId}`, '_blank');
-                        navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
+                        if (event && event.button === 1) {
+                            const url = `../../dataform/works/${task?.contractId}?data=${encodeURIComponent(
+                                JSON.stringify(navigationArg.state)
+                            )}`;
+                            window.open(url, '_blank');
+                        } else navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
+                        // navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
                     });
 
                     localStorage.setItem('selectedTab', JSON.stringify({ key: 'works', title: 'Работа и задачи' }));
@@ -244,7 +250,7 @@ function TaskRow(props) {
         return task?.navKey in NAVIGATION_CONF ? NAVIGATION_CONF[task?.navKey]() : null;
     }
 
-    //   console.log(`task: ${JSON.stringify(task, null, 4)}`);
+    console.log(`gantt task data: ${JSON.stringify(task, null, 4)}`);
 
     return (
         <>
@@ -271,7 +277,10 @@ function TaskRow(props) {
                             </p>
                         ) : (
                             <p
-                                className="gantt-task-title"
+                                // className="gantt-task-title"
+                                className={classNames('gantt-task-title', {
+                                    'gantt-task-title_done': +task?.done === 1
+                                })}
                                 onClick={() => onShowInfo(null, task, 'update')}
                                 onMouseDown={e => onShowInfo(e, task, 'update')}
                             >
@@ -300,9 +309,10 @@ function TaskRow(props) {
                     <div className="gantt-task-wrapper" style={{ paddingLeft: `${config.indent / 16}rem` }}>
                         <div
                             className={classNames('gantt-task-title', {
-                                'gantt-task-title_done': task?.done
+                                'gantt-task-title_done': +task?.done
                             })}
                             onClick={() => onShowInfo(null, task, 'update')}
+                            onMouseDown={e => onShowInfo(e, task, 'update')}
                         >
                             {/* <span>{task?.title?.contractNum ?? task?.title?.name}</span>
                             {task?.title?.address ?? task?.title?.model}
@@ -359,7 +369,7 @@ function TaskRow(props) {
                 </ul>
             </div>
             {/* Отображение подзадач */}
-            {showTasks && task?.tasks && task?.tasks.length !== 0
+            {showTasks && task?.tasks && isArray(task?.tasks) && task?.tasks.length !== 0
                 ? task?.tasks.map(task => (
                       <TaskRow
                           timeLine={timeLine}

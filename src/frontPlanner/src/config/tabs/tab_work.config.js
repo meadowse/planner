@@ -50,7 +50,8 @@ export const DATA_FORM_OPERATIONS = [
             task: false,
             dateStart: false,
             deadlineTask: false,
-            done: true,
+            // done: true,
+            done: false,
             comment: false
         },
         hiddenFields: {
