@@ -457,8 +457,7 @@ def getTasksContracts(request):
                 EXECUTOR.F16 AS ID_MM_EXECUTOR,
                 EXECUTOR.F4886 AS EXECUTOR_NAME, 
                 T218.F4697 AS DONE,
-                T218.F5646 AS parentId,
-                T218.F4698 AS comment
+                T218.F5646 AS parentId
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
@@ -467,7 +466,7 @@ def getTasksContracts(request):
                 result = cur.fetchall()
                 columns = (
                 'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'idDirector', 'idMMDirector',
-                'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId', 'comment')
+                'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
@@ -842,7 +841,6 @@ def getTasksEmployee(request):
                 sql = f"""SELECT
                 T218.ID,
                 T218.F4695 AS TASK,
-                T218.F4698 AS COMMENT,
                 T218.F5569 AS START_DATE,
                 T218.F4696 AS DEADLINE_DATE,
                 T218.F5476 AS DEADLINE_TIME,
@@ -868,7 +866,7 @@ def getTasksEmployee(request):
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
-                'id', 'task', 'comment', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'idDirector',
+                'id', 'task', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'idDirector',
                 'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId',
                 'contractNum', 'address', 'customer', 'parentId')
                 json_result = [
