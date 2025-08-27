@@ -250,7 +250,7 @@ function TaskRow(props) {
         return task?.navKey in NAVIGATION_CONF ? NAVIGATION_CONF[task?.navKey]() : null;
     }
 
-    //   console.log(`task: ${JSON.stringify(task, null, 4)}`);
+    console.log(`gantt task data: ${JSON.stringify(task, null, 4)}`);
 
     return (
         <>
@@ -277,7 +277,10 @@ function TaskRow(props) {
                             </p>
                         ) : (
                             <p
-                                className="gantt-task-title"
+                                // className="gantt-task-title"
+                                className={classNames('gantt-task-title', {
+                                    'gantt-task-title_done': +task?.done === 1
+                                })}
                                 onClick={() => onShowInfo(null, task, 'update')}
                                 onMouseDown={e => onShowInfo(e, task, 'update')}
                             >

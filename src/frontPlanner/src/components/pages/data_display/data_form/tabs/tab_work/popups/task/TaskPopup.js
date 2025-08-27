@@ -426,8 +426,8 @@ function Completeness(props) {
 
     function onChangeCompleteness() {
         // console.log(`res done ${!checked}`);
-        setChecked(!checked);
-        onSelect('done', !checked);
+        setChecked(+!checked);
+        onSelect('done', +!checked);
     }
 
     useEffect(() => {
@@ -454,20 +454,6 @@ function Completeness(props) {
         </li>
     ) : null;
 }
-
-// Получение задач
-// async function fetchTaskData(idTask, idParent) {
-//     const taskData = await TaskService.getTaskInfo(idTask, idParent);
-//     if (taskData && taskData.length !== 0) {
-//         const { subtasks, ...otherElems } = taskData;
-//         const newTask = {
-//             ...TaskService.formData(otherElems),
-//             subtasks: subtasks?.map(subtask => TaskService.formData(subtask))
-//         };
-//         // console.log(`newTask: ${JSON.stringify(newTask, null, 4)}`)
-//         setTaskData(newTask);
-//     }
-// }
 
 // Родительская задача
 function ParentsTasks(props) {
