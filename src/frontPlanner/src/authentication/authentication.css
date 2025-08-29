@@ -69,6 +69,7 @@
     cursor: pointer;
     font-size: calc(12px + 4 * (100vw - 320px) / 1600);
     font-family: 'Montserrat-SemiBold';
+    color: #000;
 }
 
 .auth-page-col__btn-registration,
@@ -179,12 +180,24 @@
     margin-top: 1.5px;
 }
 
+.auth__info-title {
+    margin: 20px 0 5px 0;
+    font-family: 'Montserrat-SemiBold';
+    text-align: center;
+    color: #495057;
+}
+
+.auth__info-title span {
+    color: #1f325c;
+}
+
 /* Анимации */
 
 @keyframes line_moving_forward {
     0% {
         width: 1px;
     }
+
     100% {
         width: 100%;
     }
@@ -194,6 +207,7 @@
     100% {
         width: 100%;
     }
+
     0% {
         width: 0;
     }
