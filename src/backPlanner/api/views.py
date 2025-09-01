@@ -17,8 +17,8 @@ def getAgreements(request):
         charset=charset
     ) as con:
         cur = con.cursor()
-        sql = """
-        SELECT T212.ID AS contractId,
+        sql = """SELECT
+        T212.ID AS contractId,
         T212.F4538 AS contractNum,
         T212.F4544 AS stage,
         T212.F4946 AS address,
@@ -46,8 +46,7 @@ def getAgreements(request):
         LEFT JOIN T218 ON T218.F4691 = T212.ID
         LEFT JOIN T3 director ON T218.F4693 = director.ID
         LEFT JOIN T3 executor ON T218.F4694 = executor.ID
-        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15
-        """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
@@ -616,6 +615,7 @@ def addTask(request):
                 'F4694': executorId,
                 'F4697': 0,
                 'F5646': parenId,
+                'F5872': 'Новая',
             }
             # Преобразование значений в SQL-формат
             sql_values = []
@@ -634,8 +634,8 @@ def addTask(request):
             con.commit()
             sql = f'select F4644 from T212 where ID = {contractId}'
             cur.execute(sql)
-            idChannel = cur.fetchone()
-            print(idChannel)
+            idChannel = cur.fetchone()[0]
+
         return JsonResponse({'status': 'Ok'}, status=200)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
