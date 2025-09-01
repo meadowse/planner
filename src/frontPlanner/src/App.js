@@ -1,4 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useContext } from 'react';
 import { ToastContainer } from 'react-toastify';
 
@@ -15,21 +16,24 @@ import { ThemeProvider } from './contexts/theme.context';
 
 // Импорт стилей
 import 'react-toastify/dist/ReactToastify.css';
+import { queryClient } from './query/queryClient';
 
 export default function App() {
     const { authState } = useContext(authContext);
+    const router = createBrowserRouter([...(!authState.accessToken ? ROUTES_FOR_NOT_AUTH : []), ...ROUTES_FOR_AUTH]);
 
     // const router = createBrowserRouter([
     //     ...(!auth?.data || Object.keys(auth?.data).length === 0 ? ROUTES_FOR_NOT_AUTH : []),
     //     ...ROUTES_FOR_AUTH
     // ]);
 
-    const router = createBrowserRouter([...(!authState.accessToken ? ROUTES_FOR_NOT_AUTH : []), ...ROUTES_FOR_AUTH]);
 
     return (
         <HistoryProvider>
             <ThemeProvider>
-                <RouterProvider router={router} />
+                <QueryClientProvider client={queryClient}>
+                    <RouterProvider router={router} />
+                </QueryClientProvider>
                 <ToastContainer />
             </ThemeProvider>
         </HistoryProvider>

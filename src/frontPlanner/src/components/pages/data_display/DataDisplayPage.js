@@ -1,5 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, Await, useOutletContext, useNavigate, useLoaderData } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
@@ -76,8 +77,8 @@ function DisplayModes(props) {
         <ul className="page-section-options">
             {displayModes && displayModes.length !== 0
                 ? displayModes?.map(item => (
-                      <Option key={item?.value} keyVal={mode?.key} item={item} onSelectOption={onSelectMode} />
-                  ))
+                    <Option key={item?.value} keyVal={mode?.key} item={item} onSelectOption={onSelectMode} />
+                ))
                 : null}
         </ul>
     );
@@ -92,8 +93,8 @@ function ModeOptions(props) {
         <ul className="page-section-options">
             {modeOptions && modeOptions.length !== 0
                 ? modeOptions.map(item => (
-                      <Option key={item?.value} keyVal={modeOption?.key} item={item} onSelectOption={onSelectOption} />
-                  ))
+                    <Option key={item?.value} keyVal={modeOption?.key} item={item} onSelectOption={onSelectOption} />
+                ))
                 : null}
         </ul>
     );
@@ -174,7 +175,7 @@ function HeaderBottom(props) {
                             type="text"
                             placeholder="Поиск по приборам"
                             value={searchElem}
-                            // onChange={e => setSearchElem(e.target.value)}
+                        // onChange={e => setSearchElem(e.target.value)}
                         />
                         <DisplayModes
                             displayModes={displayModes}
@@ -395,6 +396,7 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => {
+                                            // const { data: initialData } = useQuery({ queryKey: ["department"], queryFn: () => Promise. })
                                             const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
                                             const kanbanData = filterData(
                                                 keyData ? resolvedData[keyData] : resolvedData[keyData],

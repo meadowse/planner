@@ -235,25 +235,27 @@ function SignInForm(props) {
     // useEffect(() => console.log(`Authorization errors: ${JSON.stringify(errors, null, 4)}`), [errors]);
 
     return (
-        <form
-            action="#"
-            className="auth-page-form"
-            data-error={errors.authorization ? errors.authorization.message : ''}
-            onSubmit={onSubmit}
-        >
-            <div className="auth-form-inpt-wrapper" data-error={errors.email ? errors.email.message : ''}>
-                <div className="auth-form-inpt">
-                    <img className="auth-form-inpt__icon" src="./img/mail.svg" alt="" />
-                    <input
-                        className="auth-form-inpt__field"
-                        type="text"
-                        name="email"
-                        placeholder="Почта"
-                        onChange={e => onChangeInptField(e)}
-                    />
+        <>
+            <h3 className='auth__info-title'>Авторизация осуществляется с помощью логина и пароля учетной записи мессенджера <span>Mattermost</span></h3>
+            <form
+                action="#"
+                className="auth-page-form"
+                data-error={errors.authorization ? errors.authorization.message : ''}
+                onSubmit={onSubmit}
+            >
+                <div className="auth-form-inpt-wrapper" data-error={errors.email ? errors.email.message : ''}>
+                    <div className="auth-form-inpt">
+                        <img className="auth-form-inpt__icon" src="./img/login.svg" alt="" />
+                        <input
+                            className="auth-form-inpt__field"
+                            type="text"
+                            name="email"
+                            placeholder="Логин"
+                            onChange={e => onChangeInptField(e)}
+                        />
+                    </div>
                 </div>
-            </div>
-            {/* <div className="inpt-item" data-error={errors.fullname ? errors.fullname.message : ''}>
+                {/* <div className="inpt-item" data-error={errors.fullname ? errors.fullname.message : ''}>
                 <div className="inpt-item-wrapper">
                     <img className="inpt__icon" src="./img/avatar.svg" alt="" />
                     <input
@@ -265,21 +267,22 @@ function SignInForm(props) {
                     />
                 </div>
             </div> */}
-            <div className="auth-form-inpt-wrapper" data-error={errors.password ? errors.password.message : ''}>
-                <div className="auth-form-inpt">
-                    <img className="auth-form-inpt__icon" src="./img/password.svg" alt="" />
-                    <input
-                        className="auth-form-inpt__field"
-                        type="password"
-                        name="password"
-                        placeholder="Пароль"
-                        autoComplete="new-password"
-                        onChange={e => onChangeInptField(e)}
-                    />
+                <div className="auth-form-inpt-wrapper" data-error={errors.password ? errors.password.message : ''}>
+                    <div className="auth-form-inpt">
+                        <img className="auth-form-inpt__icon" src="./img/password.svg" alt="" />
+                        <input
+                            className="auth-form-inpt__field"
+                            type="password"
+                            name="password"
+                            placeholder="Пароль"
+                            autoComplete="new-password"
+                            onChange={e => onChangeInptField(e)}
+                        />
+                    </div>
                 </div>
-            </div>
-            <input className="auth-page-form__btn-sign-in btn-auth-action" type="submit" value="Войти" />
-        </form>
+                <input className="auth-page-form__btn-sign-in btn-auth-action" type="submit" value="Войти" />
+            </form>
+        </>
     );
 }
 

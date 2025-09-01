@@ -1,6 +1,5 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, defer } from 'react-router-dom';
-import axios from 'axios';
 
 // Импорт компонетов
 import ProtectedRoute from './ProtectedRoute';
@@ -14,6 +13,7 @@ import DataFormService from '@services/data_form.service';
 import UserService from '@services/user.service';
 import Preloader from '../components/auxiliary_pages/loader/Preloader';
 import UserInfo from '../components/pages/data_user/UserInfo';
+import { queryClient } from '../query/queryClient';
 // import UserInfoNew from '../components/pages/data_user/UserInfoNew';
 
 const DataDisplayPage = lazy(() => import('@components/pages/data_display/DataDisplayPage'));
