@@ -33,7 +33,7 @@ def getAgreements(request):
         responsible.F4886 AS responsible,
         manager.F16 AS idManager,
         manager.F4886 AS manager,
-        LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886 || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END, '*') AS tasks
+        LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886 || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || T218.F5872, '*') AS tasks
         FROM T212
         LEFT JOIN T237 ON T212.F4948 = T237.ID
         LEFT JOIN T205 ON T212.F4540 = T205.ID
@@ -133,7 +133,7 @@ def getAgreements(request):
                             {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
                              'dateOfEnding': list2[2], 'done': list2[3],
                              'director': {'mmId': list2[4], 'fullName': list2[7]},
-                             'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'tasks': []})
+                             'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[10], 'tasks': []})
                 for allData in List:
                     list2 = allData.split(';')
                     list2[0].strip()
@@ -147,7 +147,7 @@ def getAgreements(request):
                                     {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
                                      'dateOfEnding': list2[2], 'done': list2[3],
                                      'director': {'mmId': list2[4], 'fullName': list2[7]},
-                                     'executor': {'mmId': list2[5], 'fullName': list2[8]}})
+                                     'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[10]})
                             i += 1
             obj.update(tasks)
 
@@ -272,7 +272,7 @@ def getAgreement(request):
             manager.ID AS managerId,
             manager.F16 AS managerMMId,
             manager.F4886 AS manager,
-            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696, '*') AS tasks, 
+            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F5872, '*') AS tasks, 
             T212.F4644 AS channelId
             FROM T212
             LEFT JOIN T237 ON T212.F4948 = T237.ID
@@ -369,7 +369,7 @@ def getAgreement(request):
                         if list2[0] == '' and list2[1] == '' and list2[2] == '':
                             continue
                         else:
-                            tasks.get('tasks').append({'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2]})
+                            tasks.get('tasks').append({'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2], 'status': list2[3]})
                 obj.update(tasks)
             end = perf_counter()
             print(end - start)
@@ -455,7 +455,8 @@ def getTasksContracts(request):
                 EXECUTOR.F16 AS ID_MM_EXECUTOR,
                 EXECUTOR.F4886 AS EXECUTOR_NAME, 
                 T218.F4697 AS DONE,
-                T218.F5646 AS parentId
+                T218.F5646 AS parentId,
+                T218.F5872 AS status
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
@@ -464,7 +465,7 @@ def getTasksContracts(request):
                 result = cur.fetchall()
                 columns = (
                 'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'idDirector', 'idMMDirector',
-                'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId')
+                'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId', 'status')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
@@ -546,7 +547,8 @@ def getTask(request):
                 EXECUTOR.F4886 AS EXECUTOR_NAME,
                 T218.F4697 AS DONE,
                 T218.F5646 AS parentId,
-                T218.F4698 AS comment
+                T218.F4698 AS comment,
+                T218.F5872 AS status
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
@@ -555,7 +557,7 @@ def getTask(request):
                 result = cur.fetchall()
                 columns = (
                     'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'idDirector', 'idMMDirector',
-                    'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId', 'comment')
+                    'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId', 'comment', 'status')
                 json_result = {'subtasks': [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
@@ -751,7 +753,7 @@ def getAllDepartmentsStaffAndTasks(request):
             T212.F4610 AS dateOfStart,
             T212.F4566 AS dateOfEnding,
             T212.F4544 AS contractStage,
-            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886 || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END, '*') AS tasks
+            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886 || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || T218.F5872, '*') AS tasks
             FROM T5
             LEFT JOIN T3 ON T5.ID = T3.F27
             LEFT JOIN T253 ON T3.ID = T253.F5022
@@ -809,7 +811,7 @@ def getAllDepartmentsStaffAndTasks(request):
                                         {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
                                          'dateOfEnding': list2[2], 'done': list2[3],
                                          'director': {'mmId': list2[4], 'fullName': list2[7]},
-                                         'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'tasks': []})
+                                         'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[10], 'tasks': []})
                             for allData in List:
                                 list2 = allData.split(';')
                                 list2[0].strip()
@@ -823,7 +825,7 @@ def getAllDepartmentsStaffAndTasks(request):
                                                 {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
                                                  'dateOfEnding': list2[2], 'done': list2[3],
                                                  'director': {'mmId': list2[4], 'fullName': list2[7]},
-                                                 'executor': {'mmId': list2[5], 'fullName': list2[8]}})
+                                                 'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[10]})
                                         i += 1
                 obj.update(contracts)
             return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
@@ -857,7 +859,8 @@ def getTasksEmployee(request):
                 T212.F4538 AS CONTRACT_NUMBER,
                 T212.F4946 AS OBJECT_ADDRESS,
                 T205.F4331 AS CUSTOMER_NAME,
-                T218.F5646 AS parentId
+                T218.F5646 AS parentId,
+                T218.F5872 AS status
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
@@ -869,7 +872,7 @@ def getTasksEmployee(request):
                 columns = (
                 'id', 'task', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'idDirector',
                 'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId',
-                'contractNum', 'address', 'customer', 'parentId')
+                'contractNum', 'address', 'customer', 'parentId', 'status')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
@@ -960,7 +963,7 @@ def getContractsEmployee(request):
             LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
             responsible.F16 AS responsibleId,
             responsible.F4886 AS responsible,
-            LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886, '*') AS tasks
+            LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886 || ';' || T218.F5872, '*') AS tasks
             FROM T212
             LEFT JOIN T237 ON T212.F4948 = T237.ID
             LEFT JOIN T205 ON T212.F4540 = T205.ID
@@ -1046,7 +1049,7 @@ def getContractsEmployee(request):
                             tasks.get('tasks').append(
                                 {'id': list2[6],'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2],
                                  'done': list2[3], 'director': {'mmId': list2[4], 'fullName': list2[7]},
-                                 'executor': {'mmId': list2[5], 'fullName': list2[8]}})
+                                 'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[9]})
                 obj.update(tasks)
             end = perf_counter()
             print(end - start)
