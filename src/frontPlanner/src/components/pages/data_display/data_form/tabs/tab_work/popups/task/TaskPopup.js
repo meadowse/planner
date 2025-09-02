@@ -2,6 +2,7 @@ import { useEffect, useReducer, useRef, useState, useContext, startTransition } 
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import Cookies from 'js-cookie';
+import classNames from 'classnames';
 
 // Импорт компонетов
 import BgFillText from '@generic/elements/text/BgFillText';
@@ -30,15 +31,95 @@ import { getDateInSpecificFormat } from '@helpers/calendar';
 // Импорт стилей
 import './task_popup.css';
 
+const STATUS_ACTIONS_DIRECEXEC = {
+    'Отмененнная': null,
+    'Новая': ['Отменить', 'Взять в работу'],
+    'В работе': ['Отменить', 'Выполнено'],
+    'Выполненная': ['Отменить', 'Принять работу', 'Вернуть в работу'],
+    'Завершенная': null
+};
+
+// Цепочка статусов
+function StatusChain(props) {
+    const { director, executor } = props;
+
+    const [status, setStatus] = useState(null);
+
+    const STATUSES_TASK = new Map([
+        ['Отмененнная', null],
+        ['Новая', { [director?.mmId]: ['Отменить'], [executor?.mmId]: ['Взять в работу'] }],
+        ['В работе', { [director?.mmId]: ['Отменить'], [executor?.mmId]: ['Выполнено'] }],
+        [
+            'Выполненная',
+            { [director?.mmId]: ['Отменить', 'Принять работу', 'Вернуть в работу'], [executor?.mmId]: null }
+        ],
+        ['Завершенная', null]
+    ]);
+
+    const ACTIONS_TASK = {
+        'Отменить': {
+            title: 'Отмененнная',
+            progress: 0
+        },
+        'Взять в работу': {
+            title: 'В работе',
+            progress: 25
+        },
+        'Выполнено': {
+            title: 'Выполненная',
+            progress: 50
+        },
+        'Вернуть в работу': {
+            title: 'В работе',
+            progress: 25
+        },
+        'Принять работу': {
+            title: 'Завершенная',
+            progress: 75
+        }
+    };
+
+    function onChangeStatus(action) {
+        setStatus(ACTIONS_TASK[action]);
+    }
+
+    // useEffect(()=>{}, []);
+
+    return (
+        <div className="popup-task-steps">
+            <div className="popup-task-steps__progress-bar">
+                <span className="popup-task-steps__indicator" style={{ height: `${status?.progress}%` }}></span>
+            </div>
+            {STATUSES_TASK.keys()?.map((key, index) => {
+                const stepVal = STATUSES_TASK.get(key);
+                const actions = stepVal && Object.keys(stepVal).length !== 0 ? stepVal[Cookies.get('MMUSERID')] : null;
+                // const actions = STATUS_ACTIONS[key] ? STATUS_ACTIONS[key].get(Cookies.get('MMUSERID')) : null;
+                return (
+                    <div
+                        class={classNames('popup-task-step', { 'popup-task-step_active': index === 2 })}
+                        data-step={actions && actions.length !== 0 ? `${key}${String.fromCharCode(8194)}▼` : key}
+                    >
+                        {actions && actions.length !== 0 ? (
+                            <ul className="popup-task-steps__actions">
+                                {actions.map(action => (
+                                    <li className="popup-task-steps__action" onClick={() => onChangeStatus(action)}>
+                                        {action}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : null}
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
 // Идентификатор договора
 function ContractNumber(props) {
     const { contract, isLoading, contractsIDs, config, setIdContract, onSelect } = props;
     // console.log(`ContractNumber contract: ${JSON.stringify(contract, null, 4)}`);
-    // console.log(`contractNum: ${JSON.stringify(getKeyByValue(contractsIDs, contract?.id), null, 4)}`);
-    // const [contractNum, setContractNum] = useState(() => {
-    //     if (contract?.number === 'Нет данных') return null;
-    //     return contract?.number;
-    // });
+
     const [contractNum, setContractNum] = useState(null);
 
     const { addToHistory } = useHistoryContext();
@@ -1102,6 +1183,10 @@ export default function TaskPopup(props) {
                     onSubmit={e => onOnSubmitData(e)}
                 >
                     <div className="popup__content-add-task-top">
+                        {/* Цепочка статусов */}
+                        {/* {taskOperation === 'update' ? (
+                            <StatusChain director={values?.director} executor={values?.executor} />
+                        ) : null} */}
                         <ul className="popup__content-add-task-left">
                             {/* Номер договора */}
                             <ContractNumber

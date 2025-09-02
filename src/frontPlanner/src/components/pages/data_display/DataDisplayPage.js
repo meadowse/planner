@@ -77,8 +77,8 @@ function DisplayModes(props) {
         <ul className="page-section-options">
             {displayModes && displayModes.length !== 0
                 ? displayModes?.map(item => (
-                    <Option key={item?.value} keyVal={mode?.key} item={item} onSelectOption={onSelectMode} />
-                ))
+                      <Option key={item?.value} keyVal={mode?.key} item={item} onSelectOption={onSelectMode} />
+                  ))
                 : null}
         </ul>
     );
@@ -93,8 +93,8 @@ function ModeOptions(props) {
         <ul className="page-section-options">
             {modeOptions && modeOptions.length !== 0
                 ? modeOptions.map(item => (
-                    <Option key={item?.value} keyVal={modeOption?.key} item={item} onSelectOption={onSelectOption} />
-                ))
+                      <Option key={item?.value} keyVal={modeOption?.key} item={item} onSelectOption={onSelectOption} />
+                  ))
                 : null}
         </ul>
     );
@@ -175,7 +175,7 @@ function HeaderBottom(props) {
                             type="text"
                             placeholder="Поиск по приборам"
                             value={searchElem}
-                        // onChange={e => setSearchElem(e.target.value)}
+                            // onChange={e => setSearchElem(e.target.value)}
                         />
                         <DisplayModes
                             displayModes={displayModes}
@@ -287,7 +287,15 @@ function HeaderBottom(props) {
 
 export default function DataDisplayPage({ partition }) {
     const data = useLoaderData();
+    // const { uploadedData } = useLoaderData();
     // const itemSideMenu = useOutletContext();
+
+    // const { data, error } = useQuery({
+    //     queryKey: ['department'],
+    //     queryFn: () => Promise.resolve(uploadedData),
+    //     uploadedData
+    // });
+
     const { itemSideMenu, theme, onToggleAppTheme } = useOutletContext();
 
     const navigate = useNavigate();
@@ -394,27 +402,20 @@ export default function DataDisplayPage({ partition }) {
                             path="kanban"
                             element={
                                 <Suspense fallback={<Preloader />}>
+                                    {/* resolve={uploadedData} */}
                                     <Await resolve={data?.uploadedData}>
                                         {resolvedData => {
-                                            // const { data: initialData } = useQuery({ queryKey: ["department"], queryFn: () => Promise. })
                                             const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
                                             const kanbanData = filterData(
-                                                keyData ? resolvedData[keyData] : resolvedData[keyData],
+                                                resolvedData[keyData] ?? resolvedData,
                                                 simplifyData(
                                                     extractSampleData(
-                                                        keyData ? resolvedData[keyData] : resolvedData[keyData],
+                                                        resolvedData[keyData] ?? resolvedData,
                                                         valsToDisplay
                                                     )
                                                 ),
                                                 searchElem
                                             );
-                                            // console.log(
-                                            //     `kanbanData resolvedData[${keyData}]: ${JSON.stringify(
-                                            //         resolvedData,
-                                            //         null,
-                                            //         4
-                                            //     )}`
-                                            // );
                                             return (
                                                 <KanbanMode
                                                     partition={partition}

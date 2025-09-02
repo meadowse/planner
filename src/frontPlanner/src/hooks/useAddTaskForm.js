@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react';
 
 function getTaskConfig(initialData, disabledFields) {
-    // console.log(
-    //     `getTaskConfig initialData: ${JSON.stringify(initialData, null, 4)}\ndisabledFields: ${JSON.stringify(
-    //         disabledFields,
-    //         null,
-    //         4
-    //     )}`
-    // );
     const template = {};
 
     if (!disabledFields) {
@@ -29,7 +22,7 @@ export const useTaskForm = (initialData, disabledFields) => {
     // let dataForm = Object.assign({}, values);
 
     // Валидация формы
-    const validate = () => {};
+    const validate = () => { };
 
     // Изменение значения
     const onChange = e => {

@@ -50,11 +50,11 @@ export const DATA_CONVERSION_MAP = {
             ? { title: stage?.title, color: STAGES_CONF_MAP[stage.title] }
             : { title: 'Без стадии', color: STAGES_CONF_MAP['Без стадии'] };
     },
-    status: status => {
-        return Object.keys(status).length !== 0 && status?.title
-            ? { title: status?.title, color: STATUSES_CONF[status.title] }
-            : { title: 'Без статуса', color: STATUSES_CONF['Без статуса'] };
-    },
+    // status: status => {
+    //     return Object.keys(status).length !== 0 && status?.title
+    //         ? { title: status?.title, color: STATUSES_CONF[status.title] }
+    //         : { title: 'Без статуса', color: STATUSES_CONF['Без статуса'] };
+    // },
     services: services => {
         if (services && services.length !== 0) {
             if (services[0]?.title) return services[0];
