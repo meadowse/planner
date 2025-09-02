@@ -637,8 +637,31 @@ def addTask(request):
             sql = f'select F4644 from T212 where ID = {contractId}'
             cur.execute(sql)
             idChannel = cur.fetchone()[0]
-
-        return JsonResponse({'status': 'Ok'}, status=200)
+            sql = f"""SELECT F4932 FROM T3 WHERE F16 = '{directorId}'"""
+            cur.execute(sql)
+            directorData = cur.fetchone()
+            director = directorData[0]
+            sql = f"""SELECT F4932 FROM T3 WHERE F16 = '{executorId}'"""
+            cur.execute(sql)
+            executorData = cur.fetchone()
+            executor = executorData[0]
+            message = f'**Добавлена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
+            message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
+            message += f'Постановщик: *@{director}*\n' if director is not None else ''
+            message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
+            message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
+            message += f'Deadline: *{deadline}*\n' if deadline is not None else ''
+            message += f'Комментарий: {comment}\n' if comment is not None else ''
+            message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
+            data = {'channel_id': idChannel, 'message': message}
+            response = requests.post(
+                f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts",
+                json=data, headers=headers)
+            if response.status_code == 201:
+                result = 'Post creation successful.'
+            else:
+                result = f'Failed to send message: {response.status_code}, {response.text}'
+        return JsonResponse({'status': f'{result}'}, status=200)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
