@@ -27,22 +27,22 @@ function getConfigKanban(modeOption, data) {
                 data:
                     modeOption?.key === 'date'
                         ? getWeek(new Date()).map(item => {
-                              let dayOfWeek = item.toLocaleString('en-US', { weekday: 'long' });
-                              return { title: WEEK_DAYS[dayOfWeek] };
-                          })
+                            let dayOfWeek = item.toLocaleString('en-US', { weekday: 'long' });
+                            return { title: WEEK_DAYS[dayOfWeek] };
+                        })
                         : data && data.length !== 0
-                        ? getUniqueData(data, { key: modeOption?.key, uniqueness: modeOption?.uniqueness }).map(
-                              item => {
-                                  if (modeOption && Object.keys(modeOption).length !== 0) {
-                                      if (modeOption?.key) {
-                                          if (item !== null && typeof item === 'object' && !Array.isArray(item))
-                                              return { title: item[modeOption?.key][modeOption?.uniqueness] };
-                                          else return { title: item[modeOption?.key] };
-                                      }
-                                  }
-                              }
-                          )
-                        : []
+                            ? getUniqueData(data, { key: modeOption?.key, uniqueness: modeOption?.uniqueness }).map(
+                                item => {
+                                    if (modeOption && Object.keys(modeOption).length !== 0) {
+                                        if (modeOption?.key) {
+                                            if (item !== null && typeof item === 'object' && !Array.isArray(item))
+                                                return { title: item[modeOption?.key][modeOption?.uniqueness] };
+                                            else return { title: item[modeOption?.key] };
+                                        }
+                                    }
+                                }
+                            )
+                            : []
             };
         }
     }
@@ -130,7 +130,7 @@ function ColumnContent(props) {
                             <li
                                 className="kanban__card-wrapper"
                                 draggable="true"
-                                // onDragStart={() => setDraggedItem({ id: item.id, nameColOut: header.title })}
+                            // onDragStart={() => setDraggedItem({ id: item.id, nameColOut: header.title })}
                             >
                                 <Card
                                     partition={partition}
@@ -254,10 +254,19 @@ export default function KanbanMode(props) {
     // console.log(`KanbanMode modeOption: ${JSON.stringify(modeOption, null, 4)}`);
     // console.log(`data: ${JSON.stringify(data, null, 4)}`);
 
+    // Данные доски Канбан
     const [boardCards, setBoardCards] = useState({});
+
+    // Конфигурация доски Канбан
     const [configKanban, setConfigKanban] = useState({});
+
+    // 
     const [stateActionSelectionPopup, setStateActionSelectionPopup] = useState(false);
+
+    // Перетаскиваемый элемент 
     const [draggedItem, setDraggedItem] = useState({ id: -1, nameColOut: null });
+
+    // Состояние раскрытости содержимого
     const [discloseContent, setDiscloseContent] = useState(null);
 
     const dropHandlerRef = useRef(null);

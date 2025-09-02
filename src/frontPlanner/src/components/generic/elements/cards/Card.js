@@ -49,28 +49,28 @@ function FigcaptionImage({ partition, data }) {
                                 </h2>
                                 {data?.contacts && data?.contacts.length !== 0
                                     ? data?.contacts?.map(contact => (
-                                          <li
-                                              key={`${data?.company}-${contact?.fullName}`}
-                                              className="kanban-card__figcaption-info-item"
-                                          >
-                                              <span
-                                                  className="kanban-card__figcaption-fullname"
-                                                  ref={refFigcapFullname}
-                                                  onMouseLeave={() => refFigcapFullname?.current.scrollTo(0, 0)}
-                                              >
-                                                  {contact?.fullName || 'Нет данных'}
-                                              </span>
-                                              <p className="kanban-card__figcaption-phones">
-                                                  {contact?.phone && contact?.phone?.length !== 0 ? (
-                                                      <span className="kanban-card__figcaption-phone">
-                                                          {contact?.phone.map(item => item)}
-                                                      </span>
-                                                  ) : (
-                                                      'Нет данных'
-                                                  )}
-                                              </p>
-                                          </li>
-                                      ))
+                                        <li
+                                            key={`${data?.company}-${contact?.fullName}`}
+                                            className="kanban-card__figcaption-info-item"
+                                        >
+                                            <span
+                                                className="kanban-card__figcaption-fullname"
+                                                ref={refFigcapFullname}
+                                                onMouseLeave={() => refFigcapFullname?.current.scrollTo(0, 0)}
+                                            >
+                                                {contact?.fullName || 'Нет данных'}
+                                            </span>
+                                            <p className="kanban-card__figcaption-phones">
+                                                {contact?.phone && contact?.phone?.length !== 0 ? (
+                                                    <span className="kanban-card__figcaption-phone">
+                                                        {contact?.phone.map(item => item)}
+                                                    </span>
+                                                ) : (
+                                                    'Нет данных'
+                                                )}
+                                            </p>
+                                        </li>
+                                    ))
                                     : String.fromCharCode(8195)}
                             </>
                         ) : (
@@ -80,9 +80,8 @@ function FigcaptionImage({ partition, data }) {
                     <div className="kanban-card__figcaption-right">
                         <p className="kanban-card__figcaption-subtitle">
                             {data?.date && Object.keys(data?.date).length !== 0
-                                ? `${data?.date?.title}: ${
-                                      data?.date?.value ? data?.date?.value : String.fromCharCode(8212)
-                                  }`
+                                ? `${data?.date?.title}: ${data?.date?.value ? data?.date?.value : String.fromCharCode(8212)
+                                }`
                                 : null}
                         </p>
                     </div>

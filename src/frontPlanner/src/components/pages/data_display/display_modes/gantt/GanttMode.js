@@ -444,8 +444,8 @@ function GanttChart(props) {
                         <ul className="gantt-time-year gantt-time-period">
                             {timeLine && Object.keys(timeLine).length !== 0
                                 ? timeLine?.data.map(day => {
-                                      let today = new Date();
-                                      today.setMonth(today.getMonth() + 1);
+                                      //   let today = new Date();
+                                      //   today.setMonth(today.getMonth() + 1);
 
                                       let currDate = getDateInSpecificFormat(new Date(), {
                                           format: 'YYYYMMDD',
@@ -457,14 +457,15 @@ function GanttChart(props) {
                                               className={classNames('gantt-time-period__day gantt-time-period', {
                                                   'gantt-time-period__curr-day': currDate === date
                                               })}
-                                              ref={
-                                                  today.getMonth() === getDateFromString(day).getMonth()
-                                                      ? getLastDayOfMonth(today) ===
-                                                        getLastDayOfMonth(getDateFromString(day))
-                                                          ? refCurrMonth
-                                                          : null
-                                                      : null
-                                              }
+                                              ref={currDate === date ? refCurrMonth : null}
+                                              //   ref={
+                                              //       today.getMonth() === getDateFromString(day).getMonth()
+                                              //           ? getLastDayOfMonth(today) ===
+                                              //             getLastDayOfMonth(getDateFromString(day))
+                                              //               ? refCurrMonth
+                                              //               : null
+                                              //           : null
+                                              //   }
                                           >
                                               {getDateFromString(day).getDate()}
                                               {currDate === date ? (

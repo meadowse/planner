@@ -2,6 +2,7 @@ import { useEffect, useReducer, useRef, useState, useContext, startTransition } 
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import Cookies from 'js-cookie';
+import classNames from 'classnames';
 
 // Импорт компонетов
 import BgFillText from '@generic/elements/text/BgFillText';
@@ -34,11 +35,7 @@ import './task_popup.css';
 function ContractNumber(props) {
     const { contract, isLoading, contractsIDs, config, setIdContract, onSelect } = props;
     // console.log(`ContractNumber contract: ${JSON.stringify(contract, null, 4)}`);
-    // console.log(`contractNum: ${JSON.stringify(getKeyByValue(contractsIDs, contract?.id), null, 4)}`);
-    // const [contractNum, setContractNum] = useState(() => {
-    //     if (contract?.number === 'Нет данных') return null;
-    //     return contract?.number;
-    // });
+
     const [contractNum, setContractNum] = useState(null);
 
     const { addToHistory } = useHistoryContext();
@@ -1102,6 +1099,10 @@ export default function TaskPopup(props) {
                     onSubmit={e => onOnSubmitData(e)}
                 >
                     <div className="popup__content-add-task-top">
+                        {/* Цепочка статусов */}
+                        {/* {taskOperation === 'update' ? (
+                            <StatusChain director={values?.director} executor={values?.executor} />
+                        ) : null} */}
                         <ul className="popup__content-add-task-left">
                             {/* Номер договора */}
                             <ContractNumber

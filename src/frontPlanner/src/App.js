@@ -1,5 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useContext } from 'react';
 import { ToastContainer } from 'react-toastify';
 
@@ -10,13 +11,15 @@ import { ROUTES_FOR_NOT_AUTH, ROUTES_FOR_AUTH } from './routes/Routes';
 import { socket, SocketContext } from './contexts/socket.context';
 import { authContext } from './contexts/auth.context';
 
-// Импорт
+// Импорт провайдеров
 import { HistoryProvider } from './contexts/history.context';
 import { ThemeProvider } from './contexts/theme.context';
 
+//
+import { queryClient } from './query/queryClient';
+
 // Импорт стилей
 import 'react-toastify/dist/ReactToastify.css';
-import { queryClient } from './query/queryClient';
 
 export default function App() {
     const { authState } = useContext(authContext);
@@ -26,7 +29,6 @@ export default function App() {
     //     ...(!auth?.data || Object.keys(auth?.data).length === 0 ? ROUTES_FOR_NOT_AUTH : []),
     //     ...ROUTES_FOR_AUTH
     // ]);
-
 
     return (
         <HistoryProvider>

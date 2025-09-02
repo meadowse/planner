@@ -68,6 +68,14 @@ const ROUTES_FOR_AUTH = [
                         loader: () => {
                             return defer({ uploadedData: DataDisplayService.loadData('department') });
                         },
+                        // loader: () => {
+                        //     return defer({
+                        //         uploadedData: queryClient.ensureQueryData({
+                        //             queryKey: ["department"],
+                        //             queryFn: () => DataDisplayService.loadData('department'),
+                        //         })
+                        //     });
+                        // },
                         shouldRevalidate: () => false,
                         element: <DataDisplayPage partition="department" additClass="department" />
                     },
