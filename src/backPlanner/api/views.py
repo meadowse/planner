@@ -729,7 +729,7 @@ def editTask(request):
             cur.execute(sql)
             executorData = cur.fetchone()
             executor = executorData[0]
-            message = f'**{'Изменена' if done != 1 else 'Завершена'} :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
+            message = f"""**{'Изменена' if done != 1 else 'Завершена'} :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n"""
             message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
             message += f'Постановщик: *@{director}*\n' if director is not None else ''
             message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
