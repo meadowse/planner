@@ -604,11 +604,11 @@ def addTask(request):
             sql = f'select F4644 from T212 where ID = {contractId}'
             cur.execute(sql)
             idChannel = cur.fetchone()[0]
-            sql = f"""SELECT F4932 FROM T3 WHERE F16 = '{directorId}'"""
+            sql = f"""SELECT F4932 FROM T3 WHERE ID = '{directorId}'"""
             cur.execute(sql)
             directorData = cur.fetchone()
             director = directorData[0]
-            sql = f"""SELECT F4932 FROM T3 WHERE F16 = '{executorId}'"""
+            sql = f"""SELECT F4932 FROM T3 WHERE ID = '{executorId}'"""
             cur.execute(sql)
             executorData = cur.fetchone()
             executor = executorData[0]
