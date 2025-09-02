@@ -625,10 +625,6 @@ def addTask(request):
             response = requests.post(
                 f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts",
                 json=data, headers=headers)
-            if response.status_code == 201:
-                result = 'Post creation successful.'
-            else:
-                result = f'Failed to send message: {response.status_code}, {response.text}'
             idMessage = response.json().get('id')
             cur.execute(f'SELECT GEN_ID(GEN_T218, 1) FROM RDB$DATABASE')
             ID = cur.fetchonemap().get('GEN_ID', None)
@@ -664,7 +660,7 @@ def addTask(request):
             sql = f"""INSERT INTO T218 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
             cur.execute(sql)
             con.commit()
-        return JsonResponse({'status': f'{result}'}, status=200)
+        return JsonResponse({'status': response.json()}, status=response.status_code)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -684,6 +680,7 @@ def editTask(request):
         done = obj.get('done')
         parenId = obj.get('parentId')
         status = obj.get('status')
+        today = datetime.date.today().strftime('%Y-%m-%d')
         with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                  charset=charset) as con:
             cur = con.cursor()
@@ -696,7 +693,7 @@ def editTask(request):
                 'F5569': dateStart,
                 'F4696': deadline,
                 'F4697': done,
-                'F4708': datetime.date.today().strftime('%Y-%m-%d'),
+                'F4708': today,
                 'F4693': directorId,  # должно быть ID пользователя
                 'F4694': executorId,
                 'F5646': parenId,
@@ -721,7 +718,52 @@ def editTask(request):
             """
             cur.execute(sql)
             con.commit()
-        return JsonResponse({'status': 'Ok'}, status=200)
+            sql = f'select F4644 from T212 where ID = {contractId}'
+            cur.execute(sql)
+            idChannel = cur.fetchone()[0]
+            sql = f"""SELECT F4932 FROM T3 WHERE ID = '{directorId}'"""
+            cur.execute(sql)
+            directorData = cur.fetchone()
+            director = directorData[0]
+            sql = f"""SELECT F4932 FROM T3 WHERE ID = '{executorId}'"""
+            cur.execute(sql)
+            executorData = cur.fetchone()
+            executor = executorData[0]
+            message = f'**{'Изменена' if done != 1 else 'Завершена'} :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
+            message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
+            message += f'Постановщик: *@{director}*\n' if director is not None else ''
+            message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
+            message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
+            message += f'Deadline: :calendar: *{deadline}*\n' if deadline is not None else ''
+            message += f'Комментарий: :speech_balloon: {comment}\n' if comment is not None else ''
+            # sql = f"""SELECT F5476 FROM T218 WHERE ID = {taskId}"""
+            # cur.execute(sql)
+            # time = cur.fetchone()[0]
+            # message += f'Планируемые времязатраты: :clock3: {time}'
+            # sql = f"""SELECT F5476 FROM T320 WHERE F5862 = {taskId}"""
+            # message += f'Текущие времязатраты: :clock3: {}'
+            statusEmoji = ''
+            match status:
+                case 'Новая':
+                    statusEmoji = ':new:'
+                case 'В работе':
+                    statusEmoji = ':molot:'
+                case 'Выполненная':
+                    statusEmoji = ':white_check_mark:'
+                case 'Завершенная':
+                    statusEmoji = ':thumbsup:'
+                case 'Отмененная':
+                    statusEmoji = ':x:'
+            message += f'Статус: {statusEmoji} *{status}* {statusEmoji}\n'
+            message += ':large_yellow_circle: *Задача ожидает исполнения...*' if done != 1 else f':large_green_circle: *Задача выполнена {today}*'
+            sql = f"""SELECT F5451 FROM T218 WHERE ID = {taskId}"""
+            cur.execute(sql)
+            rootId = cur.fetchone()[0]
+            data = {'channel_id': idChannel, 'message': message, 'root_id': rootId}
+            response = requests.post(
+                f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts",
+                json=data, headers=headers)
+        return JsonResponse({'status': response.json()}, status=response.status_code)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
