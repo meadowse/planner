@@ -165,20 +165,21 @@ def employees(request):
             charset=charset
     ) as con:
         cur = con.cursor()
-        sql = """select T3.ID as id, 
-        T3.F16 as mmId,
-        T3.F4886 as fullName, 
-        T4.F7 as post, 
-        T3.F4887SRC as photo, 
-        T3.F14 as phone, 
-        T3.F12 as email 
-        from T3 
-        left join T4 on T3.F11 = T4.ID 
-        where T3.F5383 = 1"""
+        sql = """SELECT T3.ID AS id,
+        T3.F16 AS mmId,
+        T3.F4932 AS nickMame,
+        T3.F4886 AS fullName,
+        T4.F7 AS post,
+        T3.F4887SRC AS photo,
+        T3.F14 AS phone,
+        T3.F12 AS email
+        FROM T3
+        LEFT JOIN T4 ON T3.F11 = T4.ID
+        WHERE T3.F5383 = 1"""
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
-        columns = ('id', 'mmId', 'fullName', 'post', 'photo', 'phone', 'email')
+        columns = ('id', 'mmId', 'nickName', 'fullName', 'post', 'photo', 'phone', 'email')
         json_result = [
             {col: value for col, value in zip(columns, row)}
             for row in result
