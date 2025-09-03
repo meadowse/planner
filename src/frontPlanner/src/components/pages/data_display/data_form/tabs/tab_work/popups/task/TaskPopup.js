@@ -21,6 +21,9 @@ import { useHistoryContext } from '../../../../../../../../contexts/history.cont
 // Импорт кастомных хуков
 import { useTaskForm } from '@hooks/useAddTaskForm';
 
+// Импорт конфигурации
+import { ACTIONS_TASK } from '@config/tabs/tab_work.config';
+
 // Импорт сервисов
 import TaskService from '@services/tabs/tab_task.service';
 
@@ -31,86 +34,62 @@ import { getDateInSpecificFormat } from '@helpers/calendar';
 // Импорт стилей
 import './task_popup.css';
 
-const STATUS_ACTIONS_DIRECEXEC = {
-    'Отмененнная': null,
-    'Новая': ['Отменить', 'Взять в работу'],
-    'В работе': ['Отменить', 'Выполнено'],
-    'Выполненная': ['Отменить', 'Принять работу', 'Вернуть в работу'],
-    'Завершенная': null
-};
-
 // Цепочка статусов
 function StatusChain(props) {
-    const { director, executor } = props;
+    const { presetValue, director, executor, onSelect } = props;
+    const statusesTask = TaskService.getStatusesTask(director, executor);
 
     const [status, setStatus] = useState(null);
 
-    const STATUSES_TASK = new Map([
-        ['Отмененнная', null],
-        ['Новая', { [director?.mmId]: ['Отменить'], [executor?.mmId]: ['Взять в работу'] }],
-        ['В работе', { [director?.mmId]: ['Отменить'], [executor?.mmId]: ['Выполнено'] }],
-        [
-            'Выполненная',
-            { [director?.mmId]: ['Отменить', 'Принять работу', 'Вернуть в работу'], [executor?.mmId]: null }
-        ],
-        ['Завершенная', null]
-    ]);
-
-    const ACTIONS_TASK = {
-        'Отменить': {
-            title: 'Отмененнная',
-            progress: 0
-        },
-        'Взять в работу': {
-            title: 'В работе',
-            progress: 25
-        },
-        'Выполнено': {
-            title: 'Выполненная',
-            progress: 50
-        },
-        'Вернуть в работу': {
-            title: 'В работе',
-            progress: 25
-        },
-        'Принять работу': {
-            title: 'Завершенная',
-            progress: 75
-        }
-    };
-
+    // Изменить статус
     function onChangeStatus(action) {
-        setStatus(ACTIONS_TASK[action]);
+        const title = ACTIONS_TASK[action]?.title;
+        const actions = statusesTask.get(title)[Cookies.get('MMUSERID')];
+        const newStatus = { ...ACTIONS_TASK[action], actions };
+
+        setStatus(newStatus);
+        onSelect('status', newStatus);
     }
 
-    // useEffect(()=>{}, []);
+    useEffect(() => {
+        if (presetValue) {
+            const taskStatus = statusesTask.get(presetValue);
+            const newStatus = {
+                title: presetValue,
+                progress: taskStatus?.progress,
+                actions: taskStatus[Cookies.get('MMUSERID')]
+            };
+            // console.log(`status: ${JSON.stringify(newStatus, null, 4)}`);
+            setStatus(newStatus);
+            onSelect('status', newStatus);
+        }
+    }, []);
 
     return (
         <div className="popup-task-steps">
             <div className="popup-task-steps__progress-bar">
                 <span className="popup-task-steps__indicator" style={{ height: `${status?.progress}%` }}></span>
             </div>
-            {STATUSES_TASK.keys()?.map((key, index) => {
-                const stepVal = STATUSES_TASK.get(key);
-                const actions = stepVal && Object.keys(stepVal).length !== 0 ? stepVal[Cookies.get('MMUSERID')] : null;
-                // const actions = STATUS_ACTIONS[key] ? STATUS_ACTIONS[key].get(Cookies.get('MMUSERID')) : null;
-                return (
-                    <div
-                        class={classNames('popup-task-step', { 'popup-task-step_active': index === 2 })}
-                        data-step={actions && actions.length !== 0 ? `${key}${String.fromCharCode(8194)}▼` : key}
-                    >
-                        {actions && actions.length !== 0 ? (
-                            <ul className="popup-task-steps__actions">
-                                {actions.map(action => (
-                                    <li className="popup-task-steps__action" onClick={() => onChangeStatus(action)}>
-                                        {action}
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : null}
-                    </div>
-                );
-            })}
+            {[...statusesTask.keys()].map(key => (
+                <div
+                    class={classNames('popup-task-step', { 'popup-task-step_active': status?.title === key })}
+                    data-step={
+                        status?.title === key && status?.actions && status?.actions.length !== 0
+                            ? `${key}${String.fromCharCode(8194)}▼`
+                            : key
+                    }
+                >
+                    {status?.title === key && status?.actions && status?.actions.length !== 0 ? (
+                        <ul className="popup-task-steps__actions">
+                            {status?.actions.map(action => (
+                                <li className="popup-task-steps__action" onClick={() => onChangeStatus(action)}>
+                                    {action}
+                                </li>
+                            ))}
+                        </ul>
+                    ) : null}
+                </div>
+            ))}
         </div>
     );
 }
@@ -232,7 +211,7 @@ function ContractNumber(props) {
 
 // Вид работы
 function TypeWork(props) {
-    const { idContract, config, onSelect } = props;
+    const { presetValue, idContract, config, onSelect } = props;
 
     // const [idContract, setIdContract] = useState(presetValue ? presetValue : null);
     const [typeWork, setTypeWork] = useState({});
@@ -241,7 +220,17 @@ function TypeWork(props) {
     // Загрузка видов работ
     async function fetchTypesWork(contractId) {
         const typesWork = await TaskService.getTypesWork(contractId);
+        // console.log(`typesWork: ${JSON.stringify(typesWork, null, 4)}`);
+
         if (typesWork && typesWork.length) setTypesWork(typesWork);
+        if (presetValue) {
+            typesWork.forEach(elem => {
+                if (elem?.id === presetValue) {
+                    setTypeWork(elem);
+                    onSelect('typeWork', elem);
+                }
+            });
+        }
     }
 
     // Выбор вида работ
@@ -257,14 +246,9 @@ function TypeWork(props) {
     }
 
     useEffect(() => {
-        if (idContract) setTypeWork(fetchTypesWork(idContract));
-        else setTypeWork({});
-        // else {
-        //     if (contractNum in contractsIDs) {
-        //         setIdContract(contractsIDs[contractNum]);
-        //         loadData(contractsIDs[contractNum]);
-        //     }
-        // }
+        if (idContract) fetchTypesWork(idContract);
+        // if (idContract) setTypeWork(fetchTypesWork(idContract));
+        // else setTypeWork({});
     }, [idContract]);
 
     return !config?.hidden ? (
@@ -298,7 +282,7 @@ function Director(props) {
     // console.log(`Director presetValue: ${JSON.stringify(presetValue, null, 4)}`);
 
     const [statePopup, setStatePopup] = useState(false);
-    const [director, setDirector] = useState(presetValue ? presetValue : {});
+    const [director, setDirector] = useState(presetValue ?? {});
 
     const navigate = useNavigate();
     const { addToHistory } = useHistoryContext();
@@ -402,7 +386,7 @@ function Executor(props) {
     // console.log(`Executor presetValue: ${JSON.stringify(presetValue, null, 4)}`);
 
     const [statePopup, setStatePopup] = useState(false);
-    const [executor, setExecutor] = useState(presetValue ? presetValue : {});
+    const [executor, setExecutor] = useState(presetValue ?? {});
 
     const navigate = useNavigate();
     const { addToHistory } = useHistoryContext();
@@ -558,9 +542,16 @@ function ParentsTasks(props) {
     }
 
     // Открыть задачу
-    function onOpenTask() {
+    async function onOpenTask() {
         const { task, ...otherElems } = config?.popupData;
-        switchPopup('update', 'editTask', { ...otherElems, task: allTasks[parentTask?.value] });
+
+        // Выбранная род.задача
+        const selectedTask = { ...allTasks[parentTask?.value] };
+        // Получение информации о задаче
+        const newTask = await TaskService.getTaskInfo(selectedTask?.id, selectedTask?.parentId);
+
+        // switchPopup('update', 'editTask', { ...otherElems, task: allTasks[parentTask?.value] });
+        switchPopup('update', 'editTask', { ...otherElems, task: newTask });
     }
 
     useEffect(() => {
@@ -615,7 +606,7 @@ function ParentsTasks(props) {
 function TaskName(props) {
     const { presetValue, config, onChange } = props;
 
-    const [taskName, setTaskName] = useState(presetValue ? presetValue : '');
+    const [taskName, setTaskName] = useState(presetValue ?? '');
 
     function onChangeTaskName(e) {
         setTaskName(e.target.value);
@@ -641,7 +632,7 @@ function CommencementDate(props) {
     // console.log(`CommencementDate presetValue: ${presetValue}`);
 
     const [calendarState, setCalendarState] = useState(false);
-    const [startDate, setStartDate] = useState(presetValue ? presetValue : {});
+    const [startDate, setStartDate] = useState(presetValue ?? {});
 
     function onShowCalendar() {
         setCalendarState(true);
@@ -723,7 +714,7 @@ function DeadlineTask(props) {
     const { presetValue, config, onSelect } = props;
 
     const [calendarState, setCalendarState] = useState(false);
-    const [deadline, setDeadline] = useState(presetValue ? presetValue : {});
+    const [deadline, setDeadline] = useState(presetValue ?? {});
 
     function onShowCalendar() {
         setCalendarState(true);
@@ -806,13 +797,21 @@ function DeadlineTask(props) {
 
 // Комментарий
 function Comment(props) {
-    const { presetValue, config, onChange } = props;
-    const [comment, setComment] = useState(presetValue ? presetValue : '');
+    const { presetValue, config, onChange, onChangeByKey } = props;
+    const [comment, setComment] = useState('');
+    // const [comment, setComment] = useState('');
 
     function onChangeTaskName(e) {
         setComment(e.target.value);
         onChange(e);
     }
+
+    useEffect(() => {
+        if (presetValue) {
+            setComment(presetValue);
+            onChangeByKey('comment', presetValue);
+        }
+    }, []);
 
     return !config?.hidden ? (
         <div className="popup__content-comment popup-content-item">
@@ -827,18 +826,21 @@ function Comment(props) {
     ) : null;
 }
 
+// Подзадача
 function TaskItem(props) {
     const { taskItem, popupData, config, switchPopup } = props;
     const { navigate, addToHistory, appTheme } = config;
     // console.log(`taskItem: ${JSON.stringify(taskItem, null, 4)}`);
 
     // Открыть задачу
-    function onOpenTask() {
+    async function onOpenTask() {
         const { task, ...otherElems } = popupData;
-        // switchPopup('editTask', { ...otherElems, task: taskItem });
-        // setTaskData(taskItem);
-        // setEditingTaskId(taskItem?.id);
-        switchPopup('update', 'editTask', { ...otherElems, task: taskItem });
+
+        // Получение информации о задаче
+        const newTask = await TaskService.getTaskInfo(taskItem?.id, taskItem?.parentId);
+
+        switchPopup('update', 'editTask', { ...otherElems, task: newTask });
+        // switchPopup('update', 'editTask', { ...otherElems, task: newTask });
     }
 
     // Переход к профилю пользователя
@@ -977,8 +979,11 @@ function TaskInfo(props) {
 
         // Установка родителя по умолчанию
         const { task: prevTask } = popupData;
-        tempSubTask.parentId = prevTask?.subtasks[0] ? prevTask.subtasks[0].parentId : null;
-        // tempSubTask.parentId = taskData[0]?.parentId;
+        tempSubTask.parentId = prevTask?.id;
+        // tempSubTask.parentId =
+        //     prevTask?.subtasks && prevTask?.subtasks.length !== 0 && prevTask?.subtasks[0]
+        //         ? prevTask.subtasks[0].parentId
+        //         : null;
 
         // Установка пользователей по умолчанию
         tempSubTask.director = await TaskService.getAuthorizedEmployee(Cookies.get('MMUSERID'));
@@ -1055,10 +1060,16 @@ export default function TaskPopup(props) {
     const [parentTask, setParentTask] = useState({});
     const [subTasks, setSubTasks] = useState([]);
 
-    const { values, onChange, onClick } = useTaskForm(
+    const { values, onChange, onChangeByKey, onClick } = useTaskForm(
         TaskService.getTaskData(data?.task, dataTaskOperation?.disabledFields),
         dataTaskOperation?.disabledFields
     );
+    // const { task, values, onChange, onChangeByKey, onClick } = useTaskForm(
+    //     null,
+    //     data?.task?.id,
+    //     data?.task?.parentId,
+    //     dataTaskOperation?.disabledFields
+    // );
     // const socket = useContext(SocketContext);
     const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
@@ -1122,7 +1133,8 @@ export default function TaskPopup(props) {
         // Редактирование задачи
         if (taskOperation === 'update') {
             const resultData = {
-                typeWorkId: values?.typeWork?.id,
+                status: values?.status?.title,
+                typeWorkId: values?.idTypeWork,
                 contractId: idContract,
                 directorId: values?.director?.id,
                 executorId: values?.executor?.id,
@@ -1136,6 +1148,7 @@ export default function TaskPopup(props) {
             };
 
             // alert(`Edit task resultData: ${JSON.stringify(resultData, null, 4)}`);
+            // alert(`Edit task values: ${JSON.stringify(values, null, 4)}`);
 
             await TaskService.editTask(resultData);
         }
@@ -1144,22 +1157,6 @@ export default function TaskPopup(props) {
         navigate(window.location.pathname);
         // navigate(0);
     }
-
-    // Получение информации о задаче
-    async function fetchTaskData(idTask, idParent) {
-        const taskData = await TaskService.getTaskInfo(idTask, idParent);
-        if (taskData && Object.keys(taskData).length !== 0) {
-            const { subtasks, ...otherElems } = taskData;
-
-            setParentTask(TaskService.formItem(otherElems));
-            setSubTasks(TaskService.formData(taskData?.subtasks));
-        }
-    }
-
-    useEffect(() => {
-        // Загрузка информации о подзадач родительской задачи
-        fetchTaskData(data?.task?.id, data?.task?.parentId);
-    }, []);
 
     useEffect(() => {
         // Загрузка номеров договоров
@@ -1182,11 +1179,20 @@ export default function TaskPopup(props) {
                     className="popup__content-add-task popup-content"
                     onSubmit={e => onOnSubmitData(e)}
                 >
-                    <div className="popup__content-add-task-top">
+                    <div
+                        className={classNames('popup__content-add-task-top', {
+                            'popup__content-edit-task-top': taskOperation === 'update'
+                        })}
+                    >
                         {/* Цепочка статусов */}
-                        {/* {taskOperation === 'update' ? (
-                            <StatusChain director={values?.director} executor={values?.executor} />
-                        ) : null} */}
+                        {taskOperation === 'update' ? (
+                            <StatusChain
+                                presetValue={data?.task?.status}
+                                director={values?.director}
+                                executor={values?.executor}
+                                onSelect={onClick}
+                            />
+                        ) : null}
                         <ul className="popup__content-add-task-left">
                             {/* Номер договора */}
                             <ContractNumber
@@ -1205,6 +1211,7 @@ export default function TaskPopup(props) {
                             />
                             {/* Вид работы */}
                             <TypeWork
+                                presetValue={data?.task?.idTypeWork}
                                 idContract={idContract}
                                 config={{ hidden: dataTaskOperation?.hiddenFields?.typeWork ? true : false }}
                                 setIdContract={setIdContract}
@@ -1271,6 +1278,7 @@ export default function TaskPopup(props) {
                                 presetValue={data?.task?.comment ?? parentTask?.comment}
                                 config={{ hidden: dataTaskOperation?.hiddenFields?.comment ? true : false }}
                                 onChange={onChange}
+                                onChangeByKey={onChangeByKey}
                             />
                         </div>
                     </div>
@@ -1279,7 +1287,8 @@ export default function TaskPopup(props) {
                         <TaskInfo
                             title="Подзадачи"
                             popupData={{ ...data }}
-                            taskData={subTasks.map(subTask => TaskService.formItem(subTask))}
+                            taskData={data?.task?.subtasks}
+                            // taskData={subTasks.map(subTask => TaskService.formItem(subTask))}
                             config={{
                                 appTheme: theme,
                                 navigate,

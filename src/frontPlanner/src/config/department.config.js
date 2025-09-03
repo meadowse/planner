@@ -135,7 +135,17 @@ export const TASKS_DATA_CONF = {
                 { value: 'Исполнитель', key: 'executor', uniqueness: 'id' },
                 { value: 'Постановщик', key: 'director', uniqueness: 'id' }
             ],
-            keys: ['task', 'contractNum', 'address', 'customer', 'director', 'executor', 'deadlineTask', 'done']
+            keys: [
+                'task',
+                'status',
+                'contractNum',
+                'address',
+                'customer',
+                'director',
+                'executor',
+                'deadlineTask',
+                'done'
+            ]
         },
         {
             mode: 'Список договоров',

@@ -28,6 +28,7 @@ const formItem = data => {
         id: data?.id ?? null,
         contractId: data?.contractId ?? null,
         task: data?.task ?? null,
+        status: data?.status ?? null,
         idTypeWork: data?.idTypeWork ?? null,
         dateStart: data?.dateStart,
         deadlineTask: data?.deadlineTask ? { value: data.deadlineTask } : null,
@@ -49,6 +50,23 @@ const formItem = data => {
     };
 };
 
+const getStatusesTask = (director, executor) => {
+    return new Map([
+        ['Отмененнная', { progress: 0 }],
+        ['Новая', { progress: 0, [director?.mmId]: ['Отменить'], [executor?.mmId]: ['Взять в работу'] }],
+        ['В работе', { progress: 25, [director?.mmId]: ['Отменить'], [executor?.mmId]: ['Выполнено'] }],
+        [
+            'Выполненная',
+            {
+                progress: 50,
+                [director?.mmId]: ['Отменить', 'Принять работу', 'Вернуть в работу'],
+                [executor?.mmId]: null
+            }
+        ],
+        ['Завершенная', { progress: 75 }]
+    ]);
+};
+
 const getTaskData = (data, disabledFields) => {
     // console.log(`getTask data: ${JSON.stringify(data, null, 4)}`);
     const dataConf = {};
@@ -57,9 +75,14 @@ const getTaskData = (data, disabledFields) => {
         // contractNum: value => {
         //     return value ? value : '';
         // },
+        // Статус задачи
+        status: value => {
+            return value ?? '';
+        },
         // Вид работы
-        typeWork: value => {
-            return value && Object.keys(value).length !== 0 ? value : null;
+        idTypeWork: value => {
+            // return value && Object.keys(value).length !== 0 ? value : null;
+            return value ?? null;
         },
         // Родительcкая Задача
         parentId: value => {
@@ -169,6 +192,7 @@ const getAllTasks = (tasks, newTasks, taskForDelete) => {
     return tasksData;
 };
 
+// Получение информации по задаче
 const getTaskInfo = async (idTask, idParent) => {
     let taskInfoData = {};
     await axios
@@ -179,9 +203,15 @@ const getTaskInfo = async (idTask, idParent) => {
         })
         .then(response => {
             if (response?.status === 200) {
-                console.log(`typeof taskInfoData: ${typeof taskInfoData}`);
+                // console.log(`typeof taskInfoData: ${typeof taskInfoData}`);
                 // console.log(`id: ${JSON.parse(localStorage.getItem('idContract'))}`);
-                if (response?.data && response?.data.length !== 0) taskInfoData = response?.data;
+                if (response?.data && response?.data.length !== 0) {
+                    const { subtasks, ...otherElems } = response.data;
+                    taskInfoData = {
+                        ...formItem(otherElems),
+                        subtasks: subtasks?.map(subtask => formItem(subtask))
+                    };
+                }
             }
         })
         .catch(error => {
@@ -382,6 +412,7 @@ const deleteTask = async idTask => {
 const TaskService = {
     formItem,
     formData,
+    getStatusesTask,
     getDataFormOperation,
     getAllTasks,
     getTaskData,

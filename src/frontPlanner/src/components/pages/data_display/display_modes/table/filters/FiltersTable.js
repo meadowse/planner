@@ -141,17 +141,17 @@ const FILTERS_CONF = {
             />
         );
     },
-    status: (options, activeOption, toggleState, onChange) => {
-        return (
-            <DropDownFilter
-                id="status"
-                defaultVal={activeOption}
-                options={options}
-                toggle={toggleState}
-                onChange={onChange}
-            />
-        );
-    },
+    // status: (options, activeOption, toggleState, onChange) => {
+    //     return (
+    //         <DropDownFilter
+    //             id="status"
+    //             defaultVal={activeOption}
+    //             options={options}
+    //             toggle={toggleState}
+    //             onChange={onChange}
+    //         />
+    //     );
+    // },
     done: (options, activeOption, toggleState, onChange) => {
         return (
             <DropDownFilter

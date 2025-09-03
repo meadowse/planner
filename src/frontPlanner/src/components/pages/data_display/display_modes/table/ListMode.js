@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTable, useExpanded } from 'react-table';
+import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 
 // Импорт компонетов
@@ -22,7 +23,6 @@ import DataDisplayService from '@services/data_display.service.js';
 
 // Импорт стилей
 import './list_mode.css';
-import { createPortal } from 'react-dom';
 
 // Ячейка шапки таблицы
 function HeadCell({ cellData, cellConfig }) {

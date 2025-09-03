@@ -22,12 +22,18 @@ export const useTaskForm = (initialData, disabledFields) => {
     // let dataForm = Object.assign({}, values);
 
     // Валидация формы
-    const validate = () => { };
+    const validate = () => {};
 
     // Изменение значения
     const onChange = e => {
         setValues(prevState => {
             return { ...prevState, [e.target.name]: e.target.value };
+        });
+    };
+
+    const onChangeByKey = (key, value) => {
+        setValues(prevState => {
+            return { ...prevState, [key]: value };
         });
     };
 
@@ -41,6 +47,7 @@ export const useTaskForm = (initialData, disabledFields) => {
     return {
         values,
         onChange,
+        onChangeByKey,
         onClick
     };
 };

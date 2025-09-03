@@ -6,11 +6,14 @@ import classNames from 'classnames';
 // Импорт компонентов
 import TaskPopup from '@components/pages/data_display/data_form/tabs/tab_work/popups/task/TaskPopup';
 
+// Импорт сервисов
+import TaskService from '../../services/tabs/tab_task.service';
+
 // Импорт доп.функционала
 import { isObject, isArray } from '@helpers/helper';
 import { getDateFromString } from '@helpers/calendar';
 
-//
+// Импорт контекста
 import { useHistoryContext } from '../../contexts/history.context';
 
 const CELLS = {
@@ -153,21 +156,21 @@ const COLUMNS = [
             );
         }
     },
-    {
-        Header: 'Статус',
-        accessor: 'status',
-        sortable: true,
-        sortBy: 'title',
-        Cell: props => {
-            return props?.value ? (
-                <p className="cell__status cell" style={{ backgroundColor: props?.value?.color }}>
-                    {props?.value?.title}
-                </p>
-            ) : (
-                'Нет данных'
-            );
-        }
-    },
+    // {
+    //     Header: 'Статус',
+    //     accessor: 'status',
+    //     sortable: true,
+    //     sortBy: 'title',
+    //     Cell: props => {
+    //         return props?.value ? (
+    //             <p className="cell__status cell" style={{ backgroundColor: props?.value?.color }}>
+    //                 {props?.value?.title}
+    //             </p>
+    //         ) : (
+    //             'Нет данных'
+    //         );
+    //     }
+    // },
     {
         Header: 'Контакт для связи',
         accessor: 'contacts',
@@ -265,15 +268,6 @@ const COLUMNS = [
             return CELLS['text'](props?.value, 'post');
         }
     },
-    // {
-    //     Header: 'Подразделение',
-    //     accessor: 'subsection',
-    //     sortable: false,
-    //     sortBy: undefined,
-    //     Cell: props => {
-    //         return CELLS['text'](props?.value, 'subsection');
-    //     }
-    // },
     {
         Header: 'Телефон',
         accessor: 'phone',
@@ -453,13 +447,19 @@ const COLUMNS = [
             const refCell = useRef();
 
             // Открыть окно редактирования задачи
-            const onOpenEditTaskPopup = () => {
+            const onOpenEditTaskPopup = async () => {
+                const { id: taskId, parentId: parentTaskId } = props?.row?.original;
+
+                // Получение информации о задаче
+                const taskData = await TaskService.getTaskInfo(taskId, parentTaskId);
+                // const taskData = await fetchTaskData(taskId, parentTaskId);
+
                 setPopupState(true);
                 openPopup('update', 'editTask', {
                     idContract: props?.row?.original?.contractId,
                     partition,
                     tasks,
-                    task: props?.row?.original,
+                    task: taskData,
                     contractOperations: dataOperation
                 });
             };
@@ -498,6 +498,16 @@ const COLUMNS = [
                     </div>
                 </>
             );
+        }
+    },
+    {
+        Header: 'Статус',
+        accessor: 'status',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            console.log(`Статус ${props.value}`);
+            return props.value ? CELLS['text'](props.value, 'status') : 'Нет данных';
         }
     },
     {

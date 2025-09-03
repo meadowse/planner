@@ -66,7 +66,7 @@ export default function TabWorkNew() {
                         key={`${partition}-table-tasks`}
                         testData={tasks.sort((a, b) => parseInt(a?.id) - parseInt(b?.id))}
                         modeConfig={{
-                            keys: ['task', 'director', 'executor', 'deadlineTask', 'done'],
+                            keys: ['task', 'status', 'director', 'executor', 'deadlineTask', 'done'],
                             mode: {
                                 key: 'listTasks'
                             },

@@ -28,7 +28,7 @@ export const EMPLOYEE_DATA_CONF = {
                 { value: 'Исполнитель', key: 'executor', uniqueness: 'id' },
                 { value: 'Постановщик', key: 'director', uniqueness: 'id' }
             ],
-            keys: ['task', 'director', 'executor', 'deadlineTask', 'done']
+            keys: ['task', 'status', 'director', 'executor', 'deadlineTask', 'done']
         },
         {
             tab: 'Договоры',

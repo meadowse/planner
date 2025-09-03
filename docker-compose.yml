@@ -11,8 +11,8 @@ services:
         build: './src/frontPlanner'
         ports:
             - 3000:3000
-    notificationServer:
-        image: notification_server
-        build: './src/notificationServer'
-        ports:
-            - 3500:3500
+    # notificationServer:
+    #     image: notification_server
+    #     build: './src/notificationServer'
+    #     ports:
+    #         - 3500:3500

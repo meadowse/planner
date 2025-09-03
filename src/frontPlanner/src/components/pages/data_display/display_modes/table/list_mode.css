@@ -173,13 +173,13 @@
 }
 
 /* Ячейка "Статус" */
-.cell__status {
+/* .cell__status {
     width: max-content;
     padding: 0.3rem;
     border-radius: 0.3125rem;
     background-color: #adb5bd;
     color: var(--text-color-cell-stage);
-}
+} */
 
 /* Ячейка "Выезды", "Сроки" */
 

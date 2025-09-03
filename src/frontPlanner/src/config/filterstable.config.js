@@ -248,7 +248,7 @@ export const FILTER_HANDLERS_CONF = new Map([
         (filterVal, services) =>
             filterVal?.includes('Все') || services?.title?.toLowerCase().includes(filterVal?.toLowerCase())
     ],
-    ['status', (filterVal, status) => filterVal?.includes('Все') || Object.values(status)?.includes(filterVal)],
+    // ['status', (filterVal, status) => filterVal?.includes('Все') || Object.values(status)?.includes(filterVal)],
     [
         'manager',
         (filterVal, manager) => {
