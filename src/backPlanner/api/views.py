@@ -917,6 +917,7 @@ def getTasksEmployee(request):
                 T218.F5476 AS DEADLINE_TIME,
                 T218.F4697 AS DONE,
                 T218.F4708 AS DATE_OF_DONE,
+                T218.F5646 AS parentId,
                 DIRECTOR.ID AS ID_DIRECTOR,
                 DIRECTOR.F16 AS ID_MM_DIRECTOR,
                 DIRECTOR.F4886 AS DIRECTOR_NAME,
@@ -926,9 +927,7 @@ def getTasksEmployee(request):
                 T212.ID AS contractId,
                 T212.F4538 AS CONTRACT_NUMBER,
                 T212.F4946 AS OBJECT_ADDRESS,
-                T205.F4331 AS CUSTOMER_NAME,
-                T218.F5646 AS parentId,
-                T218.F5872 AS status
+                T205.F4331 AS CUSTOMER_NAME
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
@@ -938,15 +937,18 @@ def getTasksEmployee(request):
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
-                'id', 'task', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'idDirector',
-                'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId',
-                'contractNum', 'address', 'customer', 'parentId', 'status')
+                    'id', 'task', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'parentId',
+                    'idDirector',
+                    'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId',
+                    'contractNum', 'address', 'customer')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
                 ]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
                 copy = []
+                removeIndexes = []
+                i = 0
                 for task in json_result:
                     director = {'director': {'idDirector': task.get('idDirector'), 'mmId': task.get('idMMDirector'),
                                              'directorName': task.get('directorName')}}
@@ -992,10 +994,23 @@ def getTasksEmployee(request):
                         subtasks = {'subtasks': []}
                         task.update(subtasks)
                         copy.append(task)
+                        removeIndexes.append(i)
+                    i += 1
+                removeIndexes = sorted(removeIndexes, reverse=True)
+                for i in removeIndexes:
+                    json_result.pop(i)
+                i = 0
+                removeIndexes = []
                 for row in json_result:
                     for item in copy:
                         if item.get('id') == row.get('parentId'):
                             item.get('subtasks').append(row)
+                            removeIndexes.append(i)
+                    i += 1
+                removeIndexes = sorted(removeIndexes, reverse=True)
+                for i in removeIndexes:
+                    json_result.pop(i)
+                copy.extend(json_result)
                 return JsonResponse(copy, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")
