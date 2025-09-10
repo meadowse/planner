@@ -1287,13 +1287,15 @@ def test(request):
                 WHERE T218.ID < 0"""
                 for Tuple in List:
                     for Id in Tuple:
-                        sql += f' OR T218.ID = {Id} OR T218.F5646 = {Id}'
+                        if Id is not None:
+                            sql += f' OR T218.ID = {Id} OR T218.F5646 = {Id}'
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
-                'id', 'task', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'parentId', 'idDirector',
-                'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId',
-                'contractNum', 'address', 'customer')
+                    'id', 'task', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'parentId',
+                    'idDirector',
+                    'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId',
+                    'contractNum', 'address', 'customer')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
