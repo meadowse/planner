@@ -909,14 +909,8 @@ def getTasksEmployee(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                sql = f"SELECT ID FROM T3 WHERE F16 = '{employeeId}'"
-                cur.execute(sql)
-                ID = cur.fetchone()[0]
-                sql = f"SELECT ID, F5646 AS parentId FROM T218 WHERE F4693 = {ID} OR F4694 = {ID}"
-                cur.execute(sql)
-                List = cur.fetchall()
                 sql = f"""SELECT
-                                T218.ID,
+                T218.ID,
                                 T218.F4695 AS TASK,
                                 T218.F5569 AS START_DATE,
                                 T218.F4696 AS DEADLINE_DATE,
@@ -939,11 +933,7 @@ def getTasksEmployee(request):
                                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
                                 LEFT JOIN T212 ON T218.F4691 = T212.ID
                                 LEFT JOIN T205 ON T212.F4540 = T205.ID
-                                WHERE T218.ID < 0"""
-                for Tuple in List:
-                    for Id in Tuple:
-                        if Id is not None:
-                            sql += f' OR T218.ID = {Id} OR T218.F5646 = {Id}'
+                                WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
