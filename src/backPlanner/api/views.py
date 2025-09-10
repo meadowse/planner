@@ -909,31 +909,41 @@ def getTasksEmployee(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
+                sql = f"SELECT ID FROM T3 WHERE F16 = '{employeeId}'"
+                cur.execute(sql)
+                ID = cur.fetchone()[0]
+                sql = f"SELECT ID, F5646 AS parentId FROM T218 WHERE F4693 = {ID} OR F4694 = {ID}"
+                cur.execute(sql)
+                List = cur.fetchall()
                 sql = f"""SELECT
-                T218.ID,
-                T218.F4695 AS TASK,
-                T218.F5569 AS START_DATE,
-                T218.F4696 AS DEADLINE_DATE,
-                T218.F5476 AS DEADLINE_TIME,
-                T218.F4697 AS DONE,
-                T218.F4708 AS DATE_OF_DONE,
-                T218.F5646 AS parentId,
-                DIRECTOR.ID AS ID_DIRECTOR,
-                DIRECTOR.F16 AS ID_MM_DIRECTOR,
-                DIRECTOR.F4886 AS DIRECTOR_NAME,
-                EXECUTOR.ID AS ID_EXECUTOR,
-                EXECUTOR.F16 AS ID_MM_EXECUTOR,
-                EXECUTOR.F4886 AS EXECUTOR_NAME,
-                T212.ID AS contractId,
-                T212.F4538 AS CONTRACT_NUMBER,
-                T212.F4946 AS OBJECT_ADDRESS,
-                T205.F4331 AS CUSTOMER_NAME
-                FROM T218
-                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
-                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                LEFT JOIN T212 ON T218.F4691 = T212.ID
-                LEFT JOIN T205 ON T212.F4540 = T205.ID
-                WHERE DIRECTOR.F16 = '{employeeId}' OR EXECUTOR.F16 = '{employeeId}'"""
+                                T218.ID,
+                                T218.F4695 AS TASK,
+                                T218.F5569 AS START_DATE,
+                                T218.F4696 AS DEADLINE_DATE,
+                                T218.F5476 AS DEADLINE_TIME,
+                                T218.F4697 AS DONE,
+                                T218.F4708 AS DATE_OF_DONE,
+                                T218.F5646 AS parentId,
+                                DIRECTOR.ID AS ID_DIRECTOR,
+                                DIRECTOR.F16 AS ID_MM_DIRECTOR,
+                                DIRECTOR.F4886 AS DIRECTOR_NAME,
+                                EXECUTOR.ID AS ID_EXECUTOR,
+                                EXECUTOR.F16 AS ID_MM_EXECUTOR,
+                                EXECUTOR.F4886 AS EXECUTOR_NAME,
+                                T212.ID AS contractId,
+                                T212.F4538 AS CONTRACT_NUMBER,
+                                T212.F4946 AS OBJECT_ADDRESS,
+                                T205.F4331 AS CUSTOMER_NAME
+                                FROM T218
+                                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
+                                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
+                                LEFT JOIN T212 ON T218.F4691 = T212.ID
+                                LEFT JOIN T205 ON T212.F4540 = T205.ID
+                                WHERE T218.ID < 0"""
+                for Tuple in List:
+                    for Id in Tuple:
+                        if Id is not None:
+                            sql += f' OR T218.ID = {Id} OR T218.F5646 = {Id}'
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
@@ -946,9 +956,6 @@ def getTasksEmployee(request):
                     for row in result
                 ]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
-                copy = []
-                removeIndexes = []
-                i = 0
                 for task in json_result:
                     director = {'director': {'idDirector': task.get('idDirector'), 'mmId': task.get('idMMDirector'),
                                              'directorName': task.get('directorName')}}
@@ -989,20 +996,12 @@ def getTasksEmployee(request):
                     else:
                         dateDone = {'dateDone': dateDone}
                     task.update(dateDone)
-                    if task.get('parentId') is None:
-                        task.pop('parentId')
-                        subtasks = {'subtasks': []}
-                        task.update(subtasks)
-                        copy.append(task)
-                        removeIndexes.append(i)
-                    i += 1
-                removeIndexes = sorted(removeIndexes, reverse=True)
-                for i in removeIndexes:
-                    json_result.pop(i)
+                    subtasks = {'subtasks': []}
+                    task.update(subtasks)
                 i = 0
                 removeIndexes = []
                 for row in json_result:
-                    for item in copy:
+                    for item in json_result:
                         if item.get('id') == row.get('parentId'):
                             item.get('subtasks').append(row)
                             removeIndexes.append(i)
@@ -1010,8 +1009,7 @@ def getTasksEmployee(request):
                 removeIndexes = sorted(removeIndexes, reverse=True)
                 for i in removeIndexes:
                     json_result.pop(i)
-                copy.extend(json_result)
-                return JsonResponse(copy, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")
                 return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
@@ -1242,108 +1240,6 @@ def getContracts(request):
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить данные по договорам")
-                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
-    else:
-        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
-
-@csrf_exempt
-def test(request):
-    if request.method == 'POST':
-        obj = json.loads(request.body)
-        employeeId = obj.get('employeeId')
-        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
-            cur = con.cursor()
-            try:
-                sql = f"SELECT ID FROM T3 WHERE F16 = '{employeeId}'"
-                cur.execute(sql)
-                ID = cur.fetchone()[0]
-                sql = f"SELECT ID, F5646 AS parentId FROM T218 WHERE F4693 = {ID} OR F4694 = {ID}"
-                cur.execute(sql)
-                List = cur.fetchall()
-                sql = f"""SELECT
-                T218.ID,
-                T218.F4695 AS TASK,
-                T218.F5569 AS START_DATE,
-                T218.F4696 AS DEADLINE_DATE,
-                T218.F5476 AS DEADLINE_TIME,
-                T218.F4697 AS DONE,
-                T218.F4708 AS DATE_OF_DONE,
-                T218.F5646 AS parentId,
-                DIRECTOR.ID AS ID_DIRECTOR,
-                DIRECTOR.F16 AS ID_MM_DIRECTOR,
-                DIRECTOR.F4886 AS DIRECTOR_NAME,
-                EXECUTOR.ID AS ID_EXECUTOR,
-                EXECUTOR.F16 AS ID_MM_EXECUTOR,
-                EXECUTOR.F4886 AS EXECUTOR_NAME,
-                T212.ID AS contractId,
-                T212.F4538 AS CONTRACT_NUMBER,
-                T212.F4946 AS OBJECT_ADDRESS,
-                T205.F4331 AS CUSTOMER_NAME
-                FROM T218
-                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
-                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                LEFT JOIN T212 ON T218.F4691 = T212.ID
-                LEFT JOIN T205 ON T212.F4540 = T205.ID
-                WHERE T218.ID < 0"""
-                for Tuple in List:
-                    for Id in Tuple:
-                        if Id is not None:
-                            sql += f' OR T218.ID = {Id} OR T218.F5646 = {Id}'
-                cur.execute(sql)
-                result = cur.fetchall()
-                columns = (
-                    'id', 'task', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'parentId',
-                    'idDirector',
-                    'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId',
-                    'contractNum', 'address', 'customer')
-                json_result = [
-                    {col: value for col, value in zip(columns, row)}
-                    for row in result
-                ]  # Создаем список словарей с сериализацией значений
-                today = datetime.date.today()
-                for task in json_result:
-                    director = {'director': {'idDirector': task.get('idDirector'), 'mmId': task.get('idMMDirector'),
-                                             'directorName': task.get('directorName')}}
-                    executor = {'executor': {'idExecutor': task.get('idExecutor'), 'mmId': task.get('idMMExecutor'),
-                                             'executorName': task.get('executorName')}}
-                    task.update(director)
-                    task.update(executor)
-                    task.pop('idDirector')
-                    task.pop('idExecutor')
-                    task.pop('idMMDirector')
-                    task.pop('idMMExecutor')
-                    task.pop('directorName')
-                    task.pop('executorName')
-                    deadlineTask = task.get('deadlineTask')
-                    if deadlineTask is not None:
-                        if task.get('done') == 0 and deadlineTask < today:
-                            deadlineTask = {
-                                'deadlineTask': {'value': datetime.datetime.strftime(deadlineTask, '%Y-%m-%d'),
-                                                 'expired': True}}
-                        else:
-                            deadlineTask = {
-                                'deadlineTask': {'value': datetime.datetime.strftime(deadlineTask, '%Y-%m-%d'),
-                                                 'expired': False}}
-                    else:
-                        deadlineTask = {
-                            'deadlineTask': {'value': deadlineTask,
-                                             'expired': False}}
-                    task.update(deadlineTask)
-                    startDate = task.get('startDate')
-                    if startDate is not None:
-                        startDate = {'startDate': datetime.datetime.strftime(startDate, '%Y-%m-%d')}
-                    else:
-                        startDate = {'startDate': startDate}
-                    task.update(startDate)
-                    dateDone = task.get('dateDone')
-                    if dateDone is not None:
-                        dateDone = {'dateDone': datetime.datetime.strftime(dateDone, '%Y-%m-%d')}
-                    else:
-                        dateDone = {'dateDone': dateDone}
-                    task.update(dateDone)
-                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
-            except Exception as ex:
-                print(f"НЕ удалось получить задачи по договору {ex}")
                 return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
