@@ -772,12 +772,17 @@ def deleteTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         taskId = obj.get('taskId')
-        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
-            cur = con.cursor()
-            sql = f"""DELETE FROM T218 WHERE ID = '{taskId}'"""
-            cur.execute(sql)
-            con.commit()
-        return JsonResponse({'status': 'Ok'}, status=200)
+        try:
+            with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                     charset=charset) as con:
+                cur = con.cursor()
+                sql = f"""DELETE FROM T218 WHERE ID = {taskId}"""
+                cur.execute(sql)
+                con.commit()
+            return JsonResponse({'status': 'Ok'}, status=200)
+        except Exception as ex:
+            print(f"НЕ удалось удалить задачу {taskId}: {ex}")
+            return ex
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -911,29 +916,29 @@ def getTasksEmployee(request):
             try:
                 sql = f"""SELECT
                 T218.ID,
-                                T218.F4695 AS TASK,
-                                T218.F5569 AS START_DATE,
-                                T218.F4696 AS DEADLINE_DATE,
-                                T218.F5476 AS DEADLINE_TIME,
-                                T218.F4697 AS DONE,
-                                T218.F4708 AS DATE_OF_DONE,
-                                T218.F5646 AS parentId,
-                                DIRECTOR.ID AS ID_DIRECTOR,
-                                DIRECTOR.F16 AS ID_MM_DIRECTOR,
-                                DIRECTOR.F4886 AS DIRECTOR_NAME,
-                                EXECUTOR.ID AS ID_EXECUTOR,
-                                EXECUTOR.F16 AS ID_MM_EXECUTOR,
-                                EXECUTOR.F4886 AS EXECUTOR_NAME,
-                                T212.ID AS contractId,
-                                T212.F4538 AS CONTRACT_NUMBER,
-                                T212.F4946 AS OBJECT_ADDRESS,
-                                T205.F4331 AS CUSTOMER_NAME
-                                FROM T218
-                                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
-                                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                                LEFT JOIN T212 ON T218.F4691 = T212.ID
-                                LEFT JOIN T205 ON T212.F4540 = T205.ID
-                                WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}'"""
+                T218.F4695 AS TASK,
+                T218.F5569 AS START_DATE,
+                T218.F4696 AS DEADLINE_DATE,
+                T218.F5476 AS DEADLINE_TIME,
+                T218.F4697 AS DONE,
+                T218.F4708 AS DATE_OF_DONE,
+                T218.F5646 AS parentId,
+                DIRECTOR.ID AS ID_DIRECTOR,
+                DIRECTOR.F16 AS ID_MM_DIRECTOR,
+                DIRECTOR.F4886 AS DIRECTOR_NAME,
+                EXECUTOR.ID AS ID_EXECUTOR,
+                EXECUTOR.F16 AS ID_MM_EXECUTOR,
+                EXECUTOR.F4886 AS EXECUTOR_NAME,
+                T212.ID AS contractId,
+                T212.F4538 AS CONTRACT_NUMBER,
+                T212.F4946 AS OBJECT_ADDRESS,
+                T205.F4331 AS CUSTOMER_NAME
+                FROM T218
+                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
+                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
+                LEFT JOIN T212 ON T218.F4691 = T212.ID
+                LEFT JOIN T205 ON T212.F4540 = T205.ID
+                WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
