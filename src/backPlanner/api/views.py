@@ -547,6 +547,7 @@ def getTask(request):
                                 T218.F5646 AS parentId,
                                 T218.F4698 AS comment,
                                 T218.F5872 AS status,
+                                T218.F5865 AS plannedTimeCosts,
                                 DIRECTOR.ID AS ID_OF_DIRECTOR,
                                 DIRECTOR.F16 AS ID_MM_DIRECTOR,
                                 DIRECTOR.F4886 AS DIRECTOR_NAME,
@@ -562,7 +563,7 @@ def getTask(request):
                 result = cur.fetchall()
                 columns = (
                     'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'done', 'parentId',
-                    'comment', 'status', 'idDirector', 'idMMDirector',
+                    'comment', 'status', 'plannedTimeCosts', 'idDirector', 'idMMDirector',
                     'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO')
                 json_result = {'parent': {}, 'subtasks': [
                     {col: value for col, value in zip(columns, row)}
@@ -583,6 +584,10 @@ def getTask(request):
                     else:
                         deadlineTask = {'deadlineTask': datetime.datetime.strftime(deadlineTask, '%Y-%m-%d')}
                     task.update(deadlineTask)
+                    plannedTimeCosts = task.get('plannedTimeCosts')
+                    if plannedTimeCosts is not None:
+                        plannedTimeCosts = {'plannedTimeCosts': datetime.time.strftime(plannedTimeCosts, '%H:%M')}
+                        task.update(plannedTimeCosts)
                     if task.get('id') == taskId:
                         json_result.update(task)
                         removeIndexes.append(i)
