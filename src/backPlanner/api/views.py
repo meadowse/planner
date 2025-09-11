@@ -590,9 +590,9 @@ def getTask(request):
                         json_result.get('parent').update(task)
                         removeIndexes.append(i)
                     i += 1
-                    removeIndexes = sorted(removeIndexes, reverse=True)
-                    for i in removeIndexes:
-                        json_result.get('subtasks').pop(i)
+                removeIndexes = sorted(removeIndexes, reverse=True)
+                for i in removeIndexes:
+                    json_result.get('subtasks').pop(i)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по задаче {taskId}: {ex}")
