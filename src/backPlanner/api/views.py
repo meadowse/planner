@@ -556,7 +556,7 @@ def getTask(request):
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                WHERE T218.F5646 = {taskId} OR T218.ID = {taskId} OR T218.ID = {parentId}"""
+                WHERE T218.F5646 = {taskId} OR T218.ID = {taskId}""" + f' OR T218.ID = {parentId}' if parentId is not None else ''
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
