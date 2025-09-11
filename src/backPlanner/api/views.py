@@ -537,33 +537,34 @@ def getTask(request):
                 cur.execute(sql)
                 parentId = cur.fetchone()[0]
                 sql = f"""SELECT
-                T218.ID,
-                T218.F4691 AS CONRACT_ID,
-                T218.F4695 AS TASK,
-                T218.F5724 AS ID_OF_TYPE_OF_WORK,
-                T218.F5569 AS dateStart,
-                T218.F4696 AS DEADLINE,
-                T218.F4697 AS DONE,
-                T218.F5646 AS parentId,
-                T218.F4698 AS comment,
-                T218.F5872 AS status,
-                DIRECTOR.ID AS ID_OF_DIRECTOR,
-                DIRECTOR.F16 AS ID_MM_DIRECTOR,
-                DIRECTOR.F4886 AS DIRECTOR_NAME,
-                EXECUTOR.ID AS ID_OF_EXECUTOR,
-                EXECUTOR.F16 AS ID_MM_EXECUTOR,
-                EXECUTOR.F4886 AS EXECUTOR_NAME
-                FROM T218
-                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
-                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                WHERE T218.F5646 = {taskId} OR T218.ID = {taskId}""" + f' OR T218.ID = {parentId}' if parentId is not None else ''
+                                T218.ID,
+                                T218.F4691 AS CONRACT_ID,
+                                T218.F4695 AS TASK,
+                                T218.F5724 AS ID_OF_TYPE_OF_WORK,
+                                T218.F5569 AS dateStart,
+                                T218.F4696 AS DEADLINE,
+                                T218.F4697 AS DONE,
+                                T218.F5646 AS parentId,
+                                T218.F4698 AS comment,
+                                T218.F5872 AS status,
+                                DIRECTOR.ID AS ID_OF_DIRECTOR,
+                                DIRECTOR.F16 AS ID_MM_DIRECTOR,
+                                DIRECTOR.F4886 AS DIRECTOR_NAME,
+                                EXECUTOR.ID AS ID_OF_EXECUTOR,
+                                EXECUTOR.F16 AS ID_MM_EXECUTOR,
+                                EXECUTOR.F4886 AS EXECUTOR_NAME
+                                FROM T218
+                                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
+                                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
+                                WHERE T218.F5646 = {taskId} OR T218.ID = {taskId}""" + (
+                    f' OR T218.ID = {parentId}' if parentId is not None else '')
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
                     'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'done', 'parentId',
                     'comment', 'status', 'idDirector', 'idMMDirector',
                     'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO')
-                json_result = {'parent': {},'subtasks': [
+                json_result = {'parent': {}, 'subtasks': [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
                 ]}  # Создаем список словарей с сериализацией значений
