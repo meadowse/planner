@@ -3,6 +3,8 @@ import firebirdsql
 from django.http import JsonResponse
 from time import perf_counter
 from django.views.decorators.csrf import csrf_exempt
+from uaclient import contract
+
 from .config import *
 import datetime
 import requests
@@ -621,9 +623,10 @@ def addTask(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                  charset=charset) as con:
             cur = con.cursor()
-            sql = f'select F4644 from T212 where ID = {contractId}'
-            cur.execute(sql)
-            idChannel = cur.fetchone()[0]
+            if contractId is not None:
+                sql = f'select F4644 from T212 where ID = {contractId}'
+                cur.execute(sql)
+                idChannel = cur.fetchone()[0]
             sql = f"""SELECT F4932 FROM T3 WHERE ID = '{directorId}'"""
             cur.execute(sql)
             directorData = cur.fetchone()
@@ -632,19 +635,20 @@ def addTask(request):
             cur.execute(sql)
             executorData = cur.fetchone()
             executor = executorData[0]
-            message = f'**Добавлена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
-            message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
-            message += f'Постановщик: *@{director}*\n' if director is not None else ''
-            message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
-            message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
-            message += f'Deadline: *{deadline}*\n' if deadline is not None else ''
-            message += f'Комментарий: {comment}\n' if comment is not None else ''
-            message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
-            data = {'channel_id': idChannel, 'message': message}
-            response = requests.post(
-                f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts",
-                json=data, headers=headers)
-            idMessage = response.json().get('id')
+            idMessage = None
+            if contractId is not None:
+                message = f'**Добавлена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
+                message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
+                message += f'Постановщик: *@{director}*\n' if director is not None else ''
+                message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
+                message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
+                message += f'Deadline: *{deadline}*\n' if deadline is not None else ''
+                message += f'Комментарий: {comment}\n' if comment is not None else ''
+                message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
+                data = {'channel_id': idChannel, 'message': message}
+                response = requests.post(
+                    f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data, headers=headers)
+                idMessage = response.json().get('id')
             cur.execute(f'SELECT GEN_ID(GEN_T218, 1) FROM RDB$DATABASE')
             ID = cur.fetchonemap().get('GEN_ID', None)
             # Подготовка значений для вставки
@@ -679,7 +683,10 @@ def addTask(request):
             sql = f"""INSERT INTO T218 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
             cur.execute(sql)
             con.commit()
-        return JsonResponse({'status': response.json()}, status=response.status_code)
+        if contractId is not None:
+            return JsonResponse({'status': response.json()}, status=response.status_code)
+        else:
+            return JsonResponse({'status': 'OK'}, status=200)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -1257,3 +1264,4 @@ def getContracts(request):
                 return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
