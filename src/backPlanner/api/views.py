@@ -3,8 +3,6 @@ import firebirdsql
 from django.http import JsonResponse
 from time import perf_counter
 from django.views.decorators.csrf import csrf_exempt
-from uaclient import contract
-
 from .config import *
 import datetime
 import requests
