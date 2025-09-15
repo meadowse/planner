@@ -1265,3 +1265,40 @@ def getContracts(request):
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
+@csrf_exempt
+def getTimeCosts(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        taskId = obj.get('taskId')
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+            cur = con.cursor()
+            try:
+                sql = f"""SELECT
+                T320.ID AS id,
+                T320.F5863 AS spent,
+                T320.F5869 AS dateReport,
+                T320.F5870 AS report,
+                T320.F5882 AS timeHours,
+                T3.F16 AS idMMExecutor
+                FROM T320 LEFT JOIN T3 ON T3.ID = T320.F5881 WHERE T320.F5862 = {taskId}"""
+                cur.execute(sql)
+                result = cur.fetchall()
+                columns = ('id', 'spent', 'dateReport', 'report', 'timeHours', 'idMMExecutor')
+                json_result = [
+                    {col: value for col, value in zip(columns, row)}
+                    for row in result
+                ]  # Создаем список словарей с сериализацией значений
+                for task in json_result:
+                    dateReport = task.get('dateReport')
+                    if dateReport is not None:
+                        dateReport = {'dateReport': datetime.datetime.strftime(dateReport, '%Y-%m-%d')}
+                        task.update(dateReport)
+                    spent = task.get('spent')
+                    if spent is not None:
+                        spent = {'spent': datetime.time.strftime(spent, '%H:%M')}
+                        task.update(spent)
+                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+            except Exception as ex:
+                print(f"Не удалось получить данные по времязатратам задачи {taskId}: {ex}")
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
