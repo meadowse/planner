@@ -420,97 +420,105 @@ function GanttChart(props) {
     }, [gantt?.data]);
 
     return gantt?.data && Object.keys(gantt?.data).length !== 0 ? (
-        <div className="gantt-grid-wrapper">
-            <div className="gantt-grid">
-                <div className="gantt-grid__header">
-                    <div className="gantt-grid__header-row">
-                        <div className="gantt-task-empty gantt-task-row"></div>
-                        <div className="gantt-empty-row"></div>
-                        <ul className="gantt-time-months gantt-time-period">
-                            {timeLine && Object.keys(timeLine).length !== 0
-                                ? timeLine?.years?.map(year => {
-                                      return MONTHS.map(month => (
-                                          <li className="gantt-time-period">
-                                              {month}&ensp;&mdash;&ensp;{year}
-                                          </li>
-                                      ));
-                                  })
-                                : null}
-                        </ul>
-                    </div>
-                    <div className="gantt-grid__header-row">
-                        <div className="gantt-task-empty gantt-task-row"></div>
-                        <div className="gantt-empty-row"></div>
-                        <ul className="gantt-time-year gantt-time-period">
-                            {timeLine && Object.keys(timeLine).length !== 0
-                                ? timeLine?.data.map(day => {
-                                      //   let today = new Date();
-                                      //   today.setMonth(today.getMonth() + 1);
+        <div
+            className={classNames('gantt-grid-wrapper', {
+                'gantt-grid-wrapper_empty': !gantt?.data?.tasks || gantt?.data?.tasks.length === 0
+            })}
+        >
+            {gantt?.data?.tasks && gantt?.data?.tasks.length !== 0 ? (
+                <div className="gantt-grid">
+                    <div className="gantt-grid__header">
+                        <div className="gantt-grid__header-row">
+                            <div className="gantt-task-empty gantt-task-row"></div>
+                            <div className="gantt-empty-row"></div>
+                            <ul className="gantt-time-months gantt-time-period">
+                                {timeLine && Object.keys(timeLine).length !== 0
+                                    ? timeLine?.years?.map(year => {
+                                          return MONTHS.map(month => (
+                                              <li className="gantt-time-period">
+                                                  {month}&ensp;&mdash;&ensp;{year}
+                                              </li>
+                                          ));
+                                      })
+                                    : null}
+                            </ul>
+                        </div>
+                        <div className="gantt-grid__header-row">
+                            <div className="gantt-task-empty gantt-task-row"></div>
+                            <div className="gantt-empty-row"></div>
+                            <ul className="gantt-time-year gantt-time-period">
+                                {timeLine && Object.keys(timeLine).length !== 0
+                                    ? timeLine?.data.map(day => {
+                                          //   let today = new Date();
+                                          //   today.setMonth(today.getMonth() + 1);
 
-                                      let currDate = getDateInSpecificFormat(new Date(), {
-                                          format: 'YYYYMMDD',
-                                          separator: '-'
-                                      });
-                                      let date = day;
-                                      return (
-                                          <li
-                                              className={classNames('gantt-time-period__day gantt-time-period', {
-                                                  'gantt-time-period__curr-day': currDate === date
-                                              })}
-                                              ref={currDate === date ? refCurrMonth : null}
-                                              //   ref={
-                                              //       today.getMonth() === getDateFromString(day).getMonth()
-                                              //           ? getLastDayOfMonth(today) ===
-                                              //             getLastDayOfMonth(getDateFromString(day))
-                                              //               ? refCurrMonth
-                                              //               : null
-                                              //           : null
-                                              //   }
-                                          >
-                                              {getDateFromString(day).getDate()}
-                                              {currDate === date ? (
-                                                  <div
-                                                      className="gantt-time__vr-line"
-                                                      style={{
-                                                          height: `${(gantt?.data?.totalCount + 1) * 100}%`
-                                                      }}
-                                                  ></div>
-                                              ) : null}
-                                          </li>
-                                      );
-                                  })
-                                : null}
-                        </ul>
+                                          let currDate = getDateInSpecificFormat(new Date(), {
+                                              format: 'YYYYMMDD',
+                                              separator: '-'
+                                          });
+                                          let date = day;
+                                          return (
+                                              <li
+                                                  className={classNames('gantt-time-period__day gantt-time-period', {
+                                                      'gantt-time-period__curr-day': currDate === date
+                                                  })}
+                                                  ref={currDate === date ? refCurrMonth : null}
+                                                  //   ref={
+                                                  //       today.getMonth() === getDateFromString(day).getMonth()
+                                                  //           ? getLastDayOfMonth(today) ===
+                                                  //             getLastDayOfMonth(getDateFromString(day))
+                                                  //               ? refCurrMonth
+                                                  //               : null
+                                                  //           : null
+                                                  //   }
+                                              >
+                                                  {getDateFromString(day).getDate()}
+                                                  {currDate === date ? (
+                                                      <div
+                                                          className="gantt-time__vr-line"
+                                                          style={{
+                                                              height: `${(gantt?.data?.totalCount + 1) * 100}%`
+                                                          }}
+                                                      ></div>
+                                                  ) : null}
+                                              </li>
+                                          );
+                                      })
+                                    : null}
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="gantt-grid__main">
+                        {/* Отображение суммы всех задач */}
+                        <TotalTaskRow
+                            timeLine={timeLine}
+                            totalTasks={gantt?.data?.totalTasks}
+                            // selectedItemInd={selectedItemInd}
+                            // dateState={dateState}
+                            // modeConfig={modeConfig}
+                            // ganttConfig={gantt?.config}
+                            bgColorTask={gantt?.data?.bgColorTask}
+                            onHideTasks={onHideTasks}
+                            // onSelectItem={onSelectItem}
+                        />
+                        {/* Отображение задач */}
+                        {gantt?.data?.tasks?.length !== 0
+                            ? gantt?.data?.tasks?.map(task => (
+                                  <TaskRow
+                                      timeLine={timeLine}
+                                      partition={partition}
+                                      task={task}
+                                      dateState={dateState}
+                                      config={{ indent: 10 }}
+                                      dataOperations={modeConfig?.dataOperations}
+                                  />
+                              ))
+                            : null}
                     </div>
                 </div>
-                <div className="gantt-grid__main">
-                    {/* Отображение суммы всех задач */}
-                    <TotalTaskRow
-                        timeLine={timeLine}
-                        totalTasks={gantt?.data?.totalTasks}
-                        // selectedItemInd={selectedItemInd}
-                        // dateState={dateState}
-                        // modeConfig={modeConfig}
-                        // ganttConfig={gantt?.config}
-                        bgColorTask={gantt?.data?.bgColorTask}
-                        onHideTasks={onHideTasks}
-                        // onSelectItem={onSelectItem}
-                    />
-                    {/* Отображение задач */}
-                    {gantt?.data?.tasks?.length !== 0
-                        ? gantt?.data?.tasks?.map(task => (
-                              <TaskRow
-                                  timeLine={timeLine}
-                                  partition={partition}
-                                  task={task}
-                                  dateState={dateState}
-                                  config={{ indent: 10 }}
-                                  dataOperations={modeConfig?.dataOperations}
-                              />
-                          ))
-                        : null}
-                </div>
-            </div>
+            ) : (
+                <p className="gantt-mode__info-message">Данные отсутствуют</p>
+            )}
         </div>
     ) : null;
 }

@@ -26,6 +26,7 @@ const formData = data => {
 const formItem = data => {
     return {
         id: data?.id ?? null,
+        idPost: data?.idPost ?? null,
         contractId: data?.contractId ?? null,
         task: data?.task ?? null,
         status: data?.status ?? null,
@@ -34,37 +35,23 @@ const formItem = data => {
         deadlineTask: data?.deadlineTask ? { value: data.deadlineTask } : null,
         done: data?.done ?? 0,
         parentId: data?.parentId ?? null,
+        parent: data?.parent ?? null,
         comment: data?.comment ?? null,
+        plannedTimeCosts: data?.plannedTimeCosts ?? null,
+        timeCosts: data?.timeCosts ?? null,
         director: {
-            id: data.idDirector || data.id || null,
-            mmId: data?.idMMDirector || data.mmId || null,
+            id: data?.idDirector || data?.id || null,
+            mmId: data?.idMMDirector || data?.mmId || null,
             fullName: data?.directorFIO || data?.directorName || data?.fullName
             //   photo: director.mmId ? `https://mm-mpk.ru/api/v4/users/${director.mmId}/image` : '/img/user.svg'
         },
         executor: {
-            id: data.idExecutor || data.id || null,
-            mmId: data?.idMMExecutor || data.mmId || null,
+            id: data?.idExecutor || data?.id || null,
+            mmId: data?.idMMExecutor || data?.mmId || null,
             fullName: data?.executorFIO || data?.directorName || data?.fullName
             //   photo: director.mmId ? `https://mm-mpk.ru/api/v4/users/${director.mmId}/image` : '/img/user.svg'
         }
     };
-};
-
-const getStatusesTask = (director, executor) => {
-    return new Map([
-        ['Отмененнная', { progress: 0 }],
-        ['Новая', { progress: 0, [director?.mmId]: ['Отменить'], [executor?.mmId]: ['Взять в работу'] }],
-        ['В работе', { progress: 25, [director?.mmId]: ['Отменить'], [executor?.mmId]: ['Выполнено'] }],
-        [
-            'Выполненная',
-            {
-                progress: 50,
-                [director?.mmId]: ['Отменить', 'Принять работу', 'Вернуть в работу'],
-                [executor?.mmId]: null
-            }
-        ],
-        ['Завершенная', { progress: 75 }]
-    ]);
 };
 
 const getTaskData = (data, disabledFields) => {
@@ -160,13 +147,13 @@ const getTaskData = (data, disabledFields) => {
         }
     }
 
-    console.log(`getTask dataConf: ${JSON.stringify(dataConf, null, 4)}`);
+    // console.log(`getTask dataConf: ${JSON.stringify(dataConf, null, 4)}`);
 
     return dataConf;
 };
 
 // Получение всех задач
-const getAllTasks = (tasks, newTasks, taskForDelete) => {
+const getAllTasks = (tasks, newTasks) => {
     const tasksData = newTasks;
 
     tasks?.forEach(item => {
@@ -186,8 +173,6 @@ const getAllTasks = (tasks, newTasks, taskForDelete) => {
         });
         tasksData[key] = newItem;
     });
-
-    if (taskForDelete) delete tasksData[taskForDelete];
 
     return tasksData;
 };
@@ -412,7 +397,6 @@ const deleteTask = async idTask => {
 const TaskService = {
     formItem,
     formData,
-    getStatusesTask,
     getDataFormOperation,
     getAllTasks,
     getTaskData,
@@ -424,20 +408,5 @@ const TaskService = {
     editTask,
     deleteTask
 };
-
-// old
-// const getAllTasks = (tasks, newTasks) => {
-//     const tasksData = newTasks;
-
-//     tasks?.forEach(item => {
-//         const { id, task, subtasks } = item;
-//         if (subtasks && subtasks.length !== 0) {
-//             tasksData.push({ id, title: task });
-//             return getAllTasks(subtasks, tasksData);
-//         } else tasksData.push({ id, title: task });
-//     });
-
-//     return tasksData;
-// };
 
 export default TaskService;

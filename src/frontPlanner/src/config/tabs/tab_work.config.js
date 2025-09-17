@@ -22,6 +22,28 @@ export const DATA_CONVERSION_MAP = {
     }
 };
 
+export const EMPLOYEE_ACTIONS = {
+    statuses: (director, executor) => {
+        return new Map([
+            ['Отмененнная', { progress: 0 }],
+            ['Новая', { progress: 0, [director?.mmId]: ['Отменить'], [executor?.mmId]: ['Взять в работу'] }],
+            ['В работе', { progress: 25, [director?.mmId]: ['Отменить'], [executor?.mmId]: ['Выполнено'] }],
+            [
+                'Выполненная',
+                {
+                    progress: 50,
+                    [director?.mmId]: ['Отменить', 'Принять работу', 'Вернуть в работу'],
+                    [executor?.mmId]: null
+                }
+            ],
+            ['Завершенная', { progress: 75 }]
+        ]);
+    },
+    delete: (taskOperation, directorId, authorizedUserId) => {
+        return taskOperation === 'update' && directorId === authorizedUserId;
+    }
+};
+
 const STATUS_ACTIONS_DIRECEXEC = {
     'Отмененнная': null,
     'Новая': ['Отменить', 'Взять в работу'],

@@ -7,6 +7,11 @@
     row-gap: 1.25rem;
 }
 
+.gantt-mode__info-message {
+    font-size: calc(0.75rem + 0.6875 * (100vw - 20rem) / 100);
+    font-family: 'Montserrat-SemiBold';
+}
+
 .gantt-mode-filters {
     display: flex;
     align-items: center;
@@ -35,6 +40,11 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+}
+
+.gantt-grid-wrapper_empty {
+    justify-content: center;
+    align-items: center;
 }
 
 .gantt-grid {

@@ -1,6 +1,7 @@
 .popup__add-task {
     /* max-width: 50%; */
-    max-width: 60%;
+    /* max-width: 60%; */
+    max-width: 70%;
     width: 100%;
     color: var(--text-color);
 }
@@ -14,45 +15,31 @@
 
 /* Контент всплывающего окна */
 
-.popup__content-add-task {
+.popup__task-form {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    row-gap: 2vw;
+    /* row-gap: 2vw; */
+    row-gap: 1vw;
 }
 
-.popup__content-add-task-top,
-.popup__content-edit-task-top {
+.popup__add-task-form,
+.popup__edit-task-form {
     padding: 0;
     max-width: 100%;
     display: grid;
     column-gap: 2vw;
 }
 
-.popup__content-add-task-top {
+.popup__add-task-form {
     grid-template-columns: 2fr 1fr;
 }
 
-.popup__content-edit-task-top {
-    grid-template-columns: 0.5fr 2fr 1fr;
+.popup__edit-task-form {
+    /* grid-template-columns: 0.5fr 2fr 1fr; */
+    grid-template-columns: 0.3fr 1.5fr 1.5fr;
 }
-
-.popup__content-add-task-bottom {
-    display: flex;
-    flex-direction: column;
-}
-
-/* .popup__content-add-task {
-    padding: 0;
-    max-width: 100%;
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    column-gap: 2vw;
-} */
-
-/* grid-template-columns: 1fr 1fr; */
-/* column-gap: 4vw; */
 
 /* Цепочка статусов */
 
@@ -149,7 +136,7 @@
 
 /* Левая часть формы */
 
-.popup__content-add-task-left {
+.popup__task-form-left {
     display: flex;
     flex-direction: column;
     row-gap: 1vw;
@@ -229,6 +216,11 @@
     display: flex;
     align-items: center;
     column-gap: 0.625rem;
+}
+
+/* Блок "Родительская задача" */
+.popup__content-parent-tasks .popup__menu-wrapper {
+    column-gap: 1vw;
 }
 
 /* Общие стили для блоков "Название" и "Комментарий" */
@@ -318,29 +310,67 @@
 
 /* Правая часть */
 
-.popup__content-add-task-right {
+.popup__task-form-right {
     display: flex;
     flex-direction: column;
-    row-gap: 15px;
 }
 
-/* Блок "Информация по задаче" */
+/* Разделы таблиц */
 
-.popup__taskinfo {
+.popup__task-form-tabs {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup__task-form-tabs-header {
+    display: flex;
+}
+
+.popup__task-form-tabs-header-item {
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    column-gap: 0.9375rem;
+    font-family: 'Montserrat-SemiBold';
+    cursor: pointer;
+    color: var(--text-color-popup-content-title);
+}
+
+.popup__task-form-tabs-header-item_active {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: #343432;
+    /* background-color: #313131; */
+}
+
+.popup__task-form-tabs-header-item span {
+    padding: 0 0.3125rem;
+    border-radius: 0.3125rem;
+    cursor: pointer;
+    font-size: calc(1.25rem + 0.25vw - 0.8px);
+    color: #fff;
+    background-color: #99ad60;
+}
+
+.popup__task-form-tabs-content {
+    padding: 10px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #343432;
+    /* background-color: #313131; */
+}
+
+/* Общие стили для блоков "Времязатраты" и "Подзадачи" */
+
+.popup__task-form-row {
     height: 100%;
     display: flex;
     flex-direction: column;
-    row-gap: 5px;
+    align-items: flex-end;
+    row-gap: 25px;
 }
 
-.popup__taskinfo-wrapper {
-    max-height: 150px;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-}
-
-.popup__taskinfo-actions {
+.popup__task-form-btn-add {
     display: flex;
     align-items: center;
     column-gap: 0.9375rem;
@@ -348,7 +378,7 @@
     color: var(--text-color-popup-content-title);
 }
 
-.popup__taskinfo-btn-add {
+.popup__task-form-btn-add span {
     background-color: #99ad60;
     border-radius: 0.3125rem;
     color: #fff;
@@ -357,42 +387,32 @@
     padding: 0 0.3125rem;
 }
 
-.popup__taskinfo-content {
+.popup__table-wrapper {
+    max-height: 150px;
+    /* max-height: 100px; */
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.popup__table-content {
     display: grid;
     grid-template-rows: max-content 1fr;
     position: relative;
 }
 
-.popup__taskinfo-table-header {
+.popup__table-head {
+    display: grid;
+    align-items: center;
     position: sticky;
     top: 0;
     z-index: 10;
     background-color: var(--bg-color-table-mode-header);
 }
 
-.popup__taskinfo-list {
-    display: grid;
-    grid-template-columns: 350px repeat(5, minmax(30px, 1fr));
-    /* grid-auto-columns: minmax(30px, 1fr);
-    grid-auto-flow: column; */
-    align-items: center;
-}
-
-.popup__taskinfo-input {
-    width: 100%;
-    height: 100%;
-    /* border: 1px solid #e7e7e7; */
-    outline: none;
-    border-radius: 5px;
-}
-
-.popup__taskinfo-input[type='text'] {
-    padding-left: 10px;
-}
-
-.popup__taskinfo-table-header-item,
-.popup__taskinfo-cell {
-    padding: 5px;
+.popup__table-header-item,
+.popup__table-row-cell {
+    padding: 5px 0;
     width: 100%;
     height: 100%;
     display: flex;
@@ -401,12 +421,12 @@
     border: 1px solid #e7e7e7;
 }
 
-.popup__taskinfo-table-header-item {
+.popup__table-header-item {
     font-family: 'Montserrat-SemiBold';
     color: var(--text-color-popup-content-title);
 }
 
-.popup__taskinfo-table-wrapper {
+.popup__table-body-wrapper {
     width: 100%;
     height: 100%;
     position: relative;
@@ -414,16 +434,32 @@
     scrollbar-width: none;
 }
 
-.popup__taskinfo-cell-subtask {
-    justify-content: flex-start;
+.popup__table-row {
+    display: grid;
+    align-items: center;
 }
 
-.popup__taskinfo-subtask {
+/* Блок "Подзадачи" */
+
+.popup__table-head-subtasks,
+.popup__table-row {
+    grid-template-columns: 350px repeat(5, minmax(30px, 1fr));
+}
+
+/* Ячейка "Название задачи" */
+
+.popup__table-cell-subtask {
     text-decoration: underline;
     cursor: pointer;
 }
 
-.popup__taskinfo-date {
+.popup__table-row-cell-task {
+    justify-content: flex-start;
+}
+
+/* Общие стили для ячеек "Дата начала" и "Дедлайн" */
+
+.popup__table-cell-date {
     padding: 5px;
     display: flex;
     align-items: center;
@@ -433,45 +469,80 @@
     border-radius: 0.3125rem;
 }
 
-.popup-taskinfo-date-input {
+.popup__table-cell-date-input {
     width: 100%;
     text-align: center;
 }
 
-/* Ячейка "Дата начала" */
+/* Ячейка "Сотрудник" */
 
-.popup__user-inner p {
+.popup__table-cell-user p {
     padding: 0;
 }
 
-/* Ячейка "Постановщик" */
+/* Блок "Времязатраты" */
 
-/* Ячейка "Исполнитель" */
+.popup__task-form-row-columns {
+    display: flex;
+    column-gap: 1vw;
+}
+
+/* Время исполнения и План. времязатраты */
+
+.popup__timecosts-dates {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 1vw;
+}
+
+.popup__content-exectime h2,
+.popup__content-planned-time h2 {
+    margin-bottom: 5px;
+}
+
+.popup__task-form-row-header {
+    /* width: 100%; */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.popup__table-head-timecosts,
+.popup__timecosts-list {
+    grid-template-columns: repeat(3, 1fr) minmax(0, 1.5fr) 0.2fr;
+}
+
+.popup__timecosts-list > * {
+    text-align: center;
+}
+
+/*  Блок "Комментарий" */
+.popup__table-cell-txt-area {
+    padding: 0.1vw;
+    width: 100%;
+    /* border: 1px solid #e7e7e7; */
+    border-radius: 0.3125rem;
+    outline: none;
+    resize: none;
+}
 
 /* Блок "Комментарий" */
 
-.popup__add-task .popup__content-comment {
+/* .popup__add-task .popup__content-comment {
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     row-gap: 0.5vw;
+} */
+
+.popup__content-comment .popup-content-title {
+    padding-top: 5px;
+    align-self: flex-start;
 }
 
 .popup__content-comment .txt-area {
     width: 100%;
-    height: 100%;
-}
-
-/* Кнопка "Удаление задачи" */
-
-.popup__content-del-task {
-    margin-left: auto;
-    margin-right: 0;
-    padding: 0.3125rem;
-    width: max-content;
-    border-radius: 0.3125rem;
-    background-color: #d90429;
-    cursor: pointer;
-    color: #fff;
+    height: 80px;
 }

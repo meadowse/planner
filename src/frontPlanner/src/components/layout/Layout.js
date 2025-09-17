@@ -1,5 +1,5 @@
 import { startTransition, Suspense, useContext, useEffect, useState } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, Outlet, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 // Импорт компонетов
@@ -40,19 +40,28 @@ export default function Layout() {
 
     useEffect(() => {
         // socket.emit('register', Cookies.get('MMUSERID'));
-
+        // console.log(`pathname: ${window.location.pathname.replace(/^\/([^\/]*).*$/, '$1')}`);
+        // Разбиваем путь на массив
+        // const partsPathName = window.location.pathname.split('/');.replace(/\/+$/, '')
+        const firstPartPath = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
         const savedMenu = JSON.parse(localStorage.getItem('itemSideMenu'));
-        if (!savedMenu || Object.keys(savedMenu).length === 0) {
-            setItemSideMenu(menuItems[0]);
-            localStorage.setItem('itemSideMenu', JSON.stringify(menuItems[0]));
-        } else {
-            const menuItemLen = Object.keys(menuItems[0]).length;
-            const savedMenuItemLen = Object.keys(savedMenu).length;
 
-            console.log(`menuItem Len: ${menuItemLen}\nsavedMenuItem Len: ${savedMenuItemLen}`);
+        let defaultVal = null;
+
+        menuItems?.forEach(menuItem => {
+            if (menuItem?.path.replace(/\/+$/, '') === firstPartPath) defaultVal = menuItem;
+        });
+
+        if (!savedMenu || Object.keys(savedMenu).length === 0) {
+            setItemSideMenu(defaultVal ?? menuItems[0]);
+            localStorage.setItem('itemSideMenu', JSON.stringify(defaultVal ?? menuItems[0]));
+        } else {
+            const menuItemLen = Object.keys(defaultVal ?? menuItems[0]).length;
+            const savedMenuItemLen = Object.keys(savedMenu).length;
+            // console.log(`menuItem Len: ${menuItemLen}\nsavedMenuItem Len: ${savedMenuItemLen}`);
 
             if (menuItemLen > savedMenuItemLen) {
-                setItemSideMenu(menuItems[0]);
+                setItemSideMenu(defaultVal ?? menuItems[0]);
                 localStorage.setItem('itemSideMenu', JSON.stringify(itemSideMenu));
             } else setItemSideMenu(savedMenu);
         }

@@ -11,6 +11,11 @@ export const useInputDataPopup = params => {
         if (changeLink) changeLink();
     }
 
+    function onDelete() {
+        setStatePopup(false);
+        if (changeLink) changeLink();
+    }
+
     function onCancelClick() {
         setStatePopup(false);
         if (changeLink) changeLink();
@@ -33,5 +38,5 @@ export const useInputDataPopup = params => {
         // };
     }, []);
 
-    return { popupRef, onSaveData, onCancelClick, onItemClick };
+    return { popupRef, onSaveData, onDelete, onCancelClick, onItemClick };
 };

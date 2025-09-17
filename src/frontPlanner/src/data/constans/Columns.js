@@ -503,10 +503,10 @@ const COLUMNS = [
     {
         Header: 'Статус',
         accessor: 'status',
-        sortable: false,
-        sortBy: undefined,
+        sortable: true,
+        sortBy: 'status',
         Cell: props => {
-            console.log(`Статус ${props.value}`);
+            // console.log(`Статус ${props.value}`);
             return props.value ? CELLS['text'](props.value, 'status') : 'Нет данных';
         }
     },

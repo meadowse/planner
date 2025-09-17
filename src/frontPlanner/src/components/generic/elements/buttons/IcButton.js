@@ -6,8 +6,8 @@ export default function IconButton(props) {
     return (
         <button
             className={nameClass}
-            type={type ? type : 'button'}
-            form={idForm ? idForm : null}
+            type={type ?? 'button'}
+            form={idForm ?? null}
             disabled={disabled}
             onClick={onClick}
             onMouseDown={onMouseDown}

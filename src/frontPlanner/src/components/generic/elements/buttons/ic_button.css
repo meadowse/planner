@@ -30,16 +30,28 @@
     font-size: calc(0.5vw + 4 * (100vw - 320px) / 1600);
 }
 
-/* Стили для кнопок "Отменить" и "Сохранить" */
+/* Кнопки "Отменить" и "Сохранить" */
 
 .icon-btn__cancel,
-.icon-btn__save {
+.icon-btn__save,
+.icon-btn__delete {
     padding: 0.625rem;
     column-gap: 0.9375rem;
     border-radius: 5px;
 }
 
-/* Стили кнопки для выпадающего меню "Действие" */
+/* Кнопка "Удаление задачи" */
+
+.icon-btn__delete {
+    border-radius: 0.3125rem;
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(8px + 6 * (100vw - 320px) / 1600);
+    cursor: pointer;
+    color: #fff;
+    background-color: #cc3333;
+}
+
+/* Кнопка для выпадающего меню "Действие" */
 
 .icon-btn__action {
     padding: 0;
@@ -47,28 +59,26 @@
     border: none;
 }
 
-/* Стили для кнопки "Сохранить" */
+/* Кнопка "Сохранить" */
 
 .icon-btn__save,
-.icon-btn__cancel {
+.icon-btn__cancel,
+.icon-btn__delete {
     flex-direction: row;
-    font-size: 0.875rem;
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(8px + 6 * (100vw - 320px) / 1600);
+    /* font-size: 0.875rem; */
     color: var(--text-color);
 }
 
 .icon-btn__save {
-    font-family: 'Montserrat-SemiBold';
     /* background-color: #e0e8b2; */
     background-color: var(--bg-color-icon-btn-save);
 }
 
-/* Стили для кнопки "Отмена" */
+/* Кнопка "Отмена" */
 
-.icon-btn__cancel {
-    font-family: 'Montserrat-SemiBold';
-}
-
-/* Стили кнопки для выпадающего меню "Статус" */
+/* Кнопка для выпадающего меню "Статус" */
 
 .icon-btn__stage {
     padding: 0;
@@ -81,7 +91,7 @@
     padding: 0.3vw;
 }
 
-/* Стили кнопки "Удалить изображение" */
+/* Кнопка "Удалить изображение" */
 
 .icon-btn__delete-img {
     padding: 0.3vw;
@@ -90,7 +100,7 @@
     background-color: var(--bg-color-tab-general-image-actions);
 }
 
-/* Стили кнопки для выпадающего меню "Цвет" */
+/* Кнопка для выпадающего меню "Цвет" */
 
 .icon-btn__color {
     padding: 0.3vw;
@@ -109,7 +119,7 @@
     background-color: transparent;
 }
 
-/* Стили кнопки "Выбрать дату" в режиме отображения данных "Календарь" */
+/* Кнопка "Выбрать дату" в режиме отображения данных "Календарь" */
 
 .icon-btn__select-date {
     padding: 0;
@@ -121,13 +131,13 @@
     font-size: calc(14px + 11 * (100vw - 320px) / 1600);
 }
 
-/* Стили кнопки "Закрыть вспылвающее боковое меню" */
+/* Кнопка "Закрыть вспылвающее боковое меню" */
 
 .icon-btn__close-sidepanel {
     margin-left: auto;
 }
 
-/* Стили кнопки для выпадающего меню "Тип услуги" */
+/* Кнопка для выпадающего меню "Тип услуги" */
 
 .ic_btn.type_service {
     padding: 0.3vw 1vw;
@@ -140,7 +150,7 @@
     padding: 0;
 }
 
-/* Стили кнопки для выпадающего меню "Группа" */
+/* Кнопка для выпадающего меню "Группа" */
 
 .ic_btn.group {
     padding: 0;
@@ -156,7 +166,7 @@
     background-color: #6d6d6d;
 }
 
-/* Стили кнопки для выпадающего меню "ПодОтделы" */
+/* Кнопка для выпадающего меню "ПодОтделы" */
 
 .icon-btn__subsections {
     width: 100%;
@@ -175,7 +185,7 @@
     flex-direction: row;
 }
 
-/* Стили кнопки для выпадающего меню "Автомобиль" */
+/* Кнопка для выпадающего меню "Автомобиль" */
 
 .ic_btn.cars {
     padding: 0;
@@ -191,7 +201,7 @@
     background-color: #6d6d6d;
 }
 
-/* Стили дял кнопок "Создать", "Добавить" */
+/* Кнопки "Создать", "Добавить" */
 
 .icon-btn__create,
 .ic_btn.add {
@@ -202,7 +212,7 @@
     background-color: #e0e8b2;
 }
 
-/* Стили кнопки "Отмена" */
+/* Кнопка "Отмена" */
 
 .ic_btn.close_side_cards {
     position: absolute;
@@ -210,14 +220,14 @@
     right: 0.5vw;
 }
 
-/* Стили кнопки "Скрыть задачи" */
+/* Кнопка "Скрыть задачи" */
 
 .ic_btn.all_tasks {
     flex-direction: row;
     column-gap: 0.5vw;
 }
 
-/* Стили кнопки "Добавить услугу", "Добавить выезд" */
+/* Кнопки "Добавить услугу", "Добавить выезд" */
 
 .icon-btn__add-service,
 .icon-btn__add-departure {
@@ -229,14 +239,14 @@
     background-color: #99ad60;
 }
 
-/* Стили кнопки "Фильтры" */
+/* Кнопка "Фильтры" */
 
 .icon-btn__filters-works {
     width: max-content;
     flex-direction: row;
 }
 
-/* Стили кнопки "Отделы" */
+/* Кнопка "Отделы" */
 
 .icon-btn__department {
     padding: 0;
@@ -250,13 +260,13 @@
     background-color: #6d6d6d;
 }
 
-/* Стили кнопки "Группа" */
+/* Кнопка "Группа" */
 
 .icon-btn__group {
     padding: 0;
 }
 
-/* Стили кнопки "Раскрытие/Скрытие элементов в режиме отображения Ганта" */
+/* Кнопка "Раскрытие/Скрытие элементов в режиме отображения Ганта" */
 .icon-btn__all-tasks {
     padding: 0;
     flex-direction: row;
@@ -276,14 +286,14 @@
     height: 0.625rem;
 }
 
-/* Стили кнопки "Сортировка" */
+/* Кнопка "Сортировка" */
 
 /* .ic_btn.sorting {
     width: 10px;
     height: 10px;
 } */
 
-/* Стили кнопки "Вид работы" */
+/* Кнопка "Вид работы" */
 
 .icon-btn__type-work {
     width: 100%;
@@ -306,13 +316,13 @@
     left: 0;
 }
 
-/* Стили кнопки "Добавить пользователя" */
+/* Кнопка "Добавить пользователя" */
 
 .icon-btn__add-user .icon-btn__image {
     cursor: pointer;
 }
 
-/* Стили кнопки "Удалить пользователя", "Удалить дату" */
+/* Кнопки "Удалить пользователя", "Удалить дату" */
 
 .icon-btn__delete-type .icon-btn__image,
 .icon-btn__open-contract .icon-btn__image,

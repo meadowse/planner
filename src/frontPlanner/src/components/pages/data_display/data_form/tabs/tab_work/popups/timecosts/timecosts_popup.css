@@ -1,0 +1,9 @@
+.popup__workingtime-task {
+    max-width: 55%;
+    width: 100%;
+    color: var(--text-color);
+}
+
+.popup__wrapper-workingtime-task {
+    padding: 1vw;
+}

@@ -301,9 +301,6 @@ export default function DataDisplayPage({ partition }) {
     const navigate = useNavigate();
     const { clearHistory } = useHistoryContext();
 
-    // Тема приложения
-    // const { theme, setTheme } = useTheme();
-
     // Элемент поиска
     const [searchElem, setSearchElem] = useState('');
     // Режимы отображения
@@ -321,7 +318,7 @@ export default function DataDisplayPage({ partition }) {
     // Операции которые можно совершать с данными
     const dataOperations = DataDisplayService.getDataOperations(partition) || [];
 
-    useEffect(() => clearHistory(`${itemSideMenu?.path}/${mode?.key}`), [itemSideMenu]);
+    useEffect(() => clearHistory(`${itemSideMenu?.path}${mode?.key}`), [itemSideMenu]);
 
     useEffect(() => {
         const dataDisplayModes = DataDisplayService.getDisplayModes(partition)?.map(item => {
@@ -376,6 +373,8 @@ export default function DataDisplayPage({ partition }) {
         // console.log(`mode: ${JSON.stringify(mode, null, 4)}`);
     }, [mode]);
 
+    // console.log(`partition: ${partition}\npath: ${itemSideMenu?.path}${mode?.key}`);
+
     return (
         <section className="page__section-department page-section">
             <div className="page-section-header">
@@ -397,7 +396,7 @@ export default function DataDisplayPage({ partition }) {
             <div className="page-section-main">
                 {mode && Object.keys(mode).length !== 0 ? (
                     <Routes>
-                        <Route index element={<Navigate to={`${itemSideMenu?.path}/${mode?.key}`} replace />} />
+                        <Route index element={<Navigate to={`${itemSideMenu?.path}${mode?.key}`} replace />} />
                         <Route
                             path="kanban"
                             element={

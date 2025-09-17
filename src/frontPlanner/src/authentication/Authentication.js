@@ -215,7 +215,8 @@ function SignInForm(props) {
                     setAuthState({
                         accessToken: response?.data?.token
                     });
-                    navigate('../department');
+                    // navigate('../department');
+                    navigate('../personal');
                 }
             })
             .catch(err => {
@@ -236,7 +237,9 @@ function SignInForm(props) {
 
     return (
         <>
-            <h3 className='auth__info-title'>Авторизация осуществляется с помощью логина и пароля учетной записи мессенджера <span>Mattermost</span></h3>
+            <h3 className="auth__info-title">
+                Авторизация осуществляется с помощью логина и пароля учетной записи мессенджера <span>Mattermost</span>
+            </h3>
             <form
                 action="#"
                 className="auth-page-form"

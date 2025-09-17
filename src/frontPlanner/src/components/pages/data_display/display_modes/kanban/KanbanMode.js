@@ -1,4 +1,6 @@
-import { useEffect, useState, useRef, memo, Fragment } from 'react';
+import React, { useEffect, useState, useRef, Fragment, useMemo } from 'react';
+import { FixedSizeList, VariableSizeList } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 
@@ -27,22 +29,22 @@ function getConfigKanban(modeOption, data) {
                 data:
                     modeOption?.key === 'date'
                         ? getWeek(new Date()).map(item => {
-                            let dayOfWeek = item.toLocaleString('en-US', { weekday: 'long' });
-                            return { title: WEEK_DAYS[dayOfWeek] };
-                        })
+                              let dayOfWeek = item.toLocaleString('en-US', { weekday: 'long' });
+                              return { title: WEEK_DAYS[dayOfWeek] };
+                          })
                         : data && data.length !== 0
-                            ? getUniqueData(data, { key: modeOption?.key, uniqueness: modeOption?.uniqueness }).map(
-                                item => {
-                                    if (modeOption && Object.keys(modeOption).length !== 0) {
-                                        if (modeOption?.key) {
-                                            if (item !== null && typeof item === 'object' && !Array.isArray(item))
-                                                return { title: item[modeOption?.key][modeOption?.uniqueness] };
-                                            else return { title: item[modeOption?.key] };
-                                        }
-                                    }
-                                }
-                            )
-                            : []
+                        ? getUniqueData(data, { key: modeOption?.key, uniqueness: modeOption?.uniqueness }).map(
+                              item => {
+                                  if (modeOption && Object.keys(modeOption).length !== 0) {
+                                      if (modeOption?.key) {
+                                          if (item !== null && typeof item === 'object' && !Array.isArray(item))
+                                              return { title: item[modeOption?.key][modeOption?.uniqueness] };
+                                          else return { title: item[modeOption?.key] };
+                                      }
+                                  }
+                              }
+                          )
+                        : []
             };
         }
     }
@@ -112,45 +114,98 @@ function HeaderColumn(props) {
     );
 }
 
+// Элемент колонки
+function ElementColumn(props) {
+    const { index, data, style } = props;
+    const { cards, partition, dataOperations, heightsCards, rowGap, setItemSize } = data;
+
+    const elemRef = useRef(null);
+
+    useEffect(() => {
+        if (!elemRef.current) return;
+
+        const observer = new ResizeObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry?.contentRect) return;
+                const newHeight = entry?.contentRect?.height;
+                if (newHeight !== heightsCards[index]) setItemSize(index, newHeight);
+            });
+        });
+
+        observer.observe(elemRef.current);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [index]);
+
+    return (
+        <div style={{ ...style, height: style?.height - rowGap, marginBottom: `25px` }}>
+            <div ref={elemRef} className="card-wrapper">
+                <Card
+                    partition={partition}
+                    key={`${cards[index]?.id}-${cards[index]?.contractNum}`}
+                    data={cards[index]}
+                    dataOperations={dataOperations}
+                />
+            </div>
+        </div>
+    );
+}
+
 function ColumnContent(props) {
     // console.log(`cardsData: ${JSON.stringify(cardsData, null, 4)}`);
     const { partition, header, cards, dataOperations, setDraggedItem, dropHandler } = props;
+    // Отступы между элементами списка
+    const rowGap = 25;
+
+    // Высоты карточек
+    // const heightsCards = useRef({}).current;
+    const heightsCards = useRef({}).current;
+    // Ссылка на список
+    const listRef = useRef();
+
+    // данные для передачи в ElementColumn
+    const elemColumnData = {
+        cards,
+        partition,
+        dataOperations,
+        heightsCards,
+        rowGap,
+        setItemSize
+    };
+
+    // Получить высоту элемента
+    function getItemSize(index) {
+        return (heightsCards[index] || 50) + rowGap; // прибавляем еще и значение rowGap чтобы VariableSizeList знал об отступе
+    }
+
+    // Установить высоту элементу
+    function setItemSize(index, newHeight) {
+        // console.log(`index: ${index}\nnewHeight: ${newHeight}`);
+        heightsCards[index] = newHeight;
+        if (listRef.current) listRef.current.resetAfterIndex(index, true);
+    }
+
+    // console.log(`height cards: ${JSON.stringify(heightsCards, null, 4)}`);
 
     return (
         <div className="kanban__col-content">
-            <ul
-                className={classNames('kanban__col-list-cards', {
-                    'kanban__col-list-cards_empty': !cards ? true : cards.length === 0 ? true : false
-                })}
-            >
-                {/* <DropArea key={`${header?.title}-0-Область`} position={0} header={header} onDrop={dropHandler} /> */}
-                {cards && cards.length !== 0 ? (
-                    cards.map((item, index) => (
-                        <Fragment key={`${item.id}-${item.contractNum}-fragment`}>
-                            <li
-                                className="kanban__card-wrapper"
-                                draggable="true"
-                            // onDragStart={() => setDraggedItem({ id: item.id, nameColOut: header.title })}
-                            >
-                                <Card
-                                    partition={partition}
-                                    key={`${item?.id}-${item?.contractNum}`}
-                                    data={item}
-                                    dataOperations={dataOperations}
-                                />
-                            </li>
-                            {/* <DropArea
-                                key={`${header?.title}-${index + 1}-Область`}
-                                position={index + 1}
-                                header={header}
-                                onDrop={dropHandler}
-                            /> */}
-                        </Fragment>
-                    ))
-                ) : (
-                    <li className="kanban__col-list-cards-message">Данные отсутствуют</li>
+            <AutoSizer className="kanban__col-list-cards-autosizer">
+                {({ width, height }) => (
+                    <VariableSizeList
+                        ref={listRef}
+                        className="kanban__col-list-cards"
+                        width={width}
+                        height={height}
+                        itemCount={cards.length} // количество карточек
+                        itemSize={getItemSize} // высота одной карточки
+                        itemData={elemColumnData}
+                    >
+                        {ElementColumn}
+                    </VariableSizeList>
                 )}
-            </ul>
+            </AutoSizer>
         </div>
     );
 }
@@ -254,16 +309,17 @@ export default function KanbanMode(props) {
     // console.log(`KanbanMode modeOption: ${JSON.stringify(modeOption, null, 4)}`);
     // console.log(`data: ${JSON.stringify(data, null, 4)}`);
 
-    // Данные доски Канбан
-    const [boardCards, setBoardCards] = useState({});
-
     // Конфигурация доски Канбан
-    const [configKanban, setConfigKanban] = useState({});
+    const configKanban = useMemo(() => getConfigKanban(modeOption, data), [modeOption, data]);
+    // const [configKanban, setConfigKanban] = useState({});
 
-    // 
+    // Данные доски Канбан
+    const boardCards = useMemo(() => initKanbanData(configKanban, data), [data]);
+    // const [boardCards, setBoardCards] = useState({});
+
     const [stateActionSelectionPopup, setStateActionSelectionPopup] = useState(false);
 
-    // Перетаскиваемый элемент 
+    // Перетаскиваемый элемент
     const [draggedItem, setDraggedItem] = useState({ id: -1, nameColOut: null });
 
     // Состояние раскрытости содержимого
@@ -300,14 +356,14 @@ export default function KanbanMode(props) {
     //     )}`
     // );
 
-    console.log(`boardCards: ${JSON.stringify(boardCards, null, 4)}`);
+    // console.log(`boardCards: ${JSON.stringify(boardCards, null, 4)}`);
 
     useEffect(() => {
-        const confKanban = getConfigKanban(modeOption, data);
+        // const confKanban = getConfigKanban(modeOption, data);
 
-        setConfigKanban(confKanban);
+        // setConfigKanban(confKanban);
         setDiscloseContent(modeOption?.disclose);
-        setBoardCards(initKanbanData(confKanban, data));
+        // setBoardCards(initKanbanData(confKanban, data));
     }, [data, modeOption]);
 
     return (

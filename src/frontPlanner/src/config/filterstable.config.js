@@ -8,6 +8,7 @@ export const DEFAULT_FILTERS = {
     company: '',
     services: 'Все',
     stage: 'Все',
+    status: 'Все',
     deadlineTask: 'Все',
     dateOfEnding: 'Все',
     manager: 'Все',
@@ -66,6 +67,31 @@ export const OPTIONS_FILTER_CONF = {
         });
 
         return newData;
+    },
+    status: data => {
+        if (data && data.length !== 0) {
+            const newData = [];
+
+            let tempData = [
+                'Все',
+                ...Array.from(
+                    new Set(
+                        data.map(item => {
+                            if (!item?.status) return 'Без статуса';
+                            else return item?.status;
+                        })
+                    )
+                )
+            ];
+
+            // console.log(`status: ${JSON.stringify(tempData, null, 4)}`);
+
+            tempData.map(item => {
+                if (item) newData.push(item);
+            });
+
+            return newData;
+        }
     },
     dateOfEnding: data => {
         if (data && data.length !== 0) {
@@ -233,15 +259,23 @@ export const FILTER_HANDLERS_CONF = new Map([
     ['group', (filterVal, group) => group?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['pathToFolder', (filterVal, pathToFolder) => pathToFolder?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['car', (filterVal, car) => Object.values(car).some(item => item.toLowerCase().includes(filterVal.toLowerCase()))],
-    // ['subsection', (filterVal, subsection) => subsection?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['phone', (filterVal, phone) => phone?.toLowerCase().includes(filterVal?.toLowerCase())],
-    // ['email', (filterVal, email) => email?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['email', (filterVal, email) => email?.toLowerCase().includes(filterVal?.toLowerCase())],
     ['typeWork', (filterVal, typeWork) => typeWork?.toLowerCase().includes(filterVal?.toLowerCase())],
     [
         'stage',
         (filterVal, stage) =>
             filterVal?.includes('Все') || stage?.title.toLowerCase().includes(filterVal?.toLowerCase())
+    ],
+    [
+        'status',
+        (filterVal, status) => {
+            if (filterVal?.includes('Все')) return true;
+            else {
+                if (!status) return filterVal === 'Без статуса';
+                else return filterVal?.includes('Все') || status.toLowerCase().includes(filterVal?.toLowerCase());
+            }
+        }
     ],
     [
         'services',

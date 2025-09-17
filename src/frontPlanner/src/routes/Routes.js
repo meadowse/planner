@@ -59,10 +59,10 @@ const ROUTES_FOR_AUTH = [
                 path: '',
                 element: <Layout />,
                 children: [
-                    {
-                        index: true,
-                        element: <Navigate to="/department/" replace />
-                    },
+                    // {
+                    //     index: true,
+                    //     element: <Navigate to="/department/" replace />
+                    // },
                     {
                         path: 'department/*',
                         loader: () => {
@@ -71,8 +71,8 @@ const ROUTES_FOR_AUTH = [
                         // loader: () => {
                         //     return defer({
                         //         uploadedData: queryClient.ensureQueryData({
-                        //             queryKey: ["department"],
-                        //             queryFn: () => DataDisplayService.loadData('department'),
+                        //             queryKey: ['department'],
+                        //             queryFn: () => DataDisplayService.loadData('department')
                         //         })
                         //     });
                         // },
@@ -97,6 +97,7 @@ const ROUTES_FOR_AUTH = [
                     },
                     {
                         path: 'personal/*',
+                        index: true,
                         loader: () => {
                             return defer({ uploadedData: DataDisplayService.loadData('tasks') });
                         },
