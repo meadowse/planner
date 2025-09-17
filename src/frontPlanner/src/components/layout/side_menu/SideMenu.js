@@ -1,5 +1,5 @@
 import { startTransition, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 
 // Импорт стилей
@@ -14,7 +14,10 @@ function ItemSideMenu(props) {
         startTransition(() => {
             setItem(item);
             localStorage.setItem('itemSideMenu', JSON.stringify(item));
-            navigate(`${item.path}`);
+
+            // Разбиваем путь на массив
+            const partsPathName = window.location.pathname.split('/');
+            if (!partsPathName.includes(item.path.replace(/\/+$/, ''))) navigate(item.path);
         });
     }
 

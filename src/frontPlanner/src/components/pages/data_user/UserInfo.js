@@ -1,14 +1,5 @@
 import { useState, useEffect, useRef, startTransition, Suspense } from 'react';
-import {
-    Routes,
-    Route,
-    useNavigate,
-    useParams,
-    useLocation,
-    useLoaderData,
-    Await,
-    resolvePath
-} from 'react-router-dom';
+import { Routes, Route, useNavigate, useParams, useLocation, useLoaderData, Await } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
@@ -23,7 +14,7 @@ import { getFilteredData } from '@helpers/helper';
 // Импорт сервисов
 import UserService from '@services/user.service';
 
-//
+// Импорт контекста
 import { useHistoryContext } from '../../../contexts/history.context';
 
 // Импорт стилей
@@ -150,6 +141,8 @@ export default function UserInfoNew() {
     function onExitAccount() {
         Cookies.remove('MMAUTHTOKEN');
         Cookies.remove('MMUSERID');
+
+        localStorage.removeItem('itemSideMenu');
 
         navigate('/auth');
     }

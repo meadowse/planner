@@ -119,19 +119,19 @@ const loadData = async partition => {
         company: async () => {
             const endpoints = [
                 `${window.location.origin}/structure_company.json`,
-                `${window.location.origin}/api/employee/`,
-                `${window.location.origin}/api/getVacations/`
+                `${window.location.origin}/api/employee/`
+                // `${window.location.origin}/api/getVacations/`
             ];
             const resolvedData = {};
 
             await axios
                 .all(endpoints.map(endpoint => dataLoader(endpoint)))
                 .then(
-                    axios.spread((structureData, employeesData, vacationsData) => {
+                    axios.spread((structureData, employeesData) => {
                         if (structureData && structureData.length !== 0) resolvedData.structure = structureData;
                         if (employeesData && employeesData.length !== 0)
                             resolvedData.employees = formData(employeesData, partition, 'employees');
-                        if (vacationsData && vacationsData.length !== 0) resolvedData.vacationsData = vacationsData;
+                        // if (vacationsData && vacationsData.length !== 0) resolvedData.vacationsData = vacationsData;
                     })
                 )
                 .catch(error => {

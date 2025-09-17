@@ -35,6 +35,7 @@ export default function App() {
             <ThemeProvider>
                 <QueryClientProvider client={queryClient}>
                     <RouterProvider router={router} />
+                    {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
                 </QueryClientProvider>
                 <ToastContainer />
             </ThemeProvider>

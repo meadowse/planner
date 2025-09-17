@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState, useContext, startTransition } from 'react';
+import { useEffect, useState, startTransition } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import Cookies from 'js-cookie';
@@ -14,6 +14,8 @@ import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
 import InputDataPopup from '@generic/elements/popup/InputDataPopup';
 import ModalWindow from '@generic/elements/popup/ModalWindow';
 
+import TimeCostsPopup from '../timecosts/TimeCostsPopup';
+
 // Импорт контекстов
 // import { SocketContext } from '../../../../../../../../contexts/socket.context';
 import { useHistoryContext } from '../../../../../../../../contexts/history.context';
@@ -22,7 +24,7 @@ import { useHistoryContext } from '../../../../../../../../contexts/history.cont
 import { useTaskForm } from '@hooks/useAddTaskForm';
 
 // Импорт конфигурации
-import { ACTIONS_TASK } from '@config/tabs/tab_work.config';
+import { EMPLOYEE_ACTIONS, ACTIONS_TASK } from '@config/tabs/tab_work.config';
 
 // Импорт сервисов
 import TaskService from '@services/tabs/tab_task.service';
@@ -37,7 +39,8 @@ import './task_popup.css';
 // Цепочка статусов
 function StatusChain(props) {
     const { presetValue, director, executor, onSelect } = props;
-    const statusesTask = TaskService.getStatusesTask(director, executor);
+    // const statusesTask = TaskService.getStatusesTask(director, executor);
+    const statusesTask = EMPLOYEE_ACTIONS?.statuses(director, executor);
 
     const [status, setStatus] = useState(null);
 
@@ -524,21 +527,30 @@ function Completeness(props) {
 function ParentsTasks(props) {
     const { presetValue, config, onSelect, switchPopup } = props;
 
+    // const allTasks = TaskService.getAllTasks(config?.tasksData, {}, config?.taskForDelete);
+    // const allTasks = TaskService.getAllTasks(config?.tasksData, {});
+
     const [parentTask, setParentTask] = useState({});
-    const allTasks = TaskService.getAllTasks(config?.tasksData, {}, config?.taskForDelete);
+    const [allTasks] = useState(() => {
+        const tempAllTasks = Object.assign({}, TaskService.getAllTasks(config?.tasksData, {}));
+        if (config?.taskForDelete) delete tempAllTasks[config?.taskForDelete];
+        return tempAllTasks;
+    });
     // console.log(`allTasks: ${JSON.stringify(allTasks, null, 4)}`);
 
     // Выбор род.задачи
-    function onSelectParentTask(value) {
-        console.log(`onSelectParentTask value: ${JSON.stringify(value, null, 4)}`);
-        setParentTask(value);
-        onSelect('parentId', value);
+    function onSelectParentTask(task) {
+        console.log(`onSelectParentTask value: ${JSON.stringify(task, null, 4)}`);
+        setParentTask(task);
+        // onSelect('parentId', value);
+        onSelect('parent', task);
     }
 
     // Удалить род.задачу
     function onDeleteParentTask() {
         setParentTask(null);
-        onSelect('parentId', null);
+        // onSelect('parentId', null);
+        onSelect('parent', null);
     }
 
     // Открыть задачу
@@ -555,7 +567,7 @@ function ParentsTasks(props) {
     }
 
     useEffect(() => {
-        // if (config?.taskForDelete) delete allTasks[config?.taskForDelete];
+        if (config?.taskForDelete) delete allTasks[config?.taskForDelete];
         if (presetValue) {
             if (presetValue in allTasks) {
                 const parentTaskData = { value: presetValue, title: allTasks[presetValue]?.task ?? 'Нет данных' };
@@ -795,6 +807,100 @@ function DeadlineTask(props) {
     ) : null;
 }
 
+// Время исполнения
+function ExecutionTime(props) {
+    const {} = props;
+    return (
+        <div className="popup__content-exectime">
+            <h2 className="popup-content-title">Время исполнения</h2>
+            <div className="popup__date-wrapper">
+                <div className="popup__exectime popup-task-date">
+                    <input
+                        className="popup-task-date-input"
+                        type="text"
+                        // value={deadline && Object.keys(deadline).length !== 0 ? deadline?.value : 'Нет данных'}
+                        // disabled={true}
+                        // onChange={onChangeDeadline}
+                    />
+                    <IconButton
+                        nameClass="popup-task-date-ic-btn icon-btn"
+                        type="button"
+                        icon="calendar.svg"
+                        // disabled={disabledElem}
+                        // onClick={onShowCalendar}
+                    />
+                    {/* {calendarState
+                        ? createPortal(
+                              <CalendarWindow
+                                  additClass="task-calendar"
+                                  stateCalendar={calendarState}
+                                  setStateCalendar={setCalendarState}
+                                  onClickDate={onSelectDeadline}
+                              />,
+                              document.getElementById('portal')
+                          )
+                        : null} */}
+                </div>
+                {/* {deadline ? (
+                    <IconButton
+                        nameClass="icon-btn__delete-date-start icon-btn__delete-date"
+                        type="button"
+                        icon="cancel.svg"
+                        onClick={onDeleteDate}
+                    />
+                ) : null} */}
+            </div>
+        </div>
+    );
+}
+
+// Планируемые времязатраты
+function PlannedTimeCosts(props) {
+    const {} = props;
+    return (
+        <div className="popup__content-planned-time">
+            <h2 className="popup-content-title">План. времязатраты</h2>
+            <div className="popup__date-wrapper">
+                <div className="popup__planned-time popup-task-date">
+                    <input
+                        className="popup-task-date-input"
+                        type="text"
+                        // value={deadline && Object.keys(deadline).length !== 0 ? deadline?.value : 'Нет данных'}
+                        // disabled={true}
+                        // onChange={onChangeDeadline}
+                    />
+                    <IconButton
+                        nameClass="popup-task-date-ic-btn icon-btn"
+                        type="button"
+                        icon="calendar.svg"
+                        // disabled={disabledElem}
+                        // onClick={onShowCalendar}
+                    />
+                    {/* {calendarState
+                        ? createPortal(
+                              <CalendarWindow
+                                  additClass="task-calendar"
+                                  stateCalendar={calendarState}
+                                  setStateCalendar={setCalendarState}
+                                  onClickDate={onSelectDeadline}
+                              />,
+                              document.getElementById('portal')
+                          )
+                        : null} */}
+                </div>
+                {/* {deadline ? (
+                    <IconButton
+                        nameClass="icon-btn__delete-date-start icon-btn__delete-date"
+                        type="button"
+                        icon="cancel.svg"
+                        onClick={onDeleteDate}
+                    />
+                ) : null} */}
+            </div>
+        </div>
+    );
+}
+
 // Комментарий
 function Comment(props) {
     const { presetValue, config, onChange, onChangeByKey } = props;
@@ -816,14 +922,20 @@ function Comment(props) {
     return !config?.hidden ? (
         <div className="popup__content-comment popup-content-item">
             <h2 className="popup-content-title">Комментарий</h2>
-            <textarea
-                className="txt-area"
-                name="comment"
-                value={comment}
-                onChange={e => onChangeTaskName(e)}
-            ></textarea>
+            <textarea className="txt-area" name="comment" value={comment} onChange={e => onChangeTaskName(e)} />
         </div>
     ) : null;
+}
+
+// Раздел обсуждения задач
+function MattermostDiscussionTasks({ idPost }) {
+    return (
+        <iframe
+            title="Mattermost Discussion Tasks"
+            src={`https://mm-mpk.ru/mosproektkompleks/threads/${idPost}`}
+            style={{ width: '100%', height: '100%', border: 'none' }}
+        />
+    );
 }
 
 // Подзадача
@@ -850,52 +962,28 @@ function TaskItem(props) {
             navigate(`../../user/${user?.mmId}/profile/profile/`, {
                 state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
             });
-
-            // navigate(`../../user/profile/`, {
-            //     state: { idEmployee: user?.mmId, path: `${window.location.pathname}` }
-            // });
         });
     }
 
     return (
-        <ul key={taskItem?.id} className="popup__taskinfo-row popup__taskinfo-list">
+        <ul className="popup__table-row">
             {/* Задача */}
-            <li className="popup__taskinfo-cell popup__taskinfo-cell-subtask">
-                <div className="popup__taskinfo-subtask" onClick={onOpenTask}>
+            <li className="popup__table-row-cell popup__table-row-cell-task">
+                <div className="popup__table-cell-subtask" onClick={onOpenTask}>
                     {taskItem?.task ?? 'Нет данных'}
                 </div>
-                {/* <input type="text" className="popup__taskinfo-input" value={taskItem?.task ?? 'Нет данных'} /> */}
-                {/* <IconButton nameClass="icon-btn__open-task" type="button" icon="contract.svg" onClick={onOpenTask} /> */}
             </li>
             {/* Дата начала */}
-            <li className="popup__taskinfo-cell">
-                <div className="popup__taskinfo-date">
-                    <input
-                        className="popup-taskinfo-date-input"
-                        type="text"
-                        value={taskItem?.dateStart || taskItem?.startDate || 'Нет данных'}
-                        disabled={true}
-                    />
-                </div>
-            </li>
+            <li className="popup__table-row-cell">{taskItem?.dateStart || taskItem?.startDate || 'Нет данных'}</li>
             {/* Дедлайн */}
-            <li className="popup__taskinfo-cell">
-                <div className="popup__taskinfo-date">
-                    <input
-                        className="popup-taskinfo-date-input"
-                        type="text"
-                        value={
-                            taskItem?.deadlineTask && Object.keys(taskItem?.deadlineTask).length !== 0
-                                ? taskItem?.deadlineTask?.value
-                                : 'Нет данных'
-                        }
-                        disabled={true}
-                    />
-                </div>
+            <li className="popup__table-row-cell">
+                {taskItem?.deadlineTask && Object.keys(taskItem?.deadlineTask).length !== 0
+                    ? taskItem?.deadlineTask?.value
+                    : 'Нет данных'}
             </li>
             {/* Постановщик */}
-            <li className="popup__taskinfo-cell">
-                <div className="popup__user-inner">
+            <li className="popup__table-row-cell">
+                <div className="popup__table-cell-user">
                     {taskItem?.director && Object.keys(taskItem?.director).length !== 0 ? (
                         <div onClick={() => onClickUser(taskItem?.director)}>
                             <BgFillText
@@ -910,8 +998,8 @@ function TaskItem(props) {
                 </div>
             </li>
             {/* Исполнитель */}
-            <li className="popup__taskinfo-cell">
-                <div className="popup__user-inner">
+            <li className="popup__table-row-cell">
+                <div className="popup__table-cell-user">
                     {taskItem?.executor && Object.keys(taskItem?.executor).length !== 0 ? (
                         <div onClick={() => onClickUser(taskItem?.director)}>
                             <BgFillText
@@ -926,7 +1014,7 @@ function TaskItem(props) {
                 </div>
             </li>
             {/* Завершено */}
-            <li className="popup__taskinfo-cell">
+            <li className="popup__table-row-cell">
                 <div className="popup__checkbox-wrapper">
                     <input
                         className="popup__inpt-checkbox"
@@ -942,8 +1030,8 @@ function TaskItem(props) {
     );
 }
 
-function TaskInfo(props) {
-    const { title, popupData, taskData, config, switchPopup } = props;
+function TaskInfo({ taskInfoConf, setSubtaskApi }) {
+    const { popupData, taskData, config, switchPopup } = taskInfoConf;
     const { navigate, addToHistory, appTheme } = config;
     // console.log(`TaskInfo\ntaskId: ${taskId}parentId: ${parentId}`);
 
@@ -980,23 +1068,21 @@ function TaskInfo(props) {
         // Установка родителя по умолчанию
         const { task: prevTask } = popupData;
         tempSubTask.parentId = prevTask?.id;
-        // tempSubTask.parentId =
-        //     prevTask?.subtasks && prevTask?.subtasks.length !== 0 && prevTask?.subtasks[0]
-        //         ? prevTask.subtasks[0].parentId
-        //         : null;
 
         // Установка пользователей по умолчанию
         tempSubTask.director = await TaskService.getAuthorizedEmployee(Cookies.get('MMUSERID'));
         tempSubTask.executor = await TaskService.getAuthorizedEmployee(Cookies.get('MMUSERID'));
 
         setSubTask(tempSubTask);
+        // Передаем функцию в родительский компонент TablesPopup
+        setSubtaskApi({ addSubtask: () => addSubtask(tempSubTask) });
     }
 
     // Добавление подзадачи
-    function addSubtask() {
+    function addSubtask(subTaskData) {
         const { task, ...otherElems } = popupData;
         // switchPopup('addSubTask', { ...otherElems, task: subTask });
-        switchPopup('creation', 'addSubTask', { ...otherElems, task: subTask });
+        switchPopup('creation', 'addSubTask', { ...otherElems, task: subTaskData });
     }
 
     useEffect(() => {
@@ -1005,27 +1091,23 @@ function TaskInfo(props) {
     }, []);
 
     return (
-        <div className="popup__taskinfo">
-            {/* <h2 className="popup-content-title">{title}</h2> */}
-            <div className="popup__taskinfo-actions">
-                {title}
-                <div className="popup__taskinfo-btn-add" onClick={addSubtask}>
-                    +
-                </div>
-            </div>
+        <div className="popup__task-form-row">
+            {/* <div className="popup__task-form-btn-add">
+                Подзадачи<span onClick={addSubtask}>+</span>
+            </div> */}
             {taskData && taskData.length !== 0 ? (
-                <div className="popup__taskinfo-wrapper">
-                    <div className="popup__taskinfo-content">
-                        <ul className="popup__taskinfo-table-header popup__taskinfo-list">
-                            <li className="popup__taskinfo-table-header-item">Задача</li>
-                            <li className="popup__taskinfo-table-header-item">Дата начала</li>
-                            <li className="popup__taskinfo-table-header-item">Дедлайн</li>
-                            <li className="popup__taskinfo-table-header-item">Постановщик</li>
-                            <li className="popup__taskinfo-table-header-item">Исполнитель</li>
-                            <li className="popup__taskinfo-table-header-item">Завершено</li>
+                <div className="popup__table-wrapper">
+                    <div className="popup__table-content">
+                        <ul className="popup__table-head popup__table-head-subtasks">
+                            <li className="popup__table-header-item">Задача</li>
+                            <li className="popup__table-header-item">Дата начала</li>
+                            <li className="popup__table-header-item">Дедлайн</li>
+                            <li className="popup__table-header-item">Постановщик</li>
+                            <li className="popup__table-header-item">Исполнитель</li>
+                            <li className="popup__table-header-item">Завершено</li>
                         </ul>
-                        <div className="popup__taskinfo-table-wrapper">
-                            <div className="popup__taskinfo-table">
+                        <div className="popup__table-body-wrapper">
+                            <div className="popup__table-body">
                                 {taskData?.map((taskItem, indTask) => (
                                     <TaskItem
                                         key={indTask}
@@ -1044,6 +1126,189 @@ function TaskInfo(props) {
     );
 }
 
+// Строка времязатрат
+function TimeCostsItem(props) {
+    const { timeCost, onOpenPopup } = props;
+
+    // Редактирование времязатрат
+    function onEditTimeCost() {
+        onOpenPopup('edit', 'editTimeCost', timeCost);
+    }
+
+    return (
+        <ul
+            // key={taskItem?.id}
+            className="popup__table-row popup__timecosts-list"
+        >
+            {/* Дата */}
+            <li className="popup__table-row-cell">{timeCost?.dateReport ?? 'Нет данных'}</li>
+            {/* Потраченное время */}
+            <li className="popup__table-row-cell">{timeCost?.spent ?? 'Нет данных'}</li>
+            {/* Время в часах */}
+            <li className="popup__table-row-cell">{timeCost?.timeHours ?? 'Нет данных'}</li>
+            {/* Комментарий */}
+            <li className="popup__table-row-cell">
+                <textarea className="popup__table-cell-txt-area" name="comment" value={timeCost?.report ?? ''} />
+            </li>
+            {/* Редактировать */}
+            <li className="popup__table-row-cell">
+                <IconButton
+                    nameClass="icon-btn__add-director icon-btn__add-user"
+                    type="button"
+                    icon="edit.svg"
+                    onClick={onEditTimeCost}
+                />
+            </li>
+        </ul>
+    );
+}
+
+// Таблица врмязатрат
+function TimeCosts({ timeCostsConf, setTimeCostsApi }) {
+    const { plannedTimeCosts, timeCosts } = timeCostsConf;
+
+    const [popupState, setPopupState] = useState(false);
+    const [popupInfo, setPopupInfo] = useState({ operation: null, key: null, data: null });
+    const [timeCost, setTimeCost] = useState({
+        spent: null,
+        dateReport: null,
+        report: null,
+        timeHours: null
+    });
+
+    // Конфигурация по всплывающим окнам
+    const POPUP_CONF = {
+        'addTimeCost': (
+            <TimeCostsPopup
+                data={popupInfo?.data}
+                popupConf={{
+                    additClass: 'workingtime-task',
+                    title: 'Время работы над задачей (Новая запись)',
+                    popupState,
+                    setPopupState
+                }}
+            />
+        ),
+        'editTimeCost': (
+            <TimeCostsPopup
+                data={popupInfo?.data}
+                popupConf={{
+                    additClass: 'workingtime-task',
+                    title: 'Время работы над задачей (Редактирование)',
+                    popupState,
+                    setPopupState
+                }}
+            />
+        )
+    };
+
+    // Открыть всплывающее окно
+    function onOpenPopup(operation, key, data = null) {
+        setPopupState(true);
+        setPopupInfo({
+            operation,
+            key,
+            data
+        });
+    }
+
+    useEffect(() => {
+        setTimeCostsApi({ openPopup: () => onOpenPopup('add', 'addTimeCost', timeCost) });
+    }, []);
+
+    // console.log(`timeCostsData: ${JSON.stringify(timeCosts, null, 4)}`);
+
+    return (
+        <div className="popup__task-form-row">
+            <div className="popup__task-form-row-header">
+                {/* <div className="popup__task-form-btn-add">
+                    Затраченное время<span onClick={null}>+</span>
+                </div> */}
+                <div className="popup__timecosts-dates">
+                    <ExecutionTime />
+                    <PlannedTimeCosts />
+                </div>
+            </div>
+            {timeCosts && timeCosts.length !== 0 ? (
+                <div className="popup__table-wrapper">
+                    <div className="popup__table-content">
+                        <ul className="popup__table-head popup__table-head-timecosts">
+                            <li className="popup__table-header-item">Дата</li>
+                            <li className="popup__table-header-item">Потраченное время</li>
+                            <li className="popup__table-header-item">Время в часах</li>
+                            <li className="popup__table-header-item">Комментарий</li>
+                            <li className="popup__table-header-item">&emsp;</li>
+                        </ul>
+                        <div className="popup__table-body-wrapper">
+                            <div className="popup__table-body">
+                                {timeCosts?.map((timeCost, ind) => (
+                                    <TimeCostsItem key={ind} timeCost={timeCost} onOpenPopup={onOpenPopup} />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : null}
+            {popupState ? createPortal(POPUP_CONF[popupInfo?.key] ?? null, document.getElementById('root')) : null}
+        </div>
+    );
+}
+
+// Разделы с таблицами
+function TablesPopup(props) {
+    const { taskInfoConfig, timeCostsConfig } = props;
+    // const { popupData, subtasks, config, switchPopup } = taskInfoConfig;
+    // const { plannedTimeCosts, timecosts } = timeCostsConfig;
+
+    const [selectedTab, setSelectedTab] = useState({ tab: 'subtasks' });
+    const [subtaskApi, setSubtaskApi] = useState(null);
+    const [timeCostsApi, setTimeCostsApi] = useState(null);
+
+    // const [popupState, setPopupState] = useState(false);
+    // const [popupInfo, setPopupInfo] = useState({ operation: null, key: null, data: null });
+
+    // Выбор раздела
+    function onSelectTab(value) {
+        setSelectedTab({ tab: value });
+    }
+
+    // Конфигурация по разделам
+    const TABS_TABLES_CONF = {
+        subtasks: <TaskInfo taskInfoConf={taskInfoConfig} setSubtaskApi={setSubtaskApi} />,
+        timecosts: <TimeCosts timeCostsConf={timeCostsConfig} setTimeCostsApi={setTimeCostsApi} />,
+        default: null
+    };
+
+    return (
+        <div className="popup__task-form-tabs">
+            <ul className="popup__task-form-tabs-header">
+                <li
+                    className={classNames('popup__task-form-tabs-header-item', {
+                        'popup__task-form-tabs-header-item_active': selectedTab?.tab === 'subtasks'
+                    })}
+                    onClick={() => onSelectTab('subtasks')}
+                >
+                    Подзадачи
+                    {selectedTab?.tab === 'subtasks' ? <span onClick={subtaskApi?.addSubtask}>+</span> : null}
+                </li>
+                <li
+                    className={classNames('popup__task-form-tabs-header-item', {
+                        'popup__task-form-tabs-header-item_active': selectedTab?.tab === 'timecosts'
+                    })}
+                    onClick={() => onSelectTab('timecosts')}
+                >
+                    Затраченное время
+                    {selectedTab?.tab === 'timecosts' ? <span onClick={timeCostsApi?.openPopup}>+</span> : null}
+                </li>
+            </ul>
+            <div className="popup__task-form-tabs-content">
+                {TABS_TABLES_CONF[selectedTab?.tab] ?? TABS_TABLES_CONF.default}
+            </div>
+            {/* {popupState ? createPortal(POPUP_CONF[popupInfo?.key] ?? null, document.getElementById('root')) : null} */}
+        </div>
+    );
+}
+
 export default function TaskPopup(props) {
     // const { additClass, title, data, taskOperation, popupState, setPopupState, setSubTaskState, setTaskData } = props;
     const { additClass, title, data, taskOperation, popupState, setPopupState, switchPopup } = props;
@@ -1058,7 +1323,6 @@ export default function TaskPopup(props) {
     const [contractsIDs, setContractsIDs] = useState({});
 
     const [parentTask, setParentTask] = useState({});
-    const [subTasks, setSubTasks] = useState([]);
 
     const { values, onChange, onChangeByKey, onClick } = useTaskForm(
         TaskService.getTaskData(data?.task, dataTaskOperation?.disabledFields),
@@ -1113,7 +1377,7 @@ export default function TaskPopup(props) {
         if (taskOperation === 'creation') {
             const resultData = {
                 typeWorkId: values?.typeWork?.id,
-                contractId: +idContract,
+                contractId: idContract ?? null,
                 directorId: values?.director?.id,
                 executorId: values?.executor?.id,
                 dateStart: values?.dateStart,
@@ -1167,21 +1431,36 @@ export default function TaskPopup(props) {
         <>
             <div id="portal"></div>
             <InputDataPopup
-                idForm="add-task-form"
+                // idForm="add-task-form"
+                idForm="task-form"
                 title={title}
                 additClass={additClass}
                 overlay={true}
                 statePopup={popupState}
                 setStatePopup={setPopupState}
+                deleteConfig={{
+                    modalWindow: {
+                        title: 'Вы действительно хотите удалить эту задачу?'
+                    },
+                    onDelete: EMPLOYEE_ACTIONS?.delete(
+                        taskOperation,
+                        data?.task?.director?.mmId,
+                        Cookies.get('MMUSERID')
+                    )
+                        ? onDeleteTask
+                        : null
+                }}
             >
                 <form
-                    id="add-task-form"
-                    className="popup__content-add-task popup-content"
+                    // id="add-task-form"
+                    id="task-form"
+                    className="popup__task-form"
+                    // className="popup__content-add-task popup-content"
                     onSubmit={e => onOnSubmitData(e)}
                 >
                     <div
-                        className={classNames('popup__content-add-task-top', {
-                            'popup__content-edit-task-top': taskOperation === 'update'
+                        className={classNames('popup__add-task-form', {
+                            'popup__edit-task-form': taskOperation === 'update'
                         })}
                     >
                         {/* Цепочка статусов */}
@@ -1193,11 +1472,14 @@ export default function TaskPopup(props) {
                                 onSelect={onClick}
                             />
                         ) : null}
-                        <ul className="popup__content-add-task-left">
+                        <ul
+                            className="popup__task-form-left"
+                            // className="popup__content-add-task-left"
+                        >
                             {/* Номер договора */}
                             <ContractNumber
                                 contract={{
-                                    id: +idContract
+                                    id: idContract
                                 }}
                                 isLoading={isLoading}
                                 contractsIDs={contractsIDs}
@@ -1242,7 +1524,9 @@ export default function TaskPopup(props) {
                                     hidden: dataTaskOperation?.hiddenFields?.parentTask,
                                     popupData: { ...data },
                                     taskForDelete: +data?.task?.id,
-                                    tasksData: data?.tasks
+                                    // добавляем к массиву задачу которая может не отображаться т.к. пользователь может не являться
+                                    // исполнителем или постановщиком задачи
+                                    tasksData: [...data?.tasks, TaskService.formItem(data?.task?.parent)]
                                 }}
                                 onSelect={onClick}
                                 switchPopup={switchPopup}
@@ -1265,14 +1549,6 @@ export default function TaskPopup(props) {
                                 config={{ hidden: dataTaskOperation?.hiddenFields?.deadlineTask ? true : false }}
                                 onSelect={onClick}
                             />
-                            {/* Завершенность */}
-                            <Completeness
-                                presetValue={data?.task?.done}
-                                config={{ hidden: dataTaskOperation?.hiddenFields?.done ? true : false }}
-                                onSelect={onClick}
-                            />
-                        </ul>
-                        <div className="popup__content-add-task-right">
                             {/* Комментарий */}
                             <Comment
                                 presetValue={data?.task?.comment ?? parentTask?.comment}
@@ -1280,39 +1556,37 @@ export default function TaskPopup(props) {
                                 onChange={onChange}
                                 onChangeByKey={onChangeByKey}
                             />
+                            {/* Завершенность */}
+                            <Completeness
+                                presetValue={data?.task?.done}
+                                config={{ hidden: dataTaskOperation?.hiddenFields?.done ? true : false }}
+                                onSelect={onClick}
+                            />
+                        </ul>
+                        <div className="popup__task-form-right">
+                            {/* Обсуждение задачи */}
+                            <MattermostDiscussionTasks idPost={data?.task?.idPost} />
                         </div>
                     </div>
-                    {/* Отображение подзадач */}
-                    {taskOperation === 'update' ? (
-                        <TaskInfo
-                            title="Подзадачи"
-                            popupData={{ ...data }}
-                            taskData={data?.task?.subtasks}
-                            // taskData={subTasks.map(subTask => TaskService.formItem(subTask))}
-                            config={{
+                    {/* Разделы таблиц */}
+                    <TablesPopup
+                        taskInfoConfig={{
+                            popupData: { ...data },
+                            taskData: data?.task?.subtasks,
+                            config: {
                                 appTheme: theme,
                                 navigate,
                                 addToHistory
-                            }}
-                            switchPopup={switchPopup}
-                        />
-                    ) : null}
+                            },
+                            switchPopup
+                        }}
+                        timeCostsConfig={{
+                            plannedTimeCosts: data?.task?.plannedTimeCosts,
+                            timeCosts: data?.task?.timeCosts
+                        }}
+                    />
                 </form>
-                {taskOperation === 'update' ? (
-                    <button className="popup__content-del-task" onClick={() => setIsModalOpen(true)}>
-                        Удалить задачу
-                    </button>
-                ) : null}
             </InputDataPopup>
-            {isModalOpen ? (
-                <ModalWindow
-                    additClass="action-selection"
-                    title="Вы действительно хотите удалить эту задачу?"
-                    statePopup={isModalOpen}
-                    actionRef={onDeleteTask}
-                    setStatePopup={setIsModalOpen}
-                />
-            ) : null}
         </>
     );
 }

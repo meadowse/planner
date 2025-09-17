@@ -215,11 +215,11 @@ export const TASKS_DATA_CONF = {
 export const COMPANY_DATA_CONF = {
     title: 'Компания',
     displayModes: [
-        {
-            mode: 'Структура компании',
-            keyMode: 'structure',
-            keys: []
-        },
+        // {
+        //     mode: 'Структура компании',
+        //     keyMode: 'structure',
+        //     keys: []
+        // },
         {
             mode: 'Сотрудники',
             keyMode: 'employees',
@@ -254,12 +254,12 @@ export const EQUIPMENT_DATA_CONF = {
             modeOptions: [{ value: 'Тип оборудования', key: 'equipment', keyData: 'equipment', uniqueness: 'title' }],
             keys: []
         },
-        {
-            mode: 'Список',
-            keyMode: 'listmode',
-            modeOptions: [],
-            keys: ['id', 'equipment', 'status', 'dates', 'responsible', 'location']
-        },
+        // {
+        //     mode: 'Список',
+        //     keyMode: 'listmode',
+        //     modeOptions: [],
+        //     keys: ['id', 'equipment', 'status', 'dates', 'responsible', 'location']
+        // },
         {
             mode: 'Календарь',
             modeOptions: [],

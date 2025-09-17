@@ -90,12 +90,12 @@ export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleSta
 
     useEffect(() => {
         // console.log(`initFilters: ${JSON.stringify(initializeFilters(modeConfig?.keys), null, 4)}`);
-        console.log(`modeConfig: ${JSON.stringify(modeConfig, null, 4)}`);
+        // console.log(`modeConfig: ${JSON.stringify(modeConfig, null, 4)}`);
         // console.log(`savedFilters: ${JSON.stringify(savedFilters, null, 4)}`);
 
         if (partition in KEYS_FOR_STORAGE) {
             const keyStorage = KEYS_FOR_STORAGE[partition](mode?.key, option?.key);
-            console.log(`keyStorage: ${keyStorage}`);
+            // console.log(`keyStorage: ${keyStorage}`);
 
             if (!savedFilters[keyStorage] || Object.keys(savedFilters[keyStorage]).length === 0) {
                 savedFilters[keyStorage] = initializeFilters(tableData, keys);

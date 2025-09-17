@@ -6,6 +6,7 @@ import axios from 'axios';
 // Импорт сервисов
 import DataFormService from '@services/data_form.service';
 
+// Импорт контекста
 import { useHistoryContext } from '../../../../contexts/history.context';
 
 // Импорт стилей
@@ -13,37 +14,6 @@ import './data_form.css';
 
 // Интеграция с Mattermost
 function MattermostIntegration({ channelId }) {
-    useEffect(() => {
-        const socket = new WebSocket(`https://mm-mpk.ru/mosproektkompleks/`);
-
-        socket.onpen = () => {
-            console.log('MattermostIntegration:\nWebSocket connection established');
-        };
-
-        socket.onmessage = event => {
-            const data = JSON.parse(event.data);
-
-            // Проверяем, является ли событие изменением канала
-            if (data.event === 'channel_viewed') {
-                const { channel_id } = data.data;
-                // setCurrentChannelId(channel_id);
-                console.log(`MattermostIntegration:\nSwitched to channel ID: ${channel_id}`);
-            }
-        };
-
-        socket.onerror = error => {
-            console.error('MattermostIntegration:\nWebSocket error:', error);
-        };
-
-        socket.onclose = () => {
-            console.log('MattermostIntegration:\nWebSocket connection closed');
-        };
-
-        return () => {
-            socket.close();
-        };
-    }, []);
-
     return (
         <div className="section__dataform-frame-wrapper">
             <iframe
@@ -148,11 +118,6 @@ function Tabs(props) {
         const savedTab = JSON.parse(localStorage.getItem('selectedTab'));
         if (savedTab && Object.keys(savedTab).length !== 0) setTab(savedTab);
     }, []);
-
-    // const PARTITION_CONF = {
-    //     equipment: () => {},
-    //     default: () => <TabsHeader tabs={tabs} tab={tab} config={config} tabClick={setTab} navigate={navigate} />
-    // };
 
     return (
         <div className="section__dataform-tabs">
