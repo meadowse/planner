@@ -63,7 +63,13 @@ const ROUTES_FOR_AUTH = [
                     // перенаправлять по адресу
                     {
                         index: true,
-                        element: <Navigate to="/personal/" replace />
+                        // element: <Navigate to="/personal/" replace />
+                        element: (
+                            <Navigate
+                                to={JSON.parse(localStorage.getItem('itemSideMenu'))?.path ?? '/personal/'}
+                                replace
+                            />
+                        )
                     },
                     {
                         path: 'department/*',

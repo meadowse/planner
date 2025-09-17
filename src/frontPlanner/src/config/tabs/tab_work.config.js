@@ -71,7 +71,8 @@ export const ACTIONS_TASK = {
     },
     'Принять работу': {
         title: 'Завершенная',
-        progress: 75
+        progress: 75,
+        done: 1
     }
 };
 

@@ -46,12 +46,13 @@ function StatusChain(props) {
 
     // Изменить статус
     function onChangeStatus(action) {
-        const title = ACTIONS_TASK[action]?.title;
-        const actions = statusesTask.get(title)[Cookies.get('MMUSERID')];
+        const actionTask = ACTIONS_TASK[action];
+        const actions = statusesTask.get(actionTask?.title)[Cookies.get('MMUSERID')];
         const newStatus = { ...ACTIONS_TASK[action], actions };
 
         setStatus(newStatus);
         onSelect('status', newStatus);
+        if ('done' in actionTask) onSelect('done', actionTask?.done);
     }
 
     useEffect(() => {
@@ -932,7 +933,7 @@ function MattermostDiscussionTasks({ idPost }) {
     return (
         <iframe
             title="Mattermost Discussion Tasks"
-            src={`https://mm-mpk.ru/mosproektkompleks/threads/${idPost}`}
+            src={`https://mm-mpk.ru/mosproektkompleks/pl/${idPost}`}
             style={{ width: '100%', height: '100%', border: 'none' }}
         />
     );
@@ -1555,12 +1556,6 @@ export default function TaskPopup(props) {
                                 config={{ hidden: dataTaskOperation?.hiddenFields?.comment ? true : false }}
                                 onChange={onChange}
                                 onChangeByKey={onChangeByKey}
-                            />
-                            {/* Завершенность */}
-                            <Completeness
-                                presetValue={data?.task?.done}
-                                config={{ hidden: dataTaskOperation?.hiddenFields?.done ? true : false }}
-                                onSelect={onClick}
                             />
                         </ul>
                         <div className="popup__task-form-right">
