@@ -640,6 +640,7 @@ def addTask(request):
         directorId = obj.get('directorId')
         executorId = obj.get('executorId')
         parenId = obj.get('parentId')
+        plannedTimeCosts = obj.get('plannedTimeCosts')
         with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                  charset=charset) as con:
             cur = con.cursor()
@@ -687,6 +688,7 @@ def addTask(request):
                 'F5646': parenId,
                 'F5872': 'Новая',
                 'F5451': idMessage,
+                'F5889': plannedTimeCosts,
             }
             # Преобразование значений в SQL-формат
             sql_values = []
@@ -727,6 +729,7 @@ def editTask(request):
         parenId = obj.get('parentId')
         status = obj.get('status')
         today = datetime.date.today().strftime('%Y-%m-%d')
+        plannedTimeCosts = obj.get('plannedTimeCosts')
         with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                  charset=charset) as con:
             cur = con.cursor()
@@ -744,6 +747,7 @@ def editTask(request):
                 'F4694': executorId,
                 'F5646': parenId,
                 'F5872': status,
+                'F5889': plannedTimeCosts,
             }
             # Преобразование значений в SQL-формат
             set_clause = []
