@@ -969,6 +969,7 @@ def getTasksEmployee(request):
                 T218.F4697 AS DONE,
                 T218.F4708 AS DATE_OF_DONE,
                 T218.F5646 AS parentId,
+                T218.F5872 AS status,
                 DIRECTOR.ID AS ID_DIRECTOR,
                 DIRECTOR.F16 AS ID_MM_DIRECTOR,
                 DIRECTOR.F4886 AS DIRECTOR_NAME,
@@ -988,7 +989,7 @@ def getTasksEmployee(request):
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
-                    'id', 'task', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'parentId',
+                    'id', 'task', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'parentId', 'status',
                     'idDirector',
                     'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId',
                     'contractNum', 'address', 'customer')
