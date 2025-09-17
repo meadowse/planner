@@ -59,10 +59,12 @@ const ROUTES_FOR_AUTH = [
                 path: '',
                 element: <Layout />,
                 children: [
-                    // {
-                    //     index: true,
-                    //     element: <Navigate to="/department/" replace />
-                    // },
+                    // Если путь не указан или указан неверно
+                    // перенаправлять по адресу
+                    {
+                        index: true,
+                        element: <Navigate to="/personal/" replace />
+                    },
                     {
                         path: 'department/*',
                         loader: () => {
