@@ -13,7 +13,7 @@ bind = "0.0.0.0:8888"
 # Restart workers when code changes (development only!)
 reload = True
 # Write access and error info to /var/log
-accesslog = errorlog = "/var/log/gunicorn/dev.log"
+accesslog = errorlog = "/app/dev.log"
 # Redirect stdout/stderr to log file
 capture_output = True
 # PID file so you can easily fetch process ID
