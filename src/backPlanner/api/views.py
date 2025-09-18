@@ -770,9 +770,12 @@ def editTask(request):
             """
             cur.execute(sql)
             con.commit()
-            sql = f'select F4644 from T212 where ID = {contractId}'
-            cur.execute(sql)
-            idChannel = cur.fetchone()[0]
+            if contractId is None:
+                idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
+            else:
+                sql = f'select F4644 from T212 where ID = {contractId}'
+                cur.execute(sql)
+                idChannel = cur.fetchone()[0]
             sql = f"""SELECT F4932 FROM T3 WHERE ID = '{directorId}'"""
             cur.execute(sql)
             directorData = cur.fetchone()
@@ -788,10 +791,10 @@ def editTask(request):
             message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
             message += f'Deadline: :calendar: *{deadline}*\n' if deadline is not None else ''
             message += f'Комментарий: :speech_balloon: {comment}\n' if comment is not None else ''
-            # sql = f"""SELECT F5476 FROM T218 WHERE ID = {taskId}"""
-            # cur.execute(sql)
-            # time = cur.fetchone()[0]
-            # message += f'Планируемые времязатраты: :clock3: {time}'
+            sql = f"""SELECT F5889 FROM T218 WHERE ID = {taskId}"""
+            cur.execute(sql)
+            time = cur.fetchone()[0]
+            message += f'Планируемые времязатраты: :clock3: {time}'
             # sql = f"""SELECT F5476 FROM T320 WHERE F5862 = {taskId}"""
             # message += f'Текущие времязатраты: :clock3: {}'
             statusEmoji = ''
