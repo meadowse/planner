@@ -709,10 +709,7 @@ def addTask(request):
             sql = f"""INSERT INTO T218 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
             cur.execute(sql)
             con.commit()
-        if contractId is not None:
-            return JsonResponse({'status': response.json()}, status=response.status_code)
-        else:
-            return JsonResponse({'status': 'OK'}, status=200)
+        return JsonResponse({'status': response.json()}, status=response.status_code)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
