@@ -154,9 +154,8 @@ async def getAgreements(request):
                                      'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[10]})
                             i += 1
             obj.update(tasks)
-
         end = perf_counter()
-        print(end - start)
+        print(f'GET /api/ {end - start}')
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
 async def employees(request):
@@ -861,6 +860,7 @@ async def auth(request):
 
 @csrf_exempt
 async def getAllDepartmentsStaffAndTasks(request):
+    start = perf_counter()
     with (firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con):
         cur = con.cursor()
         try:
@@ -959,6 +959,8 @@ async def getAllDepartmentsStaffAndTasks(request):
                                                  'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[10]})
                                         i += 1
                 obj.update(contracts)
+            end = perf_counter()
+            print(f'GET /api/getAllDepartmentsStaffAndTasks {end - start}')
             return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
         except Exception as ex:
             print(f"Не удалось получить данные по отделам и сотрудникам: {ex}")
