@@ -646,7 +646,9 @@ def addTask(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                  charset=charset) as con:
             cur = con.cursor()
-            if contractId is not None:
+            if contractId is None:
+                idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
+            else:
                 sql = f'select F4644 from T212 where ID = {contractId}'
                 cur.execute(sql)
                 idChannel = cur.fetchone()[0]
