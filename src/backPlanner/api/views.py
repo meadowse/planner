@@ -1339,7 +1339,7 @@ def addTimeCost(request):
                 sql = f"""INSERT INTO T320 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
                 cur.execute(sql)
                 con.commit()
-                return {'result': 'Ok', 'status': 200}
+                return JsonResponse({'result': 'Ok'}, status=405)
             except Exception as ex:
                 print(f"Не удалось добавить отчёт по задаче {taskId}: {ex}")
     else:
