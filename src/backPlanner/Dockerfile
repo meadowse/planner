@@ -33,4 +33,4 @@ ENV PYTHONUNBUFFERED=1
 COPY --from=build-venv /venv /venv
 COPY . /app
 WORKDIR /app
-ENTRYPOINT ["/venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "planner.wsgi"]
+ENTRYPOINT ["/venv/bin/gunicorn", "-c", "/app/config/gunicorn/dev.py"]
