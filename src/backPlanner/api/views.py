@@ -667,7 +667,7 @@ def addTask(request):
             message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
             message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
             message += f'Deadline: *{deadline}*\n' if deadline is not None else ''
-            message += f'Комментарий: {comment}\n' if comment is not None else ''
+            message += f'Комментарий: {comment}\n' if comment is not None else '' if comment is not None else ''
             message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
             data = {'channel_id': idChannel, 'message': message}
             response = requests.post(
@@ -717,7 +717,6 @@ def editTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         taskId = obj.get('taskId')
-        contractId = obj.get('contractId')
         task = obj.get('task')
         comment = obj.get('comment')
         typeWorkId = obj.get('typeWorkId')
@@ -735,7 +734,6 @@ def editTask(request):
             cur = con.cursor()
             # Подготовка значений для обновления
             values = {
-                'F4691': contractId,
                 'F4695': task,
                 'F4698': comment,
                 'F5724': typeWorkId,
@@ -768,6 +766,9 @@ def editTask(request):
             """
             cur.execute(sql)
             con.commit()
+            sql = f'SELECT F4691 FROM T218 WHERE ID = {taskId}'
+            cur.execute(sql)
+            contractId = cur.fetchone()[0]
             if contractId is None:
                 idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
             else:
@@ -792,7 +793,7 @@ def editTask(request):
             sql = f"""SELECT F5889 FROM T218 WHERE ID = {taskId}"""
             cur.execute(sql)
             time = cur.fetchone()[0]
-            message += f'Планируемые времязатраты: :clock3: {time}'
+            message += f'Планируемые времязатраты: :clock3: {time}' if time is not None else ''
             # sql = f"""SELECT F5476 FROM T320 WHERE F5862 = {taskId}"""
             # message += f'Текущие времязатраты: :clock3: {}'
             statusEmoji = ''
