@@ -1,3 +1,4 @@
+import asyncio
 import json
 import firebirdsql
 from django.http import JsonResponse
@@ -51,8 +52,10 @@ async def getAgreements(request):
         LEFT JOIN T3 director ON T218.F4693 = director.ID
         LEFT JOIN T3 executor ON T218.F4694 = executor.ID
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
-        await cur.execute(sql)
-        result = await cur.fetchall()
+        execute = asyncio.create_task(cur.execute(sql))
+        await execute
+        fetchall = asyncio.create_task(cur.fetchall())
+        result = await fetchall
         # Преобразование результата в список словарей
         columns = ('contractId', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart',
                    'dateOfEnding', 'company', 'contacts', 'participants', 'idResponsible', 'responsible',
