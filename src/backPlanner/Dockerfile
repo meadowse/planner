@@ -22,8 +22,7 @@ COPY requirements.txt /requirements.txt
 RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
 COPY . /app
 WORKDIR /app
-CMD ["/venv/bin/gunicorn", "-c", "/app/config/gunicorn/dev.py"]
-ENTRYPOINT ["tail", "-f", "/app/dev.log"]
+ENTRYPOINT ["/venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "planner.wsgi"]
 
 ## Copy the virtualenv into a distroless image
 #FROM meadowse56/distroless-python3-debian12
