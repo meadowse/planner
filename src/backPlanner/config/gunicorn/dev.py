@@ -9,7 +9,7 @@ loglevel = "debug"
 # The number of worker processes for handling requests
 workers = multiprocessing.cpu_count() * 2 + 1
 # The socket to bind
-bind = "0.0.0.0:8888"
+bind = "0.0.0.0:8000"
 # Restart workers when code changes (development only!)
 reload = True
 # Write access and error info to /var/log
