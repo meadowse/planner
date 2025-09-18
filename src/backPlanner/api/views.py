@@ -7,6 +7,10 @@ from .config import *
 import datetime
 import requests
 
+def timeToFloat(t: datetime.time) -> float:
+    """Переводит время в вещественное число (часы с дробной частью)."""
+    return t.hour + t.minute / 60 + t.second / 3600 + t.microsecond / 3_600_000_000
+
 def getAgreements(request):
     start = perf_counter()
     with firebirdsql.connect(
@@ -1294,3 +1298,49 @@ def getContracts(request):
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
+@csrf_exempt
+def addTimeCost(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        idMM = obj.get('idMM')
+        taskId = obj.get('taskId')
+        dataReport = obj.get('dataReport')
+        report = obj.get('report')
+        spent = obj.get('spent')
+        strToTime = datetime.datetime.strptime(spent, '%H:%M').time()
+        timeHours = timeToFloat(strToTime)
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+            cur = con.cursor()
+            try:
+                cur.execute(f'SELECT GEN_ID(GEN_T320, 1) FROM RDB$DATABASE')
+                ID = cur.fetchonemap().get('GEN_ID', None)
+                sql = f"SELECT ID FROM T3 WHERE F16 = '{idMM}'"
+                cur.execute(sql)
+                idExecutor = cur.fetchone()[0]
+                values = {
+                    'ID': ID,
+                    'F5881': idExecutor,
+                    'F5862': taskId,
+                    'F5869': dataReport,
+                    'F5870': report,
+                    'F5882': timeHours,
+                    'F5863': spent,
+                }
+                sql_values = []
+                for key, value in values.items():
+                    if value is None:
+                        sql_values.append('NULL')
+                    elif isinstance(value, (int, float)):  # Числовые значения
+                        sql_values.append(str(value))
+                    elif isinstance(value, str):  # Строковые значения
+                        sql_values.append(f"'{value}'")
+                    else:
+                        raise ValueError(f"Unsupported type for value: {value}")
+                sql = f"""INSERT INTO T320 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
+                cur.execute(sql)
+                con.commit()
+                return {'result': 'Ok', 'status': 200}
+            except Exception as ex:
+                print(f"Не удалось добавить отчёт по задаче {taskId}: {ex}")
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
