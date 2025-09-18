@@ -1344,3 +1344,42 @@ def addTimeCost(request):
                 print(f"Не удалось добавить отчёт по задаче {taskId}: {ex}")
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+@csrf_exempt
+def editTimeCost(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        Id = obj.get('Id')
+        dataReport = obj.get('dataReport')
+        report = obj.get('report')
+        spent = obj.get('spent')
+        strToTime = datetime.datetime.strptime(spent, '%H:%M').time()
+        timeHours = timeToFloat(strToTime)
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+            cur = con.cursor()
+            try:
+                values = {
+                    'F5869': dataReport,
+                    'F5870': report,
+                    'F5882': timeHours,
+                    'F5863': spent,
+                }
+                sql_values = []
+                for key, value in values.items():
+                    if value is None:
+                        sql_values.append(key + ' = ' + 'NULL')
+                    elif isinstance(value, (int, float)):  # Числовые значения
+                        sql_values.append(key + ' = ' + str(value))
+                    elif isinstance(value, str):  # Строковые значения
+                        sql_values.append(key + ' = ' + f"'{value}'")
+                    else:
+                        raise ValueError(f"Unsupported type for value: {value}")
+                sql = f"UPDATE T320 SET {', '.join(sql_values)} WHERE ID = {Id}"
+                print(sql)
+                cur.execute(sql)
+                con.commit()
+                return {'result': 'Ok', 'status': 200}
+            except Exception as ex:
+                print(f"Не удалось изменить отчёт {Id}: {ex}")
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
