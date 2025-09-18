@@ -661,19 +661,18 @@ def addTask(request):
             executorData = cur.fetchone()
             executor = executorData[0]
             idMessage = None
-            if contractId is not None:
-                message = f'**Добавлена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
-                message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
-                message += f'Постановщик: *@{director}*\n' if director is not None else ''
-                message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
-                message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
-                message += f'Deadline: *{deadline}*\n' if deadline is not None else ''
-                message += f'Комментарий: {comment}\n' if comment is not None else ''
-                message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
-                data = {'channel_id': idChannel, 'message': message}
-                response = requests.post(
-                    f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data, headers=headers)
-                idMessage = response.json().get('id')
+            message = f'**Добавлена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
+            message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
+            message += f'Постановщик: *@{director}*\n' if director is not None else ''
+            message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
+            message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
+            message += f'Deadline: *{deadline}*\n' if deadline is not None else ''
+            message += f'Комментарий: {comment}\n' if comment is not None else ''
+            message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
+            data = {'channel_id': idChannel, 'message': message}
+            response = requests.post(
+                f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data, headers=headers)
+            idMessage = response.json().get('id')
             cur.execute(f'SELECT GEN_ID(GEN_T218, 1) FROM RDB$DATABASE')
             ID = cur.fetchonemap().get('GEN_ID', None)
             # Подготовка значений для вставки
