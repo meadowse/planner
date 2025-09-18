@@ -40,4 +40,5 @@ urlpatterns = [
     path('getContracts', getContracts, name='getContracts'),
     path('addTimeCost', addTimeCost, name='addTimeCost'),
     path('editTimeCost', editTimeCost, name='editTimeCost'),
+    path('deleteTimeCost', deleteTimeCost, name='deleteTimeCost'),
 ]

@@ -1383,3 +1383,22 @@ def editTimeCost(request):
                 print(f"Не удалось изменить отчёт {Id}: {ex}")
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+@csrf_exempt
+def deleteTimeCost(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        Id = obj.get('Id')
+        try:
+            with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                     charset=charset) as con:
+                cur = con.cursor()
+                sql = f"""DELETE FROM T320 WHERE ID = {Id}"""
+                cur.execute(sql)
+                con.commit()
+            return JsonResponse({'status': 'Ok'}, status=200)
+        except Exception as ex:
+            print(f"НЕ удалось удалить отчёт {Id}: {ex}")
+            return ex
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
