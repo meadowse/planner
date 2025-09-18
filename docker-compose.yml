@@ -6,6 +6,7 @@ services:
         #      - 8888:8000
         volumes:
             - /mnt/work/6. Технологии/11. Изображения для карточек договоров:/app/images
+            - /var/log/gunicorn/dev.log:/app/dev.log
     frontPlanner:
         image: front_planner
         build: './src/frontPlanner'
