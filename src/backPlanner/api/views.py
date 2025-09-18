@@ -7,11 +7,11 @@ from .config import *
 import datetime
 import requests
 
-def timeToFloat(t: datetime.time) -> float:
+async def timeToFloat(t: datetime.time) -> float:
     """Переводит время в вещественное число (часы с дробной частью)."""
     return t.hour + t.minute / 60 + t.second / 3600 + t.microsecond / 3_600_000_000
 
-def getAgreements(request):
+async def getAgreements(request):
     start = perf_counter()
     with firebirdsql.connect(
         host=host,
@@ -159,7 +159,7 @@ def getAgreements(request):
         print(end - start)
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
-def employees(request):
+async def employees(request):
     # start = perf_counter()
     with firebirdsql.connect(
             host=host,
@@ -193,7 +193,7 @@ def employees(request):
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
 @csrf_exempt
-def corParticipants(request):
+async def corParticipants(request):
     if request.method != "POST":
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
     else:
@@ -244,7 +244,7 @@ def corParticipants(request):
             return JsonResponse({'ok': True})
 
 @csrf_exempt
-def getAgreement(request):
+async def getAgreement(request):
     start = perf_counter()
     if request.method != "POST":
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
@@ -381,7 +381,7 @@ def getAgreement(request):
             return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
 @csrf_exempt
-def addPhoto(request):
+async def addPhoto(request):
     """Process images uploaded by users"""
     if request.method == 'POST':
         data = request.FILES.get('image').read()
@@ -392,7 +392,7 @@ def addPhoto(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def getTypesWork(request):
+async def getTypesWork(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         contractId = obj.get('contractId')
@@ -439,7 +439,7 @@ def getTypesWork(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def getTasksContracts(request):
+async def getTasksContracts(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         contractId = obj.get('contractId')
@@ -530,7 +530,7 @@ def getTasksContracts(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def getTask(request):
+async def getTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         taskId = obj.get('taskId')
@@ -634,7 +634,7 @@ def getTask(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def addTask(request):
+async def addTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         contractId = obj.get('contractId')
@@ -717,7 +717,7 @@ def addTask(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def editTask(request):
+async def editTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         taskId = obj.get('taskId')
@@ -826,7 +826,7 @@ def editTask(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def deleteTask(request):
+async def deleteTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         taskId = obj.get('taskId')
@@ -845,7 +845,7 @@ def deleteTask(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def auth(request):
+async def auth(request):
     if request.method == 'POST':
         payload = json.loads(request.body)
         url = f'{MATTERMOST_URL}/api/v4/users/login'
@@ -860,7 +860,7 @@ def auth(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def getAllDepartmentsStaffAndTasks(request):
+async def getAllDepartmentsStaffAndTasks(request):
     with (firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con):
         cur = con.cursor()
         try:
@@ -965,7 +965,7 @@ def getAllDepartmentsStaffAndTasks(request):
             return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
 @csrf_exempt
-def getTasksEmployee(request):
+async def getTasksEmployee(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         employeeId = obj.get('employeeId')
@@ -1071,7 +1071,7 @@ def getTasksEmployee(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def getContractsEmployee(request):
+async def getContractsEmployee(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         employeeId = obj.get('employeeId')
@@ -1193,7 +1193,7 @@ def getContractsEmployee(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def getDataUser(request):
+async def getDataUser(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         employeeId = obj.get('employeeId')
@@ -1237,7 +1237,7 @@ def getDataUser(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def getVacations(request):
+async def getVacations(request):
     if request.method == 'POST':
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
@@ -1276,7 +1276,7 @@ def getVacations(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def getContracts(request):
+async def getContracts(request):
     if request.method == 'POST':
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
@@ -1299,7 +1299,7 @@ def getContracts(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def addTimeCost(request):
+async def addTimeCost(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         idMM = obj.get('idMM')
@@ -1346,7 +1346,7 @@ def addTimeCost(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def editTimeCost(request):
+async def editTimeCost(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         Id = obj.get('Id')
@@ -1385,7 +1385,7 @@ def editTimeCost(request):
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def deleteTimeCost(request):
+async def deleteTimeCost(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         Id = obj.get('Id')
