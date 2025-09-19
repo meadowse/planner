@@ -1075,9 +1075,9 @@ def getTasksEmployee(request):
 @csrf_exempt
 def getContractsEmployee(request):
     if request.method == 'POST':
+        start = perf_counter()
         obj = json.loads(request.body)
         employeeId = obj.get('employeeId')
-        start = perf_counter()
         with firebirdsql.connect(
             host=host,
             database=database,
@@ -1086,39 +1086,37 @@ def getContractsEmployee(request):
             charset=charset
         ) as con:
             cur = con.cursor()
-            sql = f"""
-            SELECT T212.ID AS contractId,
-            T212.F4538 AS contractNum,
-            T212.F4544 AS stage,
-            T212.F4946 AS address,
-            T237.F4890 AS services,
-            T212.F4648 AS path,
-            T212.F4610 AS dateOfStart,
-            T212.F4566 AS dateOfEnding,
-            T205.F4331 AS customer,
-            LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
-            LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
-            responsible.F16 AS responsibleId,
-            responsible.F4886 AS responsible,
-            LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886 || ';' || T218.F5872, '*') AS tasks
-            FROM T212
-            LEFT JOIN T237 ON T212.F4948 = T237.ID
-            LEFT JOIN T205 ON T212.F4540 = T205.ID
-            LEFT JOIN T233 ON T233.F4963 = T212.ID
-            LEFT JOIN T206 ON T233.F4870 = T206.ID
-            LEFT JOIN T253 ON T212.ID = T253.F5024
-            LEFT JOIN T3 participants ON T253.F5022 = participants.ID
-            LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
-            LEFT JOIN T218 ON T218.F4691 = T212.ID
-            LEFT JOIN T3 director ON T218.F4693 = director.ID
-            LEFT JOIN T3 executor ON T218.F4694 = executor.ID
-            WHERE participants.F16 = '{employeeId}' OR responsible.F16 = '{employeeId}'
-            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13
-            """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
+            sql = f"""SELECT T212.ID AS contractId,
+                        T212.F4538 AS contractNum,
+                        T212.F4544 AS stage,
+                        T212.F4946 AS address,
+                        T212.F4648 AS path,
+                        T212.F4610 AS dateOfStart,
+                        T212.F4566 AS dateOfEnding,
+                        T237.F4890 AS services,
+                        T205.F4331 AS customer,
+                        LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
+                        LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
+                        responsible.F16 AS responsibleId,
+                        responsible.F4886 AS responsible,
+                        LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || T218.F5872 || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
+                        FROM T212
+                        LEFT JOIN T237 ON T212.F4948 = T237.ID
+                        LEFT JOIN T205 ON T212.F4540 = T205.ID
+                        LEFT JOIN T233 ON T233.F4963 = T212.ID
+                        LEFT JOIN T206 ON T233.F4870 = T206.ID
+                        LEFT JOIN T253 ON T212.ID = T253.F5024
+                        LEFT JOIN T3 participants ON T253.F5022 = participants.ID
+                        LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
+                        LEFT JOIN T218 ON T218.F4691 = T212.ID
+                        LEFT JOIN T3 director ON T218.F4693 = director.ID
+                        LEFT JOIN T3 executor ON T218.F4694 = executor.ID
+                        WHERE participants.F16 = '{employeeId}' OR responsible.F16 = '{employeeId}'
+                        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
             cur.execute(sql)
             result = cur.fetchall()
             # Преобразование результата в список словарей
-            columns = ('contractId', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'company', 'contacts', 'participants', 'responsibleId', 'responsible', 'tasks')
+            columns = ('contractId', 'contractNum', 'stage', 'address', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'services', 'company', 'contacts', 'participants', 'responsibleId', 'responsible', 'tasks')
             json_result = [
                 {col: value for col, value in zip(columns, row)}
                 for row in result
@@ -1140,24 +1138,18 @@ def getContractsEmployee(request):
                     obj.update(data)
                 responsible = obj.get('responsible')
                 if responsible is not None:
-                    responsible = {'responsible': {'fullName': obj.get('responsible').strip(), 'id': obj.get('responsibleId')}}
+                    responsible = {'responsible': {'fullName': responsible.strip(), 'id': obj.get('responsibleId')}}
                 else:
-                    responsible = {'responsible': {'fullName': obj.get('responsible'), 'id': obj.get('responsibleId')}}
+                    responsible = {'responsible': {'fullName': responsible, 'id': obj.get('responsibleId')}}
                 obj.update(responsible)
                 obj.pop('responsibleId')
                 dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
                 obj.update(dateOfStart)
                 dateOfEnding = obj.get('dateOfEnding')
-                if dateOfEnding is not None:
-                    if status == 'В работе' and dateOfEnding < today:
-                        dateOfEnding = {
-                            'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': True}}
-                    else:
-                        dateOfEnding = {
-                            'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': False}}
+                if dateOfEnding is not None and status == 'В работе' and dateOfEnding < today:
+                    dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': dateOfEnding, 'expired': True}}
                 else:
-                    dateOfEnding = {
-                        'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': False}}
+                    dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': dateOfEnding, 'expired': False}}
                 obj.update(dateOfEnding)
                 Str = obj.get('contacts')
                 contacts = {'contacts': []}
@@ -1165,12 +1157,12 @@ def getContractsEmployee(request):
                     List = Str.split(',')
                     for allData in List:
                         list2 = allData.split(';')
-                        flag = 0
+                        count = 0
                         for data in list2:
                             data.strip()
                             if data == '':
-                                flag += 1
-                        if flag < 4:
+                                count += 1
+                        if count < 4:
                             contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]], 'post': '', 'email': list2[3]})
                 obj.update(contacts)
                 Str = obj.get('tasks')
@@ -1184,9 +1176,9 @@ def getContractsEmployee(request):
                             continue
                         else:
                             tasks.get('tasks').append(
-                                {'id': list2[6],'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2],
-                                 'done': list2[3], 'director': {'mmId': list2[4], 'fullName': list2[7]},
-                                 'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[9]})
+                                {'id': list2[4], 'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2],
+                                 'done': list2[3], 'director': {'mmId': list2[6], 'fullName': list2[7]},
+                                 'executor': {'mmId': list2[8], 'fullName': list2[9]}, 'status': list2[5]})
                 obj.update(tasks)
             end = perf_counter()
             print(end - start)
