@@ -1048,7 +1048,7 @@ def getTasksEmployee(request):
                 for subtask in json_result:
                     for task in json_result:
                         if task.get('id') == subtask.get('parentId') and task.get('id') != task.get('parentId'):
-                            task.get('tasks').append(subtask)
+                            task.get('subtasks').append(subtask)
                             removeIndexesSubtasks.append(indexSubtask)
                     indexSubtask += 1
                 removeIndexesSubtasks = sorted(removeIndexesSubtasks, reverse=True)
