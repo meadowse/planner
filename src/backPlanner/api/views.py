@@ -864,37 +864,33 @@ def getAllDepartmentsStaffAndTasks(request):
     with (firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con):
         cur = con.cursor()
         try:
-            sql = """
-            SELECT 
-            sectionId, 
-            sectionName, 
-            employeeId, 
-            employeeName, 
-            photo, 
-            LIST(contractId || '$' || contractNum || '$' || address || '$' || dateOfStart || '$' || dateOfEnding || '$' || contractStage || '$' || CASE WHEN tasks IS NULL THEN '' ELSE tasks END, '^') AS contracts 
-            FROM (SELECT
-            T5.ID AS sectionId,
-            T5.F26 AS sectionName,
-            T3.F16 AS employeeId,
-            T3.F4886 AS employeeName,
-            T3.F4887SRC as photo,
-            T212.ID AS contractId,
-            T212.F4538 AS contractNum,
-            T212.F4946 AS address,
-            T212.F4610 AS dateOfStart,
-            T212.F4566 AS dateOfEnding,
-            T212.F4544 AS contractStage,
-            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886 || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || T218.F5872, '*') AS tasks
-            FROM T5
-            LEFT JOIN T3 ON T5.ID = T3.F27
-            LEFT JOIN T253 ON T3.ID = T253.F5022
-            LEFT JOIN T212 ON T253.F5024 = T212.ID
-            LEFT JOIN T218 ON T212.ID = T218.F4691
-            LEFT JOIN T3 director ON T218.F4693 = director.ID
-            LEFT JOIN T3 executor ON T218.F4694 = executor.ID
-            WHERE T3.F5383 = 1
-            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) tasks GROUP BY 1, 2, 3, 4, 5
-            """
+            sql = """SELECT sectionId,
+                        sectionName,
+                        employeeId,
+                        employeeName,
+                        photo,
+                        LIST(contractId || '$' || contractNum || '$' || address || '$' || dateOfStart || '$' || dateOfEnding || '$' || contractStage || '$' || CASE WHEN tasks IS NULL THEN '' ELSE tasks END, '^') AS contracts
+                        FROM (SELECT T5.ID AS sectionId,
+                        T5.F26 AS sectionName,
+                        T3.F16 AS employeeId,
+                        T3.F4886 AS employeeName,
+                        T3.F4887SRC as photo,
+                        T212.ID AS contractId,
+                        T212.F4538 AS contractNum,
+                        T212.F4946 AS address,
+                        T212.F4610 AS dateOfStart,
+                        T212.F4566 AS dateOfEnding,
+                        T212.F4544 AS contractStage,
+                        LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || T218.F5872 || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
+                        FROM T5
+                        LEFT JOIN T3 ON T5.ID = T3.F27
+                        LEFT JOIN T253 ON T3.ID = T253.F5022
+                        LEFT JOIN T212 ON T253.F5024 = T212.ID
+                        LEFT JOIN T218 ON T212.ID = T218.F4691
+                        LEFT JOIN T3 director ON T218.F4693 = director.ID
+                        LEFT JOIN T3 executor ON T218.F4694 = executor.ID
+                        WHERE T3.F5383 = 1
+                        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) tasks GROUP BY 1, 2, 3, 4, 5"""
             cur.execute(sql)
             result = cur.fetchall()
             columns = ('sectionId', 'sectionName', 'employeeId', 'employeeName', 'photo', 'contracts')
@@ -922,13 +918,11 @@ def getAllDepartmentsStaffAndTasks(request):
                     for contract in Contracts:
                         count += 1
                         data = contract.split('$')
-                        contracts.get('contracts').append({'contractId': data[0],
-                                                           'contractNum': data[1],
+                        contracts.get('contracts').append({'contractId': data[0], 'contractNum': data[1],
                                                            'address': data[2],
                                                            'dateOfStart': {'title': '', 'value': data[3]},
                                                            'dateOfEnding': {'title': 'Срок работы', 'value': data[4]},
-                                                           'stage': {'title': data[5]},
-                                                           'tasks': []})
+                                                           'stage': {'title': data[5]}, 'tasks': []})
                         Str = data[6]
                         if Str != '':
                             List = Str.split('*')
@@ -937,27 +931,23 @@ def getAllDepartmentsStaffAndTasks(request):
                                 list2[0].strip()
                                 if list2[0] == '' and list2[1] == '' and list2[2] == '':
                                     continue
-                                elif list2[9] == '':
-                                    contracts.get('contracts')[count].get('tasks').append(
-                                        {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
-                                         'dateOfEnding': list2[2], 'done': list2[3],
-                                         'director': {'mmId': list2[4], 'fullName': list2[7]},
-                                         'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[10], 'tasks': []})
-                            for allData in List:
-                                list2 = allData.split(';')
-                                list2[0].strip()
-                                if list2[0] == '' and list2[1] == '' and list2[2] == '':
-                                    continue
-                                elif list2[9] != '':
-                                    i = 0
-                                    for item in contracts.get('contracts')[count].get('tasks'):
-                                        if list2[9] == item.get('id'):
-                                            contracts.get('contracts')[count].get('tasks')[i].get('tasks').append(
-                                                {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
-                                                 'dateOfEnding': list2[2], 'done': list2[3],
-                                                 'director': {'mmId': list2[4], 'fullName': list2[7]},
-                                                 'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[10]})
-                                        i += 1
+                                contracts.get('contracts')[count].get('tasks').append(
+                                    {'id': list2[4], 'title': list2[0], 'dateOfStart': list2[1],
+                                     'dateOfEnding': list2[2], 'done': list2[3],
+                                     'director': {'mmId': list2[7], 'fullName': list2[8]},
+                                     'executor': {'mmId': list2[9], 'fullName': list2[10]}, 'status': list2[6],
+                                     'parentId': list2[5], 'tasks': []})
+                            indexSubtask = 0
+                            removeIndexesSubtasks = []
+                            for subtask in contracts.get('contracts')[count].get('tasks'):
+                                for task in contracts.get('contracts')[count].get('tasks'):
+                                    if task.get('id') == subtask.get('parentId'):
+                                        task.get('tasks').append(subtask)
+                                        removeIndexesSubtasks.append(indexSubtask)
+                                indexSubtask += 1
+                            removeIndexesSubtasks = sorted(removeIndexesSubtasks, reverse=True)
+                            for indexSubtask in removeIndexesSubtasks:
+                                contracts.get('contracts')[count].get('tasks').pop(indexSubtask)
                 obj.update(contracts)
             end = perf_counter()
             print(f'GET /api/getAllDepartmentsStaffAndTasks {end - start}')
@@ -974,32 +964,31 @@ def getTasksEmployee(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                sql = f"""SELECT
-                T218.ID,
-                T218.F4695 AS TASK,
-                T218.F5569 AS START_DATE,
-                T218.F4696 AS DEADLINE_DATE,
-                T218.F5476 AS DEADLINE_TIME,
-                T218.F4697 AS DONE,
-                T218.F4708 AS DATE_OF_DONE,
-                T218.F5646 AS parentId,
-                T218.F5872 AS status,
-                DIRECTOR.ID AS ID_DIRECTOR,
-                DIRECTOR.F16 AS ID_MM_DIRECTOR,
-                DIRECTOR.F4886 AS DIRECTOR_NAME,
-                EXECUTOR.ID AS ID_EXECUTOR,
-                EXECUTOR.F16 AS ID_MM_EXECUTOR,
-                EXECUTOR.F4886 AS EXECUTOR_NAME,
-                T212.ID AS contractId,
-                T212.F4538 AS CONTRACT_NUMBER,
-                T212.F4946 AS OBJECT_ADDRESS,
-                T205.F4331 AS CUSTOMER_NAME
-                FROM T218
-                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
-                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                LEFT JOIN T212 ON T218.F4691 = T212.ID
-                LEFT JOIN T205 ON T212.F4540 = T205.ID
-                WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}'"""
+                sql = f"""SELECT T218.ID,
+                                T218.F4695 AS TASK,
+                                T218.F5569 AS START_DATE,
+                                T218.F4696 AS DEADLINE_DATE,
+                                T218.F5476 AS DEADLINE_TIME,
+                                T218.F4697 AS DONE,
+                                T218.F4708 AS DATE_OF_DONE,
+                                T218.F5646 AS parentId,
+                                T218.F5872 AS status,
+                                DIRECTOR.ID AS ID_DIRECTOR,
+                                DIRECTOR.F16 AS ID_MM_DIRECTOR,
+                                DIRECTOR.F4886 AS DIRECTOR_NAME,
+                                EXECUTOR.ID AS ID_EXECUTOR,
+                                EXECUTOR.F16 AS ID_MM_EXECUTOR,
+                                EXECUTOR.F4886 AS EXECUTOR_NAME,
+                                T212.ID AS contractId,
+                                T212.F4538 AS CONTRACT_NUMBER,
+                                T212.F4946 AS OBJECT_ADDRESS,
+                                T205.F4331 AS CUSTOMER_NAME
+                                FROM T218
+                                LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
+                                LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
+                                LEFT JOIN T212 ON T218.F4691 = T212.ID
+                                LEFT JOIN T205 ON T212.F4540 = T205.ID
+                                WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
@@ -1068,7 +1057,8 @@ def getTasksEmployee(request):
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")
-                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False,
+                                                                                       'indent': 4})
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
