@@ -1116,7 +1116,8 @@ def getContractsEmployee(request):
             cur.execute(sql)
             result = cur.fetchall()
             # Преобразование результата в список словарей
-            columns = ('contractId', 'contractNum', 'stage', 'address', 'pathToFolder', 'dateOfStart', 'dateOfEnding', 'services', 'company', 'contacts', 'participants', 'responsibleId', 'responsible', 'tasks')
+            columns = ('contractId', 'contractNum', 'stage', 'address', 'pathToFolder', 'dateOfStart', 'dateOfEnding',
+                       'services', 'company', 'contacts', 'participants', 'responsibleId', 'responsible', 'tasks')
             json_result = [
                 {col: value for col, value in zip(columns, row)}
                 for row in result
@@ -1163,7 +1164,8 @@ def getContractsEmployee(request):
                             if data == '':
                                 count += 1
                         if count < 4:
-                            contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]], 'post': '', 'email': list2[3]})
+                            contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]],
+                                                             'post': '', 'email': list2[3]})
                 obj.update(contacts)
                 Str = obj.get('tasks')
                 tasks = {'tasks': []}
@@ -1175,10 +1177,11 @@ def getContractsEmployee(request):
                         if list2[0] == '' and list2[1] == '' and list2[2] == '':
                             continue
                         else:
-                            tasks.get('tasks').append(
-                                {'id': list2[4], 'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2],
-                                 'done': list2[3], 'director': {'mmId': list2[6], 'fullName': list2[7]},
-                                 'executor': {'mmId': list2[8], 'fullName': list2[9]}, 'status': list2[5]})
+                            tasks.get('tasks').append({'id': list2[4], 'title': list2[0], 'dateOfStart': list2[1],
+                                                       'dateOfEnding': list2[2], 'done': list2[3],
+                                                       'director': {'mmId': list2[6], 'fullName': list2[7]},
+                                                       'executor': {'mmId': list2[8], 'fullName': list2[9]},
+                                                       'status': list2[5]})
                 obj.update(tasks)
             end = perf_counter()
             print(end - start)
