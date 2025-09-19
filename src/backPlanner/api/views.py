@@ -1365,7 +1365,7 @@ def editTimeCost(request):
                 print(sql)
                 cur.execute(sql)
                 con.commit()
-                return {'result': 'Ok', 'status': 200}
+                return JsonResponse({'result': 'Ok'}, status=200)
             except Exception as ex:
                 print(f"Не удалось изменить отчёт {Id}: {ex}")
     else:
