@@ -1043,17 +1043,17 @@ def getTasksEmployee(request):
                     task.update(dateDone)
                     subtasks = {'subtasks': []}
                     task.update(subtasks)
-                i = 0
-                removeIndexes = []
-                for row in json_result:
-                    for item in json_result:
-                        if item.get('id') == row.get('parentId'):
-                            item.get('subtasks').append(row)
-                            removeIndexes.append(i)
-                    i += 1
-                removeIndexes = sorted(removeIndexes, reverse=True)
-                for i in removeIndexes:
-                    json_result.pop(i)
+                indexSubtask = 0
+                removeIndexesSubtasks = []
+                for subtask in json_result:
+                    for task in json_result:
+                        if task.get('id') == subtask.get('parentId') and task.get('id') != task.get('parentId'):
+                            task.get('tasks').append(subtask)
+                            removeIndexesSubtasks.append(indexSubtask)
+                    indexSubtask += 1
+                removeIndexesSubtasks = sorted(removeIndexesSubtasks, reverse=True)
+                for indexSubtask in removeIndexesSubtasks:
+                    json_result.pop(indexSubtask)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")
