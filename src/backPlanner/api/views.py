@@ -937,17 +937,17 @@ def getAllDepartmentsStaffAndTasks(request):
                                      'director': {'mmId': list2[7], 'fullName': list2[8]},
                                      'executor': {'mmId': list2[9], 'fullName': list2[10]}, 'status': list2[6],
                                      'parentId': list2[5], 'tasks': []})
-                            indexSubtask = 0
-                            removeIndexesSubtasks = []
-                            for subtask in contracts.get('contracts')[count].get('tasks'):
-                                for task in contracts.get('contracts')[count].get('tasks'):
-                                    if task.get('id') == subtask.get('parentId'):
-                                        task.get('tasks').append(subtask)
-                                        removeIndexesSubtasks.append(indexSubtask)
-                                indexSubtask += 1
-                            removeIndexesSubtasks = sorted(removeIndexesSubtasks, reverse=True)
-                            for indexSubtask in removeIndexesSubtasks:
-                                contracts.get('contracts')[count].get('tasks').pop(indexSubtask)
+                                indexSubtask = 0
+                                removeIndexesSubtasks = []
+                                for subtask in contracts.get('contracts')[count].get('tasks'):
+                                    for task in contracts.get('contracts')[count].get('tasks'):
+                                        if task.get('id') == subtask.get('parentId') and task.get('id') != task.get('parentId'):
+                                            task.get('tasks').append(subtask)
+                                            removeIndexesSubtasks.append(indexSubtask)
+                                    indexSubtask += 1
+                                removeIndexesSubtasks = sorted(removeIndexesSubtasks, reverse=True)
+                                for indexSubtask in removeIndexesSubtasks:
+                                    contracts.get('contracts')[count].get('tasks').pop(indexSubtask)
                 obj.update(contracts)
             end = perf_counter()
             print(f'GET /api/getAllDepartmentsStaffAndTasks {end - start}')
