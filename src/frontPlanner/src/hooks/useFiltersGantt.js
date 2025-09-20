@@ -38,12 +38,12 @@ function applyFilters(keyData, data, filters) {
             }
         },
         sections: () => {
-            const newData = data.map(item => {
+            const newData = data?.map(item => {
                 return { section: item.section, employee: item.employee };
             });
             // console.log(`useFiltersGantt newData: ${JSON.stringify(newData, null, 4)}`);
 
-            data.forEach((item, indItem) => {
+            data?.forEach((item, indItem) => {
                 if (item.contracts && item.contracts.length !== 0) {
                     let filteredData = item.contracts.filter(contract =>
                         Object.keys(filters).every(key => {
@@ -56,7 +56,7 @@ function applyFilters(keyData, data, filters) {
             });
 
             // return newData;
-            return newData.length !== 0 ? newData : data;
+            return newData?.length !== 0 ? newData : data;
         }
     };
 

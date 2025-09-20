@@ -66,11 +66,11 @@ const COLUMNS = [
             const { addToHistory } = useHistoryContext();
 
             function onShowInfoCard(event) {
-                if (props?.config?.idContract) {
+                // alert(`Номер договора: ${JSON.stringify(props?.row.original?.contractNum, null, 4)}`);
+                if (props.row.original?.contractId) {
                     const navigationArg = {
                         state: {
                             idContract: props.row.original?.contractId,
-                            // idContract: props?.config?.idContract,
                             tabForm: { key: 'general', title: 'Общие' },
                             partition: props?.config?.partition,
                             dataOperation: props?.config?.dataOperation

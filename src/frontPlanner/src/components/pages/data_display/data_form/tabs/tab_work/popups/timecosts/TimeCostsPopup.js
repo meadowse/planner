@@ -1,6 +1,9 @@
 import { useEffect, useState, startTransition } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import { parse, format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
@@ -12,19 +15,15 @@ import DropdownMenu from '@generic/elements/dropdown_menu/DropdownMenu';
 import CalendarWindow from '@generic/elements/calendar/CalendarWindow';
 import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
 import InputDataPopup from '@generic/elements/popup/InputDataPopup';
-import ModalWindow from '@generic/elements/popup/ModalWindow';
 
 // Импорт контекстов
-// import { SocketContext } from '../../../../../../../../contexts/socket.context';
 import { useHistoryContext } from '../../../../../../../../contexts/history.context';
 
 // Импорт кастомных хуков
-import { useTaskForm } from '@hooks/useAddTaskForm';
-
-// Импорт конфигурации
-import { EMPLOYEE_ACTIONS, ACTIONS_TASK } from '@config/tabs/tab_work.config';
+import { useTimeCosts } from '@hooks/useTimeCosts';
 
 // Импорт сервисов
+import PopupTimeCostsService from '@services/popups/popup_timecosts.service';
 import TaskService from '@services/tabs/tab_task.service';
 
 // Импорт доп.функционала
@@ -33,21 +32,438 @@ import { getDateInSpecificFormat } from '@helpers/calendar';
 
 // Импорт стилей
 import './timecosts_popup.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
-export default function TimeCostsPopup({ data, popupConf }) {
-    const { additClass, title, popupState, setPopupState } = popupConf;
+registerLocale('ru', ru);
 
-    console.log(`TimeCostsPopup data: ${JSON.stringify(data, null, 4)}`);
+// Задача
+function Task({ taskConf, onSelect }) {
+    const { allTasks, task } = taskConf;
+
+    const [allTasksData] = useState(() => {
+        const tempAllTasks = Object.assign({}, TaskService.getAllTasks(allTasks, {}));
+        if (task?.id) delete tempAllTasks[task?.id];
+        return tempAllTasks;
+    });
+
+    // Выбор род.задачи
+    function onSelectTask(task) {
+        setTaskData(task);
+        onSelect('task', task);
+    }
+
+    // Удалить род.задачу
+    function onDeleteTask() {
+        setTaskData(null);
+        onSelect('task', null);
+    }
+
+    return (
+        <li className="popup__content-taskname popup-content-item">
+            <h2 className="popup-content-title">Задача</h2>
+            <div className="popup__menu-wrapper">
+                {task?.title}
+                {/* <DropdownMenu
+                    additClass="timecosts-all-tasks"
+                    icon="arrow_down_gr.svg"
+                    nameMenu="Выбрать задачу"
+                    specifiedVal={taskData}
+                    dataSource={[]}
+                    dataSource={Object.keys(allTasksData)?.map(key => {
+                        return { id: key, title: allTasksData[key]?.task };
+                    })}
+                    onItemClick={onSelectTask}
+                />
+                {taskData && Object.keys(taskData).length !== 0 ? (
+                    <div className="popup__menu-actions">
+                        <IconButton
+                            nameClass="icon-btn__delete-type"
+                            type="button"
+                            icon="cancel.svg"
+                            onClick={onDeleteTask}
+                        />
+                    </div>
+                ) : null} */}
+            </div>
+        </li>
+    );
+}
+
+// Дата
+function DateReport({ presetValue, onSelect }) {
+    const [calendarState, setCalendarState] = useState(false);
+    const [dateReport, setDateReport] = useState(null);
+
+    function onShowCalendar() {
+        setCalendarState(true);
+    }
+
+    // Удаление даты
+    function onDeleteDate() {
+        setDateReport('');
+        onSelect('dateReport', '');
+    }
+
+    // Выбор даты
+    function onSelectDateReport(date) {
+        const dateYYYYMMDD = getDateInSpecificFormat(new Date(date.getFullYear(), date.getMonth(), date.getDate()), {
+            format: 'YYYYMMDD',
+            separator: '-'
+        });
+        setDateReport(dateYYYYMMDD);
+        onSelect('dateReport', dateYYYYMMDD);
+    }
+
+    useEffect(() => {
+        const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
+            format: 'YYYYMMDD',
+            separator: '-'
+        });
+
+        setDateReport(presetValue ?? currDateYYYYMMDD);
+        onSelect('dateReport', presetValue ?? currDateYYYYMMDD);
+    }, []);
+
+    return (
+        <li className="popup__content-datereport popup-content-item">
+            <h2 className="popup-content-title">Дата</h2>
+            <div className="popup__date-wrapper">
+                <div className="popup__datereport popup-task-date">
+                    <input
+                        className="popup-task-date-input"
+                        type="text"
+                        value={dateReport}
+                        disabled={true}
+                        onChange={null}
+                    />
+                    <IconButton
+                        nameClass="popup-task-date-ic-btn icon-btn"
+                        type="button"
+                        icon="calendar.svg"
+                        onClick={onShowCalendar}
+                    />
+                    {calendarState
+                        ? createPortal(
+                              <CalendarWindow
+                                  additClass="task-calendar"
+                                  stateCalendar={calendarState}
+                                  setStateCalendar={setCalendarState}
+                                  onClickDate={onSelectDateReport}
+                              />,
+                              document.getElementById('portal')
+                          )
+                        : null}
+                </div>
+                {dateReport ? (
+                    <IconButton
+                        nameClass="icon-btn__delete-date-start icon-btn__delete-date"
+                        type="button"
+                        icon="cancel.svg"
+                        onClick={onDeleteDate}
+                    />
+                ) : null}
+            </div>
+        </li>
+    );
+}
+
+// Сотрудник
+function Employee({ presetValue, onSelect }) {
+    // console.log(`Director presetValue: ${JSON.stringify(presetValue, null, 4)}`);
+
+    const [statePopup, setStatePopup] = useState(false);
+    const [employee, setEmployee] = useState(null);
+
+    const navigate = useNavigate();
+    const { addToHistory } = useHistoryContext();
+
+    // Загрузка постановщика по умолчанию
+    async function fetchDefaultEmployee() {
+        const employee = await TaskService.getAuthorizedEmployee(Cookies.get('MMUSERID'));
+        setEmployee(employee);
+        onSelect('employee', employee);
+    }
+
+    function onShowPopup() {
+        setStatePopup(true);
+    }
+
+    // Выбор пользователя
+    function onSelectEmployee(user) {
+        setEmployee(user);
+        onSelect('employee', user);
+    }
+
+    // Удаление пользователя
+    function onDeleteEmployee() {
+        setEmployee(null);
+        onSelect('employee', null);
+    }
+
+    // Переход к профилю пользователя
+    function onClickUser() {
+        startTransition(() => {
+            addToHistory(`${window.location.pathname}`);
+            navigate(`../../user/${employee?.mmId}/profile/profile/`, {
+                state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+            });
+        });
+    }
+
+    useEffect(() => {
+        if (!employee || Object.keys(employee).length === 0) fetchDefaultEmployee();
+        else {
+            setEmployee(presetValue);
+            onSelect('employee', presetValue);
+        }
+    }, []);
+
+    return (
+        <li className="popup__content-employee popup-content-item">
+            <h2 className="popup-content-title">Сотрудник</h2>
+            <div className="popup__user-inner">
+                {employee && Object.keys(employee).length !== 0 ? (
+                    <ul className="popup__employee-list popup__users-list">
+                        <li className="popup__employee-list-item" onClick={onClickUser}>
+                            <BgFillText
+                                type="p"
+                                text={employee.fullName}
+                                // bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                            />
+                        </li>
+                    </ul>
+                ) : null}
+            </div>
+        </li>
+    );
+}
+
+// Потраченное время
+function SpentTime(props) {
+    const { presetValue, onSelect, onChange } = props;
+
+    const [spentTime, setSpentTime] = useState(null);
+
+    // Изменить потраченное время
+    function onChangeSpentTime(e) {
+        setSpentTime(e.target.value);
+        onChange(e);
+    }
+
+    // Выбор времени в формате чч:мм
+    function onSelectSpentTime(value) {
+        setSpentTime(value);
+        onSelect('spent', value);
+    }
+
+    // Удаление
+    function onDeleteDate() {
+        setSpentTime(null);
+        onChange('spent', null);
+    }
+
+    useEffect(() => {
+        setSpentTime(presetValue ?? '00:00');
+        onSelect('spent', presetValue ?? '00:00');
+    }, []);
+
+    return (
+        <li className="popup__content-spenttime popup-content-item">
+            <h2 className="popup-content-title">Потраченное время</h2>
+            <div className="popup__date-wrapper">
+                <DatePicker
+                    className="spenttime-datepicker"
+                    locale="ru"
+                    selected={parse(spentTime ? spentTime : presetValue ? presetValue : '00:00', 'HH:mm', new Date())}
+                    onChange={date => onSelectSpentTime(format(date, 'HH:mm'))}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={5}
+                    timeCaption="Время"
+                    dateFormat="HH:mm"
+                />
+            </div>
+        </li>
+    );
+}
+
+// Время в часах
+function TimeHours({ spentTime }) {
+    const [timeHours, setTimeHours] = useState(null);
+
+    useEffect(() => {
+        const timeHoursData = parse(spentTime ?? '00:00', 'HH:mm', new Date());
+        setTimeHours((timeHoursData?.getHours() * 60 + timeHoursData?.getMinutes()) / 60);
+    }, [spentTime]);
+
+    return (
+        <div className="popup__content-timehours popup-content-item">
+            <h2 className="popup-content-title">Время в часах</h2>
+            <div className="popup__date-wrapper">
+                <div className="popup__datereport popup-task-date">
+                    <input className="popup-task-date-input" type="text" value={timeHours} disabled={true} />
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// Комментарий
+function Comment({ presetValue, onSelect, onChange }) {
+    const [report, setReport] = useState(null);
+
+    function onChangeReport(e) {
+        setReport(e.target.value);
+        onChange(e);
+    }
+
+    useEffect(() => {
+        setReport(presetValue ?? '');
+        onSelect('report', presetValue ?? '');
+    }, []);
+
+    return (
+        <div className="popup__content-comment popup-content-item">
+            <h2 className="popup-content-title">Комментарий</h2>
+            <textarea className="txt-area-timecosts" name="report" value={report} onChange={onChangeReport} />
+        </div>
+    );
+}
+
+// Постановщик
+function Director({ appTheme, director }) {
+    return (
+        <li className="popup__content-user popup-content-item">
+            <h2 className="popup-content-title">Постановщик</h2>
+            <div className="popup__user-inner">
+                {director && Object.keys(director).length !== 0 ? (
+                    <BgFillText
+                        type="p"
+                        text={director?.fullName ?? 'Нет данных'}
+                        bgColor={appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                    />
+                ) : null}
+            </div>
+        </li>
+    );
+}
+
+// Исполнитель
+function Executor({ appTheme, executor }) {
+    return (
+        <li className="popup__content-user popup-content-item">
+            <h2 className="popup-content-title">Исполнитель</h2>
+            <div className="popup__user-inner">
+                {executor && Object.keys(executor).length !== 0 ? (
+                    <BgFillText
+                        type="p"
+                        text={executor?.fullName ?? 'Нет данных'}
+                        bgColor={appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                    />
+                ) : null}
+            </div>
+        </li>
+    );
+}
+
+// Договор
+function ContractNum({ contract }) {
+    const [isLoading] = useState(false);
+    const [contractNum, setContractNum] = useState(null);
+
+    useEffect(() => {
+        if (contract?.data && Object.keys(contract?.data).length !== 0) {
+            setContractNum(getKeyByValue(contract?.data, contract?.id));
+        }
+    }, [contract?.data]);
+
+    return (
+        <li className="popup__content-contractnum popup-content-item">
+            <h2 className="popup-content-title">Номер договора</h2>
+            <div className="popup__menu-wrapper">
+                {contract?.data ? (
+                    <div class="dropdown-menu-search">
+                        <input
+                            type="text"
+                            class="dropdown-menu-search__input"
+                            list="suggestions"
+                            placeholder="Выбрать номер договора"
+                            value={contractNum}
+                        />
+                    </div>
+                ) : null}
+            </div>
+        </li>
+    );
+}
+
+export default function TimeCostsPopup({ data, config, popupConf }) {
+    const { immutableVals, timeCostData } = data;
+    const { navigate, addToHistory, appTheme } = config;
+    const { additClass, title, operation, popupState, setPopupState, refreshTimeCostsData } = popupConf;
+    const { allTasks, task } = immutableVals;
+
+    const { disabledFields } = PopupTimeCostsService.getDataFormOperation(operation);
+
+    const { values, onChange, onClick } = useTimeCosts(
+        PopupTimeCostsService.getTimeCostData(timeCostData, disabledFields),
+        disabledFields
+    );
+
+    // console.log(`TimeCostsPopup data: ${JSON.stringify(data, null, 4)}`);
+    console.log(`operation: ${operation}\nTimeCostsPopup task: ${JSON.stringify(task, null, 4)}`);
+    // console.log(`TimeCostsPopup values: ${JSON.stringify(values, null, 4)}`);
+
+    // Удаление времязатрат
+    function onDeleteTimeCost() {
+        if (timeCostData && Object.keys(timeCostData).length !== 0) {
+            PopupTimeCostsService.deleteTimeCost(timeCostData?.id);
+            setPopupState(false);
+            // После удаления данных обновляем таблицу времязатрат
+            refreshTimeCostsData();
+        }
+    }
 
     // Отправка данных
-    function onOnSubmitData(e) {}
+    async function onOnSubmitData(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (operation === 'creation') {
+            const resultData = {
+                idMM: values?.employee?.mmId ?? null,
+                taskId: values?.task?.id ?? null,
+                dataReport: values?.dateReport ?? null,
+                report: values?.report ?? null,
+                spent: values?.spent ?? null
+            };
+
+            await PopupTimeCostsService.addTimeCost(resultData);
+        }
+
+        // Редактирование времязатрат
+        if (operation === 'update') {
+            const resultData = {
+                Id: timeCostData?.id,
+                dataReport: values?.dateReport ?? null,
+                report: values?.report ?? null,
+                spent: values?.spent ?? null
+            };
+
+            await PopupTimeCostsService.editTimeCost(resultData);
+        }
+
+        setPopupState(false);
+
+        // После добавления или редактирования данных обновляем таблицу времязатрат
+        refreshTimeCostsData();
+    }
 
     return (
         <>
             <div id="portal"></div>
             <InputDataPopup
-                // idForm="add-task-form"
-                idForm="task-form"
+                idForm="timecosts-form"
                 title={title}
                 additClass={additClass}
                 overlay={true}
@@ -55,12 +471,48 @@ export default function TimeCostsPopup({ data, popupConf }) {
                 setStatePopup={setPopupState}
                 deleteConfig={{
                     modalWindow: {
-                        title: ''
+                        title: 'Вы действительно хотите удалить данные?'
                     },
-                    onDelete: null
+                    onDelete: timeCostData?.executor?.mmId === Cookies.get('MMUSERID') ? onDeleteTimeCost : null
                 }}
             >
-                <form id="timecosts-form" className="popup__timecosts-form" onSubmit={e => onOnSubmitData(e)}></form>
+                <form id="timecosts-form" className="popup__timecosts-form" onSubmit={e => onOnSubmitData(e)}>
+                    <div className="popup__timecosts-form-top">
+                        <ul className="popup__timecosts-form-left">
+                            <Task key="timecost-task-item" taskConf={{ allTasks, task }} onSelect={onClick} />
+                            <DateReport
+                                key="timecost-datereport-item"
+                                presetValue={timeCostData?.dateReport}
+                                onSelect={onClick}
+                            />
+                            <Employee
+                                key="timecost-executor-item"
+                                presetValue={timeCostData?.executor}
+                                onSelect={onClick}
+                            />
+                            <SpentTime
+                                key="timecost-spent-item"
+                                presetValue={timeCostData?.spent}
+                                onSelect={onClick}
+                                onChange={onChange}
+                            />
+                        </ul>
+                        <ul className="popup__timecosts-form-right">
+                            <ContractNum key="timecost-contractnum-item" contract={task?.contract} />
+                            <Director key="timecost-director-item" appTheme={appTheme} director={task?.director} />
+                            <Executor key="timecost-executor-item" appTheme={appTheme} executor={task?.executor} />
+                            <TimeHours key="timecost-timehours-item" spentTime={values?.spent} />
+                        </ul>
+                    </div>
+                    <div className="popup__timecosts-form-bottom">
+                        <Comment
+                            key="timecost-report-item"
+                            presetValue={timeCostData?.report}
+                            onSelect={onClick}
+                            onChange={onChange}
+                        />
+                    </div>
+                </form>
             </InputDataPopup>
         </>
     );
