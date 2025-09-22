@@ -445,22 +445,21 @@ def getTasksContracts(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                sql = f"""SELECT
-                T218.ID,
+                sql = f"""SELECT T218.ID,
                 T218.F4691 AS CONRACT_ID,
                 T218.F4695 AS TASK,
                 T218.F5724 AS ID_OF_TYPE_OF_WORK,
                 T218.F5569 AS dateStart,
                 T218.F4696 AS DEADLINE,
+                T218.F4697 AS DONE,
+                T218.F5646 AS parentId,
+                T218.F5872 AS status,
                 DIRECTOR.ID AS ID_OF_DIRECTOR,
                 DIRECTOR.F16 AS ID_MM_DIRECTOR,
                 DIRECTOR.F4886 AS DIRECTOR_NAME,
                 EXECUTOR.ID AS ID_OF_EXECUTOR,
                 EXECUTOR.F16 AS ID_MM_EXECUTOR,
-                EXECUTOR.F4886 AS EXECUTOR_NAME,
-                T218.F4697 AS DONE,
-                T218.F5646 AS parentId,
-                T218.F5872 AS status
+                EXECUTOR.F4886 AS EXECUTOR_NAME
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
@@ -468,8 +467,8 @@ def getTasksContracts(request):
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
-                'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'idDirector', 'idMMDirector',
-                'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'done', 'parentId', 'status')
+                    'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'done', 'parentId', 'status',
+                    'idDirector', 'idMMDirector', 'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
@@ -511,15 +510,18 @@ def getTasksContracts(request):
                     row.pop('idMMExecutor')
                     row.pop('executorFIO')
                     row.pop('directorFIO')
-                    if row.get('parentId') is None:
-                        row.pop('parentId')
-                        subtasks = {'subtasks': []}
-                        row.update(subtasks)
-                        copy.append(row)
-                for row in json_result:
-                    for item in copy:
-                        if item.get('id') == row.get('parentId'):
-                            item.get('subtasks').append(row)
+                    row.update({'subtasks': []})
+                indexSubtask = 0
+                removeIndexesSubtasks = []
+                for subtask in json_result:
+                    for task in json_result:
+                        if task.get('id') == subtask.get('parentId') and task.get('id') != task.get('parentId'):
+                            task.get('subtasks').append(subtask)
+                            removeIndexesSubtasks.append(indexSubtask)
+                    indexSubtask += 1
+                removeIndexesSubtasks = sorted(removeIndexesSubtasks, reverse=True)
+                for indexSubtask in removeIndexesSubtasks:
+                    json_result.pop(indexSubtask)
                 return JsonResponse(copy, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")
