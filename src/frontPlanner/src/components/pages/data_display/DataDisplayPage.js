@@ -439,7 +439,7 @@ export default function DataDisplayPage({ partition }) {
             return (
                 <Route
                     path="structure"
-                    element={!isLoading ? <CompanyStructure testData={resolvedData?.structure} /> : <Preloader />}
+                    element={!isLoading ? <CompanyStructure testData={uploadedData?.structure} /> : <Preloader />}
                 />
             );
         },
