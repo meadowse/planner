@@ -590,19 +590,19 @@ def getTask(request):
                 removeIndexes = sorted(removeIndexes, reverse=True)
                 for i in removeIndexes:
                     json_result.get('subtasks').pop(i)
-                sql = f"""SELECT
-                                T320.ID AS id,
-                                T320.F5863 AS spent,
-                                T320.F5869 AS dateReport,
-                                T320.F5870 AS report,
-                                T320.F5882 AS timeHours,
-                                T3.ID AS idExecutor,
-                                T3.F16 AS idMMExecutor,
-                                T3.F4886 AS executorFIO
-                                FROM T320 LEFT JOIN T3 ON T3.ID = T320.F5881 WHERE T320.F5862 = {taskId}"""
+                sql = f"""SELECT T320.ID AS id,
+                T320.F5863 AS spent,
+                T320.F5869 AS dateReport,
+                T320.F5870 AS report,
+                T320.F5882 AS timeHours,
+                T3.ID AS idExecutor,
+                T3.F16 AS idMMExecutor,
+                T3.F4886 AS executorFIO
+                FROM T320 LEFT JOIN T3 ON T3.ID = T320.F5881 WHERE T320.F5862 = {taskId}"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = ('id', 'spent', 'dateReport', 'report', 'timeHours', 'idExecutor', 'idMMExecutor', 'executorFIO')
+                columns = ('id', 'spent', 'dateReport', 'report', 'timeHours', 'idExecutor', 'idMMExecutor',
+                           'executorFIO')
                 jsonResult = {'timeCosts': [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
