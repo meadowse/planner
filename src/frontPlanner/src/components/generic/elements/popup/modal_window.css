@@ -3,11 +3,11 @@
     width: max-content;
 }
 
-.popup__action-selection .popup__btn-close-popup{
+.popup__action-selection .popup__btn-close-popup {
     padding: 0;
 }
 
-.popup__content-action-selection{
+.popup__content-action-selection {
     max-width: 90%;
     width: 100%;
     margin: 0 auto;
@@ -19,30 +19,30 @@
 
 /* Заголовок модального окна */
 
-.popup-content__title{
+.popup-content__title {
     text-align: center;
     font-family: 'Montserrat-SemiBold';
     font-size: calc(10px + 6 * (100vw - 320px) / 1600);
 }
 
-.popup-content__actions{
+.popup-content__actions {
     display: flex;
     column-gap: 20px;
 }
 
 /* Кнопка действия */
 
-.popup__action-selection .btn-action{
+.popup__action-selection .btn-action {
     padding: 10px 25px 10px 25px;
     border-radius: 5px;
-    cursor:pointer;
-    background-color: #DCDCDC;
+    cursor: pointer;
+    background-color: var(--bg-color-popup__action-selection-btn);
 }
 
-.popup__btn-action-yes{
-    border-bottom: 5px solid #00FF7F;
+.popup__btn-action-yes {
+    border-bottom: 5px solid #00ff7f;
 }
 
-.popup__btn-action-no{
-    border-bottom: 5px solid #FF0033;
+.popup__btn-action-no {
+    border-bottom: 5px solid #ff0033;
 }

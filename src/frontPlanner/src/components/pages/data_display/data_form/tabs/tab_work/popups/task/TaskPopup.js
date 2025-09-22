@@ -96,13 +96,13 @@ function StatusChain(props) {
                                 class={classNames('popup-task-step', {
                                     'popup-task-step_active': status?.title === key
                                 })}
-                                data-step={
-                                    status?.title === key && status?.actions && status?.actions.length !== 0
-                                        ? `${key}${String.fromCharCode(8194)}▼`
-                                        : key
-                                }
+                                data-step={key}
                             />
-                            <div className="popup-task-steps__actions" style={{ position: 'relative' }}>
+                            <div
+                                className={classNames('popup-task-steps__actions', {
+                                    'popup-task-steps__actions_completed': key === 'Выполненная'
+                                })}
+                            >
                                 {key === 'Отмененнная' && status?.title && status?.title !== 'Завершенная' ? (
                                     <ul className="popup-task-steps__actions-list">
                                         <li
@@ -1199,7 +1199,7 @@ function TimeCostsItem(props) {
                 </div>
             </li>
             {/* Время в часах */}
-            <li className="popup__table-row-cell">{timeCost?.timeHours ?? 'Нет данных'}</li>
+            <li className="popup__table-row-cell">{Number(timeCost?.timeHours).toFixed(2) ?? 'Нет данных'}</li>
             {/* Комментарий */}
             <li className="popup__table-row-cell">
                 <textarea className="popup__table-cell-txt-area" name="comment" value={timeCost?.report ?? ''} />
@@ -1393,7 +1393,9 @@ function TablesPopup(props) {
                     onClick={() => onSelectTab('subtasks')}
                 >
                     Подзадачи
-                    {selectedTab?.tab === 'subtasks' ? <span onClick={subtaskApi?.addSubtask}>+</span> : null}
+                    {selectedTab?.tab === 'subtasks' && config?.taskOperation === 'update' ? (
+                        <span onClick={subtaskApi?.addSubtask}>+</span>
+                    ) : null}
                 </li>
                 <li
                     className={classNames('popup__task-form-tabs-header-item', {
@@ -1402,7 +1404,9 @@ function TablesPopup(props) {
                     onClick={() => onSelectTab('timecosts')}
                 >
                     Затраченное время
-                    {selectedTab?.tab === 'timecosts' ? <span onClick={timeCostsApi?.openPopup}>+</span> : null}
+                    {selectedTab?.tab === 'timecosts' && config?.taskOperation === 'update' ? (
+                        <span onClick={timeCostsApi?.openPopup}>+</span>
+                    ) : null}
                 </li>
             </ul>
             <div className="popup__task-form-tabs-content">
@@ -1447,7 +1451,6 @@ export default function TaskPopup(props) {
 
             setPopupState(false);
             navigate(window.location.pathname);
-            // navigate(0);
         }
     }
 
@@ -1470,7 +1473,6 @@ export default function TaskPopup(props) {
         e.preventDefault();
         // const idContract = JSON.parse(localStorage.getItem('idContract'));
         // Создание новой задачи
-        // !data?.task || Object.keys(data?.task).length === 0
         if (taskOperation === 'creation') {
             const resultData = {
                 typeWorkId: values?.typeWork?.id,
@@ -1518,7 +1520,6 @@ export default function TaskPopup(props) {
 
         setPopupState(false);
         navigate(window.location.pathname);
-        // navigate(0);
     }
 
     useEffect(() => {
@@ -1660,6 +1661,7 @@ export default function TaskPopup(props) {
                     <TablesPopup
                         config={{
                             appTheme: theme,
+                            taskOperation,
                             navigate,
                             addToHistory
                         }}

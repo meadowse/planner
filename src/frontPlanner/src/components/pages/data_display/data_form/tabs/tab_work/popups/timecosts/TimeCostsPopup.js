@@ -40,51 +40,10 @@ registerLocale('ru', ru);
 function Task({ taskConf, onSelect }) {
     const { allTasks, task } = taskConf;
 
-    const [allTasksData] = useState(() => {
-        const tempAllTasks = Object.assign({}, TaskService.getAllTasks(allTasks, {}));
-        if (task?.id) delete tempAllTasks[task?.id];
-        return tempAllTasks;
-    });
-
-    // Выбор род.задачи
-    function onSelectTask(task) {
-        setTaskData(task);
-        onSelect('task', task);
-    }
-
-    // Удалить род.задачу
-    function onDeleteTask() {
-        setTaskData(null);
-        onSelect('task', null);
-    }
-
     return (
         <li className="popup__content-taskname popup-content-item">
             <h2 className="popup-content-title">Задача</h2>
-            <div className="popup__menu-wrapper">
-                {task?.title}
-                {/* <DropdownMenu
-                    additClass="timecosts-all-tasks"
-                    icon="arrow_down_gr.svg"
-                    nameMenu="Выбрать задачу"
-                    specifiedVal={taskData}
-                    dataSource={[]}
-                    dataSource={Object.keys(allTasksData)?.map(key => {
-                        return { id: key, title: allTasksData[key]?.task };
-                    })}
-                    onItemClick={onSelectTask}
-                />
-                {taskData && Object.keys(taskData).length !== 0 ? (
-                    <div className="popup__menu-actions">
-                        <IconButton
-                            nameClass="icon-btn__delete-type"
-                            type="button"
-                            icon="cancel.svg"
-                            onClick={onDeleteTask}
-                        />
-                    </div>
-                ) : null} */}
-            </div>
+            <div className="popup__menu-wrapper">{task?.title}</div>
         </li>
     );
 }
@@ -293,7 +252,7 @@ function TimeHours({ spentTime }) {
 
     useEffect(() => {
         const timeHoursData = parse(spentTime ?? '00:00', 'HH:mm', new Date());
-        setTimeHours((timeHoursData?.getHours() * 60 + timeHoursData?.getMinutes()) / 60);
+        setTimeHours(Number((timeHoursData?.getHours() * 60 + timeHoursData?.getMinutes()) / 60).toFixed(2));
     }, [spentTime]);
 
     return (
@@ -389,6 +348,7 @@ function ContractNum({ contract }) {
                             list="suggestions"
                             placeholder="Выбрать номер договора"
                             value={contractNum}
+                            disabled={true}
                         />
                     </div>
                 ) : null}

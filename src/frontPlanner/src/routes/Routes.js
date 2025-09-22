@@ -53,7 +53,6 @@ const ROUTES_FOR_AUTH = [
                     return defer({ uploadedData: UserService.loadData(tab, idEmployee) });
                 },
                 element: <UserInfo />
-                // element: <UserInfoNew />
             },
             {
                 path: '',
@@ -73,17 +72,17 @@ const ROUTES_FOR_AUTH = [
                     },
                     {
                         path: 'department/*',
-                        loader: () => {
-                            return defer({ uploadedData: DataDisplayService.loadData('department') });
-                        },
                         // loader: () => {
-                        //     return defer({
-                        //         uploadedData: queryClient.ensureQueryData({
-                        //             queryKey: ['department'],
-                        //             queryFn: () => DataDisplayService.loadData('department')
-                        //         })
-                        //     });
+                        //     return defer({ uploadedData: DataDisplayService.loadData('department') });
                         // },
+                        loader: () => {
+                            return defer({
+                                uploadedData: queryClient.ensureQueryData({
+                                    queryKey: ['department'],
+                                    queryFn: () => DataDisplayService.loadData('department')
+                                })
+                            });
+                        },
                         shouldRevalidate: () => false,
                         element: <DataDisplayPage partition="department" additClass="department" />
                     },
@@ -112,14 +111,6 @@ const ROUTES_FOR_AUTH = [
                         shouldRevalidate: () => false,
                         element: <DataDisplayPage partition="personal" additClass="tasks" />
                     },
-                    // {
-                    //     path: 'user/',
-                    //     // loader: async ({ params }) => {
-                    //     //     const { tab, id } = params;
-                    //     //     return defer({ uploadedData: await UserService.loadData(tab, id) });
-                    //     // },
-                    //     element: <UserInfo />
-                    // },
                     {
                         path: 'dataform/*',
                         // path: 'dataform/:key/*',

@@ -286,15 +286,21 @@ function HeaderBottom(props) {
 }
 
 export default function DataDisplayPage({ partition }) {
-    const data = useLoaderData();
-    // const { uploadedData } = useLoaderData();
+    // const data = useLoaderData();
+    const { uploadedData } = useLoaderData();
     // const itemSideMenu = useOutletContext();
 
-    // const { data, error } = useQuery({
-    //     queryKey: ['department'],
-    //     queryFn: () => Promise.resolve(uploadedData),
-    //     uploadedData
-    // });
+    const {
+        data: cachedData,
+        isLoading,
+        error
+    } = useQuery({
+        queryKey: [partition],
+        queryFn: () => Promise.resolve(uploadedData),
+        uploadedData,
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 60 * 60 * 1000
+    });
 
     const { itemSideMenu, theme, onToggleAppTheme } = useOutletContext();
 
@@ -318,6 +324,285 @@ export default function DataDisplayPage({ partition }) {
     // Операции которые можно совершать с данными
     const dataOperations = DataDisplayService.getDataOperations(partition) || [];
 
+    //
+    const ROUTES_CONFIG = {
+        kanban: () => {
+            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
+
+            const kanbanData =
+                cachedData && Object.keys(cachedData).length !== 0
+                    ? filterData(
+                          cachedData[keyData] ?? cachedData,
+                          simplifyData(extractSampleData(cachedData[keyData] ?? cachedData, valsToDisplay)),
+                          searchElem
+                      )
+                    : [];
+
+            return (
+                <Route
+                    path="kanban"
+                    element={
+                        !isLoading ? (
+                            <KanbanMode
+                                partition={partition}
+                                data={kanbanData}
+                                modeOption={modeOption[mode?.key]}
+                                dataOperations={dataOperations}
+                            />
+                        ) : (
+                            <Preloader />
+                        )
+                    }
+                />
+            );
+        },
+        listmode: () => {
+            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
+            const tableData =
+                cachedData && Object.keys(cachedData).length !== 0
+                    ? filterData(
+                          cachedData[keyData] ?? cachedData,
+                          simplifyData(extractSampleData(cachedData[keyData] ?? cachedData, valsToDisplay)),
+                          searchElem
+                      )
+                    : [];
+            return (
+                <Route
+                    path="listmode"
+                    element={
+                        !isLoading ? (
+                            <ListMode
+                                testData={tableData}
+                                modeConfig={{
+                                    keys: valsToDisplay,
+                                    mode: mode,
+                                    option: modeOption[mode?.key],
+                                    partition: partition,
+                                    dataOperations: dataOperations
+                                }}
+                            />
+                        ) : (
+                            <Preloader />
+                        )
+                    }
+                />
+            );
+        },
+        calendar: () => {
+            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
+            const calendarData =
+                cachedData && Object.keys(cachedData).length !== 0 ? cachedData[keyData] ?? cachedData : [];
+            return (
+                <Route
+                    path="calendar"
+                    element={
+                        !isLoading ? (
+                            <CalendarMode
+                                partition={partition}
+                                testData={calendarData}
+                                dataOperations={dataOperations}
+                            />
+                        ) : (
+                            <Preloader />
+                        )
+                    }
+                />
+            );
+        },
+        gant: () => {
+            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
+            const gantData =
+                cachedData && Object.keys(cachedData).length !== 0 ? cachedData[keyData] ?? cachedData : [];
+            return (
+                <Route
+                    path="gant"
+                    element={
+                        !isLoading ? (
+                            <GanttMode
+                                partition={partition}
+                                data={gantData}
+                                modeConfig={{
+                                    resolvedData: gantData,
+                                    modeOptions: modeOptions,
+                                    modeOption: modeOption[mode?.key],
+                                    dataOperations: dataOperations
+                                }}
+                            />
+                        ) : (
+                            <Preloader />
+                        )
+                    }
+                />
+            );
+        },
+        structure: () => {
+            return (
+                <Route
+                    path="structure"
+                    element={!isLoading ? <CompanyStructure testData={resolvedData?.structure} /> : <Preloader />}
+                />
+            );
+        },
+        employees: () => {
+            const tableData =
+                cachedData && Object.keys(cachedData).length !== 0
+                    ? filterData(
+                          cachedData?.employees,
+                          simplifyData(extractSampleData(cachedData?.employees, valsToDisplay)),
+                          searchElem
+                      )
+                    : [];
+            return (
+                <Route
+                    path="employees"
+                    element={
+                        !isLoading ? (
+                            <ListMode
+                                testData={tableData}
+                                modeConfig={{
+                                    keys: valsToDisplay,
+                                    mode: mode,
+                                    option: modeOption[mode?.key],
+                                    partition: partition,
+                                    dataOperations: dataOperations
+                                }}
+                            />
+                        ) : (
+                            <Preloader />
+                        )
+                    }
+                />
+            );
+        },
+        listTasks: () => {
+            const filteredDataById =
+                cachedData && Object.keys(cachedData).length !== 0
+                    ? getFilteredData(cachedData?.tasks, Cookies.get('MMUSERID'), modeOption?.listTasks)
+                    : [];
+            const filteredData =
+                filteredDataById && filteredDataById.length !== 0
+                    ? filterData(
+                          filteredDataById,
+                          simplifyData(extractSampleData(filteredDataById, valsToDisplay)),
+                          searchElem
+                      )
+                    : [];
+            return (
+                <Route
+                    path="listTasks"
+                    element={
+                        !isLoading ? (
+                            <ListMode
+                                testData={filteredData}
+                                modeConfig={{
+                                    keys: valsToDisplay,
+                                    mode: mode,
+                                    option: modeOption[mode?.key],
+                                    partition: partition,
+                                    dataOperations: dataOperations
+                                }}
+                            />
+                        ) : (
+                            <Preloader />
+                        )
+                    }
+                />
+            );
+        },
+        listContracts: () => {
+            const dataById =
+                cachedData && Object.keys(cachedData).length !== 0
+                    ? getFilteredData(cachedData?.contracts, Cookies.get('MMUSERID'), modeOption?.listContracts)
+                    : [];
+            const filteredData =
+                dataById && dataById.length !== 0
+                    ? filterData(dataById, simplifyData(extractSampleData(dataById, valsToDisplay)), searchElem)
+                    : [];
+            return (
+                <Route
+                    path="listContracts"
+                    element={
+                        !isLoading ? (
+                            <ListMode
+                                testData={filteredData}
+                                modeConfig={{
+                                    keys: valsToDisplay,
+                                    mode: mode,
+                                    option: modeOption[mode?.key],
+                                    partition: partition,
+                                    dataOperations: dataOperations
+                                }}
+                            />
+                        ) : (
+                            <Preloader />
+                        )
+                    }
+                />
+            );
+        },
+        gantContracts: () => {
+            const filteredData =
+                cachedData && Object.keys(cachedData).length !== 0
+                    ? filterData(
+                          cachedData?.contracts,
+                          simplifyData(
+                              extractSampleData(cachedData?.contracts, [
+                                  'contractId',
+                                  'stage',
+                                  'contractNum',
+                                  'company',
+                                  'address',
+                                  'services',
+                                  'dateOfStart',
+                                  'dateOfEnding',
+                                  'tasks'
+                              ])
+                          ),
+                          Cookies.get('MMUSERID')
+                      )
+                    : [];
+
+            return (
+                <Route
+                    path="gantContracts"
+                    element={
+                        !isLoading ? (
+                            <GanttMode
+                                partition={partition}
+                                data={filteredData}
+                                modeConfig={{
+                                    resolvedData: cachedData?.contracts,
+                                    modeOptions: modeOptions,
+                                    modeOption: {
+                                        keyData: 'contracts',
+                                        keys: [
+                                            'contractId',
+                                            'stage',
+                                            'contractNum',
+                                            'company',
+                                            'address',
+                                            'services',
+                                            'dateOfStart',
+                                            'dateOfEnding',
+                                            'tasks'
+                                        ]
+                                    },
+                                    dataOperations: dataOperations
+                                }}
+                            />
+                        ) : (
+                            <Preloader />
+                        )
+                    }
+                />
+            );
+        },
+        timetable: () => {
+            return <Route path="timetable" element={!isLoading ? <TimeTableMode /> : <Preloader />} />;
+        }
+    };
+
+    // Очитска истории маршрутов
     useEffect(() => clearHistory(`${itemSideMenu?.path}${mode?.key}`), [itemSideMenu]);
 
     useEffect(() => {
@@ -366,14 +651,9 @@ export default function DataDisplayPage({ partition }) {
 
             localStorage.setItem(`mode-option_${partition}`, JSON.stringify(option));
 
-            // console.log(`mode: ${JSON.stringify(mode, null, 4)}\nsavedOption: ${JSON.stringify(savedOption, null, 4)}`);
             return option;
         });
-
-        // console.log(`mode: ${JSON.stringify(mode, null, 4)}`);
     }, [mode]);
-
-    // console.log(`partition: ${partition}\npath: ${itemSideMenu?.path}${mode?.key}`);
 
     return (
         <section className="page__section-department page-section">
@@ -397,298 +677,7 @@ export default function DataDisplayPage({ partition }) {
                 {mode && Object.keys(mode).length !== 0 ? (
                     <Routes>
                         <Route index element={<Navigate to={`${itemSideMenu?.path}${mode?.key}`} replace />} />
-                        <Route
-                            path="kanban"
-                            element={
-                                <Suspense fallback={<Preloader />}>
-                                    {/* resolve={uploadedData} */}
-                                    <Await resolve={data?.uploadedData}>
-                                        {resolvedData => {
-                                            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
-                                            const kanbanData = filterData(
-                                                resolvedData[keyData] ?? resolvedData,
-                                                simplifyData(
-                                                    extractSampleData(
-                                                        resolvedData[keyData] ?? resolvedData,
-                                                        valsToDisplay
-                                                    )
-                                                ),
-                                                searchElem
-                                            );
-                                            return (
-                                                <KanbanMode
-                                                    partition={partition}
-                                                    data={kanbanData}
-                                                    modeOption={modeOption[mode?.key]}
-                                                    dataOperations={dataOperations}
-                                                />
-                                            );
-                                        }}
-                                    </Await>
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="listmode"
-                            element={
-                                <Suspense fallback={<Preloader />}>
-                                    <Await resolve={data?.uploadedData}>
-                                        {resolvedData => {
-                                            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
-                                            // console.log(
-                                            //     `listmode keyData: ${keyData}\nresolvedData: ${JSON.stringify(
-                                            //         resolvedData,
-                                            //         null,
-                                            //         4
-                                            //     )}`
-                                            // );
-                                            const tableData = filterData(
-                                                // resolvedData?.contracts,
-                                                keyData ? resolvedData[keyData] : resolvedData,
-                                                simplifyData(
-                                                    extractSampleData(
-                                                        keyData ? resolvedData[keyData] : resolvedData,
-                                                        valsToDisplay
-                                                    )
-                                                ),
-                                                searchElem
-                                            );
-                                            return (
-                                                <ListMode
-                                                    testData={tableData}
-                                                    modeConfig={{
-                                                        keys: valsToDisplay,
-                                                        mode: mode,
-                                                        option: modeOption[mode?.key],
-                                                        partition: partition,
-                                                        dataOperations: dataOperations
-                                                    }}
-                                                />
-                                            );
-                                        }}
-                                    </Await>
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="calendar/*"
-                            element={
-                                <Suspense fallback={<Preloader />}>
-                                    <Await resolve={data?.uploadedData}>
-                                        {resolvedData => {
-                                            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
-                                            return (
-                                                <CalendarMode
-                                                    partition={partition}
-                                                    testData={keyData ? resolvedData[keyData] : resolvedData}
-                                                    dataOperations={dataOperations}
-                                                />
-                                            );
-                                        }}
-                                    </Await>
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="gant"
-                            element={
-                                <Suspense fallback={<Preloader />}>
-                                    <Await resolve={data?.uploadedData}>
-                                        {resolvedData => {
-                                            const keyData = modeOption[mode?.key]?.keyData ?? itemSideMenu?.key;
-                                            console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}`);
-                                            return (
-                                                <GanttMode
-                                                    partition={partition}
-                                                    data={keyData ? resolvedData[keyData] : resolvedData}
-                                                    modeConfig={{
-                                                        // resolvedData: resolvedData,
-                                                        resolvedData: keyData ? resolvedData[keyData] : resolvedData,
-                                                        modeOptions: modeOptions,
-                                                        modeOption: modeOption[mode?.key],
-                                                        dataOperations: dataOperations
-                                                    }}
-                                                />
-                                            );
-                                        }}
-                                    </Await>
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="structure"
-                            element={
-                                <Suspense fallback={<Preloader />}>
-                                    <Await resolve={data?.uploadedData}>
-                                        {resolvedData => <CompanyStructure testData={resolvedData?.structure} />}
-                                    </Await>
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="employees"
-                            element={
-                                <Suspense fallback={<Preloader />}>
-                                    <Await resolve={data?.uploadedData}>
-                                        {resolvedData => {
-                                            const tableData = filterData(
-                                                resolvedData?.employees,
-                                                simplifyData(extractSampleData(resolvedData?.employees, valsToDisplay)),
-                                                searchElem
-                                            );
-                                            return (
-                                                <ListMode
-                                                    testData={tableData}
-                                                    modeConfig={{
-                                                        keys: valsToDisplay,
-                                                        mode: mode,
-                                                        option: modeOption[mode?.key],
-                                                        partition: partition,
-                                                        dataOperations: dataOperations
-                                                    }}
-                                                />
-                                            );
-                                        }}
-                                    </Await>
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="listTasks"
-                            element={
-                                <Suspense fallback={<Preloader />}>
-                                    <Await resolve={data?.uploadedData}>
-                                        {resolvedData => {
-                                            const filteredDataById = getFilteredData(
-                                                resolvedData?.tasks,
-                                                Cookies.get('MMUSERID'),
-                                                modeOption?.listTasks
-                                            );
-                                            // console.log(
-                                            //     `filteredDataById: ${JSON.stringify(filteredDataById, null, 4)}`
-                                            // );
-                                            const filteredData = filterData(
-                                                filteredDataById,
-                                                simplifyData(extractSampleData(filteredDataById, valsToDisplay)),
-                                                searchElem
-                                            );
-                                            return (
-                                                <ListMode
-                                                    testData={filteredData}
-                                                    modeConfig={{
-                                                        keys: valsToDisplay,
-                                                        mode: mode,
-                                                        option: modeOption[mode?.key],
-                                                        // contractsIDs: resolvedData?.contractsIDs,
-                                                        partition: partition,
-                                                        dataOperations: dataOperations
-                                                    }}
-                                                />
-                                            );
-                                        }}
-                                    </Await>
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="listContracts"
-                            element={
-                                <Suspense fallback={<Preloader />}>
-                                    <Await resolve={data?.uploadedData}>
-                                        {resolvedData => {
-                                            const dataById = getFilteredData(
-                                                resolvedData?.contracts,
-                                                Cookies.get('MMUSERID'),
-                                                modeOption?.listContracts
-                                            );
-                                            const filteredData = filterData(
-                                                dataById,
-                                                simplifyData(extractSampleData(dataById, valsToDisplay)),
-                                                searchElem
-                                            );
-                                            return (
-                                                <ListMode
-                                                    testData={filteredData}
-                                                    modeConfig={{
-                                                        keys: valsToDisplay,
-                                                        mode: mode,
-                                                        option: modeOption[mode?.key],
-                                                        partition: partition,
-                                                        dataOperations: dataOperations
-                                                    }}
-                                                />
-                                            );
-                                        }}
-                                    </Await>
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="gantContracts"
-                            element={
-                                <Suspense fallback={<Preloader />}>
-                                    <Await resolve={data?.uploadedData}>
-                                        {resolvedData => {
-                                            const filteredData = filterData(
-                                                resolvedData?.contracts,
-                                                simplifyData(
-                                                    extractSampleData(resolvedData?.contracts, [
-                                                        'contractId',
-                                                        'stage',
-                                                        'contractNum',
-                                                        'company',
-                                                        'address',
-                                                        'services',
-                                                        'dateOfStart',
-                                                        'dateOfEnding',
-                                                        'tasks'
-                                                    ])
-                                                ),
-                                                Cookies.get('MMUSERID')
-                                            );
-                                            return (
-                                                <GanttMode
-                                                    // data={resolvedData?.contracts || []}
-                                                    partition={partition}
-                                                    data={filteredData}
-                                                    modeConfig={{
-                                                        resolvedData: resolvedData?.contracts,
-                                                        modeOptions: modeOptions,
-                                                        modeOption: {
-                                                            keyData: 'contracts',
-                                                            keys: [
-                                                                'contractId',
-                                                                'stage',
-                                                                'contractNum',
-                                                                'company',
-                                                                'address',
-                                                                'services',
-                                                                'dateOfStart',
-                                                                'dateOfEnding',
-                                                                'tasks'
-                                                            ]
-                                                        },
-                                                        dataOperations: dataOperations
-                                                    }}
-                                                />
-                                            );
-                                        }}
-                                    </Await>
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="timetable"
-                            element={
-                                <Suspense fallback={<Preloader />}>
-                                    <Await resolve={data?.uploadedData}>
-                                        {resolvedData => {
-                                            return <TimeTableMode />;
-                                        }}
-                                    </Await>
-                                </Suspense>
-                            }
-                        />
+                        {ROUTES_CONFIG[mode?.key] ? ROUTES_CONFIG[mode?.key]() : null}
                     </Routes>
                 ) : null}
             </div>

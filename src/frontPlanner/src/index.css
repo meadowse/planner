@@ -71,6 +71,17 @@ html[data-theme='light'] {
     /* Раздел Работа и задачи */
     --bg-color-tab-work: #fff;
     --text-color-popup-content-title: #666;
+    /* Всплывающее окно задачи */
+    --bg-color-popup-task-steps__progress-bar: #e8e9eb;
+    --bg-color-popup-task-step: #d3d3d3;
+    --bg-color-popup-task-steps__actions-list: #e8e9eb;
+    --border-color-popup-task-steps__action: #c5c6d0;
+    --bg-color-popup__task-form-tabs-header-item_active: #f2f3f5;
+    --bg-color-popup__task-form-tabs-content: #f2f3f5;
+    --border-color-popup__task-form-tabs-content: #c5c6d0;
+    /* #A9A9A9 */
+    /* Модальное окно подтверждения */
+    --bg-color-popup__action-selection-btn: #dcdcdc;
     /* Раздел Аккаунт пользователя */
     --bg-color-user-info: #f1f1f1;
     --bg-color-user-side-menu-content: #f8f9fa;
@@ -149,6 +160,17 @@ html[data-theme='dark'] {
     /* Раздел Работа и задачи */
     --bg-color-tab-work: #353535;
     --text-color-popup-content-title: #bec3c6;
+    /* Всплывающее окно задачи */
+    --bg-color-popup-task-steps__progress-bar: #333;
+    --bg-color-popup-task-step: #4c4c4e;
+    --bg-color-popup-task-steps__actions-list: #4c4c4e;
+    --border-color-popup-task-steps__action: #212529;
+    --bg-color-popup__task-form-tabs-header-item_active: #343432;
+    --bg-color-popup__task-form-tabs-content: #343432;
+    --border-color-popup__task-form-tabs-content: grey;
+    /* Модальное окно подтверждения */
+    /* #DBE2E9 */
+    --bg-color-popup__action-selection-btn: #888b8d;
     /* Раздел Аккаунт пользователя */
     --bg-color-user-info: #2c2b29;
     --bg-color-user-side-menu-content: #2a2a2a;

@@ -32,17 +32,11 @@ export default function Layout() {
             navigate(`../../user/${Cookies.get('MMUSERID')}/profile/profile/`, {
                 state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
             });
-            // navigate(`../../user/profile/`, {
-            //     state: { idEmployee: Cookies.get('MMUSERID'), path: `${window.location.pathname}` }
-            // });
         });
     }
 
     useEffect(() => {
-        // socket.emit('register', Cookies.get('MMUSERID'));
-        // console.log(`pathname: ${window.location.pathname.replace(/^\/([^\/]*).*$/, '$1')}`);
         // Разбиваем путь на массив
-        // const partsPathName = window.location.pathname.split('/');.replace(/\/+$/, '')
         const firstPartPath = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
         const savedMenu = JSON.parse(localStorage.getItem('itemSideMenu'));
 
@@ -94,15 +88,3 @@ export default function Layout() {
         </div>
     );
 }
-
-// useEffect(() => {
-//     if (JSON.parse(localStorage.getItem('itemSideMenu'))) localStorage.removeItem('itemSideMenu');
-//     setItemSideMenu(menuItems[0]);
-//     localStorage.setItem('itemSideMenu', JSON.stringify(menuItems[0]));
-// }, []);
-
-// const [itemSideMenu, setItemSideMenu] = useState(JSON.parse(localStorage.getItem('itemSideMenu')) || menuItems[0]);
-
-// <button onClick={onRetrieveUser}>Получить пользователя</button>
-// <button onClick={onExitAccount}>Выйти</button>
-// <div className="user_image" onClick={() => navigate('users/17')}></div>

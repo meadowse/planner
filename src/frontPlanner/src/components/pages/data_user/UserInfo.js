@@ -17,6 +17,8 @@ import UserService from '@services/user.service';
 // Импорт контекста
 import { useHistoryContext } from '../../../contexts/history.context';
 
+import { queryClient } from '../../../query/queryClient';
+
 // Импорт стилей
 import './user_info.css';
 
@@ -37,7 +39,7 @@ function CardInfoItem({ title, value }) {
     return (
         <li className="user__data-item">
             <h2 className="user__item-title">{title}</h2>
-            <p className="user__item-value" ref={refValue} onMouseLeave={() => refValue?.current.scrollTo(0, 0)}>
+            <p className="user__item-value" ref={refValue} onMouseLeave={() => refValue?.current?.scrollTo(0, 0)}>
                 <span>{value}</span>
             </p>
         </li>
@@ -138,9 +140,13 @@ export default function UserInfoNew() {
         });
     }
 
+    // Выход пользователя из аккаунта
     function onExitAccount() {
         Cookies.remove('MMAUTHTOKEN');
         Cookies.remove('MMUSERID');
+
+        // очищаем все данные из кэша
+        queryClient.clear();
 
         localStorage.removeItem('itemSideMenu');
 
