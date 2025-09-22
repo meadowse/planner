@@ -100,11 +100,8 @@ export default function ListMode(props) {
     // Конфигурация по ячейкам таблицы
     const CELL_CONF = {
         contractNum: cellData => {
-            // console.log(`List mode\nCell contractNum\filteredData: ${JSON.stringify(filteredData, null, 4)}`);
             const config = {
                 partition: modeConfig?.partition,
-                // idContract: filteredData[cellData?.indRow]?.contractId,
-                idContract: data[cellData?.indRow]?.contractId,
                 dataOperation: findNestedObj(modeConfig?.dataOperations, 'key', 'update')
             };
             return <Cell cellData={cellData} cellConfig={config} />;
@@ -114,9 +111,6 @@ export default function ListMode(props) {
                 idContract: data[cellData?.indRow]?.contractId,
                 partition: modeConfig?.partition,
                 tasks: data,
-                // task: data[cellData?.indRow]
-                //     ? { ...data[cellData?.indRow], contractNum: data[cellData?.indRow]?.contractNum }
-                //     : {},
                 dataOperation: findNestedObj(modeConfig?.dataOperations, 'key', 'update'),
                 setPopupState,
                 openPopup

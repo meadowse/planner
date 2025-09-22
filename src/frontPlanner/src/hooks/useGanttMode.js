@@ -485,6 +485,7 @@ export const useGanttMode = args => {
 
                         if (contract?.tasks && contract?.tasks.length !== 0) {
                             contract?.tasks.forEach((task, ind) => {
+                                // Данное услолвие не отображает все данные
                                 if (item?.employee?.id === task?.executor?.mmId) {
                                     const subtasks = [];
                                     const assignedUsersData = [];

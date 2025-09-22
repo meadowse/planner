@@ -1,9 +1,78 @@
 .popup__workingtime-task {
-    max-width: 55%;
+    max-width: 50%;
     width: 100%;
     color: var(--text-color);
 }
 
 .popup__wrapper-workingtime-task {
     padding: 1vw;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2.5rem;
+}
+
+.popup__timecosts-form {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    row-gap: 1vw;
+}
+
+.popup__timecosts-form-top {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1vw;
+    align-items: center;
+}
+
+.popup__timecosts-form-left,
+.popup__timecosts-form-right {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vw;
+}
+
+.popup__timecosts-form-left > *,
+.popup__timecosts-form-right > * {
+    display: grid;
+    grid-template-columns: minmax(0, 0.5fr) 1fr;
+    align-items: center;
+    column-gap: 0.625rem;
+}
+
+/* Левая часть */
+
+/* Потраченное время */
+
+.popup__content-spenttime .popup__date-wrapper {
+    padding: 0.375rem;
+    width: max-content;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e7e7e7;
+    border-radius: 0.3125rem;
+}
+
+.popup__timecosts-form-bottom .popup__content-comment {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5vw;
+}
+
+/* Комментарий */
+
+.txt-area-timecosts {
+    width: 100%;
+    flex-grow: 1;
+    padding: 0.5vw;
+    border: 1px solid #e7e7e7;
+    border-radius: 0.3125rem;
+    outline: none;
+    resize: none;
 }

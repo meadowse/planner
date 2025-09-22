@@ -106,31 +106,36 @@
 }
 
 .popup-task-steps__actions {
-    display: none;
-    opacity: 0;
+    position: relative;
+}
+
+.popup-task-steps__actions-list {
     width: max-content;
     display: flex;
     flex-direction: column;
     row-gap: 5px;
     position: absolute;
-    top: 10px;
-    left: 30px;
+    bottom: 50%;
+    right: 50%;
+    transform: translateX(50%);
     font-size: 12px;
     transition: opacity 0.5s ease;
     background-color: #4c4c4e;
     z-index: 10;
 }
 
-.popup-task-step:hover .popup-task-steps__actions {
-    opacity: 1;
-}
-
-.popup-task-steps__actions li {
-    padding: 10px;
+.popup-task-steps__actions-list li {
+    padding: 5px;
+    text-align: center;
     cursor: pointer;
+    transition: all 0.5s ease;
 }
 
-.popup-task-steps__actions li:not(:last-child) {
+.popup-task-steps__actions-list li:hover {
+    background-color: rgba(215, 25, 32, 0.8);
+}
+
+.popup-task-steps__actions-list li:not(:last-child) {
     border-bottom: 1px solid #212529;
 }
 
@@ -139,7 +144,7 @@
 .popup__task-form-left {
     display: flex;
     flex-direction: column;
-    row-gap: 1vw;
+    row-gap: 1.25vw;
 }
 
 .popup__add-task .popup-content-item {
@@ -223,9 +228,10 @@
     column-gap: 1vw;
 }
 
-/* Общие стили для блоков "Название" и "Комментарий" */
+/* Блок "Комментарий" */
 
-.popup__add-task .txt-area {
+.txt-area-task,
+.txt-area-comment {
     padding: 0.5vw;
     border: 1px solid #e7e7e7;
     border-radius: 0.3125rem;
@@ -412,7 +418,7 @@
 
 .popup__table-header-item,
 .popup__table-row-cell {
-    padding: 5px 0;
+    padding: 5px;
     width: 100%;
     height: 100%;
     display: flex;
@@ -487,7 +493,7 @@
     column-gap: 1vw;
 }
 
-/* Время исполнения и План. времязатраты */
+/* Блок Время исполнения и План. времязатраты */
 
 .popup__timecosts-dates {
     display: flex;
@@ -501,6 +507,18 @@
     margin-bottom: 5px;
 }
 
+/* План. времязатраты */
+
+.popup__content-planned-time .popup__date-wrapper {
+    padding: 0.375rem;
+    width: max-content;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e7e7e7;
+    border-radius: 0.3125rem;
+}
+
 .popup__task-form-row-header {
     /* width: 100%; */
     display: flex;
@@ -510,18 +528,19 @@
 
 .popup__table-head-timecosts,
 .popup__timecosts-list {
-    grid-template-columns: repeat(3, 1fr) minmax(0, 1.5fr) 0.2fr;
+    grid-template-columns: repeat(4, 1fr) minmax(0, 1.5fr) 0.2fr;
 }
 
 .popup__timecosts-list > * {
     text-align: center;
 }
 
-/*  Блок "Комментарий" */
+/*  Ячейка "Комментарий" */
 .popup__table-cell-txt-area {
-    padding: 0.1vw;
+    /* padding: 0.1vw; */
+    padding: 5px;
     width: 100%;
-    /* border: 1px solid #e7e7e7; */
+    border: 1px solid #e7e7e7;
     border-radius: 0.3125rem;
     outline: none;
     resize: none;
@@ -529,20 +548,12 @@
 
 /* Блок "Комментарий" */
 
-/* .popup__add-task .popup__content-comment {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    row-gap: 0.5vw;
-} */
-
 .popup__content-comment .popup-content-title {
     padding-top: 5px;
     align-self: flex-start;
 }
 
-.popup__content-comment .txt-area {
+.txt-area-comment {
     width: 100%;
     height: 80px;
 }
