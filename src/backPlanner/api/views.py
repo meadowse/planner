@@ -21,15 +21,14 @@ def getAgreements(request):
         charset=charset
     ) as con:
         cur = con.cursor()
-        sql = """SELECT
-        T212.ID AS contractId,
+        sql = """SELECT T212.ID AS contractId,
         T212.F4538 AS contractNum,
         T212.F4544 AS stage,
         T212.F4946 AS address,
-        T237.F4890 AS services,
         T212.F4648 AS path,
         T212.F4610 AS dateOfStart,
         T212.F4566 AS dateOfEnding,
+        T237.F4890 AS services,
         T205.F4331 AS customer,
         LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358, '*') AS contacts,
         LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
@@ -37,7 +36,7 @@ def getAgreements(request):
         responsible.F4886 AS responsible,
         manager.F16 AS idManager,
         manager.F4886 AS manager,
-        LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || director.F16 || ';' || executor.F16 || ';' || T218.ID || ';' || director.F4886 || ';' || executor.F4886 || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || T218.F5872, '*') AS tasks
+        LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || T218.F5872 || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
         FROM T212
         LEFT JOIN T237 ON T212.F4948 = T237.ID
         LEFT JOIN T205 ON T212.F4540 = T205.ID
@@ -54,9 +53,9 @@ def getAgreements(request):
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
-        columns = ('contractId', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart',
-                   'dateOfEnding', 'company', 'contacts', 'participants', 'idResponsible', 'responsible',
-                   'idManager', 'manager', 'tasks')
+        columns = ('contractId', 'contractNum', 'stage', 'address', 'pathToFolder', 'dateOfStart', 'dateOfEnding',
+                   'services', 'company', 'contacts', 'participants', 'idResponsible', 'responsible', 'idManager',
+                   'manager', 'tasks')
         json_result = [
             {col: value for col, value in zip(columns, row)}
             for row in result
@@ -122,7 +121,6 @@ def getAgreements(request):
                     if flag < 4:
                         contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]], 'post': '', 'email': list2[3]})
             obj.update(contacts)
-
             Str = obj.get('tasks')
             tasks = {'tasks': []}
             if Str is not None:
@@ -132,27 +130,21 @@ def getAgreements(request):
                     list2[0].strip()
                     if list2[0] == '' and list2[1] == '' and list2[2] == '':
                         continue
-                    elif list2[9] == '':
-                        tasks.get('tasks').append(
-                            {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
-                             'dateOfEnding': list2[2], 'done': list2[3],
-                             'director': {'mmId': list2[4], 'fullName': list2[7]},
-                             'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[10], 'tasks': []})
-                for allData in List:
-                    list2 = allData.split(';')
-                    list2[0].strip()
-                    if list2[0] == '' and list2[1] == '' and list2[2] == '':
-                        continue
-                    elif list2[9] != '':
-                        i = 0
-                        for item in tasks.get('tasks'):
-                            if list2[9] == item.get('id'):
-                                tasks.get('tasks')[i].get('tasks').append(
-                                    {'id': list2[6], 'title': list2[0], 'dateOfStart': list2[1],
-                                     'dateOfEnding': list2[2], 'done': list2[3],
-                                     'director': {'mmId': list2[4], 'fullName': list2[7]},
-                                     'executor': {'mmId': list2[5], 'fullName': list2[8]}, 'status': list2[10]})
-                            i += 1
+                    tasks.get('tasks').append(
+                        {'id': list2[4], 'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2],
+                         'done': list2[3], 'director': {'mmId': list2[7], 'fullName': list2[8]}, 'parentId': list2[5],
+                         'executor': {'mmId': list2[9], 'fullName': list2[10]}, 'status': list2[6], 'tasks': []})
+                indexSubtask = 0
+                removeIndexesSubtasks = []
+                for subtask in tasks.get('tasks'):
+                    for task in tasks.get('tasks'):
+                        if task.get('id') == subtask.get('parentId') and task.get('id') != task.get('parentId'):
+                            task.get('tasks').append(subtask)
+                            removeIndexesSubtasks.append(indexSubtask)
+                    indexSubtask += 1
+                removeIndexesSubtasks = sorted(removeIndexesSubtasks, reverse=True)
+                for indexSubtask in removeIndexesSubtasks:
+                    tasks.get('tasks').pop(indexSubtask)
             obj.update(tasks)
         end = perf_counter()
         print(f'GET /api/ {end - start}')
@@ -866,32 +858,32 @@ def getAllDepartmentsStaffAndTasks(request):
         cur = con.cursor()
         try:
             sql = """SELECT sectionId,
-                        sectionName,
-                        employeeId,
-                        employeeName,
-                        photo,
-                        LIST(contractId || '$' || contractNum || '$' || address || '$' || dateOfStart || '$' || dateOfEnding || '$' || contractStage || '$' || CASE WHEN tasks IS NULL THEN '' ELSE tasks END, '^') AS contracts
-                        FROM (SELECT T5.ID AS sectionId,
-                        T5.F26 AS sectionName,
-                        T3.F16 AS employeeId,
-                        T3.F4886 AS employeeName,
-                        T3.F4887SRC as photo,
-                        T212.ID AS contractId,
-                        T212.F4538 AS contractNum,
-                        T212.F4946 AS address,
-                        T212.F4610 AS dateOfStart,
-                        T212.F4566 AS dateOfEnding,
-                        T212.F4544 AS contractStage,
-                        LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || T218.F5872 || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
-                        FROM T5
-                        LEFT JOIN T3 ON T5.ID = T3.F27
-                        LEFT JOIN T253 ON T3.ID = T253.F5022
-                        LEFT JOIN T212 ON T253.F5024 = T212.ID
-                        LEFT JOIN T218 ON T212.ID = T218.F4691
-                        LEFT JOIN T3 director ON T218.F4693 = director.ID
-                        LEFT JOIN T3 executor ON T218.F4694 = executor.ID
-                        WHERE T3.F5383 = 1
-                        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) tasks GROUP BY 1, 2, 3, 4, 5"""
+            sectionName,
+            employeeId,
+            employeeName,
+            photo,
+            LIST(contractId || '$' || contractNum || '$' || address || '$' || dateOfStart || '$' || dateOfEnding || '$' || contractStage || '$' || CASE WHEN tasks IS NULL THEN '' ELSE tasks END, '^') AS contracts
+            FROM (SELECT T5.ID AS sectionId,
+            T5.F26 AS sectionName,
+            T3.F16 AS employeeId,
+            T3.F4886 AS employeeName,
+            T3.F4887SRC as photo,
+            T212.ID AS contractId,
+            T212.F4538 AS contractNum,
+            T212.F4946 AS address,
+            T212.F4610 AS dateOfStart,
+            T212.F4566 AS dateOfEnding,
+            T212.F4544 AS contractStage,
+            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || T218.F5872 || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
+            FROM T5
+            LEFT JOIN T3 ON T5.ID = T3.F27
+            LEFT JOIN T253 ON T3.ID = T253.F5022
+            LEFT JOIN T212 ON T253.F5024 = T212.ID
+            LEFT JOIN T218 ON T212.ID = T218.F4691
+            LEFT JOIN T3 director ON T218.F4693 = director.ID
+            LEFT JOIN T3 executor ON T218.F4694 = executor.ID
+            WHERE T3.F5383 = 1
+            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) tasks GROUP BY 1, 2, 3, 4, 5"""
             cur.execute(sql)
             result = cur.fetchall()
             columns = ('sectionId', 'sectionName', 'employeeId', 'employeeName', 'photo', 'contracts')
