@@ -67,7 +67,7 @@ const getTaskData = (data, disabledFields) => {
             return value ?? '';
         },
         // Планируемые времязатраты
-        plannedTimeCosts: value => value ?? '00:00',
+        plannedTimeCosts: value => value ?? 0.0,
         // Вид работы
         idTypeWork: value => {
             // return value && Object.keys(value).length !== 0 ? value : null;

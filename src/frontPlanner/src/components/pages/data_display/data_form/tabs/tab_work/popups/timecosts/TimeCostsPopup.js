@@ -127,14 +127,13 @@ function DateReport({ presetValue, onSelect }) {
 }
 
 // Сотрудник
-function Employee({ presetValue, onSelect }) {
+function Employee(props) {
     // console.log(`Director presetValue: ${JSON.stringify(presetValue, null, 4)}`);
+    const { presetValue, config, onSelect } = props;
+    const { navigate, addToHistory, appTheme } = config;
 
     const [statePopup, setStatePopup] = useState(false);
     const [employee, setEmployee] = useState(null);
-
-    const navigate = useNavigate();
-    const { addToHistory } = useHistoryContext();
 
     // Загрузка постановщика по умолчанию
     async function fetchDefaultEmployee() {
@@ -143,21 +142,21 @@ function Employee({ presetValue, onSelect }) {
         onSelect('employee', employee);
     }
 
-    function onShowPopup() {
-        setStatePopup(true);
-    }
+    // function onShowPopup() {
+    //     setStatePopup(true);
+    // }
 
     // Выбор пользователя
-    function onSelectEmployee(user) {
-        setEmployee(user);
-        onSelect('employee', user);
-    }
+    // function onSelectEmployee(user) {
+    //     setEmployee(user);
+    //     onSelect('employee', user);
+    // }
 
     // Удаление пользователя
-    function onDeleteEmployee() {
-        setEmployee(null);
-        onSelect('employee', null);
-    }
+    // function onDeleteEmployee() {
+    //     setEmployee(null);
+    //     onSelect('employee', null);
+    // }
 
     // Переход к профилю пользователя
     function onClickUser() {
@@ -180,17 +179,13 @@ function Employee({ presetValue, onSelect }) {
     return (
         <li className="popup__content-employee popup-content-item">
             <h2 className="popup-content-title">Сотрудник</h2>
-            <div className="popup__user-inner">
+            <div className="popup__user-inner" onClick={onClickUser}>
                 {employee && Object.keys(employee).length !== 0 ? (
-                    <ul className="popup__employee-list popup__users-list">
-                        <li className="popup__employee-list-item" onClick={onClickUser}>
-                            <BgFillText
-                                type="p"
-                                text={employee.fullName}
-                                // bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
-                            />
-                        </li>
-                    </ul>
+                    <BgFillText
+                        type="p"
+                        text={employee.fullName}
+                        bgColor={appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                    />
                 ) : null}
             </div>
         </li>
@@ -290,11 +285,23 @@ function Comment({ presetValue, onSelect, onChange }) {
 }
 
 // Постановщик
-function Director({ appTheme, director }) {
+function Director({ director, config }) {
+    const { navigate, addToHistory, appTheme } = config;
+
+    // Переход к профилю пользователя
+    function onClickUser() {
+        startTransition(() => {
+            addToHistory(`${window.location.pathname}`);
+            navigate(`../../user/${director?.mmId}/profile/profile/`, {
+                state: { idEmployee: director?.mmId, path: `${window.location.pathname}` }
+            });
+        });
+    }
+
     return (
         <li className="popup__content-user popup-content-item">
             <h2 className="popup-content-title">Постановщик</h2>
-            <div className="popup__user-inner">
+            <div className="popup__user-inner" onClick={onClickUser}>
                 {director && Object.keys(director).length !== 0 ? (
                     <BgFillText
                         type="p"
@@ -308,11 +315,23 @@ function Director({ appTheme, director }) {
 }
 
 // Исполнитель
-function Executor({ appTheme, executor }) {
+function Executor({ executor, config }) {
+    const { navigate, addToHistory, appTheme } = config;
+
+    // Переход к профилю пользователя
+    function onClickUser() {
+        startTransition(() => {
+            addToHistory(`${window.location.pathname}`);
+            navigate(`../../user/${executor?.mmId}/profile/profile/`, {
+                state: { idEmployee: executor?.mmId, path: `${window.location.pathname}` }
+            });
+        });
+    }
+
     return (
         <li className="popup__content-user popup-content-item">
             <h2 className="popup-content-title">Исполнитель</h2>
-            <div className="popup__user-inner">
+            <div className="popup__user-inner" onClick={onClickUser}>
                 {executor && Object.keys(executor).length !== 0 ? (
                     <BgFillText
                         type="p"
@@ -359,7 +378,7 @@ function ContractNum({ contract }) {
 
 export default function TimeCostsPopup({ data, config, popupConf }) {
     const { immutableVals, timeCostData } = data;
-    const { navigate, addToHistory, appTheme } = config;
+    // const { navigate, addToHistory, appTheme } = config;
     const { additClass, title, operation, popupState, setPopupState, refreshTimeCostsData } = popupConf;
     const { allTasks, task } = immutableVals;
 
@@ -448,6 +467,7 @@ export default function TimeCostsPopup({ data, config, popupConf }) {
                             <Employee
                                 key="timecost-executor-item"
                                 presetValue={timeCostData?.executor}
+                                config={config}
                                 onSelect={onClick}
                             />
                             <SpentTime
@@ -459,8 +479,8 @@ export default function TimeCostsPopup({ data, config, popupConf }) {
                         </ul>
                         <ul className="popup__timecosts-form-right">
                             <ContractNum key="timecost-contractnum-item" contract={task?.contract} />
-                            <Director key="timecost-director-item" appTheme={appTheme} director={task?.director} />
-                            <Executor key="timecost-executor-item" appTheme={appTheme} executor={task?.executor} />
+                            <Director key="timecost-director-item" director={task?.director} config={config} />
+                            <Executor key="timecost-executor-item" executor={task?.executor} config={config} />
                             <TimeHours key="timecost-timehours-item" spentTime={values?.spent} />
                         </ul>
                     </div>
