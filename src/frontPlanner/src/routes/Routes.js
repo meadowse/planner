@@ -108,12 +108,11 @@ const ROUTES_FOR_AUTH = [
                         loader: () => {
                             return defer({ uploadedData: DataDisplayService.loadData('tasks') });
                         },
-                        shouldRevalidate: () => false,
+                        // shouldRevalidate: () => false,
                         element: <DataDisplayPage partition="personal" additClass="tasks" />
                     },
                     {
                         path: 'dataform/*',
-                        // path: 'dataform/:key/*',
                         element: <DataFormNew />,
                         loader: async ({ params }) => {
                             const { key } = params;

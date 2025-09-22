@@ -99,6 +99,10 @@
     position: relative;
 }
 
+.popup-task-steps__actions_empty {
+    display: none;
+}
+
 .popup-task-steps__actions-list {
     width: max-content;
     display: flex;
@@ -114,7 +118,7 @@
 }
 
 .popup-task-steps__actions_completed {
-    margin-top: 30px;
+    transform: translate(50%, 25%);
 }
 
 .popup-task-steps__actions-list li {
