@@ -522,7 +522,7 @@ def getTasksContracts(request):
                 removeIndexesSubtasks = sorted(removeIndexesSubtasks, reverse=True)
                 for indexSubtask in removeIndexesSubtasks:
                     json_result.pop(indexSubtask)
-                return JsonResponse(copy, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по договору {ex}")
                 result = None
