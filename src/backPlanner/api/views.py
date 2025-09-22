@@ -663,7 +663,6 @@ def addTask(request):
             cur.execute(sql)
             executorData = cur.fetchone()
             executor = executorData[0]
-            idMessage = None
             message = f'**Добавлена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
             message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
             message += f'Постановщик: *@{director}*\n' if director is not None else ''
@@ -1069,40 +1068,40 @@ def getContractsEmployee(request):
         obj = json.loads(request.body)
         employeeId = obj.get('employeeId')
         with firebirdsql.connect(
-            host=host,
-            database=database,
-            user=user,
-            password=password,
-            charset=charset
+                host=host,
+                database=database,
+                user=user,
+                password=password,
+                charset=charset
         ) as con:
             cur = con.cursor()
             sql = f"""SELECT T212.ID AS contractId,
-                        T212.F4538 AS contractNum,
-                        T212.F4544 AS stage,
-                        T212.F4946 AS address,
-                        T212.F4648 AS path,
-                        T212.F4610 AS dateOfStart,
-                        T212.F4566 AS dateOfEnding,
-                        T237.F4890 AS services,
-                        T205.F4331 AS customer,
-                        LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
-                        LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
-                        responsible.F16 AS responsibleId,
-                        responsible.F4886 AS responsible,
-                        LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || T218.F5872 || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
-                        FROM T212
-                        LEFT JOIN T237 ON T212.F4948 = T237.ID
-                        LEFT JOIN T205 ON T212.F4540 = T205.ID
-                        LEFT JOIN T233 ON T233.F4963 = T212.ID
-                        LEFT JOIN T206 ON T233.F4870 = T206.ID
-                        LEFT JOIN T253 ON T212.ID = T253.F5024
-                        LEFT JOIN T3 participants ON T253.F5022 = participants.ID
-                        LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
-                        LEFT JOIN T218 ON T218.F4691 = T212.ID
-                        LEFT JOIN T3 director ON T218.F4693 = director.ID
-                        LEFT JOIN T3 executor ON T218.F4694 = executor.ID
-                        WHERE participants.F16 = '{employeeId}' OR responsible.F16 = '{employeeId}'
-                        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
+            T212.F4538 AS contractNum,
+            T212.F4544 AS stage,
+            T212.F4946 AS address,
+            T212.F4648 AS path,
+            T212.F4610 AS dateOfStart,
+            T212.F4566 AS dateOfEnding,
+            T237.F4890 AS services,
+            T205.F4331 AS customer,
+            LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
+            LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
+            responsible.F16 AS responsibleId,
+            responsible.F4886 AS responsible,
+            LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || T218.F5872 || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
+            FROM T212
+            LEFT JOIN T237 ON T212.F4948 = T237.ID
+            LEFT JOIN T205 ON T212.F4540 = T205.ID
+            LEFT JOIN T233 ON T233.F4963 = T212.ID
+            LEFT JOIN T206 ON T233.F4870 = T206.ID
+            LEFT JOIN T253 ON T212.ID = T253.F5024
+            LEFT JOIN T3 participants ON T253.F5022 = participants.ID
+            LEFT JOIN T3 responsible ON T212.F4546 = responsible.ID
+            LEFT JOIN T218 ON T218.F4691 = T212.ID
+            LEFT JOIN T3 director ON T218.F4693 = director.ID
+            LEFT JOIN T3 executor ON T218.F4694 = executor.ID
+            WHERE participants.F16 = '{employeeId}' OR responsible.F16 = '{employeeId}'
+            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
             cur.execute(sql)
             result = cur.fetchall()
             # Преобразование результата в список словарей
@@ -1169,9 +1168,20 @@ def getContractsEmployee(request):
                         else:
                             tasks.get('tasks').append({'id': list2[4], 'title': list2[0], 'dateOfStart': list2[1],
                                                        'dateOfEnding': list2[2], 'done': list2[3],
-                                                       'director': {'mmId': list2[6], 'fullName': list2[7]},
-                                                       'executor': {'mmId': list2[8], 'fullName': list2[9]},
-                                                       'status': list2[5]})
+                                                       'director': {'mmId': list2[7], 'fullName': list2[8]},
+                                                       'executor': {'mmId': list2[9], 'fullName': list2[10]},
+                                                       'status': list2[5], 'parentId': list2[6], 'tasks': []})
+                        indexSubtask = 0
+                        removeIndexesSubtasks = []
+                        for subtask in tasks.get('tasks'):
+                            for task in tasks.get('tasks'):
+                                if task.get('id') == subtask.get('parentId') and task.get('id') != task.get('parentId'):
+                                    task.get('tasks').append(subtask)
+                                    removeIndexesSubtasks.append(indexSubtask)
+                            indexSubtask += 1
+                        removeIndexesSubtasks = sorted(removeIndexesSubtasks, reverse=True)
+                        for indexSubtask in removeIndexesSubtasks:
+                            tasks.get('tasks').pop(indexSubtask)
                 obj.update(tasks)
             end = perf_counter()
             print(end - start)
