@@ -660,8 +660,9 @@ def addTask(request):
             message += f'Постановщик: *@{director}*\n' if director is not None else ''
             message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
             message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
-            message += f'Deadline: *{deadline}*\n' if deadline is not None else ''
-            message += f'Комментарий: {comment}\n' if comment is not None else '' if comment is not None else ''
+            message += f'Deadline: :calendar: *{deadline}*\n' if deadline is not None else ''
+            message += f'Комментарий: :speech_balloon: *{comment}*\n' if comment is not None else '' if comment is not None else ''
+            message += f'Планируемые времязатраты: :clock3: *{plannedTimeCosts}ч.*\n' if plannedTimeCosts is not None else ''
             message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
             data = {'channel_id': idChannel, 'message': message}
             response = requests.post(
@@ -777,19 +778,21 @@ def editTask(request):
             cur.execute(sql)
             executorData = cur.fetchone()
             executor = executorData[0]
-            message = f"""**{'Изменена' if done != 1 else 'Завершена'} :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n"""
+            message = f"**{'Изменена' if done != 1 else 'Завершена'} :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n"
             message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
             message += f'Постановщик: *@{director}*\n' if director is not None else ''
             message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
             message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
             message += f'Deadline: :calendar: *{deadline}*\n' if deadline is not None else ''
-            message += f'Комментарий: :speech_balloon: {comment}\n' if comment is not None else ''
+            message += f'Комментарий: :speech_balloon: *{comment}*\n' if comment is not None or comment != '' else ''
             sql = f"""SELECT F5889 FROM T218 WHERE ID = {taskId}"""
             cur.execute(sql)
             time = cur.fetchone()[0]
-            message += f'Планируемые времязатраты: :clock3: {time}' if time is not None else ''
-            # sql = f"""SELECT F5476 FROM T320 WHERE F5862 = {taskId}"""
-            # message += f'Текущие времязатраты: :clock3: {}'
+            message += f'Планируемые времязатраты: :clock3: *{time}ч.*\n' if time is not None else ''
+            sql = f"SELECT SUM(F5476) FROM T320 WHERE F5862 = {taskId}"
+            cur.execute(sql)
+            currentTimeCosts = cur.fetchone()[0]
+            message += f'Текущие времязатраты: :clock3: *{currentTimeCosts}ч.*\n' if currentTimeCosts is not None else ''
             statusEmoji = ''
             match status:
                 case 'Новая':
@@ -803,7 +806,7 @@ def editTask(request):
                 case 'Отмененная':
                     statusEmoji = ':x:'
             message += f'Статус: {statusEmoji} *{status}* {statusEmoji}\n'
-            message += ':large_yellow_circle: *Задача ожидает исполнения...*' if done != 1 else f':large_green_circle: *Задача выполнена {today}*'
+            message += ':large_yellow_circle: *Задача ожидает завершения...*' if done != 1 else f':large_green_circle: *Задача завершена {today}*'
             sql = f"""SELECT F5451 FROM T218 WHERE ID = {taskId}"""
             cur.execute(sql)
             rootId = cur.fetchone()[0]
@@ -824,7 +827,7 @@ def deleteTask(request):
             with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                      charset=charset) as con:
                 cur = con.cursor()
-                sql = f"""DELETE FROM T218 WHERE ID = {taskId}"""
+                sql = f"DELETE FROM T218 WHERE ID = {taskId}"
                 cur.execute(sql)
                 con.commit()
             return JsonResponse({'status': 'Ok'}, status=200)
