@@ -101,7 +101,7 @@ export const useGanttMode = args => {
     };
 
     // Формирование временной шкалы
-    function formTimeline() {
+    const formTimeline = () => {
         let years = [];
 
         // console.log(`partition : ${JSON.stringify(partition, null, 4)}`);
@@ -191,7 +191,7 @@ export const useGanttMode = args => {
             years: years,
             data: timeLine
         };
-    }
+    };
 
     // Инициализация данных
     const formData = () => {
@@ -208,6 +208,20 @@ export const useGanttMode = args => {
         let newItem = {};
         let totalCount = 0;
         let dateStart, dateEnd, diffDates;
+
+        const COLORS_CONF = {
+            task: config => {
+                const { endDate, done } = config;
+                const currDateTime = new Date().getTime();
+                const endDateTime = getDateFromString(endDate).getTime();
+                const expired = currDateTime > endDateTime ? true : false;
+
+                if (!expired && done) return '#8ac926';
+                if (expired && done) return '#8ac926';
+                if (!expired && !done) return '#FFA500';
+                if (expired && !done) return '#d53032';
+            }
+        };
 
         const KEYS_DATA_CONF = {
             equipment: item => {
@@ -404,8 +418,11 @@ export const useGanttMode = args => {
                                           done: +subtask?.done,
                                           dateOfStart: subtask?.dateOfStart,
                                           dateOfEnding: subtask?.dateOfEnding,
-                                          //   bgColorTask: item?.stage?.color,
-                                          bgColorTask: +subtask?.done ? '#8ac926' : '#d53032',
+                                          //   bgColorTask: +subtask?.done ? '#8ac926' : '#d53032',
+                                          bgColorTask: COLORS_CONF?.task({
+                                              endDate: subtask?.dateOfEnding,
+                                              done: +subtask?.done
+                                          }),
                                           assignedUsers: assignedUsersDataSubTasks
                                       });
                                   });
@@ -421,8 +438,11 @@ export const useGanttMode = args => {
                                   done: +task?.done,
                                   dateOfStart: task?.dateOfStart,
                                   dateOfEnding: task?.dateOfEnding,
-                                  //   bgColorTask: item?.stage?.color,
-                                  bgColorTask: +task?.done ? '#8ac926' : '#d53032',
+                                  //   bgColorTask: +task?.done ? '#8ac926' : '#d53032',
+                                  bgColorTask: COLORS_CONF?.task({
+                                      endDate: task?.dateOfEnding,
+                                      done: +task?.done
+                                  }),
                                   assignedUsers: assignedUsersData,
                                   tasks: subtasks
                               };
@@ -631,8 +651,11 @@ export const useGanttMode = args => {
                                                 done: +subtask?.done,
                                                 dateOfStart: subtask?.dateOfStart,
                                                 dateOfEnding: subtask?.dateOfEnding,
-                                                //   bgColorTask: contract?.stage?.color,
-                                                bgColorTask: +subtask?.done ? '#8ac926' : '#d53032',
+                                                // bgColorTask: +subtask?.done ? '#8ac926' : '#d53032',
+                                                bgColorTask: COLORS_CONF?.task({
+                                                    endDate: subtask?.dateOfEnding,
+                                                    done: +subtask?.done
+                                                }),
                                                 assignedUsers: assignedUsersDataSubTasks
                                             });
                                         });
@@ -647,8 +670,11 @@ export const useGanttMode = args => {
                                         done: +task?.done,
                                         dateOfStart: task?.dateOfStart,
                                         dateOfEnding: task?.dateOfEnding,
-                                        //   bgColorTask: contract?.stage?.color,
-                                        bgColorTask: +task?.done ? '#8ac926' : '#d53032',
+                                        // bgColorTask: +task?.done ? '#8ac926' : '#d53032',
+                                        bgColorTask: COLORS_CONF?.task({
+                                            endDate: task?.dateOfEnding,
+                                            done: +task?.done
+                                        }),
                                         assignedUsers: assignedUsersData,
                                         tasks: subtasks
                                     });

@@ -422,17 +422,13 @@ function GanttChart(props) {
         const container = ganttGridMain.current;
         const line = refCurrMonth.current;
 
-        const containerRect = container.getBoundingClientRect();
-        const lineRect = line.getBoundingClientRect();
-
         // текущая позиция полосы относительно контейнера
         const lineOffset = line.offsetLeft;
 
-        // хотим, чтобы полоса была по центру контейнера
-        const targetScrollLeft = lineOffset - containerRect.clientWidth / 2 + lineRect.clientWidth / 2;
+        // располагаем полосу по центру контейнера
+        const targetScrollLeft = lineOffset - container.clientWidth / 2 + line.clientWidth / 2;
 
-        // alert(`targetScrollLeft: ${targetScrollLeft}`);
-        refCurrMonth?.current?.scrollIntoView({ left: targetScrollLeft, block: 'center', behavior: 'smooth' });
+        ganttGridMain?.current?.scrollTo({ left: targetScrollLeft + 500, behavior: 'smooth' });
     }, [gantt?.data]);
 
     return gantt?.data && Object.keys(gantt?.data).length !== 0 ? (
@@ -442,7 +438,7 @@ function GanttChart(props) {
             })}
         >
             {gantt?.data?.tasks && gantt?.data?.tasks.length !== 0 ? (
-                <div className="gantt-grid">
+                <div ref={ganttGridMain} className="gantt-grid">
                     <div className="gantt-grid__header">
                         <div className="gantt-grid__header-row">
                             <div className="gantt-task-empty gantt-task-row"></div>
@@ -465,9 +461,6 @@ function GanttChart(props) {
                             <ul className="gantt-time-year gantt-time-period">
                                 {timeLine && Object.keys(timeLine).length !== 0
                                     ? timeLine?.data.map(day => {
-                                          //   let today = new Date();
-                                          //   today.setMonth(today.getMonth() + 1);
-
                                           let currDate = getDateInSpecificFormat(new Date(), {
                                               format: 'YYYYMMDD',
                                               separator: '-'
@@ -479,14 +472,6 @@ function GanttChart(props) {
                                                       'gantt-time-period__curr-day': currDate === date
                                                   })}
                                                   ref={currDate === date ? refCurrMonth : null}
-                                                  //   ref={
-                                                  //       today.getMonth() === getDateFromString(day).getMonth()
-                                                  //           ? getLastDayOfMonth(today) ===
-                                                  //             getLastDayOfMonth(getDateFromString(day))
-                                                  //               ? refCurrMonth
-                                                  //               : null
-                                                  //           : null
-                                                  //   }
                                               >
                                                   {getDateFromString(day).getDate()}
                                                   {currDate === date ? (
@@ -504,7 +489,7 @@ function GanttChart(props) {
                             </ul>
                         </div>
                     </div>
-                    <div ref={ganttGridMain} className="gantt-grid__main">
+                    <div className="gantt-grid__main">
                         {/* Отображение суммы всех задач */}
                         <TotalTaskRow
                             timeLine={timeLine}

@@ -123,9 +123,20 @@
 
 .popup-task-steps__actions-list li {
     padding: 5px;
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
     text-align: center;
     cursor: pointer;
     transition: all 0.5s ease;
+}
+
+.popup-task-steps__actions-list li p {
+    padding-top: 2.5px;
+}
+
+.popup-task-steps__actions-list li span {
+    font-size: calc(0.75rem + 4 * (100vw - 320px) / 1600);
 }
 
 .popup-task-steps__actions-list li:hover {
@@ -431,7 +442,7 @@
     color: var(--text-color-popup-content-title);
 }
 
-.popup__table-header-employee {
+.popup__table-header-timehours {
     display: flex;
     flex-direction: column;
 }
