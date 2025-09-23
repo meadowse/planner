@@ -787,7 +787,7 @@ def editTask(request):
             cur.execute(sql)
             time = cur.fetchone()[0]
             message += f'Планируемые времязатраты: :clock3: *{time}ч.*\n' if time is not None else ''
-            sql = f"SELECT SUM(F5476) FROM T320 WHERE F5862 = {taskId}"
+            sql = f"SELECT SUM(F5882) FROM T320 WHERE F5862 = {taskId}"
             cur.execute(sql)
             currentTimeCosts = cur.fetchone()[0]
             message += f'Текущие времязатраты: :clock3: *{currentTimeCosts}ч.*\n' if currentTimeCosts is not None else ''
