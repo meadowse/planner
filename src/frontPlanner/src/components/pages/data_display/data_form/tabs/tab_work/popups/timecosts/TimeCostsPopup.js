@@ -376,7 +376,8 @@ function ContractNum({ contract }) {
     );
 }
 
-export default function TimeCostsPopup({ data, config, popupConf }) {
+export default function TimeCostsPopup(props) {
+    const { data, config, popupConf } = props;
     const { immutableVals, timeCostData } = data;
     // const { navigate, addToHistory, appTheme } = config;
     const { additClass, title, operation, popupState, setPopupState, refreshTimeCostsData } = popupConf;
@@ -394,9 +395,9 @@ export default function TimeCostsPopup({ data, config, popupConf }) {
     // console.log(`TimeCostsPopup values: ${JSON.stringify(values, null, 4)}`);
 
     // Удаление времязатрат
-    function onDeleteTimeCost() {
+    async function onDeleteTimeCost() {
         if (timeCostData && Object.keys(timeCostData).length !== 0) {
-            PopupTimeCostsService.deleteTimeCost(timeCostData?.id);
+            await PopupTimeCostsService.deleteTimeCost(timeCostData?.id);
             setPopupState(false);
             // После удаления данных обновляем таблицу времязатрат
             refreshTimeCostsData();

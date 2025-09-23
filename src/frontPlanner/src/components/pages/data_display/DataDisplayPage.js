@@ -295,7 +295,6 @@ export default function DataDisplayPage({ partition }) {
         isLoading,
         error
     } = useQuery({
-        // queryKey: [partition],
         queryKey: [partition],
         queryFn: () => Promise.resolve(uploadedData),
         uploadedData,

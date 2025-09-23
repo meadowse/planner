@@ -1401,9 +1401,9 @@ export default function TaskPopup(props) {
     // console.log(`TaskPopup data: ${JSON.stringify(data, null, 4)}`);
 
     // Удаление задачи
-    async function onDeleteTask() {
+    function onDeleteTask() {
         if (data?.task && Object.keys(data?.task).length !== 0) {
-            await TaskService.deleteTask(data?.task?.id);
+            TaskService.deleteTask(data?.task?.id);
 
             setPopupState(false);
             navigate(window.location.pathname);
