@@ -872,7 +872,7 @@ def getAllDepartmentsStaffAndTasks(request):
             T212.F4610 AS dateOfStart,
             T212.F4566 AS dateOfEnding,
             T212.F4544 AS contractStage,
-            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || T218.F5872 || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
+            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
             FROM T5
             LEFT JOIN T3 ON T5.ID = T3.F27
             LEFT JOIN T253 ON T3.ID = T253.F5022
