@@ -91,7 +91,7 @@ def getAgreements(request):
             obj.update(responsible)
             obj.pop('idResponsible')
             if obj.get('dateOfStart') is not None:
-                dateOfStart = {'dateOfStart': {'title': '', 'value': datetime.datetime.strftime(obj.get('dateOfStart'), '%Y/%m/%d')}}
+                dateOfStart = {'dateOfStart': {'title': '', 'value': datetime.datetime.strftime(obj.get('dateOfStart'), '%Y-%m-%d')}}
             else:
                 dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
             obj.update(dateOfStart)
