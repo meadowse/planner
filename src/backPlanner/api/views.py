@@ -772,12 +772,10 @@ def editTask(request):
                 idChannel = cur.fetchone()[0]
             sql = f"""SELECT F4932 FROM T3 WHERE ID = '{directorId}'"""
             cur.execute(sql)
-            directorData = cur.fetchone()
-            director = directorData[0]
+            director = cur.fetchone()[0]
             sql = f"""SELECT F4932 FROM T3 WHERE ID = '{executorId}'"""
             cur.execute(sql)
-            executorData = cur.fetchone()
-            executor = executorData[0]
+            executor = cur.fetchone()[0]
             message = f"**{'Изменена' if done != 1 else 'Завершена'} :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n"
             message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
             message += f'Постановщик: *@{director}*\n' if director is not None else ''
@@ -843,7 +841,10 @@ def deleteTask(request):
                     sql = f'select F4644 from T212 where ID = {contractId}'
                     cur.execute(sql)
                     idChannel = cur.fetchone()[0]
-                sql = f"SELECT F4932 FROM T3 WHERE ID = '{idMM}'"
+                sql = f"SELECT ID FROM T3 WHERE F16 = '{idMM}'"
+                cur.execute(sql)
+                director = cur.fetchone()[0]
+                sql = f"SELECT F4932 FROM T3 WHERE ID = {director}"
                 cur.execute(sql)
                 director = cur.fetchone()[0]
                 message = f"**Удалена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**"
