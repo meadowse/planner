@@ -823,14 +823,35 @@ def deleteTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         taskId = obj.get('taskId')
+        idMM = obj.get('idMM')
         try:
             with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                      charset=charset) as con:
                 cur = con.cursor()
+                sql = f'SELECT F4691 FROM T218 WHERE ID = {taskId}'
+                cur.execute(sql)
+                contractId = cur.fetchone()[0]
+                sql = f"""SELECT F5451 FROM T218 WHERE ID = {taskId}"""
+                cur.execute(sql)
+                rootId = cur.fetchone()[0]
                 sql = f"DELETE FROM T218 WHERE ID = {taskId}"
                 cur.execute(sql)
                 con.commit()
-            return JsonResponse({'status': 'Ok'}, status=200)
+                if contractId is None:
+                    idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
+                else:
+                    sql = f'select F4644 from T212 where ID = {contractId}'
+                    cur.execute(sql)
+                    idChannel = cur.fetchone()[0]
+                sql = f"SELECT F4932 FROM T3 WHERE ID = '{idMM}'"
+                cur.execute(sql)
+                director = cur.fetchone()[0]
+                message = f"**Удалена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**"
+                data = {'channel_id': idChannel, 'message': message, 'root_id': rootId}
+                response = requests.post(
+                    f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts",
+                    json=data, headers=headers)
+            return JsonResponse({'status': response.json()}, status=response.status_code)
         except Exception as ex:
             print(f"НЕ удалось удалить задачу {taskId}: {ex}")
             return ex
