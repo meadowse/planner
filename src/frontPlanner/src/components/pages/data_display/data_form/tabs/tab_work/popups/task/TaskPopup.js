@@ -2,10 +2,6 @@ import { useEffect, useState, startTransition, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 
-import { parse, format } from 'date-fns';
-import { ru } from 'date-fns/locale';
-import DatePicker, { registerLocale } from 'react-datepicker';
-
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
@@ -34,15 +30,12 @@ import { EMPLOYEE_ACTIONS, ACTIONS_TASK } from '@config/tabs/tab_work.config';
 import TaskService from '@services/tabs/tab_task.service';
 
 // Импорт доп.функционала
-import { isArray } from '@helpers/helper';
 import { getKeyByValue } from '@helpers/helper';
 import { getDateInSpecificFormat } from '@helpers/calendar';
 
 // Импорт стилей
 import './task_popup.css';
 import 'react-datepicker/dist/react-datepicker.css';
-
-registerLocale('ru', ru);
 
 // Цепочка статусов
 function StatusChain(props) {
@@ -99,12 +92,11 @@ function StatusChain(props) {
                                 })}
                                 data-step={key}
                             />
-                            <div
-                                className={classNames('popup-task-steps__actions', {
-                                    'popup-task-steps__actions_completed': key === 'Выполненная'
-                                })}
-                            >
-                                {key === 'Отмененнная' && status?.title && status?.title !== 'Завершенная' ? (
+                            <div className="popup-task-steps__actions">
+                                {key === 'Отмененнная' &&
+                                status?.title &&
+                                statusesTask[key][Cookies.get('MMUSERID')] &&
+                                status?.title !== 'Завершенная' ? (
                                     <ul className="popup-task-steps__actions-list">
                                         <li
                                             type="button"
@@ -116,7 +108,11 @@ function StatusChain(props) {
                                     </ul>
                                 ) : null}
                                 {status?.title === key && status?.actions && status?.actions.length !== 0 ? (
-                                    <ul className="popup-task-steps__actions-list">
+                                    <ul
+                                        className={classNames('popup-task-steps__actions-list', {
+                                            'popup-task-steps__actions_completed': key === 'Выполненная'
+                                        })}
+                                    >
                                         {status?.actions.map(action => (
                                             <li
                                                 className="popup-task-steps__action"

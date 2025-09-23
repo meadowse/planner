@@ -9,7 +9,7 @@ function getTaskConfig(initialData, disabledFields) {
         });
     }
 
-    console.log(`template: ${JSON.stringify(template, null, 4)}`);
+    // console.log(`template: ${JSON.stringify(template, null, 4)}`);
 
     return template;
 }

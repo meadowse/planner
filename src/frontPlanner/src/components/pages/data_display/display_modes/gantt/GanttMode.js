@@ -25,7 +25,7 @@ import {
     getAddedDay
 } from '@helpers/calendar';
 
-//
+// Импорт контекста
 import { useHistoryContext } from '../../../../../contexts/history.context';
 
 // Импорт стилей
