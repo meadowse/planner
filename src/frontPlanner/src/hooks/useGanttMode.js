@@ -112,7 +112,7 @@ export const useGanttMode = args => {
         const DATA_CONF = {
             equipment: () => {
                 // console.log(`SampleData ${JSON.stringify(extractSampleData(data, ['dates']), null, 4)}`);
-                console.log(`SampleData  ${JSON.stringify(extractSampleData(data, ['dates']), null, 4)}`);
+                // console.log(`SampleData  ${JSON.stringify(extractSampleData(data, ['dates']), null, 4)}`);
                 return extractSampleData(data, ['dates']);
             },
             contracts: () => {
@@ -137,16 +137,20 @@ export const useGanttMode = args => {
         if (keyData in DATA_CONF) {
             DATA_CONF[keyData]().forEach(item => {
                 if (item && Object.keys(item).length !== 0) {
+                    // Собираем информацию по датам поля dateOfStart
                     if (item?.dateOfStart && Object.keys(item?.dateOfStart).length !== 0 && item?.dateOfStart.value)
                         years.push(getDateFromString(item?.dateOfStart.value)?.getFullYear());
+                    // Собираем информацию по датам поля dateOfEnding
                     if (item?.dateOfEnding && Object.keys(item?.dateOfEnding).length !== 0 && item?.dateOfEnding.value)
                         years.push(getDateFromString(item?.dateOfEnding.value)?.getFullYear());
+                    // Собираем информацию по датам массива tasks
                     if (item.tasks && item.tasks.length !== 0) {
                         item.tasks.forEach(elem => {
                             if (elem?.dateOfStart) years.push(getDateFromString(elem?.dateOfStart)?.getFullYear());
                             if (elem?.dateOfEnding) years.push(getDateFromString(elem?.dateOfEnding)?.getFullYear());
                         });
                     }
+                    // Собираем информацию по датам массива dates
                     if (item?.dates && isArray(item?.dates) && item?.dates.length !== 0) {
                         item?.dates?.forEach(elem => {
                             if (elem?.start) years.push(getDateFromString(elem?.start)?.getFullYear());
@@ -157,7 +161,9 @@ export const useGanttMode = args => {
             });
         }
 
-        years = Array.from(new Set(years)).sort((a, b) => a - b);
+        years = Array.from(new Set(years))
+            .sort((a, b) => a - b)
+            .filter(year => year);
 
         years.forEach(year => {
             const beginDate = { year, month: 0, day: 1 };

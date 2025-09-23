@@ -250,7 +250,7 @@ function TaskRow(props) {
         return task?.navKey in NAVIGATION_CONF ? NAVIGATION_CONF[task?.navKey]() : null;
     }
 
-    console.log(`gantt task data: ${JSON.stringify(task, null, 4)}`);
+    // console.log(`gantt task data: ${JSON.stringify(task, null, 4)}`);
 
     return (
         <>
@@ -390,6 +390,7 @@ function GanttChart(props) {
 
     const [showTasks, setShowTasks] = useState(true);
     // const [currTask, setCurrTask] = useState({});
+    const ganttGridMain = useRef(null);
     const refCurrMonth = useRef(null);
 
     // Скрытие основных задач
@@ -416,7 +417,22 @@ function GanttChart(props) {
     console.log(`new Data: ${JSON.stringify(gantt, null, 4)}`);
 
     useEffect(() => {
-        refCurrMonth?.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        if (!ganttGridMain.current || !refCurrMonth.current) return;
+
+        const container = ganttGridMain.current;
+        const line = refCurrMonth.current;
+
+        const containerRect = container.getBoundingClientRect();
+        const lineRect = line.getBoundingClientRect();
+
+        // текущая позиция полосы относительно контейнера
+        const lineOffset = line.offsetLeft;
+
+        // хотим, чтобы полоса была по центру контейнера
+        const targetScrollLeft = lineOffset - containerRect.clientWidth / 2 + lineRect.clientWidth / 2;
+
+        // alert(`targetScrollLeft: ${targetScrollLeft}`);
+        refCurrMonth?.current?.scrollIntoView({ left: targetScrollLeft, block: 'center', behavior: 'smooth' });
     }, [gantt?.data]);
 
     return gantt?.data && Object.keys(gantt?.data).length !== 0 ? (
@@ -488,7 +504,7 @@ function GanttChart(props) {
                             </ul>
                         </div>
                     </div>
-                    <div className="gantt-grid__main">
+                    <div ref={ganttGridMain} className="gantt-grid__main">
                         {/* Отображение суммы всех задач */}
                         <TotalTaskRow
                             timeLine={timeLine}

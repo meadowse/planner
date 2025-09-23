@@ -376,9 +376,9 @@ const editTask = async newData => {
 };
 
 // Удаление задачи
-const deleteTask = async idTask => {
+const deleteTask = async (idTask, idEmployee) => {
     await axios
-        .post(`${window.location.origin}/api/deleteTask`, { taskId: idTask })
+        .post(`${window.location.origin}/api/deleteTask`, { taskId: idTask, idMM: idEmployee })
         .then(response => {
             if (response.status === 200) {
                 //

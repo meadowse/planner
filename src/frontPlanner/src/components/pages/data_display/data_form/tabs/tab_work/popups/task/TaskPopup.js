@@ -1403,7 +1403,7 @@ export default function TaskPopup(props) {
     // Удаление задачи
     function onDeleteTask() {
         if (data?.task && Object.keys(data?.task).length !== 0) {
-            TaskService.deleteTask(data?.task?.id);
+            TaskService.deleteTask(data?.task?.id, Cookies.get('MMUSERID'));
 
             setPopupState(false);
             navigate(window.location.pathname);
