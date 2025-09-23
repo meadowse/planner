@@ -661,7 +661,7 @@ def addTask(request):
             message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
             message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
             message += f'Deadline: :calendar: *{deadline}*\n' if deadline is not None else ''
-            message += f'Комментарий: :speech_balloon: *{comment}*\n' if comment is not None else '' if comment is not None else ''
+            message += f'Комментарий: :speech_balloon: *{comment}*\n' if comment is not None else ''
             message += f'Планируемые времязатраты: :clock3: *{plannedTimeCosts}ч.*\n' if plannedTimeCosts is not None else ''
             message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
             data = {'channel_id': idChannel, 'message': message}
@@ -782,7 +782,7 @@ def editTask(request):
             message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
             message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
             message += f'Deadline: :calendar: *{deadline}*\n' if deadline is not None else ''
-            message += f'Комментарий: :speech_balloon: *{comment}*\n' if comment is not None or comment != '' else ''
+            message += f'Комментарий: :speech_balloon: *{comment}*\n' if comment is not None and comment != '' else ''
             sql = f"""SELECT F5889 FROM T218 WHERE ID = {taskId}"""
             cur.execute(sql)
             time = cur.fetchone()[0]
