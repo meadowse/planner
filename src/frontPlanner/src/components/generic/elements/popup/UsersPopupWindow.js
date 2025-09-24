@@ -68,7 +68,7 @@ export default function UsersPopupWindow(props) {
         await axios.get(`${window.location.origin}/api/employee/`).then(response => {
             if (response?.status === 200) {
                 if (response?.data && response?.data.length !== 0) {
-                    const sortedData = response.data.sort((a, b) => a?.fullName.localeCompare(b.fullName));
+                    const sortedData = response.data.sort((a, b) => a?.fullName?.localeCompare(b?.fullName));
                     sortedData.forEach(
                         elem =>
                             (elem.photo = elem.mmId

@@ -64,11 +64,11 @@ export const DATA_CONVERSION_MAP = {
     responsible: responsible => {
         if (responsible && Object.keys(responsible).length !== 0) {
             return {
-                id: -1,
-                mmId: responsible?.idResponsible || -1,
+                id: responsible?.id ?? null,
+                mmId: responsible?.id ?? null,
                 fullName: responsible?.fullName,
                 photo: responsible?.idResponsible
-                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.idResponsible}/image`
+                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.id}/image`
                     : '/img/user.svg',
                 post: null
             };
