@@ -1215,28 +1215,27 @@ def getDataUser(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                sql = f"""SELECT
-                T3.ID as ID,
+                sql = f"""SELECT T3.ID as ID,
                 T3.F16 as MMID,
                 T3.F10 AS FIO,
-                T5.F26 AS DEPARTMENT,
-                T4.F7 AS JOB_TITLE,
                 T3.F12 AS EMAIL,
                 T3.F14 AS MOBILE_NUMBER,
                 T3.F13 AS JOB_NUMBER,
                 T3.F5411 AS ADD_NUMBER,
                 T3.F15 AS TELEGRAM_USERNAME,
                 T3.F18 AS BIRTHDAY,
-                T3.F5572 AS OFFICE
+                T3.F5572 AS OFFICE,
+                T3.F4932 AS login,
+                T5.F26 AS DEPARTMENT,
+                T4.F7 AS JOB_TITLE
                 FROM T3
                 LEFT JOIN T5 ON T3.F27 = T5.ID
                 LEFT JOIN T4 ON T3.F11 = T4.ID
                 WHERE T3.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = (
-                    'id', 'mmId', 'FIO', 'department', 'job', 'email', 'telephone', 'jobTelephone', 'addTelephone',
-                    'telegram', 'birthday', 'office')
+                columns = ('id', 'mmId', 'FIO', 'email', 'telephone', 'jobTelephone', 'addTelephone', 'telegram',
+                           'birthday', 'office', 'login', 'department', 'job')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
