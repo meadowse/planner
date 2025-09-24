@@ -24,7 +24,7 @@ import { useHistoryContext } from '../../../../../../../../contexts/history.cont
 import { useTaskForm } from '@hooks/useAddTaskForm';
 
 // Импорт конфигурации
-import { EMPLOYEE_ACTIONS, ACTIONS_TASK } from '@config/tabs/tab_work.config';
+import { EMPLOYEE_ACTIONS, ACTIONS_TASK, IMAGES_ACTIONS_TASK } from '@config/tabs/tab_work.config';
 
 // Импорт сервисов
 import TaskService from '@services/tabs/tab_task.service';
@@ -103,7 +103,8 @@ function StatusChain(props) {
                                             className="popup-task-steps__action"
                                             onClick={() => onChangeStatus('Отменить')}
                                         >
-                                            {statusesTask[key][Cookies.get('MMUSERID')]}
+                                            <p>{statusesTask[key][Cookies.get('MMUSERID')]}</p>
+                                            {IMAGES_ACTIONS_TASK['Отменить']}
                                         </li>
                                     </ul>
                                 ) : null}
@@ -118,7 +119,8 @@ function StatusChain(props) {
                                                 className="popup-task-steps__action"
                                                 onClick={() => onChangeStatus(action)}
                                             >
-                                                {action}
+                                                <p>{action}</p>
+                                                {IMAGES_ACTIONS_TASK[action]}
                                             </li>
                                         ))}
                                     </ul>
@@ -863,8 +865,8 @@ function PlannedTimeCosts(props) {
     }
 
     useEffect(() => {
-        setPlannedTimeCosts(presetValue ?? 0.0);
-        onSelect('plannedTimeCosts', presetValue ?? 0.0);
+        setPlannedTimeCosts(presetValue ?? 0);
+        onSelect('plannedTimeCosts', presetValue ?? 0);
     }, []);
 
     return (
@@ -1274,13 +1276,13 @@ function TimeCosts(props) {
                         <ul className="popup__table-head popup__table-head-timecosts">
                             <li className="popup__table-header-item">Дата</li>
                             <li className="popup__table-header-item">Потраченное время</li>
-                            <li className="popup__table-header-employee popup__table-header-item">
-                                Сотрудник
+                            <li className="popup__table-header-item">Сотрудник</li>
+                            <li className="popup__table-header-timehours popup__table-header-item">
+                                Время в часах
                                 <p>
                                     Факт. времязатраты: <span>{totalTime} ч.</span>
                                 </p>
                             </li>
-                            <li className="popup__table-header-item">Время в часах</li>
                             <li className="popup__table-header-item">Комментарий</li>
                             <li className="popup__table-header-item">&emsp;</li>
                         </ul>
@@ -1401,9 +1403,9 @@ export default function TaskPopup(props) {
     // console.log(`TaskPopup data: ${JSON.stringify(data, null, 4)}`);
 
     // Удаление задачи
-    function onDeleteTask() {
+    async function onDeleteTask() {
         if (data?.task && Object.keys(data?.task).length !== 0) {
-            TaskService.deleteTask(data?.task?.id, Cookies.get('MMUSERID'));
+            await TaskService.deleteTask(data?.task?.id, Cookies.get('MMUSERID'));
 
             setPopupState(false);
             navigate(window.location.pathname);

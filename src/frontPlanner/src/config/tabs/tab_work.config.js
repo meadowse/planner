@@ -76,6 +76,14 @@ export const ACTIONS_TASK = {
     }
 };
 
+export const IMAGES_ACTIONS_TASK = {
+    'Отменить': <span>&#10007;</span>,
+    'Взять в работу': <span>&#128296;</span>,
+    'Выполнено': <span>&#10004;</span>,
+    'Вернуть в работу': <span>&#8617;</span>,
+    'Принять работу': <span>&#128077;</span>
+};
+
 export const DATA_FORM_OPERATIONS = [
     {
         key: 'creation',
