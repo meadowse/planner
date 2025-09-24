@@ -239,3 +239,10 @@
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
 }
+
+/* Стили для правильного отображения ММ */
+
+.user__write-message {
+    width: 100%;
+    height: 100%;
+}

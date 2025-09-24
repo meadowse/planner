@@ -56,6 +56,19 @@ function CardInfo({ config, userData }) {
     );
 }
 
+// Интеграция с Mattermost для отправки сообщений
+function MattermostIntegration({ login }) {
+    return (
+        <div className="user__write-message">
+            <iframe
+                title="Mattermost"
+                src={`https://mm-mpk.ru/mosproektkompleks/messages/@${login}`}
+                style={{ width: '100%', height: '100%', border: 'none' }}
+            />
+        </div>
+    );
+}
+
 export default function UserInfoNew() {
     const lastSegmentPath = `${window.location.href.match(/([^\/]*)\/*$/)[1]}`;
     const theme = localStorage.getItem('appTheme');
@@ -120,12 +133,6 @@ export default function UserInfoNew() {
             navigate(`/user/${idEmployee}/${tabData?.key}/${tabData?.key}`, {
                 state: { idEmployee: state?.idEmployee, path: `${window.location.pathname}` }
             });
-            // navigate(`${tabData?.key}/${lastSegmentPath}`, {
-            //     state: { idEmployee: state?.idEmployee, path: `${window.location.pathname}` }
-            // });
-            // navigate(`${tabData?.key}/`, {
-            //     state: { idEmployee: state?.idEmployee, path: `${window.location.pathname}` }
-            // });
         });
     }
 
@@ -323,6 +330,21 @@ export default function UserInfoNew() {
                                                 }}
                                             />
                                         );
+                                    }}
+                                </Await>
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="writemm"
+                        element={
+                            <Suspense fallback={<Preloader />}>
+                                <Await resolve={data?.uploadedData}>
+                                    {resolvedData => {
+                                        const employee = Object.assign({}, resolvedData?.employee);
+                                        return employee && Object.keys(employee).length !== 0 ? (
+                                            <MattermostIntegration login={employee?.login} />
+                                        ) : null;
                                     }}
                                 </Await>
                             </Suspense>
