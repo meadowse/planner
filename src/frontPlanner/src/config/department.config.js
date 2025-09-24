@@ -68,7 +68,7 @@ export const DATA_CONVERSION_MAP = {
                 mmId: responsible?.id ?? null,
                 fullName: responsible?.fullName,
                 photo: responsible?.idResponsible
-                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.idResponsible}/image`
+                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.id}/image`
                     : '/img/user.svg',
                 post: null
             };
