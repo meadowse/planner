@@ -516,7 +516,7 @@ def getTask(request):
                 i = 0
                 removeIndexes = []
                 for task in json_result.get('subtasks'):
-                    listCoExecutor = task.get('coExecutor').split(',')
+                    listCoExecutor = task.get('coExecutors').split(',')
                     coExecutor = {'coExecutors': []}
                     for strDataCoExecutor in listCoExecutor:
                         dataCoExecutor = strDataCoExecutor.split(';')
