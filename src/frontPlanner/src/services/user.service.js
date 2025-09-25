@@ -52,7 +52,8 @@ const loadData = async (partition, idEmployee) => {
                                 telegram: employee?.telegram || 'Нет данных',
                                 skype: employee?.skype || 'Нет данных',
                                 division: employee?.department || 'Нет данных',
-                                birthday: employee?.birthday || 'Нет данных'
+                                birthday: employee?.birthday || 'Нет данных',
+                                office: employee?.office || 'Нет данных'
                             };
                             resolvedData.employee = Object.assign({}, userData);
                         }
@@ -129,6 +130,37 @@ const loadData = async (partition, idEmployee) => {
                     }
                 });
 
+            return resolvedData;
+        },
+        // Получение данных сотрудника для отправкии сообщения в ММ
+        writemm: async () => {
+            const resolvedData = {};
+            await axios
+                .post(`${window.location.origin}/api/getDataUser`, { employeeId: idEmployee })
+                .then(response => {
+                    if (response.status === 200) {
+                        if (response.data && response.data.length !== 0) {
+                            const employee = response.data[0];
+                            // Информация о сотруднике
+                            const userData = {
+                                login: employee?.login || 'Нет данных'
+                            };
+                            resolvedData.employee = Object.assign({}, userData);
+                        }
+                    }
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.log('server responded');
+                        resolvedData.employee = {};
+                    } else if (error.request) {
+                        console.log('network error');
+                        resolvedData.employee = {};
+                    } else {
+                        console.log(error);
+                        resolvedData.employee = {};
+                    }
+                });
             return resolvedData;
         }
     };

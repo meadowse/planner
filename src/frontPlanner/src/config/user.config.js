@@ -6,7 +6,8 @@ export const EMPLOYEE_CONF = {
     internalPhone: 'Внутренний телефон',
     telegramm: 'Telegram',
     division: 'Подразделение',
-    birthday: 'День рождения'
+    birthday: 'День рождения',
+    office: 'Офис'
 };
 
 // Конфигурация по разделу "Сотрудник"
@@ -60,6 +61,13 @@ export const EMPLOYEE_DATA_CONF = {
                     'pathToFolder'
                 ]
             }
+        },
+        {
+            tab: 'Написать в ММ',
+            keyTab: 'writemm',
+            path: 'writeMM',
+            tabOptions: [],
+            keys: []
         }
     ],
     dataOperations: [
