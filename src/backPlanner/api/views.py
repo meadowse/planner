@@ -3,7 +3,7 @@ import firebirdsql
 from django.http import JsonResponse
 from time import perf_counter
 from django.views.decorators.csrf import csrf_exempt
-from .config import *
+from config import *
 import datetime
 import requests
 
@@ -945,38 +945,47 @@ def getTasksEmployee(request):
                 T212.ID AS contractId,
                 T212.F4538 AS CONTRACT_NUMBER,
                 T212.F4946 AS OBJECT_ADDRESS,
-                T205.F4331 AS CUSTOMER_NAME
+                T205.F4331 AS CUSTOMER_NAME,
+                co_executor.ID AS ID_CO_EXECUTOR,
+                co_executor.F16 AS ID_MM_CO_EXECUTOR,
+                co_executor.F4886 AS CO_EXECUTOR_NAME
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
                 LEFT JOIN T212 ON T218.F4691 = T212.ID
                 LEFT JOIN T205 ON T212.F4540 = T205.ID
-                WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}'"""
+                LEFT JOIN T313 ON T218.ID = T313.F5750
+                LEFT JOIN T3 AS co_executor ON T3.ID = T313.F5751
+                WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}' OR co_executor.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
                     'id', 'task', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'parentId', 'status',
-                    'idDirector',
-                    'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName', 'contractId',
-                    'contractNum', 'address', 'customer')
-                json_result = [
-                    {col: value for col, value in zip(columns, row)}
-                    for row in result
-                ]  # Создаем список словарей с сериализацией значений
+                    'idDirector', 'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName',
+                    'contractId', 'contractNum', 'address', 'customer', 'idCoExecutor', 'idMMCoExecutor',
+                    'coExecutorName')
+                json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
                 for task in json_result:
                     director = {'director': {'idDirector': task.get('idDirector'), 'mmId': task.get('idMMDirector'),
                                              'directorName': task.get('directorName')}}
                     executor = {'executor': {'idExecutor': task.get('idExecutor'), 'mmId': task.get('idMMExecutor'),
                                              'executorName': task.get('executorName')}}
+                    coExecutor = {'coExecutor': {'idCoExecutor': task.get('idCoExecutor'),
+                                                 'mmId': task.get('idMMCoExecutor'),
+                                                 'coExecutorName': task.get('coExecutorName')}}
                     task.update(director)
                     task.update(executor)
+                    task.update(coExecutor)
                     task.pop('idDirector')
                     task.pop('idExecutor')
+                    task.pop('idCoExecutor')
                     task.pop('idMMDirector')
                     task.pop('idMMExecutor')
+                    task.pop('idMMCoExecutor')
                     task.pop('directorName')
                     task.pop('executorName')
+                    task.pop('coExecutorName')
                     deadlineTask = task.get('deadlineTask')
                     if deadlineTask is not None:
                         if task.get('done') == 0 and deadlineTask < today:
@@ -989,8 +998,7 @@ def getTasksEmployee(request):
                                                  'expired': False}}
                     else:
                         deadlineTask = {
-                            'deadlineTask': {'value': deadlineTask,
-                                             'expired': False}}
+                            'deadlineTask': {'value': deadlineTask, 'expired': False}}
                     task.update(deadlineTask)
                     startDate = task.get('startDate')
                     if startDate is not None:
