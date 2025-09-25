@@ -1027,7 +1027,7 @@ def getTasksEmployee(request):
                     json_result.pop(indexSubtask)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
-                print(f"НЕ удалось получить задачи по договору {ex}")
+                print(f"НЕ удалось получить задачи сотрудника {employeeId}: {ex}")
                 return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False,
                                                                                        'indent': 4})
     else:
