@@ -13,13 +13,7 @@ def timeToFloat(t: datetime.time) -> float:
 
 def getAgreements(request):
     start = perf_counter()
-    with firebirdsql.connect(
-        host=host,
-        database=database,
-        user=user,
-        password=password,
-        charset=charset
-    ) as con:
+    with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
         cur = con.cursor()
         sql = """SELECT T212.ID AS contractId,
         T212.F4538 AS contractNum,
@@ -31,10 +25,12 @@ def getAgreements(request):
         T237.F4890 AS services,
         T205.F4331 AS customer,
         LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358, '*') AS contacts,
-        LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
-        responsible.F16 AS idResponsible,
+        LIST(DISTINCT participants.ID || ';' || participants.F16 || ';' || participants.F4886) AS participants,
+        responsible.ID AS idResponsible,
+        responsible.F16 AS idMMResponsible,
         responsible.F4886 AS responsible,
-        manager.F16 AS idManager,
+        manager.ID AS idManager,
+        manager.F16 AS idMMManager,
         manager.F4886 AS manager,
         LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
         FROM T212
@@ -49,17 +45,14 @@ def getAgreements(request):
         LEFT JOIN T218 ON T218.F4691 = T212.ID
         LEFT JOIN T3 director ON T218.F4693 = director.ID
         LEFT JOIN T3 executor ON T218.F4694 = executor.ID
-        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
         columns = ('contractId', 'contractNum', 'stage', 'address', 'pathToFolder', 'dateOfStart', 'dateOfEnding',
-                   'services', 'company', 'contacts', 'participants', 'idResponsible', 'responsible', 'idManager',
-                   'manager', 'tasks')
-        json_result = [
-            {col: value for col, value in zip(columns, row)}
-            for row in result
-        ]  # Создаем список словарей с сериализацией значений
+                   'services', 'company', 'contacts', 'participants', 'idResponsible', 'idMMResponsible', 'responsible',
+                   'idManager', 'idMMManager', 'manager', 'tasks')
+        json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
         today = datetime.date.today()
         for obj in json_result:
             status = obj.get('stage')
@@ -73,39 +66,48 @@ def getAgreements(request):
                 data = {'participants': []}
                 for participant in participants:
                     data2 = participant.split(';')
-                    data.get('participants').append({'participantId': data2[0], 'fullName': data2[1].strip()})
+                    data.get('participants').append({'id': data2[0], 'idMM': data2[1], 'fullName': data2[2].strip()})
                 obj.update(data)
             manager = obj.get('manager')
             if manager is not None:
-                manager = {
-                    'manager': {'idManager': obj.get('idManager'), 'fullName': manager.strip()}}
+                manager = {'manager': {'id': obj.get('idManager'), 'idMM': obj.get('idMMManager'),
+                                       'fullName': manager.strip()}}
             else:
-                manager = {'manager': {'idManager': obj.get('idManager'), 'fullName': manager}}
+                manager = {'manager': {'id': obj.get('idManager'), 'idMM': obj.get('idMMManager'), 'fullName': manager}}
             obj.update(manager)
             obj.pop('idManager')
+            obj.pop('idMMManager')
             responsible = obj.get('responsible')
             if responsible is not None:
-                responsible = {'responsible': {'idResponsible': obj.get('idResponsible'), 'fullName': responsible.strip()}}
+                responsible = {'responsible': {'id': obj.get('idResponsible'), 'idMM': obj.get('idMMResponsible'),
+                                               'fullName': responsible.strip()}}
             else:
-                responsible = {'responsible': {'idResponsible': obj.get('idResponsible'), 'fullName': responsible}}
+                responsible = {'responsible': {'id': obj.get('idResponsible'), 'idMM': obj.get('idMMResponsible'),
+                                               'fullName': responsible}}
             obj.update(responsible)
             obj.pop('idResponsible')
+            obj.pop('idMMResponsible')
             if obj.get('dateOfStart') is not None:
-                dateOfStart = {'dateOfStart': {'title': '', 'value': datetime.datetime.strftime(obj.get('dateOfStart'), '%Y-%m-%d')}}
+                dateOfStart = {'dateOfStart': {'title': '',
+                                               'value': datetime.datetime.strftime(obj.get('dateOfStart'), '%Y-%m-%d')}}
             else:
                 dateOfStart = {'dateOfStart': {'title': '', 'value': obj.get('dateOfStart')}}
             obj.update(dateOfStart)
             dateOfEnding = obj.get('dateOfEnding')
             if dateOfEnding is not None:
                 if status == 'В работе' and dateOfEnding < today:
-                    dateOfEnding = {
-                        'dateOfEnding': {'title': 'Срок работы', 'value': datetime.datetime.strftime(obj.get('dateOfEnding'), '%Y-%m-%d'), 'expired': True}}
+                    dateOfEnding = {'dateOfEnding': {'title': 'Срок работы',
+                                                     'value': datetime.datetime.strftime(obj.get('dateOfEnding'),
+                                                                                         '%Y-%m-%d'),
+                                                     'expired': True}}
                 else:
-                    dateOfEnding = {
-                        'dateOfEnding': {'title': 'Срок работы', 'value': datetime.datetime.strftime(obj.get('dateOfEnding'), '%Y-%m-%d'), 'expired': False}}
+                    dateOfEnding = {'dateOfEnding': {'title': 'Срок работы',
+                                                     'value': datetime.datetime.strftime(obj.get('dateOfEnding'),
+                                                                                         '%Y-%m-%d'),
+                                                     'expired': False}}
             else:
-                dateOfEnding = {
-                    'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'), 'expired': False}}
+                dateOfEnding = {'dateOfEnding': {'title': 'Срок работы', 'value': obj.get('dateOfEnding'),
+                                                 'expired': False}}
             obj.update(dateOfEnding)
             Str = obj.get('contacts')
             contacts = {'contacts': []}
@@ -152,33 +154,24 @@ def getAgreements(request):
 
 def employees(request):
     # start = perf_counter()
-    with firebirdsql.connect(
-            host=host,
-            database=database,
-            user=user,
-            password=password,
-            charset=charset
-    ) as con:
+    with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
         cur = con.cursor()
         sql = """SELECT T3.ID AS id,
         T3.F16 AS mmId,
         T3.F4932 AS nickMame,
         T3.F4886 AS fullName,
-        T4.F7 AS post,
         T3.F4887SRC AS photo,
         T3.F14 AS phone,
-        T3.F12 AS email
+        T3.F12 AS email,
+        T4.F7 AS post
         FROM T3
         LEFT JOIN T4 ON T3.F11 = T4.ID
         WHERE T3.F5383 = 1"""
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
-        columns = ('id', 'mmId', 'nickName', 'fullName', 'post', 'photo', 'phone', 'email')
-        json_result = [
-            {col: value for col, value in zip(columns, row)}
-            for row in result
-        ]  # Создаем список словарей с сериализацией значений
+        columns = ('id', 'mmId', 'nickName', 'fullName', 'photo', 'phone', 'email', 'post')
+        json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
         # end = perf_counter()
         # print(end - start)
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
@@ -191,13 +184,7 @@ def corParticipants(request):
         obj = json.loads(request.body)
         contractId = obj.get('contractId')
         participants = obj.get('participants')
-        with firebirdsql.connect(
-                host=host,
-                database=database,
-                user=user,
-                password=password,
-                charset=charset
-        ) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             cur.execute(f'SELECT T253.F5022 FROM T253 WHERE T253.F5024 = {contractId}')
             List = cur.fetchall()
@@ -209,27 +196,15 @@ def corParticipants(request):
                 if participantId not in List2:
                     cur.execute(f'SELECT GEN_ID(GEN_T253, 1) FROM RDB$DATABASE')
                     Id = cur.fetchonemap().get('GEN_ID', None)
-                    values = {
-                        'id': Id,
-                        'F5022': participantId,
-                        'F5024': contractId,
-                    }
-                    sql = f"""
-                    INSERT INTO T253 (
-                    {', '.join(values.keys())}
-                    ) VALUES (
-                    {', '.join(f"'{value}'" for value in values.values())}
-                    )
-                    """
+                    values = {'id': Id, 'F5022': participantId, 'F5024': contractId,}
+                    sql = f"""INSERT INTO T253 ({', '.join(values.keys())})
+                    VALUES ({', '.join(f"'{value}'" for value in values.values())})"""
                     cur.execute(sql)
                     con.commit()
                 else:
                     List2.remove(participantId)
             for participantId in List2:
-                sql = f"""
-                DELETE FROM T253 
-                WHERE F5022 = '{participantId}' AND F5024 = '{contractId}'
-                """
+                sql = f"""DELETE FROM T253 WHERE F5022 = '{participantId}' AND F5024 = '{contractId}'"""
                 cur.execute(sql)
                 con.commit()
             return JsonResponse({'ok': True})
@@ -242,16 +217,9 @@ def getAgreement(request):
     else:
         obj = json.loads(request.body)
         contractId = obj.get('contractId')
-        with firebirdsql.connect(
-            host=host,
-            database=database,
-            user=user,
-            password=password,
-            charset=charset
-        ) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
-            sql = f"""
-            SELECT T212.ID AS id,
+            sql = f"""SELECT T212.ID AS id,
             T212.F4538 AS contractNum,
             T212.F4544 AS stage,
             T212.F4946 AS address,
@@ -281,18 +249,14 @@ def getAgreement(request):
             LEFT JOIN T3 manager ON T212.F4950 = manager.ID
             LEFT JOIN T218 ON T218.F4691 = T212.ID
             WHERE T212.ID = {contractId}
-            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 19
-            """  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
+            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 19"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
             cur.execute(sql)
             result = cur.fetchall()
             # Преобразование результата в список словарей
             columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart',
                        'dateOfEnding', 'company', 'contacts', 'participants', 'responsibleId', 'responsibleMMId',
                        'responsible', 'managerId', 'managerMMId', 'manager', 'tasks', 'channelId')
-            json_result = [
-                {col: value for col, value in zip(columns, row)}
-                for row in result
-            ]  # Создаем список словарей с сериализацией значений
+            json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
             today = datetime.date.today()
             for obj in json_result:
                 status = obj.get('stage')
@@ -1255,28 +1219,24 @@ def getVacations(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                sql = """
-                SELECT
-                T5.F26 AS department,
-                T3.ID AS id,
+                sql = """SELECT T3.ID AS id,
                 T3.F16 AS mmId,
                 T3.F4886 AS employeeFI,
-                T4.F7 AS post,
                 T302.F5577 AS vacation,
                 T302.F5579 AS vacationStart,
-                T302.F5581 AS vacationEnd
+                T302.F5581 AS vacationEnd,
+                T4.F7 AS post,
+                T5.F26 AS department
                 FROM T3
                 LEFT JOIN T4 ON T4.ID = T3.F11
                 LEFT JOIN T5 ON T5.ID = T3.F27
                 LEFT JOIN T302 ON T302.F5574 = T3.ID
                 WHERE T3.F5383 = 1 AND
                 (T302.F5577 = 'отпуск' OR T302.F5577 = 'отпуск без содержания' OR T302.F5577 = 'удаленная работа' OR T302.F5577 = 'работа в выходной' OR T302.F5577 = 'отсутствие на рабочем месте' OR T302.F5577 = 'больничный' OR T302.F5577 IS NULL)
-                ORDER BY department, employeeFI, vacation
-                """
+                ORDER BY department, employeeFI, vacation"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = (
-                    'department', 'id', 'mmId', 'employeeFI', 'post', 'vacation', 'vacationStart', 'vacationEnd')
+                columns = ('id', 'mmId', 'employeeFI', 'vacation', 'vacationStart', 'vacationEnd', 'post', 'department')
                 json_result = [
                     {col: value for col, value in zip(columns, row)}
                     for row in result
@@ -1294,16 +1254,11 @@ def getContracts(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                sql = """SELECT T212.ID AS id,
-                T212.F4538 AS contractNum
-                FROM T212"""
+                sql = 'SELECT T212.ID AS id, T212.F4538 AS contractNum FROM T212'
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = ('id', 'contractNum')
-                json_result = [
-                    {col: value for col, value in zip(columns, row)}
-                    for row in result
-                ]  # Создаем список словарей с сериализацией значений
+                json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить данные по договорам")
