@@ -516,13 +516,15 @@ def getTask(request):
                 i = 0
                 removeIndexes = []
                 for task in json_result.get('subtasks'):
-                    listCoExecutor = task.get('coExecutors').split(',')
-                    coExecutor = {'coExecutors': []}
-                    for strDataCoExecutor in listCoExecutor:
-                        dataCoExecutor = strDataCoExecutor.split(';')
-                        coExecutor.get('coExecutors').append({'id': dataCoExecutor[0], 'idMM': dataCoExecutor[1],
-                                                     'fio': dataCoExecutor[2]})
-                    task.update(coExecutor)
+                    strCoExecutor = task.get('coExecutors')
+                    if strCoExecutor is not None:
+                        listCoExecutor = strCoExecutor.split(',')
+                        coExecutor = {'coExecutors': []}
+                        for strDataCoExecutor in listCoExecutor:
+                            dataCoExecutor = strDataCoExecutor.split(';')
+                            coExecutor.get('coExecutors').append({'id': dataCoExecutor[0], 'idMM': dataCoExecutor[1],
+                                                                  'fio': dataCoExecutor[2]})
+                        task.update(coExecutor)
                     dateStart = task.get('dateStart')
                     if dateStart is None:
                         dateStart = {'dateStart': dateStart}
