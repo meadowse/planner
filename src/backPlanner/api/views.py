@@ -497,24 +497,32 @@ def getTask(request):
                 DIRECTOR.F4886 AS DIRECTOR_NAME,
                 EXECUTOR.ID AS ID_OF_EXECUTOR,
                 EXECUTOR.F16 AS ID_MM_EXECUTOR,
-                EXECUTOR.F4886 AS EXECUTOR_NAME
+                EXECUTOR.F4886 AS EXECUTOR_NAME,
+                LIST(coExecutor.ID || ';' || coExecutor.F16 || ';' || coExecutor.F10) AS coExecutor
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
-                WHERE T218.F5646 = {taskId} OR T218.ID = {taskId}""" + (f' OR T218.ID = {parentId}' if parentId is not None else '')
+                LEFT JOIN T313 ON T218.ID = T313.F5750
+                LEFT JOIN T3 AS coExecutor ON T313.F5751 = coExecutor.ID
+                WHERE T218.F5646 = {taskId} OR T218.ID = {taskId}""" + (f' OR T218.ID = {parentId}' if parentId is not None else '') + ' GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18'
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
                     'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'done', 'parentId',
                     'comment', 'status', 'plannedTimeCosts', 'idPost', 'idDirector', 'idMMDirector', 'directorFIO',
-                    'idExecutor', 'idMMExecutor', 'executorFIO')
-                json_result = {'parent': {}, 'subtasks': [
-                    {col: value for col, value in zip(columns, row)}
-                    for row in result
-                ]}  # Создаем список словарей с сериализацией значений
+                    'idExecutor', 'idMMExecutor', 'executorFIO', 'coExecutors')
+                json_result = {
+                    'parent': {}, 'subtasks': [{col: value for col, value in zip(columns, row)} for row in result]}  # Создаем список словарей с сериализацией значений
                 i = 0
                 removeIndexes = []
                 for task in json_result.get('subtasks'):
+                    listCoExecutor = task.get('coExecutor').split(',')
+                    coExecutor = {'coExecutors': []}
+                    for strDataCoExecutor in listCoExecutor:
+                        dataCoExecutor = strDataCoExecutor.split(';')
+                        coExecutor.get('coExecutors').append({'id': dataCoExecutor[0], 'idMM': dataCoExecutor[1],
+                                                     'fio': dataCoExecutor[2]})
+                    task.update(coExecutor)
                     dateStart = task.get('dateStart')
                     if dateStart is None:
                         dateStart = {'dateStart': dateStart}
