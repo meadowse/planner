@@ -25,11 +25,9 @@ def getAgreements(request):
         T237.F4890 AS services,
         T205.F4331 AS customer,
         LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358, '*') AS contacts,
-        LIST(DISTINCT participants.ID || ';' || participants.F16 || ';' || participants.F4886) AS participants,
-        responsible.ID AS idResponsible,
+        LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
         responsible.F16 AS idMMResponsible,
         responsible.F4886 AS responsible,
-        manager.ID AS idManager,
         manager.F16 AS idMMManager,
         manager.F4886 AS manager,
         LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
@@ -45,13 +43,13 @@ def getAgreements(request):
         LEFT JOIN T218 ON T218.F4691 = T212.ID
         LEFT JOIN T3 director ON T218.F4693 = director.ID
         LEFT JOIN T3 executor ON T218.F4694 = executor.ID
-        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
         columns = ('contractId', 'contractNum', 'stage', 'address', 'pathToFolder', 'dateOfStart', 'dateOfEnding',
-                   'services', 'company', 'contacts', 'participants', 'idResponsible', 'idMMResponsible', 'responsible',
-                   'idManager', 'idMMManager', 'manager', 'tasks')
+                   'services', 'company', 'contacts', 'participants', 'idMMResponsible', 'responsible', 'idMMManager',
+                   'manager', 'tasks')
         json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
         today = datetime.date.today()
         for obj in json_result:
@@ -66,26 +64,21 @@ def getAgreements(request):
                 data = {'participants': []}
                 for participant in participants:
                     data2 = participant.split(';')
-                    data.get('participants').append({'id': data2[0], 'idMM': data2[1], 'fullName': data2[2].strip()})
+                    data.get('participants').append({'idMM': data2[0], 'fullName': data2[1].strip()})
                 obj.update(data)
             manager = obj.get('manager')
             if manager is not None:
-                manager = {'manager': {'id': obj.get('idManager'), 'idMM': obj.get('idMMManager'),
-                                       'fullName': manager.strip()}}
+                manager = {'manager': {'idMM': obj.get('idMMManager'), 'fullName': manager.strip()}}
             else:
-                manager = {'manager': {'id': obj.get('idManager'), 'idMM': obj.get('idMMManager'), 'fullName': manager}}
+                manager = {'manager': {'idMM': obj.get('idMMManager'), 'fullName': manager}}
             obj.update(manager)
-            obj.pop('idManager')
             obj.pop('idMMManager')
             responsible = obj.get('responsible')
             if responsible is not None:
-                responsible = {'responsible': {'id': obj.get('idResponsible'), 'idMM': obj.get('idMMResponsible'),
-                                               'fullName': responsible.strip()}}
+                responsible = {'responsible': {'idMM': obj.get('idMMResponsible'), 'fullName': responsible.strip()}}
             else:
-                responsible = {'responsible': {'id': obj.get('idResponsible'), 'idMM': obj.get('idMMResponsible'),
-                                               'fullName': responsible}}
+                responsible = {'responsible': {'idMM': obj.get('idMMResponsible'), 'fullName': responsible}}
             obj.update(responsible)
-            obj.pop('idResponsible')
             obj.pop('idMMResponsible')
             if obj.get('dateOfStart') is not None:
                 dateOfStart = {'dateOfStart': {'title': '',
