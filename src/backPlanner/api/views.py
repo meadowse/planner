@@ -1182,25 +1182,28 @@ def getDataUser(request):
                 T3.F5572 AS OFFICE,
                 T3.F4932 AS login,
                 T5.F26 AS DEPARTMENT,
-                T4.F7 AS JOB_TITLE
+                T4.F7 AS JOB_TITLE,
+                director.ID AS idDirector,
+                director.F16 AS idMMDirector,
+                director.F10 AS fioDirector
                 FROM T3
                 LEFT JOIN T5 ON T3.F27 = T5.ID
                 LEFT JOIN T4 ON T3.F11 = T4.ID
+                LEFT JOIN T3 AS director ON director.F27 = T3.F27 AND director.F5846 = 1
                 WHERE T3.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = ('id', 'mmId', 'FIO', 'email', 'telephone', 'jobTelephone', 'addTelephone', 'telegram',
-                           'birthday', 'office', 'login', 'department', 'job')
-                json_result = [
-                    {col: value for col, value in zip(columns, row)}
-                    for row in result
-                ]  # Создаем список словарей с сериализацией значений
+                           'birthday', 'office', 'login', 'department', 'job', 'idDirector', 'idMMDirector',
+                           'fioDirector')
+                json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 end = perf_counter()
                 print(end - start)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить данные по сотруднику с id {employeeId}: {ex}")
-                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False,
+                                                                                       'indent': 4})
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
