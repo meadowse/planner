@@ -955,7 +955,7 @@ def getTasksEmployee(request):
                 LEFT JOIN T212 ON T218.F4691 = T212.ID
                 LEFT JOIN T205 ON T212.F4540 = T205.ID
                 LEFT JOIN T313 ON T218.ID = T313.F5750
-                LEFT JOIN T3 AS co_executor ON T3.ID = T313.F5751
+                LEFT JOIN T3 AS co_executor ON co_executor.ID = T313.F5751
                 WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}' OR co_executor.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
