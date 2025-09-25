@@ -216,10 +216,11 @@ def getAgreement(request):
             T212.F4538 AS contractNum,
             T212.F4544 AS stage,
             T212.F4946 AS address,
-            T237.F4890 AS services,
             T212.F4648 AS path,
             T212.F4610 AS dateOfStart,
             T212.F4566 AS dateOfEnding,
+            T212.F4644 AS channelId,
+            T237.F4890 AS services,
             T205.F4332 AS company,
             LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358, '*') AS contacts,
             LIST(DISTINCT participants.ID || ';' || participants.F16 || ';' || participants.F4886, '*') AS participants,
@@ -229,8 +230,7 @@ def getAgreement(request):
             manager.ID AS managerId,
             manager.F16 AS managerMMId,
             manager.F4886 AS manager,
-            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F5872, '*') AS tasks,
-            T212.F4644 AS channelId
+            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F5872, '*') AS tasks
             FROM T212
             LEFT JOIN T237 ON T212.F4948 = T237.ID
             LEFT JOIN T205 ON T212.F4540 = T205.ID
@@ -246,9 +246,9 @@ def getAgreement(request):
             cur.execute(sql)
             result = cur.fetchall()
             # Преобразование результата в список словарей
-            columns = ('id', 'contractNum', 'stage', 'address', 'services', 'pathToFolder', 'dateOfStart',
-                       'dateOfEnding', 'company', 'contacts', 'participants', 'responsibleId', 'responsibleMMId',
-                       'responsible', 'managerId', 'managerMMId', 'manager', 'tasks', 'channelId')
+            columns = ('id', 'contractNum', 'stage', 'address', 'pathToFolder', 'dateOfStart', 'dateOfEnding',
+                       'channelId', 'services', 'company', 'contacts', 'participants', 'responsibleId',
+                       'responsibleMMId', 'responsible', 'managerId', 'managerMMId', 'manager', 'tasks')
             json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
             today = datetime.date.today()
             for obj in json_result:
@@ -263,23 +263,26 @@ def getAgreement(request):
                     data = {'participants': []}
                     for participant in participants:
                         data2 = participant.split(';')
-                        data.get('participants').append({'id': data2[0], 'mmId': data2[1], 'fullName': data2[2].strip()})
+                        data.get('participants').append({'id': data2[0], 'idMM': data2[1],
+                                                         'fullName': data2[2].strip()})
                     obj.update(data)
                 responsible = obj.get('responsible')
                 if responsible is not None:
-                    responsible = {'responsible': {'id': obj.get('responsibleId'), 'mmId': obj.get('responsibleMMId'), 'fullName': responsible.strip()}}
+                    responsible = {'responsible': {'id': obj.get('responsibleId'), 'idMM': obj.get('responsibleMMId'),
+                                                   'fullName': responsible.strip()}}
                 else:
-                    responsible = {'responsible': {'id': obj.get('responsibleId'), 'mmId': obj.get('responsibleMMId'), 'fullName': responsible}}
+                    responsible = {'responsible': {'id': obj.get('responsibleId'), 'idMM': obj.get('responsibleMMId'),
+                                                   'fullName': responsible}}
                 obj.update(responsible)
                 obj.pop('responsibleId')
                 obj.pop('responsibleMMId')
                 manager = obj.get('manager')
                 if manager is not None:
-                    manager = {'manager': {'id': obj.get('managerId'), 'mmId': obj.get('managerMMId'),
-                                                   'fullName': manager.strip()}}
+                    manager = {'manager': {'id': obj.get('managerId'), 'idMM': obj.get('managerMMId'),
+                                           'fullName': manager.strip()}}
                 else:
-                    manager = {'manager': {'id': obj.get('managerId'), 'mmId': obj.get('managerMMId'),
-                                                   'fullName': manager}}
+                    manager = {'manager': {'id': obj.get('managerId'), 'idMM': obj.get('managerMMId'),
+                                           'fullName': manager}}
                 obj.update(manager)
                 obj.pop('managerId')
                 obj.pop('managerMMId')
@@ -310,7 +313,8 @@ def getAgreement(request):
                             if data == '':
                                 flag += 1
                         if flag < 4:
-                            contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]], 'post': '', 'email': list2[3]})
+                            contacts.get('contacts').append({'fullName': list2[0], 'phone': [list2[1], list2[2]],
+                                                             'post': '', 'email': list2[3]})
                 obj.update(contacts)
                 Str = obj.get('tasks')
                 tasks = {'tasks': []}
@@ -322,7 +326,8 @@ def getAgreement(request):
                         if list2[0] == '' and list2[1] == '' and list2[2] == '':
                             continue
                         else:
-                            tasks.get('tasks').append({'title': list2[0], 'dateOfStart': list2[1], 'dateOfEnding': list2[2], 'status': list2[3]})
+                            tasks.get('tasks').append({'title': list2[0], 'dateOfStart': list2[1],
+                                                       'dateOfEnding': list2[2], 'status': list2[3]})
                 obj.update(tasks)
             end = perf_counter()
             print(end - start)
@@ -347,42 +352,31 @@ def getTypesWork(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                sql = f"""SELECT 
-                F4601 AS NUM, 
-                F4600 AS TYPE_OF_WORK, 
-                F4597 AS TERM, 
-                F4607 AS DONE, 
-                F4608 AS DATE_OF_DONE 
+                sql = f"""SELECT F4601 AS NUM,
+                F4600 AS TYPE_OF_WORK,
+                F4597 AS TERM,
+                F4607 AS DONE,
+                F4608 AS DATE_OF_DONE
                 FROM T214 WHERE F4606 = {contractId}"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = ('number', 'typeWork', 'deadline', 'done', 'dateDone')
-                json_result = [
-                    {col: value for col, value in zip(columns, row)}
-                    for row in result
-                ]  # Создаем список словарей с сериализацией значений
+                json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
                 for obj in json_result:
                     dateDone = obj.get('dateDone')
                     if dateDone is not None:
                         if obj.get('done') == 0 and dateDone < today:
-                            dateDone = {
-                                'dateDone': {'value': dateDone,
-                                                 'expired': True}}
+                            dateDone = {'dateDone': {'value': dateDone, 'expired': True}}
                         else:
-                            dateDone = {
-                                'dateDone': {'value': dateDone,
-                                                 'expired': False}}
+                            dateDone = {'dateDone': {'value': dateDone, 'expired': False}}
                     else:
-                        dateDone = {
-                            'dateDone': {'value': dateDone,
-                                             'expired': False}}
+                        dateDone = {'dateDone': {'value': dateDone, 'expired': False}}
                     obj.update(dateDone)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить работы договора {ex}")
-                result = None
-                return result
+                return JsonResponse({'error': f'НЕ удалось получить работы договора {ex}'}, status=404)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -418,12 +412,8 @@ def getTasksContracts(request):
                 columns = (
                     'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'done', 'parentId', 'status',
                     'idDirector', 'idMMDirector', 'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO')
-                json_result = [
-                    {col: value for col, value in zip(columns, row)}
-                    for row in result
-                ]  # Создаем список словарей с сериализацией значений
+                json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
-                copy = []
                 for row in json_result:
                     status = row.get('done')
                     row.update({'director': {'id': row.get('idDirector'), 'mmId': row.get('idMMDirector'),
