@@ -1069,7 +1069,9 @@ def getContractsEmployee(request):
             LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
             responsible.F16 AS responsibleId,
             responsible.F4886 AS responsible,
-            LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
+            LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks,
+            projectManager.F16 AS idMMProjectManager,
+            projectManager.F10 AS fioProjectManager
             FROM T212
             LEFT JOIN T237 ON T212.F4948 = T237.ID
             LEFT JOIN T205 ON T212.F4540 = T205.ID
@@ -1081,16 +1083,26 @@ def getContractsEmployee(request):
             LEFT JOIN T218 ON T218.F4691 = T212.ID
             LEFT JOIN T3 director ON T218.F4693 = director.ID
             LEFT JOIN T3 executor ON T218.F4694 = executor.ID
-            WHERE participants.F16 = '{employeeId}' OR responsible.F16 = '{employeeId}'
-            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
+            LEFT JOIN T3 projectManager ON T212.F4950 = projectManager.ID
+            WHERE participants.F16 = '{employeeId}' OR responsible.F16 = '{employeeId}' OR projectManager.F16 = '{employeeId}'
+            GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 15, 16"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
             cur.execute(sql)
             result = cur.fetchall()
             # Преобразование результата в список словарей
             columns = ('contractId', 'contractNum', 'stage', 'address', 'pathToFolder', 'dateOfStart', 'dateOfEnding',
-                       'services', 'company', 'contacts', 'participants', 'responsibleId', 'responsible', 'tasks')
+                       'services', 'company', 'contacts', 'participants', 'responsibleId', 'responsible', 'tasks',
+                       'projectManagerId', 'projectManager')
             json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
             today = datetime.date.today()
             for obj in json_result:
+                projectManager = obj.get('projectManager')
+                if projectManager is None:
+                    projectManager = {'projectManager': {'id': obj.get('projectManagerId'), 'fullName': projectManager}}
+                else:
+                    projectManager = {'projectManager': {'id': obj.get('projectManagerId'),
+                                                         'fullName': projectManager.strip()}}
+                obj.update(projectManager)
+                obj.pop('projectManagerId')
                 status = obj.get('stage')
                 stage = {'stage': {'title': status}}
                 obj.update(stage)
