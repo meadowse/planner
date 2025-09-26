@@ -956,9 +956,7 @@ def getTasksEmployee(request):
                 T212.F4538 AS CONTRACT_NUMBER,
                 T212.F4946 AS OBJECT_ADDRESS,
                 T205.F4331 AS CUSTOMER_NAME,
-                co_executor.ID AS ID_CO_EXECUTOR,
-                co_executor.F16 AS ID_MM_CO_EXECUTOR,
-                co_executor.F4886 AS CO_EXECUTOR_NAME
+                LIST(co_executor.ID || ';' || co_executor.F16 || ';' || co_executor.F4886) AS coExecutors
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
@@ -966,36 +964,41 @@ def getTasksEmployee(request):
                 LEFT JOIN T205 ON T212.F4540 = T205.ID
                 LEFT JOIN T313 ON T218.ID = T313.F5750
                 LEFT JOIN T3 AS co_executor ON co_executor.ID = T313.F5751
-                WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}' OR co_executor.F16 = '{employeeId}'"""
+                WHERE EXECUTOR.F16 = '{employeeId}' OR DIRECTOR.F16 = '{employeeId}' OR co_executor.F16 = '{employeeId}'
+                GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19"""
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
                     'id', 'task', 'startDate', 'deadlineTask', 'deadlineTime', 'done', 'dateDone', 'parentId', 'status',
                     'idDirector', 'idMMDirector', 'directorName', 'idExecutor', 'idMMExecutor', 'executorName',
-                    'contractId', 'contractNum', 'address', 'customer', 'idCoExecutor', 'idMMCoExecutor',
-                    'coExecutorName')
+                    'contractId', 'contractNum', 'address', 'customer', 'coExecutors')
                 json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
                 for task in json_result:
+                    coExecutors = {'coExecutors': []}
+                    strCoExecutors = task.get('coExecutors')
+                    if strCoExecutors is not None:
+                        listCoExecutors = strCoExecutors.split(',')
+                        for strCoExecutor in listCoExecutors:
+                            dataCoExecutor = strCoExecutor.split(';')
+                            coExecutors.get('coExecutors').append({'id': dataCoExecutor[0], 'idMM': dataCoExecutor[1],
+                                                                   'coExecutorName': dataCoExecutor[2]})
+                            if dataCoExecutor[1] == employeeId:
+                                task.update({'coExecutor': {'id': dataCoExecutor[0], 'idMM': dataCoExecutor[1],
+                                                            'coExecutorName': dataCoExecutor[2]}})
+                    task.update(coExecutors)
                     director = {'director': {'idDirector': task.get('idDirector'), 'mmId': task.get('idMMDirector'),
                                              'directorName': task.get('directorName')}}
                     executor = {'executor': {'idExecutor': task.get('idExecutor'), 'mmId': task.get('idMMExecutor'),
                                              'executorName': task.get('executorName')}}
-                    coExecutor = {'coExecutor': {'idCoExecutor': task.get('idCoExecutor'),
-                                                 'mmId': task.get('idMMCoExecutor'),
-                                                 'coExecutorName': task.get('coExecutorName')}}
                     task.update(director)
                     task.update(executor)
-                    task.update(coExecutor)
                     task.pop('idDirector')
                     task.pop('idExecutor')
-                    task.pop('idCoExecutor')
                     task.pop('idMMDirector')
                     task.pop('idMMExecutor')
-                    task.pop('idMMCoExecutor')
                     task.pop('directorName')
                     task.pop('executorName')
-                    task.pop('coExecutorName')
                     deadlineTask = task.get('deadlineTask')
                     if deadlineTask is not None:
                         if task.get('done') == 0 and deadlineTask < today:
@@ -1049,13 +1052,7 @@ def getContractsEmployee(request):
         start = perf_counter()
         obj = json.loads(request.body)
         employeeId = obj.get('employeeId')
-        with firebirdsql.connect(
-                host=host,
-                database=database,
-                user=user,
-                password=password,
-                charset=charset
-        ) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             sql = f"""SELECT T212.ID AS contractId,
             T212.F4538 AS contractNum,
@@ -1089,10 +1086,7 @@ def getContractsEmployee(request):
             # Преобразование результата в список словарей
             columns = ('contractId', 'contractNum', 'stage', 'address', 'pathToFolder', 'dateOfStart', 'dateOfEnding',
                        'services', 'company', 'contacts', 'participants', 'responsibleId', 'responsible', 'tasks')
-            json_result = [
-                {col: value for col, value in zip(columns, row)}
-                for row in result
-            ]  # Создаем список словарей с сериализацией значений
+            json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
             today = datetime.date.today()
             for obj in json_result:
                 status = obj.get('stage')
