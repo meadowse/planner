@@ -613,7 +613,7 @@ def addTask(request):
             message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
             message += f'Постановщик: *@{director}*\n' if director is not None else ''
             message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
-            message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
+            message += (f'Задача: :hammer: *{task}*\n' if task is not None or task != '' else '')
             message += f'Deadline: :calendar: *{deadline}*\n' if deadline is not None else ''
             message += f'Комментарий: :speech_balloon: *{comment}*\n' if comment is not None or comment != '' else ''
             message += f'Планируемые времязатраты: :clock3: *{plannedTimeCosts}ч.*\n' if plannedTimeCosts is not None else ''
