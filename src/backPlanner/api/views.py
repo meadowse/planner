@@ -981,10 +981,12 @@ def getTasksEmployee(request):
                         listCoExecutors = strCoExecutors.split(',')
                         for strCoExecutor in listCoExecutors:
                             dataCoExecutor = strCoExecutor.split(';')
-                            coExecutors.get('coExecutors').append({'id': dataCoExecutor[0], 'idMM': dataCoExecutor[1],
+                            coExecutors.get('coExecutors').append({'idCoExecutor': dataCoExecutor[0],
+                                                                   'mmId': dataCoExecutor[1],
                                                                    'coExecutorName': dataCoExecutor[2]})
                             if dataCoExecutor[1] == employeeId:
-                                task.update({'coExecutor': {'id': dataCoExecutor[0], 'idMM': dataCoExecutor[1],
+                                task.update({'coExecutor': {'idCoExecutor': dataCoExecutor[0],
+                                                            'mmId': dataCoExecutor[1],
                                                             'coExecutorName': dataCoExecutor[2]}})
                     task.update(coExecutors)
                     director = {'director': {'idDirector': task.get('idDirector'), 'mmId': task.get('idMMDirector'),
