@@ -671,6 +671,30 @@ const COLUMNS = [
         }
     },
     {
+        Header: 'Соисполнитель',
+        accessor: 'coExecutor',
+        sortable: true,
+        sortBy: 'value',
+        Cell: props => {
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee(employee) {
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+
+                    navigate(`../../user/${employee?.mmId}/profile/profile/`, {
+                        state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                    });
+                });
+            }
+
+            return props?.value && Object.keys(props?.value).length !== 0
+                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
+                : 'Нет данных';
+        }
+    },
+    {
         Header: 'Дедлайн',
         accessor: 'deadlineTask',
         sortable: true,

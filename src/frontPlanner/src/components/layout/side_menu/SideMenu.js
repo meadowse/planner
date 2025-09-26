@@ -7,13 +7,16 @@ import './side_menu.css';
 
 function ItemSideMenu(props) {
     // console.log(`item: ${item}\nselectedItem: ${selectedItem}`);
-    const { item, selectedItem, setItem, navigate } = props;
+    const { item, selectedItem, setItem, navigate, setSearchElem } = props;
 
     function handleClickItem(item) {
         // console.log(`value: ${JSON.stringify(value, null, 4)}`);
         startTransition(() => {
-            setItem(item);
             localStorage.setItem('itemSideMenu', JSON.stringify(item));
+            localStorage.setItem('globalSearch', '');
+
+            setItem(item);
+            setSearchElem('');
 
             // Разбиваем путь на массив
             const partsPathName = window.location.pathname.split('/');
@@ -40,7 +43,7 @@ function ItemSideMenu(props) {
 }
 
 export default function SideMenu(props) {
-    const { items, itemSideMenu, setItemSideMenu } = props;
+    const { items, itemSideMenu, setItemSideMenu, setSearchElem } = props;
     const navigate = useNavigate();
 
     return (
@@ -52,6 +55,7 @@ export default function SideMenu(props) {
                     selectedItem={itemSideMenu}
                     setItem={setItemSideMenu}
                     navigate={navigate}
+                    setSearchElem={setSearchElem}
                 />
             ))}
         </ul>

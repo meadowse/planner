@@ -62,13 +62,14 @@ export const DATA_CONVERSION_MAP = {
         return null;
     },
     responsible: responsible => {
+        // console.log(`responsible: ${JSON.stringify(responsible, null, 4)}`);
+
         if (responsible && Object.keys(responsible).length !== 0) {
             return {
-                id: responsible?.id ?? null,
-                mmId: responsible?.id ?? null,
+                mmId: responsible?.idMM ?? null,
                 fullName: responsible?.fullName,
-                photo: responsible?.idResponsible
-                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.id}/image`
+                photo: responsible?.idMM
+                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.idMM}/image`
                     : '/img/user.svg',
                 post: null
             };
@@ -78,25 +79,26 @@ export const DATA_CONVERSION_MAP = {
     manager: manager => {
         if (manager && Object.keys(manager).length !== 0) {
             return {
-                id: -1,
-                mmId: manager?.idManager || -1,
+                mmId: manager?.idMM ?? null,
                 fullName: manager?.fullName || 'Нет данных',
-                photo: manager?.idManager
-                    ? `https://mm-mpk.ru/api/v4/users/${manager?.idManager}/image`
-                    : '/img/user.svg',
+                photo: manager?.idMM ? `https://mm-mpk.ru/api/v4/users/${manager?.idMM}/image` : '/img/user.svg',
                 post: null
             };
         }
     },
     participants: participants => {
+        console.log(`participants: ${JSON.stringify(participants, null, 4)}`);
         return participants && participants.length !== 0
             ? participants.map(participant => {
-                  const { participantId, ...restElems } = participant;
+                  const { idMM, ...restElems } = participant;
                   return {
-                      id: -1,
-                      mmId: participantId,
+                      mmId: idMM ?? participant?.participantId,
                       ...restElems,
-                      photo: participantId ? `https://mm-mpk.ru/api/v4/users/${participantId}/image` : '/img/user.svg',
+                      photo: idMM
+                          ? `https://mm-mpk.ru/api/v4/users/${idMM}/image`
+                          : participant?.participantId
+                          ? `https://mm-mpk.ru/api/v4/users/${participant?.participantId}/image`
+                          : '/img/user.svg',
                       post: null
                   };
               })
@@ -121,6 +123,17 @@ export const DATA_CONVERSION_MAP = {
                   photo: executor.mmId ? `https://mm-mpk.ru/api/v4/users/${executor.mmId}/image` : '/img/user.svg'
               }
             : null;
+    },
+    coExecutor: coExecutor => {
+        if (coExecutor && Object.keys(coExecutor).length !== 0) {
+            return {
+                id: coExecutor.idCoExecutor || coExecutor.id || -1,
+                mmId: coExecutor.mmId,
+                fullName: coExecutor.fullName || coExecutor.coExecutorName,
+                photo: coExecutor.mmId ? `https://mm-mpk.ru/api/v4/users/${coExecutor.mmId}/image` : '/img/user.svg'
+            };
+        }
+        return null;
     }
 };
 
@@ -132,20 +145,32 @@ export const TASKS_DATA_CONF = {
             mode: 'Список задач',
             keyMode: 'listTasks',
             modeOptions: [
+                // { value: 'Исполнитель', key: 'executor', uniqueness: 'id' },
                 { value: 'Исполнитель', key: 'executor', uniqueness: 'id' },
                 { value: 'Постановщик', key: 'director', uniqueness: 'id' }
             ],
-            keys: [
-                'task',
-                'status',
-                'contractNum',
-                'address',
-                'customer',
-                'director',
-                'executor',
-                'deadlineTask',
-                'done'
-            ]
+            keys: {
+                executor: [
+                    'task',
+                    'status',
+                    'contractNum',
+                    'address',
+                    'customer',
+                    'director',
+                    'coExecutor',
+                    'deadlineTask'
+                ],
+                director: [
+                    'task',
+                    'status',
+                    'contractNum',
+                    'address',
+                    'customer',
+                    'executor',
+                    'coExecutor',
+                    'deadlineTask'
+                ]
+            }
         },
         {
             mode: 'Список договоров',

@@ -222,6 +222,19 @@
     border-right: 0.5px solid var(--color-border-gantt-time-period-cell);
 }
 
+.gantt-time-period-cell_start {
+    position: relative;
+}
+
+.gantt-time-period-cell_start::after {
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    left: 0;
+    bottom: 0;
+    background-color: red;
+}
+
 .gantt-time-period-cell__users {
     column-gap: 10px;
     display: flex;

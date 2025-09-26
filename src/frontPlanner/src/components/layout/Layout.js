@@ -26,6 +26,13 @@ export default function Layout() {
 
     const [itemSideMenu, setItemSideMenu] = useState({});
 
+    // Глобальный поиск данных
+    const [searchElem, setSearchElem] = useState(() => {
+        const savedSearch = localStorage.getItem('globalSearch');
+        if (!savedSearch || savedSearch.length === 0) return '';
+        else return savedSearch;
+    });
+
     function onRetrieveUser() {
         startTransition(() => {
             addToHistory(`${window.location.pathname}`);
@@ -65,7 +72,12 @@ export default function Layout() {
         <div className="app">
             <img class="logo" src={theme === 'dark' ? '/img/logo_dark.svg' : '/img/logo.svg'} alt="Logo" />
             <div className="app__left-column">
-                <SideMenu items={menuItems} itemSideMenu={itemSideMenu} setItemSideMenu={setItemSideMenu} />
+                <SideMenu
+                    items={menuItems}
+                    itemSideMenu={itemSideMenu}
+                    setItemSideMenu={setItemSideMenu}
+                    setSearchElem={setSearchElem}
+                />
                 <figure className="app__user" onClick={onRetrieveUser}>
                     <img
                         src={
@@ -81,7 +93,7 @@ export default function Layout() {
                 <main className="main">
                     <div id="portal" />
                     <Suspense fallback={<Preloader />}>
-                        <Outlet context={{ itemSideMenu, theme, onToggleAppTheme }} />
+                        <Outlet context={{ itemSideMenu, searchElem, theme, onToggleAppTheme, setSearchElem }} />
                     </Suspense>
                 </main>
             </div>

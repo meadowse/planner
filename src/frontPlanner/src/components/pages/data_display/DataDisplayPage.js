@@ -11,7 +11,7 @@ import Preloader from '@components/auxiliary_pages/loader/Preloader';
 import DataDisplayService from '@services/data_display.service';
 
 // Импорт вспомогательных функций
-import { extractSampleData, simplifyData, getFilteredData } from '@helpers/helper';
+import { extractSampleData, simplifyData, getUniqueData, getFilteredData } from '@helpers/helper';
 
 // Импорт контекста
 import { useHistoryContext } from '../../../contexts/history.context';
@@ -143,6 +143,7 @@ function HeaderBottom(props) {
                         type="text"
                         placeholder="Поиск по карточкам"
                         value={searchElem}
+                        onBlur={onFocusOut}
                         onChange={e => setSearchElem(e.target.value)}
                     />
                     {displayModes && displayModes.length !== 0 ? (
@@ -204,6 +205,7 @@ function HeaderBottom(props) {
                             type="text"
                             placeholder="Поиск по компании"
                             value={searchElem}
+                            onBlur={onFocusOut}
                             onChange={e => setSearchElem(e.target.value)}
                         />
                         <DisplayModes
@@ -226,6 +228,7 @@ function HeaderBottom(props) {
                             type="text"
                             placeholder="Поиск по задачам"
                             value={searchElem}
+                            onBlur={onFocusOut}
                             onChange={e => setSearchElem(e.target.value)}
                         />
                         <DisplayModes
@@ -246,6 +249,11 @@ function HeaderBottom(props) {
             );
         }
     };
+
+    // Обработка потери фокуса
+    function onFocusOut(e) {
+        localStorage.setItem('globalSearch', e.target.value);
+    }
 
     // Выбор режима отображения
     function onSelectMode(value) {
@@ -303,13 +311,11 @@ export default function DataDisplayPage({ partition }) {
         cacheTime: 60 * 60 * 1000
     });
 
-    const { itemSideMenu, theme, onToggleAppTheme } = useOutletContext();
+    const { itemSideMenu, searchElem, theme, onToggleAppTheme, setSearchElem } = useOutletContext();
 
     const navigate = useNavigate();
     const { clearHistory } = useHistoryContext();
 
-    // Элемент поиска
-    const [searchElem, setSearchElem] = useState('');
     // Режимы отображения
     const [displayModes, setDisplayModes] = useState([]);
     // Режим отображения
@@ -439,9 +445,12 @@ export default function DataDisplayPage({ partition }) {
     };
 
     // Очитска истории маршрутов
-    useEffect(() => clearHistory(`${itemSideMenu?.path}${mode?.key}`), [itemSideMenu]);
+    // useEffect(() => clearHistory(`${itemSideMenu?.path}${mode?.key}`), [itemSideMenu]);
 
     useEffect(() => {
+        // Очитска истории маршрутов
+        clearHistory(`${itemSideMenu?.path}${mode?.key}`);
+
         const dataDisplayModes = DataDisplayService.getDisplayModes(partition)?.map(item => {
             return { key: item?.keyMode, value: item?.mode };
         });
@@ -496,7 +505,6 @@ export default function DataDisplayPage({ partition }) {
             <div className="page-section-header">
                 <HeaderTop itemSideMenu={itemSideMenu.title} theme={theme} onToggleAppTheme={onToggleAppTheme} />
                 <HeaderBottom
-                    itemSideMenu={itemSideMenu.title}
                     partition={partition}
                     searchElem={searchElem}
                     displayModes={displayModes}
@@ -589,17 +597,36 @@ export default function DataDisplayPage({ partition }) {
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={uploadedData}>
                                         {resolvedData => {
-                                            const filteredDataById = getFilteredData(
+                                            // Фильтрация данных по id
+                                            const filteredDataByIdExec = getFilteredData(
                                                 resolvedData?.tasks,
                                                 Cookies.get('MMUSERID'),
                                                 modeOption?.listTasks
                                             );
-                                            // console.log(
-                                            //     `filteredDataById: ${JSON.stringify(filteredDataById, null, 4)}`
-                                            // );
+                                            // Фильтрация данных по id соисполнителя
+                                            const filteredDataByIdCoExec = getFilteredData(
+                                                resolvedData?.tasks,
+                                                Cookies.get('MMUSERID'),
+                                                {
+                                                    keyMode: 'listTasks',
+                                                    value: 'Соисполнитель',
+                                                    key: 'coExecutor',
+                                                    uniqueness: 'id'
+                                                }
+                                            );
+
+                                            // Сформированные данные после слияния
+                                            const mergedData = filteredDataByIdExec.concat(filteredDataByIdCoExec);
+                                            // Массив уникальных идентификаторов
+                                            const uniqueIds = [...new Set(mergedData.map(elem => elem.id))];
+                                            // Уникальные данные
+                                            const uniqueData = resolvedData?.tasks?.filter(item =>
+                                                uniqueIds.includes(item?.id)
+                                            );
+
                                             const filteredData = filterData(
-                                                filteredDataById,
-                                                simplifyData(extractSampleData(filteredDataById, valsToDisplay)),
+                                                uniqueData,
+                                                simplifyData(extractSampleData(uniqueData, valsToDisplay)),
                                                 searchElem
                                             );
                                             return (

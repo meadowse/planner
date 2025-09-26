@@ -273,7 +273,7 @@ function Responsible({ responsible }) {
 
 // Участники
 function Participants({ participants }) {
-    // console.log(`users: ${JSON.stringify(users, null, 4)}`);
+    console.log(`Participants: ${JSON.stringify(participants, null, 4)}`);
     return participants && Object.keys(participants).length !== 0 ? (
         <ul
             className="kanban-card__footer-users"

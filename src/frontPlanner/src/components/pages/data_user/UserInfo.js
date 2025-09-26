@@ -279,13 +279,36 @@ export default function UserInfoNew() {
                             <Suspense fallback={<Preloader />}>
                                 <Await resolve={data?.uploadedData}>
                                     {resolvedData => {
-                                        const filteredData =
+                                        // const filteredData =
+                                        //     getFilteredData(resolvedData?.tabData, idEmployee, userInfo?.tabOption) ||
+                                        //     [];
+                                        const filteredDataById =
                                             getFilteredData(resolvedData?.tabData, idEmployee, userInfo?.tabOption) ||
                                             [];
+                                        // Фильтрация данных по id соисполнителя
+                                        const filteredDataByIdCoExec = getFilteredData(
+                                            resolvedData?.tabData,
+                                            idEmployee,
+                                            {
+                                                keyMode: 'listTasks',
+                                                value: 'Соисполнитель',
+                                                key: 'coExecutor',
+                                                uniqueness: 'id'
+                                            }
+                                        );
+
+                                        // Сформированные данные после слияния
+                                        const mergedData = filteredDataById.concat(filteredDataByIdCoExec);
+                                        // Массив уникальных идентификаторов
+                                        const uniqueIds = [...new Set(mergedData.map(elem => elem.id))];
+                                        //
+                                        const uniqueData = resolvedData?.tabData.filter(item =>
+                                            uniqueIds.includes(item?.id)
+                                        );
 
                                         return (
                                             <ListMode
-                                                testData={filteredData || []}
+                                                testData={uniqueData || []}
                                                 modeConfig={{
                                                     keys: userInfo.valsToDisplay,
                                                     // partition: userInfo.tab?.key,

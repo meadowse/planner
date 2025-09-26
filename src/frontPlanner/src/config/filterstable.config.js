@@ -13,6 +13,7 @@ export const DEFAULT_FILTERS = {
     dateOfEnding: 'Все',
     manager: 'Все',
     responsible: 'Все',
+    coExecutor: 'Все',
     participants: 'Все',
     pathToFolder: '',
     // subsection: '',
@@ -20,13 +21,13 @@ export const DEFAULT_FILTERS = {
     email: '',
     typeWork: '',
     deadline: 'Все',
-    dateDone: 'Все',
-    done: 'Все'
+    dateDone: 'Все'
+    // done: 'Все'
 };
 
 export const INITIAL_FILTERS = {
-    stage: 'В работе',
-    done: 'Не завершено'
+    stage: 'В работе'
+    // done: 'Не завершено'
 };
 
 export const KEYS_FOR_STORAGE = {
@@ -200,26 +201,26 @@ export const OPTIONS_FILTER_CONF = {
         });
         return newData;
     },
-    done: data => {
-        const newData = [];
-        let tempData = [
-            'Все',
-            ...Array.from(
-                new Set(
-                    data.map(item => {
-                        if (item.done) return 'Завершено';
-                        else return 'Не завершено';
-                    })
-                )
-            )
-        ];
+    // done: data => {
+    //     const newData = [];
+    //     let tempData = [
+    //         'Все',
+    //         ...Array.from(
+    //             new Set(
+    //                 data.map(item => {
+    //                     if (item.done) return 'Завершено';
+    //                     else return 'Не завершено';
+    //                 })
+    //             )
+    //         )
+    //     ];
 
-        tempData.map(item => {
-            if (item) newData.push(item);
-        });
+    //     tempData.map(item => {
+    //         if (item) newData.push(item);
+    //     });
 
-        return newData;
-    },
+    //     return newData;
+    // },
     manager: data => {
         const newData = [];
         const tempData = ['Все', ...Array.from(new Set(data.map(item => item.manager?.fullName)))];
@@ -304,6 +305,16 @@ export const FILTER_HANDLERS_CONF = new Map([
         }
     ],
     [
+        'coExecutor',
+        (filterVal, coExecutor) => {
+            if (filterVal?.includes('Все')) return true;
+            else {
+                if (coExecutor && Object.keys(coExecutor).length !== 0)
+                    return filterVal?.includes('Все') || Object.values(coExecutor)?.includes(filterVal);
+            }
+        }
+    ],
+    [
         'participants',
         (filterVal, participants) => {
             if (participants && participants.length !== 0) {
@@ -374,16 +385,16 @@ export const FILTER_HANDLERS_CONF = new Map([
             }
         }
     ],
-    [
-        'done',
-        (filterVal, done) => {
-            if (filterVal?.includes('Все')) return true;
-            else {
-                if (done) return filterVal === 'Завершено';
-                else return filterVal === 'Не завершено';
-            }
-        }
-    ],
+    // [
+    //     'done',
+    //     (filterVal, done) => {
+    //         if (filterVal?.includes('Все')) return true;
+    //         else {
+    //             if (done) return filterVal === 'Завершено';
+    //             else return filterVal === 'Не завершено';
+    //         }
+    //     }
+    // ],
     [
         'contacts',
         (filterVal, contacts) =>
