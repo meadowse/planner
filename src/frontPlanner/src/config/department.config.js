@@ -66,10 +66,11 @@ export const DATA_CONVERSION_MAP = {
 
         if (responsible && Object.keys(responsible).length !== 0) {
             return {
-                mmId: responsible?.idMM ?? null,
+                id: responsible?.id || responsible?.idMM || null,
+                mmId: responsible?.id || responsible?.idMM || null,
                 fullName: responsible?.fullName,
                 photo: responsible?.idMM
-                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.idMM}/image`
+                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.idMM ?? responsible?.id}/image`
                     : '/img/user.svg',
                 post: null
             };
@@ -79,19 +80,22 @@ export const DATA_CONVERSION_MAP = {
     manager: manager => {
         if (manager && Object.keys(manager).length !== 0) {
             return {
+                id: manager?.idMM ?? null,
                 mmId: manager?.idMM ?? null,
                 fullName: manager?.fullName || 'Нет данных',
-                photo: manager?.idMM ? `https://mm-mpk.ru/api/v4/users/${manager?.idMM}/image` : '/img/user.svg',
+                photo: manager?.idMM
+                    ? `https://mm-mpk.ru/api/v4/users/${manager?.idMM ?? manager?.id}/image`
+                    : '/img/user.svg',
                 post: null
             };
         }
     },
     participants: participants => {
-        console.log(`participants: ${JSON.stringify(participants, null, 4)}`);
         return participants && participants.length !== 0
             ? participants.map(participant => {
                   const { idMM, ...restElems } = participant;
                   return {
+                      id: idMM ?? participant?.participantId,
                       mmId: idMM ?? participant?.participantId,
                       ...restElems,
                       photo: idMM
