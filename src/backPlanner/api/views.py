@@ -610,13 +610,15 @@ def addTask(request):
             cur.execute(sql)
             executor = cur.fetchone()[0]
             message = f'**Добавлена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
-            message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
-            message += f'Постановщик: *@{director}*\n' if director is not None else ''
-            message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
-            message += (f'Задача: :hammer: *{task}*\n' if task is not None or task != '' else '')
-            message += f'Deadline: :calendar: *{deadline}*\n' if deadline is not None else ''
-            message += f'Комментарий: :speech_balloon: *{comment}*\n' if comment is not None or comment != '' else ''
-            message += f'Планируемые времязатраты: :clock3: *{plannedTimeCosts}ч.*\n' if plannedTimeCosts is not None else ''
+            message += f'Дата добавления: *{dateStart}*\n'
+            message += f'Постановщик: *@{director}*\n'
+            message += f'Исполнитель: *@{executor}*\n'
+            if task != '':
+                message += f'Задача: :hammer: *{task}*\n'
+            message += f'Deadline: :calendar: *{deadline}*\n'
+            if comment != '':
+                message += f'Комментарий: :speech_balloon: *{comment}*\n'
+            message += f'Планируемые времязатраты: :clock3: *{plannedTimeCosts}ч.*\n'
             message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
             data = {'channel_id': idChannel, 'message': message}
             response = requests.post(
