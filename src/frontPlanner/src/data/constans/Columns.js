@@ -548,6 +548,8 @@ const COLUMNS = [
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
 
+            console.log(`Руководитель отдела: ${JSON.stringify(props?.value, null, 4)}`);
+
             function onShowInfoEmployee(employee) {
                 // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
 

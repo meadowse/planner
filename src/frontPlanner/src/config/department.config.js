@@ -70,7 +70,9 @@ export const DATA_CONVERSION_MAP = {
                 mmId: responsible?.id || responsible?.idMM || null,
                 fullName: responsible?.fullName,
                 photo: responsible?.idMM
-                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.idMM ?? responsible?.id}/image`
+                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.idMM}/image`
+                    : responsible?.id
+                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.id}/image`
                     : '/img/user.svg',
                 post: null
             };
@@ -84,7 +86,9 @@ export const DATA_CONVERSION_MAP = {
                 mmId: manager?.idMM ?? null,
                 fullName: manager?.fullName || 'Нет данных',
                 photo: manager?.idMM
-                    ? `https://mm-mpk.ru/api/v4/users/${manager?.idMM ?? manager?.id}/image`
+                    ? `https://mm-mpk.ru/api/v4/users/${manager?.idMM}/image`
+                    : manager?.id
+                    ? `https://mm-mpk.ru/api/v4/users/${manager?.id}/image`
                     : '/img/user.svg',
                 post: null
             };
