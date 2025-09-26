@@ -595,8 +595,7 @@ def addTask(request):
         executorId = obj.get('executorId')
         parenId = obj.get('parentId')
         plannedTimeCosts = obj.get('plannedTimeCosts')
-        with firebirdsql.connect(host=host, database=database, user=user, password=password,
-                                 charset=charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             if contractId is None:
                 idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
@@ -604,21 +603,19 @@ def addTask(request):
                 sql = f'select F4644 from T212 where ID = {contractId}'
                 cur.execute(sql)
                 idChannel = cur.fetchone()[0]
-            sql = f"""SELECT F4932 FROM T3 WHERE ID = '{directorId}'"""
+            sql = f"SELECT F4932 FROM T3 WHERE ID = {directorId}"
             cur.execute(sql)
-            directorData = cur.fetchone()
-            director = directorData[0]
-            sql = f"""SELECT F4932 FROM T3 WHERE ID = '{executorId}'"""
+            director = cur.fetchone()[0]
+            sql = f"SELECT F4932 FROM T3 WHERE ID = {executorId}"
             cur.execute(sql)
-            executorData = cur.fetchone()
-            executor = executorData[0]
+            executor = cur.fetchone()[0]
             message = f'**Добавлена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
             message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
             message += f'Постановщик: *@{director}*\n' if director is not None else ''
             message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
             message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
             message += f'Deadline: :calendar: *{deadline}*\n' if deadline is not None else ''
-            message += f'Комментарий: :speech_balloon: *{comment}*\n' if comment is not None else ''
+            message += f'Комментарий: :speech_balloon: *{comment}*\n' if comment is not None or comment != '' else ''
             message += f'Планируемые времязатраты: :clock3: *{plannedTimeCosts}ч.*\n' if plannedTimeCosts is not None else ''
             message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
             data = {'channel_id': idChannel, 'message': message}
