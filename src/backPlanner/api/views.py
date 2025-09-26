@@ -627,23 +627,10 @@ def addTask(request):
             cur.execute(f'SELECT GEN_ID(GEN_T218, 1) FROM RDB$DATABASE')
             ID = cur.fetchonemap().get('GEN_ID', None)
             # Подготовка значений для вставки
-            values = {
-                'id': ID,
-                'F4691': contractId,
-                'F4695': task,
-                'F4698': comment,
-                'F5724': typeWorkId,
-                'F4970': dateStart,
-                'F5569': dateStart,
-                'F4696': deadline,
-                'F4693': directorId,  # должно быть ID пользователя
-                'F4694': executorId,
-                'F4697': 0,
-                'F5646': parenId,
-                'F5872': 'Новая',
-                'F5451': idMessage,
-                'F5889': plannedTimeCosts,
-            }
+            values = {'id': ID, 'F4691': contractId, 'F4695': task, 'F4698': comment, 'F5724': typeWorkId,
+                      'F4970': dateStart, 'F5569': dateStart, 'F4696': deadline, 'F4693': directorId,  # должно быть ID пользователя
+                      'F4694': executorId, 'F4697': 0, 'F5646': parenId, 'F5872': 'Новая', 'F5451': idMessage,
+                      'F5889': plannedTimeCosts, }
             # Преобразование значений в SQL-формат
             sql_values = []
             for key, value in values.items():
@@ -656,7 +643,7 @@ def addTask(request):
                 else:
                     raise ValueError(f"Unsupported type for value: {value}")
             # Формирование SQL-запроса
-            sql = f"""INSERT INTO T218 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
+            sql = f"INSERT INTO T218 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"
             cur.execute(sql)
             con.commit()
         return JsonResponse({'status': response.json()}, status=response.status_code)
@@ -680,24 +667,12 @@ def editTask(request):
         status = obj.get('status')
         today = datetime.date.today().strftime('%Y-%m-%d')
         plannedTimeCosts = obj.get('plannedTimeCosts')
-        with firebirdsql.connect(host=host, database=database, user=user, password=password,
-                                 charset=charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             # Подготовка значений для обновления
-            values = {
-                'F4695': task,
-                'F4698': comment,
-                'F5724': typeWorkId,
-                'F5569': dateStart,
-                'F4696': deadline,
-                'F4697': done,
-                'F4708': today,
-                'F4693': directorId,  # должно быть ID пользователя
-                'F4694': executorId,
-                'F5646': parenId,
-                'F5872': status,
-                'F5889': plannedTimeCosts,
-            }
+            values = {'F4695': task, 'F4698': comment, 'F5724': typeWorkId, 'F5569': dateStart, 'F4696': deadline,
+                      'F4697': done, 'F4708': today, 'F4693': directorId,  # должно быть ID пользователя
+                      'F4694': executorId, 'F5646': parenId, 'F5872': status, 'F5889': plannedTimeCosts, }
             # Преобразование значений в SQL-формат
             set_clause = []
             for key, value in values.items():
@@ -710,11 +685,7 @@ def editTask(request):
                 else:
                     raise ValueError(f"Unsupported type for value: {value}")
             # Формирование SQL-запроса
-            sql = f"""
-            UPDATE T218
-            SET {', '.join(set_clause)}
-            WHERE id = {taskId}
-            """
+            sql = f"UPDATE T218 SET {', '.join(set_clause)} WHERE id = {taskId}"
             cur.execute(sql)
             con.commit()
             sql = f'SELECT F4691 FROM T218 WHERE ID = {taskId}'
@@ -726,27 +697,27 @@ def editTask(request):
                 sql = f'select F4644 from T212 where ID = {contractId}'
                 cur.execute(sql)
                 idChannel = cur.fetchone()[0]
-            sql = f"""SELECT F4932 FROM T3 WHERE ID = '{directorId}'"""
+            sql = f"SELECT F4932 FROM T3 WHERE ID = {directorId}"
             cur.execute(sql)
             director = cur.fetchone()[0]
-            sql = f"""SELECT F4932 FROM T3 WHERE ID = '{executorId}'"""
+            sql = f"SELECT F4932 FROM T3 WHERE ID = {executorId}"
             cur.execute(sql)
             executor = cur.fetchone()[0]
             message = f"**{'Изменена' if done != 1 else 'Завершена'} :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n"
-            message += f'Дата добавления: *{dateStart}*\n' if dateStart is not None else ''
-            message += f'Постановщик: *@{director}*\n' if director is not None else ''
-            message += f'Исполнитель: *@{executor}*\n' if executor is not None else ''
-            message += f'Задача: :hammer: *{task}*\n' if task is not None else ''
-            message += f'Deadline: :calendar: *{deadline}*\n' if deadline is not None else ''
-            message += f'Комментарий: :speech_balloon: *{comment}*\n' if comment is not None and comment != '' else ''
-            sql = f"""SELECT F5889 FROM T218 WHERE ID = {taskId}"""
-            cur.execute(sql)
-            time = cur.fetchone()[0]
-            message += f'Планируемые времязатраты: :clock3: *{time}ч.*\n' if time is not None else ''
+            message += f'Дата добавления: *{dateStart}*\n'
+            message += f'Постановщик: *@{director}*\n'
+            message += f'Исполнитель: *@{executor}*\n'
+            if task != '':
+                message += f'Задача: :hammer: *{task}*\n'
+            message += f'Deadline: :calendar: *{deadline}*\n'
+            if comment != '':
+                message += f'Комментарий: :speech_balloon: *{comment}*\n'
+            message += f'Планируемые времязатраты: :clock3: *{plannedTimeCosts}ч.*\n'
             sql = f"SELECT SUM(F5882) FROM T320 WHERE F5862 = {taskId}"
             cur.execute(sql)
             currentTimeCosts = cur.fetchone()[0]
-            message += f'Текущие времязатраты: :clock3: *{currentTimeCosts}ч.*\n' if currentTimeCosts is not None else ''
+            if currentTimeCosts is not None:
+                message += f'Текущие времязатраты: :clock3: *{currentTimeCosts}ч.*\n'
             statusEmoji = ''
             match status:
                 case 'Новая':
@@ -761,13 +732,11 @@ def editTask(request):
                     statusEmoji = ':x:'
             message += f'Статус: {statusEmoji} *{status}* {statusEmoji}\n'
             message += ':large_yellow_circle: *Задача ожидает завершения...*' if done != 1 else f':large_green_circle: *Задача завершена {today}*'
-            sql = f"""SELECT F5451 FROM T218 WHERE ID = {taskId}"""
+            sql = f"SELECT F5451 FROM T218 WHERE ID = {taskId}"
             cur.execute(sql)
             rootId = cur.fetchone()[0]
             data = {'channel_id': idChannel, 'message': message, 'root_id': rootId}
-            response = requests.post(
-                f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts",
-                json=data, headers=headers)
+            response = requests.post(f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data, headers=headers)
         return JsonResponse({'status': response.json()}, status=response.status_code)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
