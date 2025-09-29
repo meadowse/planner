@@ -585,14 +585,14 @@ function ParentsTasks(props) {
         // console.log(`onSelectParentTask value: ${JSON.stringify(task, null, 4)}`);
         setParentTask(task);
         // onSelect('parentId', value);
-        onSelect('parent', task);
+        onSelect('parentId', task?.value);
     }
 
     // Удалить род.задачу
     function onDeleteParentTask() {
         setParentTask(null);
         // onSelect('parentId', null);
-        onSelect('parent', null);
+        onSelect('parentId', null);
     }
 
     // Открыть задачу
@@ -614,7 +614,7 @@ function ParentsTasks(props) {
             if (presetValue in allTasks) {
                 const parentTaskData = { value: presetValue, title: allTasks[presetValue]?.task ?? 'Нет данных' };
                 setParentTask(parentTaskData);
-                onSelect('parentId', parentTaskData);
+                onSelect('parentId', parentTaskData?.value);
             }
         }
     }, []);
@@ -1385,9 +1385,6 @@ export default function TaskPopup(props) {
     const [idContract, setIdContract] = useState(data?.idContract ?? null);
     const [contractsIDs, setContractsIDs] = useState({});
 
-    // Родительская задача
-    const [parentTask, setParentTask] = useState({});
-
     const { values, onChange, onChangeByKey, onClick } = useTaskForm(
         TaskService.getTaskData(data?.task, operationData?.disabledFields),
         operationData?.disabledFields
@@ -1440,7 +1437,7 @@ export default function TaskPopup(props) {
                 dateStart: values?.dateStart,
                 deadline: values?.deadlineTask?.value,
                 plannedTimeCosts: Number(values?.plannedTimeCosts),
-                parentId: values?.parentId?.value,
+                parentId: values?.parentId,
                 task: values?.task,
                 comment: values?.comment
             };
@@ -1464,7 +1461,7 @@ export default function TaskPopup(props) {
                 dateStart: values?.dateStart,
                 deadline: values?.deadlineTask?.value,
                 plannedTimeCosts: Number(values?.plannedTimeCosts),
-                parentId: values?.parentId?.value,
+                parentId: values?.parentId,
                 done: !values?.done || values?.done === null ? 0 : values?.done,
                 task: values?.task,
                 comment: values?.comment
@@ -1609,7 +1606,7 @@ export default function TaskPopup(props) {
                             />
                             {/* Комментарий */}
                             <Comment
-                                presetValue={data?.task?.comment ?? parentTask?.comment}
+                                presetValue={data?.task?.comment}
                                 config={{ hidden: operationData?.hiddenFields?.comment ? true : false }}
                                 onChange={onChange}
                                 onChangeByKey={onChangeByKey}

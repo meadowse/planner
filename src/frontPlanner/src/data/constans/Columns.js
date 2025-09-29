@@ -34,11 +34,9 @@ const CELLS = {
             <div className={`cell__${additClass}`} onClick={onClick}>
                 <img className={`cell__${additClass}-photo`} src={value?.photo} alt="" />
                 <div className={`cell__${additClass}-info`}>
-                    <h2 className={`cell__${additClass}-fullname`}>{value?.fullName || 'Нет данных'}</h2>
+                    <h2 className={`cell__${additClass}-fullname`}>{value?.fullName ?? null}</h2>
                     {value?.post ? <p className={`cell__${additClass}-post`}>{value?.post}</p> : null}
-                    {value?.phone ? (
-                        <p className={`cell__${additClass}-phone`}>{value?.phone || 'Нет данных'}</p>
-                    ) : null}
+                    {value?.phone ? <p className={`cell__${additClass}-phone`}>{value?.phone ?? null}</p> : null}
                 </div>
             </div>
         );
@@ -464,6 +462,8 @@ const COLUMNS = [
                 });
             };
 
+            // console.log(`row data: ${JSON.stringify(props?.row.original, null, 4)}`);
+
             return (
                 <>
                     <div
@@ -474,14 +474,18 @@ const COLUMNS = [
                             paddingLeft: `${props?.row?.depth * 20}px`
                         }}
                     >
-                        <p
-                            className="cell__task"
-                            ref={refCell}
-                            onMouseLeave={() => refCell?.current.scrollTo(0, 0)}
-                            onClick={onOpenEditTaskPopup}
-                        >
-                            <span>{props?.value || 'Нет данных'}</span>
-                        </p>
+                        <div className="cell__task" ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
+                            <div className="cell__task-content">
+                                <h2 onClick={onOpenEditTaskPopup}>{props?.value || 'Нет данных'}</h2>
+                                <h3>
+                                    {props?.row?.original?.contractNum ?? null}
+                                    {String.fromCharCode(8195)}
+                                    {props?.row?.original?.address ?? null}
+                                    {String.fromCharCode(8195)}
+                                    {props?.row?.original?.customer ?? null}
+                                </h3>
+                            </div>
+                        </div>
                         {props?.row.canExpand ? (
                             <span
                                 className="cell__expand"
@@ -540,6 +544,31 @@ const COLUMNS = [
         }
     },
     {
+        Header: 'Проектный менеджер',
+        accessor: 'projectManager',
+        sortable: true,
+        sortBy: 'fullName',
+        Cell: props => {
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee(employee) {
+                if (employee?.mmId && employee?.mmId !== -1) {
+                    startTransition(() => {
+                        addToHistory(`${window.location.pathname}`);
+                        navigate(`../../user/${employee?.mmId}/profile/profile/`, {
+                            state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                        });
+                    });
+                }
+            }
+
+            return props?.value && Object.keys(props?.value).length !== 0
+                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
+                : 'Нет данных';
+        }
+    },
+    {
         Header: 'Руководитель отдела',
         accessor: 'responsible',
         sortable: true,
@@ -548,12 +577,10 @@ const COLUMNS = [
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
 
-            console.log(`Руководитель отдела: ${JSON.stringify(props?.value, null, 4)}`);
+            // console.log(`Руководитель отдела: ${JSON.stringify(props?.value, null, 4)}`);
 
             function onShowInfoEmployee(employee) {
                 // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
-
-                // localStorage.setItem('employee_settings', JSON.stringify({ activeTab: 0, data: userInfo?.data || [] }));
 
                 startTransition(() => {
                     addToHistory(`${window.location.pathname}`);
@@ -678,22 +705,90 @@ const COLUMNS = [
         sortable: true,
         sortBy: 'value',
         Cell: props => {
+            const { coExecutor, coExecutors } = props.config;
+            let coExecutorVal = null;
+            let coExecutorsArr = coExecutors && coExecutors.length !== 0 ? [...coExecutors] : [];
+
+            const [popupState, setPopupState] = useState(false);
+            const ref = useRef();
+
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
+
+            if (!coExecutor || Object.keys(coExecutor).length === 0) {
+                if (coExecutors && coExecutors.length !== 0) coExecutorVal = Object.assign({}, coExecutors[0]);
+            } else coExecutorVal = Object.assign({}, coExecutor);
 
             function onShowInfoEmployee(employee) {
                 startTransition(() => {
                     addToHistory(`${window.location.pathname}`);
-
                     navigate(`../../user/${employee?.mmId}/profile/profile/`, {
                         state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                     });
                 });
             }
 
-            return props?.value && Object.keys(props?.value).length !== 0
-                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
-                : 'Нет данных';
+            useEffect(() => {
+                const checkIfClickedOutside = e => {
+                    if (ref.current && !ref.current.contains(e.target)) setPopupState(false);
+                };
+                document.addEventListener('click', checkIfClickedOutside);
+                return () => {
+                    document.removeEventListener('click', checkIfClickedOutside);
+                };
+            }, [setPopupState]);
+
+            return (
+                <div className="cell__person-wrapper">
+                    <div className="cell__person" onClick={() => onShowInfoEmployee(coExecutorVal)}>
+                        <img
+                            className={`cell__person-photo`}
+                            src={
+                                coExecutorVal?.mmId
+                                    ? `https://mm-mpk.ru/api/v4/users/${coExecutorVal?.mmId}/image`
+                                    : '/img/user.svg'
+                            }
+                            alt=""
+                        />
+                        <h2 className={`cell__person-fullname`}>
+                            {coExecutorVal?.coExecutorName ?? coExecutorVal?.fullName}
+                        </h2>
+                    </div>
+                    {coExecutorsArr && coExecutorsArr.length !== 0 ? (
+                        <button
+                            ref={ref}
+                            className="cell__btn-show-persons"
+                            type="button"
+                            onClick={() => setPopupState(true)}
+                        >
+                            <span>+</span>
+                            <span>{coExecutorsArr.length}</span>
+                        </button>
+                    ) : null}
+                    <div class="cell__persons-list-wrapper">
+                        {coExecutorsArr && coExecutorsArr.length !== 0 && popupState ? (
+                            <ul className="cell__persons-list">
+                                {coExecutorsArr.map(elem => (
+                                    <li className="cell__persons-list-item" onClick={() => onShowInfoEmployee(elem)}>
+                                        <img
+                                            className={`cell__person-photo`}
+                                            src={
+                                                elem?.mmId
+                                                    ? `https://mm-mpk.ru/api/v4/users/${elem?.mmId}/image`
+                                                    : '/img/user.svg'
+                                            }
+                                            alt=""
+                                        />
+                                        <h2 className={`cell__person-fullname`}>
+                                            {elem?.coExecutorName ?? elem?.fullName}
+                                        </h2>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : null}
+                    </div>
+                </div>
+            );
         }
     },
     {

@@ -603,17 +603,17 @@ export default function DataDisplayPage({ partition }) {
                                                 Cookies.get('MMUSERID'),
                                                 modeOption?.listTasks
                                             );
+
                                             // Фильтрация данных по id соисполнителя
-                                            const filteredDataByIdCoExec = getFilteredData(
-                                                resolvedData?.tasks,
-                                                Cookies.get('MMUSERID'),
-                                                {
-                                                    keyMode: 'listTasks',
-                                                    value: 'Соисполнитель',
-                                                    key: 'coExecutor',
-                                                    uniqueness: 'id'
-                                                }
-                                            );
+                                            const filteredDataByIdCoExec =
+                                                modeOption?.listTasks?.key !== 'director'
+                                                    ? resolvedData?.tasks?.filter(
+                                                          task =>
+                                                              'coExecutor' in task &&
+                                                              task?.coExecutor &&
+                                                              Object.keys(task?.coExecutor).length !== 0
+                                                      )
+                                                    : [];
 
                                             // Сформированные данные после слияния
                                             const mergedData = filteredDataByIdExec.concat(filteredDataByIdCoExec);
@@ -664,7 +664,9 @@ export default function DataDisplayPage({ partition }) {
                                                 simplifyData(extractSampleData(dataById, valsToDisplay)),
                                                 searchElem
                                             );
-                                            // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
+                                            // console.log(
+                                            //     `listContracts filteredData: ${JSON.stringify(filteredData, null, 4)}`
+                                            // );
                                             return (
                                                 <ListMode
                                                     testData={filteredData}

@@ -53,7 +53,8 @@ const loadData = async (partition, idEmployee) => {
                                 skype: employee?.skype || 'Нет данных',
                                 division: employee?.department || 'Нет данных',
                                 birthday: employee?.birthday || 'Нет данных',
-                                office: employee?.office || 'Нет данных'
+                                office: employee?.office || 'Нет данных',
+                                director: employee?.fioDirector || 'Нет данных'
                             };
                             resolvedData.employee = Object.assign({}, userData);
                         }

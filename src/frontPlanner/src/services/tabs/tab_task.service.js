@@ -75,7 +75,7 @@ const getTaskData = (data, disabledFields) => {
         },
         // Родительcкая Задача
         parentId: value => {
-            return value ?? '';
+            return value ?? null;
         },
         // Задача
         task: value => {

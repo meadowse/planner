@@ -241,6 +241,12 @@
 
 /* Ячейка "Сотрудник" */
 
+.cell__person-wrapper {
+    display: flex;
+    align-items: center;
+    column-gap: 0.5vw;
+}
+
 .cell__person {
     width: max-content;
     display: flex;
@@ -255,10 +261,54 @@
     border-radius: 50%;
 }
 
-/* .cell__person-fullname {
-    font-family: 'Montserrat-SemiBold';
-    font-size: calc(0.5rem + 0.375 * (100vw - 20rem) / 100);
-} */
+.cell__btn-show-persons {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    column-gap: 5px;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid grey;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.cell__persons-list-wrapper {
+    position: relative;
+}
+
+.cell__persons-list {
+    padding: 10px;
+    width: max-content;
+    max-height: 200px;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5vw;
+    position: absolute;
+    bottom: 50%;
+    border-radius: 8px;
+    right: -50%;
+    transform: translate(100%, 50%);
+    overflow-y: auto;
+    background-color: #e8e9eb;
+    z-index: 120;
+}
+
+.cell__persons-list-item {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    column-gap: 0.5vw;
+    transition: all 0.8s ease;
+    cursor: pointer;
+    color: black;
+}
+
+.cell__persons-list-item:hover {
+    border-radius: 8px;
+    background-color: #c5c6d0;
+}
 
 /* Ячейка "Название прибора" */
 
@@ -374,6 +424,16 @@
 
 /* Заголовк "Задача" */
 
+.cell__task-content {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+}
+
+.cell__task-content h2 {
+    cursor: pointer;
+}
+
 .cell__task-title {
     display: flex;
     align-items: center;
@@ -390,8 +450,15 @@
 }
 
 /*  */
-.cell__task {
+.cell__task h2 {
+    width: max-content;
     text-decoration: underline;
+}
+
+.cell__task h3 {
+    /* font-size: calc(6px + 4 * (100vw - 320px) / 1600); */
+    font-style: italic;
+    color: var(--text-color-cell-subtitle);
 }
 
 .cell__task span {

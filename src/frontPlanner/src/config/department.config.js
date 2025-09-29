@@ -94,6 +94,21 @@ export const DATA_CONVERSION_MAP = {
             };
         }
     },
+    projectManager: projectManager => {
+        if (projectManager && Object.keys(projectManager).length !== 0) {
+            return {
+                id: projectManager?.idMM ?? null,
+                mmId: projectManager?.idMM ?? null,
+                fullName: projectManager?.fullName || 'Нет данных',
+                photo: projectManager?.idMM
+                    ? `https://mm-mpk.ru/api/v4/users/${projectManager?.idMM}/image`
+                    : projectManager?.id
+                    ? `https://mm-mpk.ru/api/v4/users/${projectManager?.id}/image`
+                    : '/img/user.svg',
+                post: null
+            };
+        }
+    },
     participants: participants => {
         return participants && participants.length !== 0
             ? participants.map(participant => {
@@ -161,9 +176,9 @@ export const TASKS_DATA_CONF = {
                 executor: [
                     'task',
                     'status',
-                    'contractNum',
-                    'address',
-                    'customer',
+                    // 'contractNum',
+                    // 'address',
+                    // 'customer',
                     'director',
                     'coExecutor',
                     'deadlineTask'
@@ -171,9 +186,9 @@ export const TASKS_DATA_CONF = {
                 director: [
                     'task',
                     'status',
-                    'contractNum',
-                    'address',
-                    'customer',
+                    // 'contractNum',
+                    // 'address',
+                    // 'customer',
                     'executor',
                     'coExecutor',
                     'deadlineTask'
@@ -185,7 +200,8 @@ export const TASKS_DATA_CONF = {
             keyMode: 'listContracts',
             modeOptions: [
                 { value: 'Руководитель отдела', key: 'responsible', uniqueness: 'id' },
-                { value: 'Исполнитель', key: 'participants', uniqueness: 'id' }
+                { value: 'Исполнитель', key: 'participants', uniqueness: 'id' },
+                { value: 'Проектные менеджеры', key: 'projectManager', uniqueness: 'id' }
             ],
             keys: {
                 responsible: [
@@ -206,6 +222,16 @@ export const TASKS_DATA_CONF = {
                     'stage',
                     'dateOfEnding',
                     'participants',
+                    'pathToFolder'
+                ],
+                projectManager: [
+                    'contractNum',
+                    'address',
+                    'company',
+                    'services',
+                    'stage',
+                    'dateOfEnding',
+                    'projectManager',
                     'pathToFolder'
                 ]
             }
