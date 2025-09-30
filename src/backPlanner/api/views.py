@@ -119,9 +119,9 @@ def getAgreements(request):
             Str = obj.get('tasks')
             tasks = {'tasks': []}
             if Str is not None:
-                List = Str.split('*')
+                List = Str.split('^')
                 for allData in List:
-                    list2 = allData.split(';')
+                    list2 = allData.split('&')
                     list2[0].strip()
                     if list2[0] == '' and list2[1] == '' and list2[2] == '':
                         continue
