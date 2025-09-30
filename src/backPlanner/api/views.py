@@ -105,9 +105,9 @@ def getAgreements(request):
             Str = obj.get('contacts')
             contacts = {'contacts': []}
             if Str is not None:
-                List = Str.split('^')
+                List = Str.split('*')
                 for allData in List:
-                    list2 = allData.split('&')
+                    list2 = allData.split(';')
                     flag = 0
                     for data in list2:
                         data.strip()
