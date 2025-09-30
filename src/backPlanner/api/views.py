@@ -595,6 +595,7 @@ def addTask(request):
         executorId = obj.get('executorId')
         parenId = obj.get('parentId')
         plannedTimeCosts = obj.get('plannedTimeCosts')
+        coExecutors = obj.get('coExecutors')
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             if contractId is None:
@@ -645,6 +646,7 @@ def addTask(request):
             # Формирование SQL-запроса
             sql = f"INSERT INTO T218 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"
             cur.execute(sql)
+            sql = f''
             con.commit()
         return JsonResponse({'status': response.json()}, status=response.status_code)
     else:
@@ -1265,15 +1267,8 @@ def addTimeCost(request):
                 sql = f"SELECT ID FROM T3 WHERE F16 = '{idMM}'"
                 cur.execute(sql)
                 idExecutor = cur.fetchone()[0]
-                values = {
-                    'ID': ID,
-                    'F5881': idExecutor,
-                    'F5862': taskId,
-                    'F5869': dataReport,
-                    'F5870': report,
-                    'F5882': timeHours,
-                    'F5863': spent,
-                }
+                values = {'ID': ID, 'F5881': idExecutor, 'F5862': taskId, 'F5869': dataReport, 'F5870': report,
+                          'F5882': timeHours, 'F5863': spent, }
                 sql_values = []
                 for key, value in values.items():
                     if value is None:
@@ -1306,12 +1301,7 @@ def editTimeCost(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                values = {
-                    'F5869': dataReport,
-                    'F5870': report,
-                    'F5882': timeHours,
-                    'F5863': spent,
-                }
+                values = {'F5869': dataReport, 'F5870': report, 'F5882': timeHours, 'F5863': spent, }
                 sql_values = []
                 for key, value in values.items():
                     if value is None:
@@ -1348,5 +1338,32 @@ def deleteTimeCost(request):
         except Exception as ex:
             print(f"НЕ удалось удалить отчёт {Id}: {ex}")
             return ex
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+@csrf_exempt
+def addCoExecutor(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        idCoExecutor = obj.get('idCoExecutor')
+        idTask = obj.get('idTask')
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+            cur = con.cursor()
+            try:
+                cur.execute(f'SELECT GEN_ID(GEN_T313, 1) FROM RDB$DATABASE')
+                ID = cur.fetchonemap().get('GEN_ID', None)
+                values = {'ID': ID, 'F5750': idTask, 'F5751': idCoExecutor, }
+                sql_values = []
+                for key, value in values.items():
+                    if isinstance(value, (int, float)):  # Числовые значения
+                        sql_values.append(str(value))
+                    else:
+                        raise ValueError(f"Unsupported type for value: {value}")
+                sql = f"""INSERT INTO T313 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
+                cur.execute(sql)
+                con.commit()
+                return JsonResponse({'result': 'Ok'}, status=200)
+            except Exception as ex:
+                print(f"Не удалось добавить соисполнителя {idCoExecutor} к задаче {idTask}: {ex}")
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
