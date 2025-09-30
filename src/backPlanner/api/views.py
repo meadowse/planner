@@ -1,5 +1,6 @@
 import json
 import firebirdsql
+from OpenSSL.rand import status
 from django.http import JsonResponse
 from time import perf_counter
 from django.views.decorators.csrf import csrf_exempt
@@ -30,7 +31,7 @@ def getAgreements(request):
         responsible.F4886 AS responsible,
         manager.F16 AS idMMManager,
         manager.F4886 AS manager,
-        LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
+        LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '^') AS tasks
         FROM T212
         LEFT JOIN T237 ON T212.F4948 = T237.ID
         LEFT JOIN T205 ON T212.F4540 = T205.ID
@@ -560,10 +561,7 @@ def getTask(request):
                 result = cur.fetchall()
                 columns = ('id', 'spent', 'dateReport', 'report', 'timeHours', 'idExecutor', 'idMMExecutor',
                            'executorFIO')
-                jsonResult = {'timeCosts': [
-                    {col: value for col, value in zip(columns, row)}
-                    for row in result
-                ]}  # Создаем список словарей с сериализацией значений
+                jsonResult = {'timeCosts': [{col: value for col, value in zip(columns, row)} for row in result]}  # Создаем список словарей с сериализацией значений
                 for task in jsonResult.get('timeCosts'):
                     dateReport = task.get('dateReport')
                     if dateReport is not None:
@@ -577,7 +575,7 @@ def getTask(request):
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи по задаче {taskId}: {ex}")
-                return ex
+                return JsonResponse({'error': f"НЕ удалось получить задачи по задаче {taskId}: {ex}"}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -595,7 +593,6 @@ def addTask(request):
         executorId = obj.get('executorId')
         parenId = obj.get('parentId')
         plannedTimeCosts = obj.get('plannedTimeCosts')
-        coExecutors = obj.get('coExecutors')
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             if contractId is None:
@@ -753,36 +750,45 @@ def deleteTask(request):
             with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                      charset=charset) as con:
                 cur = con.cursor()
-                sql = f'SELECT F4691 FROM T218 WHERE ID = {taskId}'
-                cur.execute(sql)
-                contractId = cur.fetchone()[0]
-                sql = f"""SELECT F5451 FROM T218 WHERE ID = {taskId}"""
-                cur.execute(sql)
-                rootId = cur.fetchone()[0]
-                sql = f"DELETE FROM T218 WHERE ID = {taskId}"
-                cur.execute(sql)
-                con.commit()
-                if contractId is None:
-                    idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
+                cur.execute(f'SELECT * FROM T313 WHERE F5750 = {taskId}')
+                result = cur.fetchall()
+                if len(result) == 0:
+                    cur.execute(f'SELECT * FROM T320 WHERE F5862 = {taskId}')
+                    result = cur.fetchall()
+                    if len(result) == 0:
+                        sql = f'SELECT F4691 FROM T218 WHERE ID = {taskId}'
+                        cur.execute(sql)
+                        contractId = cur.fetchone()[0]
+                        sql = f"SELECT F5451 FROM T218 WHERE ID = {taskId}"
+                        cur.execute(sql)
+                        rootId = cur.fetchone()[0]
+                        sql = f"DELETE FROM T218 WHERE ID = {taskId}"
+                        cur.execute(sql)
+                        con.commit()
+                        if contractId is None:
+                            idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
+                        else:
+                            sql = f'select F4644 from T212 where ID = {contractId}'
+                            cur.execute(sql)
+                            idChannel = cur.fetchone()[0]
+                        sql = f"SELECT ID FROM T3 WHERE F16 = '{idMM}'"
+                        cur.execute(sql)
+                        director = cur.fetchone()[0]
+                        sql = f"SELECT F4932 FROM T3 WHERE ID = {director}"
+                        cur.execute(sql)
+                        director = cur.fetchone()[0]
+                        message = f"**Удалена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**"
+                        data = {'channel_id': idChannel, 'message': message, 'root_id': rootId}
+                        response = requests.post(f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data,
+                                                 headers=headers)
+                        return JsonResponse({'status': response.json()}, status=response.status_code)
+                    else:
+                        return JsonResponse({'error': f"НЕ удалось удалить задачу {taskId}, т.к. у задачи присутствуют записи по отчётам времязатрат"}, status=500)
                 else:
-                    sql = f'select F4644 from T212 where ID = {contractId}'
-                    cur.execute(sql)
-                    idChannel = cur.fetchone()[0]
-                sql = f"SELECT ID FROM T3 WHERE F16 = '{idMM}'"
-                cur.execute(sql)
-                director = cur.fetchone()[0]
-                sql = f"SELECT F4932 FROM T3 WHERE ID = {director}"
-                cur.execute(sql)
-                director = cur.fetchone()[0]
-                message = f"**Удалена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**"
-                data = {'channel_id': idChannel, 'message': message, 'root_id': rootId}
-                response = requests.post(
-                    f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts",
-                    json=data, headers=headers)
-            return JsonResponse({'status': response.json()}, status=response.status_code)
+                    return JsonResponse({'error': f"НЕ удалось удалить задачу {taskId}, т.к. у задачи присутствуют записи по соисполнителям"}, status=500)
         except Exception as ex:
             print(f"НЕ удалось удалить задачу {taskId}: {ex}")
-            return ex
+            return JsonResponse({'error': f"НЕ удалось удалить задачу {taskId}: {ex}"}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -897,7 +903,7 @@ def getAllDepartmentsStaffAndTasks(request):
             return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
         except Exception as ex:
             print(f"Не удалось получить данные по отделам и сотрудникам: {ex}")
-            return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+            return JsonResponse({"error": f"Не удалось получить данные по отделам и сотрудникам: {ex}"}, status=500)
 
 @csrf_exempt
 def getTasksEmployee(request):
@@ -1013,8 +1019,7 @@ def getTasksEmployee(request):
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить задачи сотрудника {employeeId}: {ex}")
-                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False,
-                                                                                       'indent': 4})
+                return JsonResponse({"error": f"НЕ удалось получить задачи сотрудника {employeeId}: {ex}"}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -1190,8 +1195,8 @@ def getDataUser(request):
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить данные по сотруднику с id {employeeId}: {ex}")
-                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False,
-                                                                                       'indent': 4})
+                return JsonResponse({'error': f"НЕ удалось получить данные по сотруднику с id {employeeId}: {ex}"},
+                                    status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -1219,14 +1224,11 @@ def getVacations(request):
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = ('id', 'mmId', 'employeeFI', 'vacation', 'vacationStart', 'vacationEnd', 'post', 'department')
-                json_result = [
-                    {col: value for col, value in zip(columns, row)}
-                    for row in result
-                ]  # Создаем список словарей с сериализацией значений
+                json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
                 print(f"НЕ удалось получить данные по календарю отпусков")
-                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+                return JsonResponse({"error": str(ex)}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -1236,15 +1238,14 @@ def getContracts(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                sql = 'SELECT T212.ID AS id, T212.F4538 AS contractNum FROM T212'
-                cur.execute(sql)
+                cur.execute('SELECT T212.ID AS id, T212.F4538 AS contractNum FROM T212')
                 result = cur.fetchall()
                 columns = ('id', 'contractNum')
                 json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
-                print(f"НЕ удалось получить данные по договорам")
-                return JsonResponse({"error": str(ex)}, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+                print(f"НЕ удалось получить данные по договорам: {ex}")
+                return JsonResponse({"error": str(ex)}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -1285,6 +1286,7 @@ def addTimeCost(request):
                 return JsonResponse({'result': 'Ok'}, status=200)
             except Exception as ex:
                 print(f"Не удалось добавить отчёт по задаче {taskId}: {ex}")
+                return JsonResponse({'error': f"Не удалось добавить отчёт по задаче {taskId}: {ex}"}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -1319,6 +1321,7 @@ def editTimeCost(request):
                 return JsonResponse({'result': 'Ok'}, status=200)
             except Exception as ex:
                 print(f"Не удалось изменить отчёт {Id}: {ex}")
+                return JsonResponse({'error': f"Не удалось изменить отчёт {Id}: {ex}"}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -1331,13 +1334,13 @@ def deleteTimeCost(request):
             with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                      charset=charset) as con:
                 cur = con.cursor()
-                sql = f"""DELETE FROM T320 WHERE ID = {Id}"""
+                sql = f"DELETE FROM T320 WHERE ID = {Id}"
                 cur.execute(sql)
                 con.commit()
             return JsonResponse({'status': 'Ok'}, status=200)
         except Exception as ex:
             print(f"НЕ удалось удалить отчёт {Id}: {ex}")
-            return ex
+            return JsonResponse({'error': f"НЕ удалось удалить отчёт {Id}: {ex}"}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
