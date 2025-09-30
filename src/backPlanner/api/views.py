@@ -1350,21 +1350,29 @@ def addCoExecutor(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                cur.execute(f'SELECT GEN_ID(GEN_T313, 1) FROM RDB$DATABASE')
-                ID = cur.fetchonemap().get('GEN_ID', None)
-                values = {'ID': ID, 'F5750': idTask, 'F5751': idCoExecutor, }
-                sql_values = []
-                for key, value in values.items():
-                    if isinstance(value, (int, float)):  # Числовые значения
-                        sql_values.append(str(value))
-                    else:
-                        raise ValueError(f"Unsupported type for value: {value}")
-                sql = f"""INSERT INTO T313 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
-                cur.execute(sql)
-                con.commit()
-                return JsonResponse({'result': 'Ok'}, status=200)
+                cur.execute(f'SELECT * FROM T313 WHERE F5750 = {idTask} AND F5751 = {idCoExecutor}')
+                result = cur.fetchall
+                if len(result) == 0:
+                    cur.execute(f'SELECT GEN_ID(GEN_T313, 1) FROM RDB$DATABASE')
+                    ID = cur.fetchonemap().get('GEN_ID', None)
+                    values = {'ID': ID, 'F5750': idTask, 'F5751': idCoExecutor, }
+                    sql_values = []
+                    for key, value in values.items():
+                        if isinstance(value, (int, float)):  # Числовые значения
+                            sql_values.append(str(value))
+                        else:
+                            raise ValueError(f"Unsupported type for value: {value}")
+                    sql = f"""INSERT INTO T313 ({', '.join(values.keys())}) VALUES ({', '.join(sql_values)})"""
+                    cur.execute(sql)
+                    con.commit()
+                    return JsonResponse({'result': 'Ok'}, status=200)
+                else:
+                    return JsonResponse({'error': f'Соисполнитель {idCoExecutor} у задачи {idTask} уже присутствует'},
+                                        status=400)
             except Exception as ex:
                 print(f"Не удалось добавить соисполнителя {idCoExecutor} к задаче {idTask}: {ex}")
+                return JsonResponse(
+                    {'error': f"Не удалось добавить соисполнителя {idCoExecutor} к задаче {idTask}: {ex}"}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 
@@ -1384,6 +1392,7 @@ def deleteCoExecutor(request):
             return JsonResponse({'status': 'Ok'}, status=200)
         except Exception as ex:
             print(f"НЕ удалось удалить соисполнителя {idCoExecutor} задачи {idTask}: {ex}")
-            return ex
+            return JsonResponse(
+                {'error': f"НЕ удалось удалить соисполнителя {idCoExecutor} задачи {idTask}: {ex}"}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
