@@ -117,6 +117,15 @@ export default function ListMode(props) {
             };
             return <Cell cellData={cellData} cellConfig={config} />;
         },
+        coExecutor: cellData => {
+            const config = {
+                id: data[cellData?.indRow]?.id,
+                task: data[cellData?.indRow]?.task,
+                coExecutor: data[cellData?.indRow]?.coExecutor ?? null,
+                coExecutors: data[cellData?.indRow]?.coExecutors ?? null
+            };
+            return <Cell cellData={cellData} cellConfig={config} />;
+        },
         default: cellData => {
             return <Cell cellData={cellData} />;
         }

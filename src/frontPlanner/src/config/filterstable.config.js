@@ -12,6 +12,7 @@ export const DEFAULT_FILTERS = {
     deadlineTask: 'Все',
     dateOfEnding: 'Все',
     manager: 'Все',
+    projectManager: 'Все',
     responsible: 'Все',
     coExecutor: 'Все',
     participants: 'Все',
