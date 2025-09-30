@@ -1367,3 +1367,23 @@ def addCoExecutor(request):
                 print(f"Не удалось добавить соисполнителя {idCoExecutor} к задаче {idTask}: {ex}")
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+@csrf_exempt
+def deleteCoExecutor(request):
+    if request.method == 'POST':
+        obj = json.loads(request.body)
+        idCoExecutor = obj.get('idCoExecutor')
+        idTask = obj.get('idTask')
+        try:
+            with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                     charset=charset) as con:
+                cur = con.cursor()
+                sql = f"DELETE FROM T313 WHERE F5750 = {idTask} AND F5751 = {idCoExecutor}"
+                cur.execute(sql)
+                con.commit()
+            return JsonResponse({'status': 'Ok'}, status=200)
+        except Exception as ex:
+            print(f"НЕ удалось удалить соисполнителя {idCoExecutor} задачи {idTask}: {ex}")
+            return ex
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)

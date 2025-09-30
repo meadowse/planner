@@ -43,4 +43,5 @@ urlpatterns = [
     path('editTimeCost', editTimeCost, name='editTimeCost'),
     path('deleteTimeCost', deleteTimeCost, name='deleteTimeCost'),
     path('addCoExecutor', addCoExecutor, name='addCoExecutor'),
+    path('deleteCoExecutor', deleteCoExecutor, name='deleteCoExecutor'),
 ]
