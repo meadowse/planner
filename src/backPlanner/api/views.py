@@ -1,6 +1,5 @@
 import json
 import firebirdsql
-from OpenSSL.rand import status
 from django.http import JsonResponse
 from time import perf_counter
 from django.views.decorators.csrf import csrf_exempt
