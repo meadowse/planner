@@ -1353,7 +1353,7 @@ def addCoExecutor(request):
             cur = con.cursor()
             try:
                 cur.execute(f'SELECT * FROM T313 WHERE F5750 = {idTask} AND F5751 = {idCoExecutor}')
-                result = cur.fetchall
+                result = cur.fetchall()
                 if len(result) == 0:
                     cur.execute(f'SELECT GEN_ID(GEN_T313, 1) FROM RDB$DATABASE')
                     ID = cur.fetchonemap().get('GEN_ID', None)
