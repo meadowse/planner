@@ -50,7 +50,19 @@ const formItem = data => {
             mmId: data?.idMMExecutor || data?.mmId || null,
             fullName: data?.executorFIO || data?.directorName || data?.fullName
             //   photo: director.mmId ? `https://mm-mpk.ru/api/v4/users/${director.mmId}/image` : '/img/user.svg'
-        }
+        },
+        coExecutors:
+            data?.coExecutors && data?.coExecutors.length !== 0
+                ? data?.coExecutors?.map(coExecutor => {
+                      return {
+                          id: coExecutor?.id || null,
+                          mmId: coExecutor?.idMM || null,
+                          fullName: coExecutor?.fio || coExecutor?.fullName,
+                          post: coExecutor?.post || null,
+                          phone: coExecutor?.telephone || coExecutor?.phone || null
+                      };
+                  })
+                : null
     };
 };
 
@@ -88,6 +100,10 @@ const getTaskData = (data, disabledFields) => {
         // Исполнитель
         executor: value => {
             return value && Object.keys(value).length !== 0 ? value : null;
+        },
+        // Соисполнители
+        coExecutors: value => {
+            return value && value.length !== 0 ? value : null;
         },
         // Дата начала
         dateStart: value => {
@@ -193,11 +209,13 @@ const getTaskInfo = async (idTask, idParent) => {
                 // console.log(`typeof taskInfoData: ${typeof taskInfoData}`);
                 // console.log(`id: ${JSON.parse(localStorage.getItem('idContract'))}`);
                 if (response?.data && response?.data.length !== 0) {
-                    const { subtasks, ...otherElems } = response.data;
+                    const { subtasks, parent, ...otherElems } = response.data;
                     taskInfoData = {
                         ...formItem(otherElems),
+                        parent: formItem(parent),
                         subtasks: subtasks?.map(subtask => formItem(subtask))
                     };
+                    console.log(`getTaskInfo taskInfoData: ${JSON.stringify(taskInfoData, null, 4)}`);
                 }
             }
         })
@@ -396,6 +414,47 @@ const deleteTask = async (idTask, idEmployee) => {
         });
 };
 
+// Добавление соисполнителя
+const addCoExecutor = async (employeeId, taskId) => {
+    await axios
+        .post(`${window.location.origin}/api/addCoExecutor`, { idCoExecutor: employeeId, idTask: taskId })
+        .then(response => {
+            if (response.status === 200) {
+                //
+            }
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log(error.response);
+                console.log('server responded');
+            } else if (error.request) {
+                console.log('network error');
+            } else {
+                console.log(error);
+            }
+        });
+};
+
+// Удаление соисполнителя
+const deleteCoExecutor = async (employeeId, taskId) => {
+    let success = false;
+    await axios
+        .post(`${window.location.origin}/api/deleteCoExecutor`, { idCoExecutor: employeeId, idTask: taskId })
+        .then(response => {
+            if (response.status === 200) success = true;
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log(error.response);
+                console.log('server responded');
+            } else if (error.request) {
+                console.log('network error');
+            } else console.log(error);
+        });
+
+    return success;
+};
+
 const TaskService = {
     formItem,
     formData,
@@ -408,7 +467,9 @@ const TaskService = {
     getTaskInfo,
     addTask,
     editTask,
-    deleteTask
+    deleteTask,
+    addCoExecutor,
+    deleteCoExecutor
 };
 
 export default TaskService;

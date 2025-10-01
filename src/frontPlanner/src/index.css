@@ -15,6 +15,8 @@ html[data-theme='light'] {
     --bg-color-app-options: #fff;
     --bg-color-app-option-active: #f1f1f1;
     --bg-color-btn-app-theme: #dee2e6;
+    /* Боковое меню */
+    --border-color-side-menu-item-hover: #a9a9a9;
     /* Канбан */
     --bg-gradient-kanban-col-top: linear-gradient(90deg, #f1f1f1, #fff0 98.09%);
     --border-color-kanban-col: #dfdfdf;
@@ -82,6 +84,7 @@ html[data-theme='light'] {
     --bg-color-popup__task-form-tabs-content: #fcfcfc;
     --border-color-popup__task-form-tabs-content: #d3d3d3;
     --border-color-popup__table-row-cell: #e7e7e7;
+    --border-color-popup__table-wrapper_empty: #e7e7e7;
     /* #A9A9A9 */
     /* Модальное окно подтверждения */
     --bg-color-popup__action-selection-btn: #dcdcdc;
@@ -108,6 +111,8 @@ html[data-theme='dark'] {
     --bg-color-app-options: #272728;
     --bg-color-app-option-active: #444444;
     --bg-color-btn-app-theme: #495057;
+    /* Боковое меню */
+    --border-color-side-menu-item-hover: #fcfcfc;
     /* Канбан */
     --bg-gradient-kanban-col-top: linear-gradient(90deg, #323232, #4d4d4d 98.09%);
     --border-color-kanban-col: #adb5bd;
@@ -174,6 +179,7 @@ html[data-theme='dark'] {
     --bg-color-popup__task-form-tabs-content: #343432;
     --border-color-popup__task-form-tabs-content: grey;
     --border-color-popup__table-row-cell: #808080;
+    --border-color-popup__table-wrapper_empty: #808080;
     /* Модальное окно подтверждения */
     /* #DBE2E9 */
     --bg-color-popup__action-selection-btn: #888b8d;

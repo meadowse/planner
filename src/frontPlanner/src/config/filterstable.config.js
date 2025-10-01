@@ -17,7 +17,6 @@ export const DEFAULT_FILTERS = {
     coExecutor: 'Все',
     participants: 'Все',
     pathToFolder: '',
-    // subsection: '',
     phone: '',
     email: '',
     typeWork: '',
@@ -28,6 +27,7 @@ export const DEFAULT_FILTERS = {
 
 export const INITIAL_FILTERS = {
     stage: 'В работе'
+    // status: 'В работе'
     // done: 'Не завершено'
 };
 

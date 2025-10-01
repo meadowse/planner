@@ -7,7 +7,8 @@ export const EMPLOYEE_CONF = {
     telegramm: 'Telegram',
     division: 'Подразделение',
     birthday: 'День рождения',
-    office: 'Офис'
+    office: 'Офис',
+    director: 'Руководитель'
 };
 
 // Конфигурация по разделу "Сотрудник"

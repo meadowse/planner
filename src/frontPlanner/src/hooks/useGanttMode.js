@@ -411,6 +411,7 @@ export const useGanttMode = args => {
                                           moveElemId: item?.contractId + (ind + 1),
                                           contractId: item?.contractId,
                                           taskId: subtask?.id || -1,
+                                          parentTaskId: subtask?.parentId || -1,
                                           title: subtask?.title || 'Нет данных',
                                           contractNum: `${item?.contractNum}_${ind + 1}`,
                                           //   navKey: 'subtask',
@@ -432,6 +433,7 @@ export const useGanttMode = args => {
                                   moveElemId: item?.contractId + (ind + 1),
                                   contractId: item?.contractId,
                                   taskId: task?.id || -1,
+                                  parentTaskId: task?.parentId || -1,
                                   title: task?.title || 'Нет данных',
                                   contractNum: `${item?.contractNum}_${ind + 1}`,
                                   navKey: 'task',
@@ -645,6 +647,8 @@ export const useGanttMode = args => {
                                             subtasks.push({
                                                 moveElemId: +contract?.contractId + (ind + 1),
                                                 contractId: +contract?.contractId,
+                                                taskId: subtask?.id || -1,
+                                                parentTaskId: subtask?.parentId || -1,
                                                 title: subtask?.title || 'Нет данных',
                                                 contractNum: `${contract?.contractNum}_${ind + 1}`,
                                                 navKey: 'task',
@@ -664,6 +668,8 @@ export const useGanttMode = args => {
                                     taskItem.tasks.push({
                                         moveElemId: +contract?.contractId + (ind + 1),
                                         contractId: +contract?.contractId,
+                                        taskId: task?.id || -1,
+                                        parentTaskId: task?.parentId || -1,
                                         title: task?.title || 'Нет данных',
                                         contractNum: `${contract?.contractNum}_${ind + 1}`,
                                         navKey: 'task',
@@ -772,7 +778,7 @@ export const useGanttMode = args => {
         newData.bgColorTask = '#E4E4E4';
 
         if (filteredData && isArray(filteredData) && filteredData.length !== 0) {
-            console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}\npartition: ${partition}`);
+            // console.log(`modeOption: ${JSON.stringify(modeOption, null, 4)}\npartition: ${partition}`);
             filteredData.forEach(item => {
                 if (item && Object.keys(item).length !== 0) {
                     if (modeOption?.keyData) KEYS_DATA_CONF[modeOption?.keyData](item);

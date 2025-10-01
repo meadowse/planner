@@ -227,20 +227,22 @@ function TaskRow(props) {
                             tabForm: { key: 'works', title: 'Работа и задачи' },
                             partition: partition,
                             path: `${window.location.pathname}`,
-                            dataOperation: findNestedObj(dataOperations, 'key', operationVal)
+                            dataOperation: findNestedObj(dataOperations, 'key', operationVal),
+                            popupConf: {
+                                cell: 'task',
+                                info: { id: +task?.taskId, parentTaskId: +task?.parentTaskId }
+                            }
                         }
                     };
 
                     startTransition(() => {
                         addToHistory(`${window.location.pathname}`);
-                        // window.open(`../../dataform/works/${task?.contractId}`, '_blank');
                         if (event && event.button === 1) {
                             const url = `../../dataform/works/${task?.contractId}?data=${encodeURIComponent(
                                 JSON.stringify(navigationArg.state)
                             )}`;
                             window.open(url, '_blank');
                         } else navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
-                        // navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
                     });
 
                     localStorage.setItem('selectedTab', JSON.stringify({ key: 'works', title: 'Работа и задачи' }));
@@ -257,13 +259,6 @@ function TaskRow(props) {
             <div className="gantt-grid__main-row">
                 {containTasks ? (
                     <div className="gantt-task-title-wrapper" style={{ paddingLeft: `${config.indent / 16}rem` }}>
-                        {/* <div
-                            className="gantt-task-title"
-                            onClick={() => onShowInfo(null, task, 'update')}
-                            onMouseDown={e => onShowInfo(e, task, 'update')}
-                        >
-                            <span>{task?.title}</span>
-                        </div> */}
                         {isObject(task?.title) && Object.keys(task?.title).length !== 0 ? (
                             <p
                                 className="gantt-task-title"
@@ -414,7 +409,7 @@ function GanttChart(props) {
     // function onDrop(e, taskData) {}
 
     // console.log(`year: ${JSON.stringify(getDaysYear(dateState), null, 4)}`);
-    console.log(`new Data: ${JSON.stringify(gantt, null, 4)}`);
+    // console.log(`new Data: ${JSON.stringify(gantt, null, 4)}`);
 
     useEffect(() => {
         if (!ganttGridMain.current || !refCurrMonth.current) return;

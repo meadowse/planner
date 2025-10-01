@@ -126,7 +126,6 @@ function Tabs(props) {
                 <Outlet context={config} />
                 <MattermostIntegration channelId={config?.data?.channelId} />
             </div>
-            {/* {PARTITION_CONF[config?.partition] ? PARTITION_CONF[config?.partition]() : PARTITION_CONF?.default()} */}
         </div>
     );
 }
@@ -155,7 +154,8 @@ export default function DataFormNew() {
                 partition: queryData?.partition,
                 dataOperation: queryData?.dataOperation,
                 tabForm: queryData?.tabForm,
-                data: uploadedData
+                data: uploadedData,
+                popupConf: queryData?.popupConf
             };
         } else {
             return {
@@ -163,7 +163,8 @@ export default function DataFormNew() {
                 partition: location?.state?.partition,
                 dataOperation: location?.state?.dataOperation,
                 tabForm: location?.state?.tabForm,
-                data: uploadedData
+                data: uploadedData,
+                popupConf: location?.state?.popupConf
             };
         }
     }

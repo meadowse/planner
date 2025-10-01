@@ -1081,11 +1081,12 @@ function TaskInfo(props) {
 
     return (
         <div className="popup__task-form-row">
-            {/* <div className="popup__task-form-btn-add">
-                Подзадачи<span onClick={addSubtask}>+</span>
-            </div> */}
-            {taskData && taskData.length !== 0 ? (
-                <div className="popup__table-wrapper">
+            <div
+                className={classNames('popup__table-wrapper', {
+                    'popup__table-wrapper_empty': !taskData || taskData.length === 0
+                })}
+            >
+                {taskData && taskData.length !== 0 ? (
                     <div className="popup__table-content">
                         <ul className="popup__table-head popup__table-head-subtasks">
                             <li className="popup__table-header-item">Задача</li>
@@ -1109,8 +1110,10 @@ function TaskInfo(props) {
                             </div>
                         </div>
                     </div>
-                </div>
-            ) : null}
+                ) : (
+                    <h2>Данные отсутствуют</h2>
+                )}
+            </div>
         </div>
     );
 }
@@ -1174,9 +1177,8 @@ function TimeCostsItem(props) {
 
 // Таблица врмязатрат
 function TimeCosts(props) {
-    const { config, timeCostsConf, onSelect, setTimeCostsApi } = props;
-    // const { navigate, addToHistory, appTheme } = config;
-    const { taskInfo, plannedTimeCosts, timeCosts } = timeCostsConf;
+    const { config, timeCostsConf, setTimeCostsApi } = props;
+    const { taskInfo, timeCosts } = timeCostsConf;
 
     const [popupState, setPopupState] = useState(false);
     const [popupInfo, setPopupInfo] = useState({ operation: null, key: null, data: null });
@@ -1270,8 +1272,12 @@ function TimeCosts(props) {
 
     return (
         <div className="popup__task-form-row">
-            {timeCostsData && timeCostsData.length !== 0 ? (
-                <div className="popup__table-wrapper">
+            <div
+                className={classNames('popup__table-wrapper', {
+                    'popup__table-wrapper_empty': !timeCostsData || timeCostsData.length === 0
+                })}
+            >
+                {timeCostsData && timeCostsData.length !== 0 ? (
                     <div className="popup__table-content">
                         <ul className="popup__table-head popup__table-head-timecosts">
                             <li className="popup__table-header-item">Дата</li>
@@ -1311,20 +1317,140 @@ function TimeCosts(props) {
                             </div>
                         </div>
                     </div>
-                </div>
-            ) : null}
+                ) : (
+                    <h2>Данные отсутствуют</h2>
+                )}
+            </div>
             {popupState ? createPortal(POPUP_CONF[popupInfo?.key] ?? null, document.getElementById('root')) : null}
+        </div>
+    );
+}
+
+// Соисполнитель
+function CoExecutorItem(props) {
+    const { taskId, coExecutor, refreshCoExecutors } = props;
+
+    // Удаление соисполнителя
+    async function onDeleteCoExecutor() {
+        const success = await TaskService.deleteCoExecutor(+coExecutor?.id, taskId);
+        if (success) refreshCoExecutors();
+    }
+
+    return (
+        <ul className="popup__table-row popup__coexecutors-list">
+            {/* ФИО */}
+            <li className="popup__table-row-cell">{coExecutor?.fullName ?? 'Нет данных'}</li>
+            {/* Должность */}
+            <li className="popup__table-row-cell">{coExecutor?.post ?? 'Нет данных'}</li>
+            {/* Моб. телефон */}
+            <li className="popup__table-row-cell">{coExecutor?.phone ?? 'Нет данных'}</li>
+            {/* Удалить */}
+            <li className="popup__table-row-cell">
+                <div className="icon-btn__delete icon-btn" onClick={onDeleteCoExecutor}>
+                    <span>&#128465;</span>
+                </div>
+            </li>
+        </ul>
+    );
+}
+
+// Таблица Соисполнителей
+function CoExecutors(props) {
+    const { config, setCoExecutorsApi, onSelect } = props;
+    const { task } = config;
+
+    const [statePopup, setStatePopup] = useState(false);
+    const [coExecutorsData, setCoExecutorsData] = useState(null);
+    // const [coExecutorData, setCoExecutorData] = useState(null);
+    // console.log(`coExecutors config: ${JSON.stringify(config, null, 4)}`);
+
+    // Обновить данные по времязатратам
+    async function refreshCoExecutors() {
+        // Получение информации о задаче
+        const taskData = await TaskService.getTaskInfo(task?.id, task?.parentTaskId);
+
+        setCoExecutorsData(taskData?.coExecutors);
+    }
+
+    // Выбор пользователя
+    async function onSelectCoExecutor(user) {
+        const tempData = [...coExecutorsData];
+        const coExecutorsIds = tempData.map(item => +item?.id);
+        // tempData.push(user);
+
+        if (!coExecutorsIds.includes(+user?.id)) {
+            tempData.push(user);
+            setCoExecutorsData(tempData);
+
+            await TaskService.addCoExecutor(+user?.id, task?.id);
+        }
+        // onSelect('coExecutors', tempData);
+    }
+
+    useEffect(() => {
+        refreshCoExecutors();
+        setCoExecutorsApi({
+            onShowPopup: () => setStatePopup(true)
+        });
+    }, []);
+
+    // useEffect(() => console.log(`coExecutorsData: ${JSON.stringify(coExecutorsData, null, 4)}`), [coExecutorsData]);
+
+    return (
+        <div className="popup__task-form-row">
+            <div
+                className={classNames('popup__table-wrapper', {
+                    'popup__table-wrapper_empty': !coExecutorsData || coExecutorsData.length === 0
+                })}
+            >
+                {coExecutorsData && coExecutorsData.length !== 0 ? (
+                    <div className="popup__table-content">
+                        <ul className="popup__table-head popup__table-head-coexecutors">
+                            <li className="popup__table-header-item">ФИО</li>
+                            <li className="popup__table-header-item">Должность</li>
+                            <li className="popup__table-header-item">Мобильный телефон</li>
+                            <li className="popup__table-header-item">&emsp;</li>
+                        </ul>
+                        <div className="popup__table-body-wrapper">
+                            <div className="popup__table-body">
+                                {coExecutorsData?.map(coExecutor => (
+                                    <CoExecutorItem
+                                        coExecutor={coExecutor}
+                                        taskId={task?.id}
+                                        refreshCoExecutors={refreshCoExecutors}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <h2>Данные отсутствуют</h2>
+                )}
+            </div>
+            {statePopup
+                ? createPortal(
+                      <UsersPopupWindow
+                          additClass="add_user"
+                          overlay={true}
+                          statePopup={statePopup}
+                          setStatePopup={setStatePopup}
+                          selectUser={onSelectCoExecutor}
+                      />,
+                      document.getElementById('portal')
+                  )
+                : null}
         </div>
     );
 }
 
 // Разделы с таблицами
 function TablesPopup(props) {
-    const { config, taskInfoConfig, timeCostsConfig, onSelect } = props;
+    const { config, taskInfoConfig, timeCostsConfig, coExecutorsConfig, onSelect } = props;
 
     const [selectedTab, setSelectedTab] = useState({ tab: 'subtasks' });
     const [subtaskApi, setSubtaskApi] = useState(null);
     const [timeCostsApi, setTimeCostsApi] = useState(null);
+    const [coExecutorsApi, setCoExecutorsApi] = useState(null);
 
     // Выбор раздела
     function onSelectTab(value) {
@@ -1334,13 +1460,9 @@ function TablesPopup(props) {
     // Конфигурация по разделам
     const TABS_TABLES_CONF = {
         subtasks: <TaskInfo config={config} taskInfoConf={taskInfoConfig} setSubtaskApi={setSubtaskApi} />,
-        timecosts: (
-            <TimeCosts
-                config={config}
-                timeCostsConf={timeCostsConfig}
-                onSelect={onSelect}
-                setTimeCostsApi={setTimeCostsApi}
-            />
+        timecosts: <TimeCosts config={config} timeCostsConf={timeCostsConfig} setTimeCostsApi={setTimeCostsApi} />,
+        coExecutors: (
+            <CoExecutors config={coExecutorsConfig} setCoExecutorsApi={setCoExecutorsApi} onSelect={onSelect} />
         ),
         default: null
     };
@@ -1365,6 +1487,15 @@ function TablesPopup(props) {
                 >
                     Затраченное время
                     {selectedTab?.tab === 'timecosts' ? <span onClick={timeCostsApi?.openPopup}>+</span> : null}
+                </li>
+                <li
+                    className={classNames('popup__task-form-tabs-header-item', {
+                        'popup__task-form-tabs-header-item_active': selectedTab?.tab === 'coExecutors'
+                    })}
+                    onClick={() => onSelectTab('coExecutors')}
+                >
+                    Соисполнители
+                    {selectedTab?.tab === 'coExecutors' ? <span onClick={coExecutorsApi?.onShowPopup}>+</span> : null}
                 </li>
             </ul>
             <div className="popup__task-form-tabs-content">
@@ -1576,7 +1707,7 @@ export default function TaskPopup(props) {
                                     taskForDelete: +data?.task?.id,
                                     // добавляем к массиву задачу которая может не отображаться т.к. пользователь может не являться
                                     // исполнителем или постановщиком задачи
-                                    tasksData: [...data?.tasks, TaskService.formItem(data?.task?.parent)]
+                                    tasksData: [...data?.tasks, data?.task?.parent]
                                 }}
                                 onSelect={onClick}
                                 switchPopup={switchPopup}
@@ -1614,7 +1745,7 @@ export default function TaskPopup(props) {
                         </ul>
                         <div className="popup__task-form-right">
                             {/* Обсуждение задачи */}
-                            <MattermostDiscussionTasks idPost={data?.task?.idPost} />
+                            {/* <MattermostDiscussionTasks idPost={data?.task?.idPost} /> */}
                         </div>
                     </div>
                     {/* Разделы таблиц */}
@@ -1650,6 +1781,12 @@ export default function TaskPopup(props) {
                                 },
                                 plannedTimeCosts: data?.task?.plannedTimeCosts,
                                 timeCosts: data?.task?.timeCosts
+                            }}
+                            coExecutorsConfig={{
+                                task: {
+                                    id: data?.task?.id,
+                                    parentTaskId: data?.task?.parent?.id
+                                }
                             }}
                             onSelect={onClick}
                         />
