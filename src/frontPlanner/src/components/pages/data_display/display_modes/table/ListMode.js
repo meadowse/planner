@@ -20,7 +20,7 @@ import getSampleColumns from '@data/constans/Columns';
 
 // Импорт сервисов
 import DataDisplayService from '@services/data_display.service.js';
-import TaskService from '@services/tabs/tab_task.service.js';
+import TaskService from '@services/popups/popup_task.service';
 
 // Импорт стилей
 import './list_mode.css';

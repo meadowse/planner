@@ -2,10 +2,9 @@ import axios from 'axios';
 
 // Импорт доп.функционала
 import { isArray, findNestedObj } from '@helpers/helper';
-import { getDateInSpecificFormat } from '@helpers/calendar';
 
 // Импорт конфигураций
-import { DATA_CONVERSION_MAP, DATA_FORM_OPERATIONS } from '@config/tabs/tab_work.config';
+import { DATA_CONVERSION_MAP, DATA_FORM_OPERATIONS, DEFAULT_VALUES } from '@config/popups/popup_task.config';
 
 const getDataFormOperation = operation => {
     return findNestedObj(DATA_FORM_OPERATIONS, 'key', operation);
@@ -69,67 +68,6 @@ const formItem = data => {
 const getTaskData = (data, disabledFields) => {
     // console.log(`getTask data: ${JSON.stringify(data, null, 4)}`);
     const dataConf = {};
-    const DEFAULT_VALUES = {
-        //
-        // contractNum: value => {
-        //     return value ? value : '';
-        // },
-        // Статус задачи
-        status: value => {
-            return value ?? '';
-        },
-        // Планируемые времязатраты
-        plannedTimeCosts: value => value ?? 0,
-        // Вид работы
-        idTypeWork: value => {
-            // return value && Object.keys(value).length !== 0 ? value : null;
-            return value ?? null;
-        },
-        // Родительcкая Задача
-        parentId: value => {
-            return value ?? null;
-        },
-        // Задача
-        task: value => {
-            return value && Object.keys(value).length !== 0 ? value : '';
-        },
-        // Постановщик
-        director: value => {
-            return value && Object.keys(value).length !== 0 ? value : null;
-        },
-        // Исполнитель
-        executor: value => {
-            return value && Object.keys(value).length !== 0 ? value : null;
-        },
-        // Соисполнители
-        coExecutors: value => {
-            return value && value.length !== 0 ? value : null;
-        },
-        // Дата начала
-        dateStart: value => {
-            const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
-                format: 'YYYYMMDD',
-                separator: '-'
-            });
-            return value ? value : currDateYYYYMMDD;
-        },
-        // Дедлайн
-        deadlineTask: value => {
-            const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
-                format: 'YYYYMMDD',
-                separator: '-'
-            });
-            return value && Object.keys(value).length !== 0 ? value : { value: currDateYYYYMMDD };
-        },
-        // Завершено
-        done: value => {
-            return !value || value === null ? 0 : value;
-        },
-        // Комментарий
-        comment: value => {
-            return value ?? '';
-        }
-    };
 
     if (data && Object.keys(data).length !== 0) {
         if (disabledFields) {

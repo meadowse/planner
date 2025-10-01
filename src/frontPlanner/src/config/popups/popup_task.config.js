@@ -1,3 +1,6 @@
+// Импорт доп.функционала
+import { getDateInSpecificFormat } from '@helpers/calendar';
+
 // Конфигурация по преобразованию данных
 export const DATA_CONVERSION_MAP = {
     director: director => {
@@ -126,3 +129,65 @@ export const DATA_FORM_OPERATIONS = [
         }
     }
 ];
+
+export const DEFAULT_VALUES = {
+    //
+    // contractNum: value => {
+    //     return value ? value : '';
+    // },
+    // Статус задачи
+    status: value => {
+        return value ?? '';
+    },
+    // Планируемые времязатраты
+    plannedTimeCosts: value => value ?? 0,
+    // Вид работы
+    idTypeWork: value => {
+        // return value && Object.keys(value).length !== 0 ? value : null;
+        return value ?? null;
+    },
+    // Родительcкая Задача
+    parentId: value => {
+        return value ?? null;
+    },
+    // Задача
+    task: value => {
+        return value && Object.keys(value).length !== 0 ? value : '';
+    },
+    // Постановщик
+    director: value => {
+        return value && Object.keys(value).length !== 0 ? value : null;
+    },
+    // Исполнитель
+    executor: value => {
+        return value && Object.keys(value).length !== 0 ? value : null;
+    },
+    // Соисполнители
+    coExecutors: value => {
+        return value && value.length !== 0 ? value : null;
+    },
+    // Дата начала
+    dateStart: value => {
+        const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
+            format: 'YYYYMMDD',
+            separator: '-'
+        });
+        return value ? value : currDateYYYYMMDD;
+    },
+    // Дедлайн
+    deadlineTask: value => {
+        const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
+            format: 'YYYYMMDD',
+            separator: '-'
+        });
+        return value && Object.keys(value).length !== 0 ? value : { value: currDateYYYYMMDD };
+    },
+    // Завершено
+    done: value => {
+        return !value || value === null ? 0 : value;
+    },
+    // Комментарий
+    comment: value => {
+        return value ?? '';
+    }
+};

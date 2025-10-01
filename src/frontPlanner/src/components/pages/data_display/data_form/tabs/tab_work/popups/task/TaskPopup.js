@@ -24,10 +24,10 @@ import { useHistoryContext } from '../../../../../../../../contexts/history.cont
 import { useTaskForm } from '@hooks/useAddTaskForm';
 
 // Импорт конфигурации
-import { EMPLOYEE_ACTIONS, ACTIONS_TASK, IMAGES_ACTIONS_TASK } from '@config/tabs/tab_work.config';
+import { EMPLOYEE_ACTIONS, ACTIONS_TASK, IMAGES_ACTIONS_TASK } from '@config/popups/popup_task.config';
 
 // Импорт сервисов
-import TaskService from '@services/tabs/tab_task.service';
+import TaskService from '@services/popups/popup_task.service';
 
 // Импорт доп.функционала
 import { getKeyByValue } from '@helpers/helper';

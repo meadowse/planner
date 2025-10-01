@@ -1,13 +1,9 @@
 import { startTransition, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 
-// Импорт компонентов
-import TaskPopup from '@components/pages/data_display/data_form/tabs/tab_work/popups/task/TaskPopup';
-
 // Импорт сервисов
-import TaskService from '../../services/tabs/tab_task.service';
+import TaskService from '@services/popups/popup_task.service';
 
 // Импорт доп.функционала
 import { isObject, isArray } from '@helpers/helper';

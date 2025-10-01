@@ -22,7 +22,9 @@ export const useTaskForm = (initialData, disabledFields) => {
     // let dataForm = Object.assign({}, values);
 
     // Валидация формы
-    const validate = () => {};
+    const validate = (name, value) => {
+        task: () => {}, pla;
+    };
 
     // Изменение значения
     const onChange = e => {

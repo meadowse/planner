@@ -24,7 +24,7 @@ import { useTimeCosts } from '@hooks/useTimeCosts';
 
 // Импорт сервисов
 import PopupTimeCostsService from '@services/popups/popup_timecosts.service';
-import TaskService from '@services/tabs/tab_task.service';
+import TaskService from '@services/popups/popup_task.service';
 
 // Импорт доп.функционала
 import { getKeyByValue } from '@helpers/helper';
