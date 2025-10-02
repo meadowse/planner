@@ -64,11 +64,10 @@ export default function ListMode(props) {
 
     const { sortData } = useListMode(data);
     const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, toggleRowExpanded } = useTable(
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
             data,
-            getRowId: row => row?.id,
             getSubRows: row => DataDisplayService.formData(row.subtasks) || []
         },
         useExpanded
