@@ -410,6 +410,8 @@ function GanttChart(props) {
     const ganttGridMain = useRef(null);
     const refCurrMonth = useRef(null);
 
+    const location = useLocation();
+
     // Конфигурация по обработке направлений
     const PROCESSING_DIRECTIONS_CONF = {
         task: async queryData => {
