@@ -1747,7 +1747,7 @@ export default function TaskPopup(props) {
                         </ul>
                         <div className="popup__task-form-right">
                             {/* Обсуждение задачи */}
-                            {/* <MattermostDiscussionTasks idPost={data?.task?.idPost} /> */}
+                            <MattermostDiscussionTasks idPost={data?.task?.idPost} />
                         </div>
                     </div>
                     {/* Разделы таблиц */}
