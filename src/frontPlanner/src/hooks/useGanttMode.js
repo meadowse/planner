@@ -193,6 +193,90 @@ export const useGanttMode = args => {
         };
     };
 
+    // Рекурсивное формирование данных
+    const formNestingLevels = (item, data, colorsConf) => {
+        if (data && data.length !== 0) {
+            const res = data?.reduce((accumulator, element) => {
+                const assignedUsersData = [];
+                let users = [];
+
+                if (element?.director && element?.executor) {
+                    if (Object.keys(element?.director).length !== 0 && Object.keys(element?.executor).length !== 0) {
+                        users = [
+                            ...(Object?.values(element?.director) || null),
+                            ...(Object?.values(element?.executor) || null)
+                        ];
+                    }
+                }
+
+                if (users.length !== 0) {
+                    const mmIdDirector = element?.director?.mmId;
+                    const mmIdExecutor = element?.executor?.mmId;
+
+                    if (mmIdDirector === mmIdExecutor) {
+                        //
+                        assignedUsersData.push({
+                            mmId: element?.executor?.mmId || element?.director?.mmId,
+                            authorizedUser:
+                                authorizedUserId === mmIdExecutor && authorizedUserId === mmIdDirector ? true : false,
+                            fullName: element?.executor?.fullName || '',
+                            role: 'Исполнитель / Постановщик',
+                            photo: element?.executor?.mmId
+                                ? `https://mm-mpk.ru/api/v4/users/${element?.executor?.mmId}/image`
+                                : '/img/user.svg'
+                        });
+                    } else {
+                        // Добавление Постановщика
+                        assignedUsersData.push({
+                            mmId: element?.director?.mmId,
+                            authorizedUser: mmIdDirector === authorizedUserId ? true : false,
+                            fullName: element?.director?.fullName || '',
+                            role: 'Постановщик',
+                            photo: element?.director?.mmId
+                                ? `https://mm-mpk.ru/api/v4/users/${element?.director?.mmId}/image`
+                                : '/img/user.svg'
+                        });
+
+                        // Добавление Исполнителя
+                        assignedUsersData.push({
+                            mmId: element?.executor?.mmId,
+                            authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
+                            fullName: element?.executor?.fullName || '',
+                            role: 'Исполнитель',
+                            photo: element?.executor?.mmId
+                                ? `https://mm-mpk.ru/api/v4/users/${element?.executor?.mmId}/image`
+                                : '/img/user.svg'
+                        });
+                    }
+                }
+
+                const newItem = {
+                    moveElemId: item?.contractId + element?.id,
+                    contractId: item?.contractId,
+                    taskId: element?.id || -1,
+                    parentTaskId: element?.parentId || -1,
+                    title: element?.title || 'Нет данных',
+                    contractNum: `${item?.contractNum}_${element?.id}`,
+                    navKey: 'task',
+                    done: +element?.done,
+                    dateOfStart: element?.dateOfStart,
+                    dateOfEnding: element?.dateOfEnding,
+                    bgColorTask: colorsConf?.task({
+                        endDate: element?.dateOfEnding,
+                        done: +element?.done
+                    }),
+                    assignedUsers: assignedUsersData,
+                    tasks: [...formNestingLevels(item, element?.tasks, colorsConf)] || []
+                };
+
+                return [...accumulator, newItem];
+            }, []);
+
+            return res;
+        }
+        return [];
+    };
+
     // Инициализация данных
     const formData = () => {
         const newData = {};
@@ -281,175 +365,9 @@ export const useGanttMode = args => {
                 newItem.bgColorTask = item?.stage?.color;
                 // Навигация
                 newItem.navKey = 'contract';
-                // Формирование задач
-                newItem.tasks =
-                    item?.tasks && item?.tasks.length !== 0
-                        ? item?.tasks.map((task, ind) => {
-                              const subtasks = [];
-                              const assignedUsersData = [];
-                              let users = [];
 
-                              if (task?.director && task?.executor) {
-                                  if (
-                                      Object.keys(task?.director).length !== 0 &&
-                                      Object.keys(task?.executor).length !== 0
-                                  ) {
-                                      users = [
-                                          ...(Object?.values(task?.director) || null),
-                                          ...(Object?.values(task?.executor) || null)
-                                      ];
-                                  }
-                              }
-
-                              if (users.length !== 0) {
-                                  const mmIdDirector = task?.director?.mmId;
-                                  const mmIdExecutor = task?.executor?.mmId;
-
-                                  if (mmIdDirector === mmIdExecutor) {
-                                      //
-                                      assignedUsersData.push({
-                                          mmId: task?.executor?.mmId || task?.director?.mmId,
-                                          authorizedUser:
-                                              authorizedUserId === mmIdExecutor && authorizedUserId === mmIdDirector
-                                                  ? true
-                                                  : false,
-                                          fullName: task?.executor?.fullName || '',
-                                          role: 'Исполнитель / Постановщик',
-                                          photo: task?.executor?.mmId
-                                              ? `https://mm-mpk.ru/api/v4/users/${task?.executor?.mmId}/image`
-                                              : '/img/user.svg'
-                                      });
-                                  } else {
-                                      // Добавление Постановщика
-                                      assignedUsersData.push({
-                                          mmId: task?.director?.mmId,
-                                          authorizedUser: mmIdDirector === authorizedUserId ? true : false,
-                                          fullName: task?.director?.fullName || '',
-                                          role: 'Постановщик',
-                                          photo: task?.director?.mmId
-                                              ? `https://mm-mpk.ru/api/v4/users/${task?.director?.mmId}/image`
-                                              : '/img/user.svg'
-                                      });
-
-                                      // Добавление Исполнителя
-                                      assignedUsersData.push({
-                                          mmId: task?.executor?.mmId,
-                                          authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
-                                          fullName: task?.executor?.fullName || '',
-                                          role: 'Исполнитель',
-                                          photo: task?.executor?.mmId
-                                              ? `https://mm-mpk.ru/api/v4/users/${task?.executor?.mmId}/image`
-                                              : '/img/user.svg'
-                                      });
-                                  }
-                              }
-
-                              // Формирование подзадач основной задачи
-                              if (task?.tasks && task?.tasks.length !== 0) {
-                                  task?.tasks.forEach(subtask => {
-                                      const assignedUsersDataSubTasks = [];
-                                      if (subtask?.director && subtask?.executor) {
-                                          if (
-                                              Object.keys(subtask?.director).length !== 0 &&
-                                              Object.keys(subtask?.executor).length !== 0
-                                          ) {
-                                              users = [
-                                                  ...(Object?.values(subtask?.director) || null),
-                                                  ...(Object?.values(subtask?.executor) || null)
-                                              ];
-                                          }
-                                      }
-
-                                      if (users.length !== 0) {
-                                          const mmIdDirector = subtask?.director?.mmId;
-                                          const mmIdExecutor = subtask?.executor?.mmId;
-
-                                          if (mmIdDirector === mmIdExecutor) {
-                                              //
-                                              assignedUsersDataSubTasks.push({
-                                                  mmId: subtask?.executor?.mmId || subtask?.director?.mmId,
-                                                  authorizedUser:
-                                                      authorizedUserId === mmIdExecutor &&
-                                                      authorizedUserId === mmIdDirector
-                                                          ? true
-                                                          : false,
-                                                  fullName: subtask?.executor?.fullName || '',
-                                                  role: 'Исполнитель / Постановщик',
-                                                  photo:
-                                                      subtask?.executor?.mmId || subtask?.director?.mmId
-                                                          ? `https://mm-mpk.ru/api/v4/users/${
-                                                                subtask?.executor?.mmId || subtask?.director?.mmId
-                                                            }/image`
-                                                          : '/img/user.svg'
-                                              });
-                                          } else {
-                                              // Добавление Постановщика
-                                              assignedUsersDataSubTasks.push({
-                                                  mmId: subtask?.director?.mmId,
-                                                  authorizedUser: mmIdDirector === authorizedUserId ? true : false,
-                                                  fullName: subtask?.director?.fullName || '',
-                                                  role: 'Постановщик',
-                                                  photo: subtask?.director?.mmId
-                                                      ? `https://mm-mpk.ru/api/v4/users/${subtask?.director?.mmId}/image`
-                                                      : '/img/user.svg'
-                                              });
-
-                                              // Добавление Исполнителя
-                                              assignedUsersDataSubTasks.push({
-                                                  mmId: subtask?.executor?.mmId,
-                                                  authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
-                                                  fullName: subtask?.executor?.fullName || '',
-                                                  role: 'Исполнитель',
-                                                  photo: subtask?.executor?.mmId
-                                                      ? `https://mm-mpk.ru/api/v4/users/${subtask?.executor?.mmId}/image`
-                                                      : '/img/user.svg'
-                                              });
-                                          }
-                                      }
-
-                                      subtasks.push({
-                                          moveElemId: item?.contractId + (ind + 1),
-                                          contractId: item?.contractId,
-                                          taskId: subtask?.id || -1,
-                                          parentTaskId: subtask?.parentId || -1,
-                                          title: subtask?.title || 'Нет данных',
-                                          contractNum: `${item?.contractNum}_${ind + 1}`,
-                                          //   navKey: 'subtask',
-                                          navKey: 'task',
-                                          done: +subtask?.done,
-                                          dateOfStart: subtask?.dateOfStart,
-                                          dateOfEnding: subtask?.dateOfEnding,
-                                          //   bgColorTask: +subtask?.done ? '#8ac926' : '#d53032',
-                                          bgColorTask: COLORS_CONF?.task({
-                                              endDate: subtask?.dateOfEnding,
-                                              done: +subtask?.done
-                                          }),
-                                          assignedUsers: assignedUsersDataSubTasks
-                                      });
-                                  });
-                              }
-
-                              return {
-                                  moveElemId: item?.contractId + (ind + 1),
-                                  contractId: item?.contractId,
-                                  taskId: task?.id || -1,
-                                  parentTaskId: task?.parentId || -1,
-                                  title: task?.title || 'Нет данных',
-                                  contractNum: `${item?.contractNum}_${ind + 1}`,
-                                  navKey: 'task',
-                                  done: +task?.done,
-                                  dateOfStart: task?.dateOfStart,
-                                  dateOfEnding: task?.dateOfEnding,
-                                  //   bgColorTask: +task?.done ? '#8ac926' : '#d53032',
-                                  bgColorTask: COLORS_CONF?.task({
-                                      endDate: task?.dateOfEnding,
-                                      done: +task?.done
-                                  }),
-                                  assignedUsers: assignedUsersData,
-                                  tasks: subtasks
-                              };
-                          })
-                        : [];
+                // Рекурсивное формирование данных (задач)
+                newItem.tasks = [...formNestingLevels(item, item?.tasks, COLORS_CONF)];
 
                 // сортировка данных, которая отсротирована по done отсортировать по полю dateOfEnding
                 newItem.tasks = Array.from(newItem?.tasks).sort(
@@ -509,184 +427,8 @@ export const useGanttMode = args => {
                         taskItem.dateOfStart = contract?.dateOfStart?.value;
                         taskItem.dateOfEnding = contract?.dateOfEnding?.value;
 
-                        taskItem.tasks = [];
-
-                        if (contract?.tasks && contract?.tasks.length !== 0) {
-                            contract?.tasks.forEach((task, ind) => {
-                                // Данное услолвие не отображает все данные
-                                if (item?.employee?.id === task?.executor?.mmId) {
-                                    const subtasks = [];
-                                    const assignedUsersData = [];
-                                    let users = [];
-
-                                    if (task?.director && task?.executor) {
-                                        if (
-                                            Object.keys(task?.director).length !== 0 &&
-                                            Object.keys(task?.executor).length !== 0
-                                        ) {
-                                            users = [
-                                                ...(Object?.values(task?.director) || null),
-                                                ...(Object?.values(task?.executor) || null)
-                                            ];
-                                        }
-                                    }
-
-                                    if (users.length !== 0) {
-                                        const mmIdDirector = task?.director?.mmId;
-                                        const mmIdExecutor = task?.executor?.mmId;
-
-                                        if (mmIdDirector === mmIdExecutor) {
-                                            //
-                                            assignedUsersData.push({
-                                                mmId: task?.executor?.mmId || task?.director?.mmId,
-                                                authorizedUser:
-                                                    authorizedUserId === mmIdExecutor &&
-                                                    authorizedUserId === mmIdDirector
-                                                        ? true
-                                                        : false,
-                                                fullName: task?.executor?.fullName || '',
-                                                role: 'Исполнитель / Постановщик',
-                                                photo:
-                                                    task?.executor?.mmId || task?.director?.mmId
-                                                        ? `https://mm-mpk.ru/api/v4/users/${
-                                                              task?.executor?.mmId || task?.director?.mmId
-                                                          }/image`
-                                                        : '/img/user.svg'
-                                            });
-                                        } else {
-                                            // Добавление Постановщика
-                                            assignedUsersData.push({
-                                                mmId: task?.director?.mmId,
-                                                authorizedUser: mmIdDirector === authorizedUserId ? true : false,
-                                                fullName: task?.director?.fullName || '',
-                                                role: 'Постановщик',
-                                                photo: task?.director?.mmId
-                                                    ? `https://mm-mpk.ru/api/v4/users/${task?.director?.mmId}/image`
-                                                    : '/img/user.svg'
-                                            });
-
-                                            // Добавление Исполнителя
-                                            assignedUsersData.push({
-                                                mmId: task?.executor?.mmId,
-                                                authorizedUser: mmIdExecutor === authorizedUserId ? true : false,
-                                                fullName: task?.executor?.fullName || '',
-                                                role: 'Исполнитель',
-                                                photo: task?.executor?.mmId
-                                                    ? `https://mm-mpk.ru/api/v4/users/${task?.executor?.mmId}/image`
-                                                    : '/img/user.svg'
-                                            });
-                                        }
-                                    }
-
-                                    // Формирование подзадач основной задачи
-                                    if (task?.tasks && task?.tasks.length !== 0) {
-                                        task?.tasks.forEach(subtask => {
-                                            const assignedUsersDataSubTasks = [];
-
-                                            if (subtask?.director && subtask?.executor) {
-                                                if (
-                                                    Object.keys(subtask?.director).length !== 0 &&
-                                                    Object.keys(subtask?.executor).length !== 0
-                                                ) {
-                                                    users = [
-                                                        ...(Object?.values(subtask?.director) || null),
-                                                        ...(Object?.values(subtask?.executor) || null)
-                                                    ];
-                                                }
-                                            }
-
-                                            if (users.length !== 0) {
-                                                const mmIdDirector = subtask?.director?.mmId;
-                                                const mmIdExecutor = subtask?.executor?.mmId;
-
-                                                if (mmIdDirector === mmIdExecutor) {
-                                                    //
-                                                    assignedUsersDataSubTasks.push({
-                                                        mmId: subtask?.executor?.mmId || subtask?.director?.mmId,
-                                                        authorizedUser:
-                                                            authorizedUserId === mmIdExecutor &&
-                                                            authorizedUserId === mmIdDirector
-                                                                ? true
-                                                                : false,
-                                                        fullName: subtask?.executor?.fullName || '',
-                                                        role: 'Исполнитель / Постановщик',
-                                                        photo:
-                                                            subtask?.executor?.mmId || subtask?.director?.mmId
-                                                                ? `https://mm-mpk.ru/api/v4/users/${
-                                                                      subtask?.executor?.mmId || subtask?.director?.mmId
-                                                                  }/image`
-                                                                : '/img/user.svg'
-                                                    });
-                                                } else {
-                                                    // Добавление Постановщика
-                                                    assignedUsersDataSubTasks.push({
-                                                        mmId: subtask?.director?.mmId,
-                                                        authorizedUser:
-                                                            mmIdDirector === authorizedUserId ? true : false,
-                                                        fullName: subtask?.director?.fullName || '',
-                                                        role: 'Постановщик',
-                                                        photo: subtask?.director?.mmId
-                                                            ? `https://mm-mpk.ru/api/v4/users/${subtask?.director?.mmId}/image`
-                                                            : '/img/user.svg'
-                                                    });
-
-                                                    // Добавление Исполнителя
-                                                    assignedUsersDataSubTasks.push({
-                                                        mmId: subtask?.executor?.mmId,
-                                                        authorizedUser:
-                                                            mmIdExecutor === authorizedUserId ? true : false,
-                                                        fullName: subtask?.executor?.fullName || '',
-                                                        role: 'Исполнитель',
-                                                        photo: subtask?.executor?.mmId
-                                                            ? `https://mm-mpk.ru/api/v4/users/${subtask?.executor?.mmId}/image`
-                                                            : '/img/user.svg'
-                                                    });
-                                                }
-                                            }
-
-                                            subtasks.push({
-                                                moveElemId: +contract?.contractId + (ind + 1),
-                                                contractId: +contract?.contractId,
-                                                taskId: subtask?.id || -1,
-                                                parentTaskId: subtask?.parentId || -1,
-                                                title: subtask?.title || 'Нет данных',
-                                                contractNum: `${contract?.contractNum}_${ind + 1}`,
-                                                navKey: 'task',
-                                                done: +subtask?.done,
-                                                dateOfStart: subtask?.dateOfStart,
-                                                dateOfEnding: subtask?.dateOfEnding,
-                                                // bgColorTask: +subtask?.done ? '#8ac926' : '#d53032',
-                                                bgColorTask: COLORS_CONF?.task({
-                                                    endDate: subtask?.dateOfEnding,
-                                                    done: +subtask?.done
-                                                }),
-                                                assignedUsers: assignedUsersDataSubTasks
-                                            });
-                                        });
-                                    }
-
-                                    taskItem.tasks.push({
-                                        moveElemId: +contract?.contractId + (ind + 1),
-                                        contractId: +contract?.contractId,
-                                        taskId: task?.id || -1,
-                                        parentTaskId: task?.parentId || -1,
-                                        title: task?.title || 'Нет данных',
-                                        contractNum: `${contract?.contractNum}_${ind + 1}`,
-                                        navKey: 'task',
-                                        done: +task?.done,
-                                        dateOfStart: task?.dateOfStart,
-                                        dateOfEnding: task?.dateOfEnding,
-                                        // bgColorTask: +task?.done ? '#8ac926' : '#d53032',
-                                        bgColorTask: COLORS_CONF?.task({
-                                            endDate: task?.dateOfEnding,
-                                            done: +task?.done
-                                        }),
-                                        assignedUsers: assignedUsersData,
-                                        tasks: subtasks
-                                    });
-                                }
-                            });
-                        }
+                        // Рекурсивное формирование данных (задач)
+                        taskItem.tasks = [...formNestingLevels(contract, contract?.tasks, COLORS_CONF)];
 
                         // сортировка данных, которая отсротирована по done отсортировать по полю dateOfEnding
                         // taskItem.tasks = Array.from(taskItem?.tasks).sort(

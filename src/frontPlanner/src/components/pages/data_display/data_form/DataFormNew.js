@@ -154,8 +154,7 @@ export default function DataFormNew() {
                 partition: queryData?.partition,
                 dataOperation: queryData?.dataOperation,
                 tabForm: queryData?.tabForm,
-                data: uploadedData,
-                popupConf: queryData?.popupConf
+                data: uploadedData
             };
         } else {
             return {
@@ -163,13 +162,10 @@ export default function DataFormNew() {
                 partition: location?.state?.partition,
                 dataOperation: location?.state?.dataOperation,
                 tabForm: location?.state?.tabForm,
-                data: uploadedData,
-                popupConf: location?.state?.popupConf
+                data: uploadedData
             };
         }
     }
-
-    //
 
     return (
         <section className="section__dataform">

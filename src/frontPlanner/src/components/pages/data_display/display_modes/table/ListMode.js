@@ -20,20 +20,9 @@ import getSampleColumns from '@data/constans/Columns';
 
 // Импорт сервисов
 import DataDisplayService from '@services/data_display.service.js';
-import TaskService from '@services/popups/popup_task.service';
 
 // Импорт стилей
 import './list_mode.css';
-
-// function findTaskLocation(data, targetId, pathArr = []) {
-//     for (let item of data) {
-//         const newPath = [...pathArr, item];
-//         if (item?.id === targetId) return newPath;
-//         if (item?.subtasks && item?.subtasks.length !== 0) return findTaskLocation(item?.subtasks, targetId, newPath);
-//     }
-
-//     return null;
-// }
 
 // Ячейка шапки таблицы
 function HeadCell({ cellData, cellConfig }) {
@@ -90,14 +79,6 @@ export default function ListMode(props) {
         toggleState,
         setToggleState
     );
-
-    // console.log(
-    //     `table: ${JSON.stringify(
-    //         rows.map(r => r.id),
-    //         null,
-    //         4
-    //     )}`
-    // );
 
     // Конфигурация по заголовкам таблицы
     const HEAD_CELL_CONF = {
@@ -192,37 +173,6 @@ export default function ListMode(props) {
         )
     };
 
-    // Конфигурация по обработке направлений из других разделов
-    const PROCESSING_DIRECTIONS_CONF = {
-        task: async info => {
-            const { id, parentTaskId } = info;
-            // Получение всех задач
-            const allTasksId = Object.keys({ ...TaskService.getAllTasks(testData, {}) }).map(key => +key);
-            // Получение информации о задаче
-            const taskData = await TaskService.getTaskInfo(id, parentTaskId);
-            // console.log(`id: ${id} --- parentTaskId: ${parentTaskId}\ntaskData: ${JSON.stringify(taskData, null, 4)}`);
-
-            // Проходимся по всем задачам в таблице, находим нужный id
-            // и только после этого выполняем запрос на получение задачи
-            for (let taskId of allTasksId) {
-                if (taskId === id) {
-                    // Раскрываем у задачи подзадачи для правильного отображения окна ред. задачи
-                    toggleRowExpanded(parentTaskId, true);
-
-                    console.log(`allTasksId: ${JSON.stringify(allTasksId, null, 4)}`);
-
-                    setPopupState(true);
-                    openPopup('update', 'editTask', {
-                        idContract: modeConfig?.idContract,
-                        partition: modeConfig?.partition,
-                        tasks: data,
-                        task: taskData,
-                        contractOperations: modeConfig?.dataOperation
-                    });
-                }
-            }
-        }
-    };
     // Открыть всплывающее окно
     function openPopup(operation, mode, data = null) {
         setPopupInfo({
@@ -236,15 +186,6 @@ export default function ListMode(props) {
     function switchPopup(operation, mode, data) {
         setPopupInfo({ operation, mode, data });
     }
-
-    useEffect(() => {
-        if (!modeConfig?.popupConf) return;
-        if (!testData || testData.length === 0) return; // ещё нечего раскрывать
-
-        const { cell, info } = modeConfig?.popupConf;
-
-        if (cell in PROCESSING_DIRECTIONS_CONF) PROCESSING_DIRECTIONS_CONF[cell](info);
-    }, []);
 
     useEffect(() => {
         // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);

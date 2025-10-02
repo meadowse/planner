@@ -961,6 +961,8 @@ function TaskItem(props) {
                     {taskItem?.task ?? 'Нет данных'}
                 </div>
             </li>
+            {/* Статус */}
+            <li className="popup__table-row-cell popup__table-row-cell-status">{taskItem?.status ?? 'Нет данных'}</li>
             {/* Дата начала */}
             <li className="popup__table-row-cell">{taskItem?.dateStart || taskItem?.startDate || 'Нет данных'}</li>
             {/* Дедлайн */}
@@ -1002,7 +1004,7 @@ function TaskItem(props) {
                 </div>
             </li>
             {/* Завершено */}
-            <li className="popup__table-row-cell">
+            {/* <li className="popup__table-row-cell">
                 <div className="popup__checkbox-wrapper">
                     <input
                         className="popup__inpt-checkbox"
@@ -1013,7 +1015,7 @@ function TaskItem(props) {
                     />
                     <span className="popup__custom-checkbox"></span>
                 </div>
-            </li>
+            </li> */}
         </ul>
     );
 }
@@ -1090,11 +1092,11 @@ function TaskInfo(props) {
                     <div className="popup__table-content">
                         <ul className="popup__table-head popup__table-head-subtasks">
                             <li className="popup__table-header-item">Задача</li>
+                            <li className="popup__table-header-item">Статус</li>
                             <li className="popup__table-header-item">Дата начала</li>
                             <li className="popup__table-header-item">Дедлайн</li>
                             <li className="popup__table-header-item">Постановщик</li>
                             <li className="popup__table-header-item">Исполнитель</li>
-                            <li className="popup__table-header-item">Завершено</li>
                         </ul>
                         <div className="popup__table-body-wrapper">
                             <div className="popup__table-body">
@@ -1374,7 +1376,7 @@ function CoExecutors(props) {
 
     // Выбор пользователя
     async function onSelectCoExecutor(user) {
-        const tempData = [...coExecutorsData];
+        const tempData = coExecutorsData && coExecutorsData.length !== 0 ? [...coExecutorsData] : [];
         const coExecutorsIds = tempData.map(item => +item?.id);
         // tempData.push(user);
 

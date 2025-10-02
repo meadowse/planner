@@ -113,14 +113,16 @@ const getAllTasks = (tasks, newTasks) => {
     const tasksData = newTasks;
 
     tasks?.forEach(item => {
-        const { id, subtasks, ...otherElems } = item;
-        if (subtasks && subtasks.length !== 0) {
-            tasksData[id] = { id, ...otherElems, subtasks };
-            return getAllTasks(subtasks, tasksData);
-        } else tasksData[id] = { id, ...otherElems, subtasks };
+        if (item && Object.keys(item).length !== 0) {
+            const { id, subtasks, ...otherElems } = item;
+            if (subtasks && subtasks.length !== 0) {
+                tasksData[id] = { id, ...otherElems, subtasks };
+                return getAllTasks(subtasks, tasksData);
+            } else tasksData[id] = { id, ...otherElems, subtasks };
+        }
     });
 
-    Object.keys(tasksData).forEach(key => {
+    Object.keys(tasksData)?.forEach(key => {
         const newItem = {};
         Object.keys(tasksData[key]).forEach(keyTask => {
             newItem[keyTask] = DATA_CONVERSION_MAP[keyTask]
