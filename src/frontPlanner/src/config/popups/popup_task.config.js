@@ -162,6 +162,14 @@ export const DEFAULT_VALUES = {
     executor: value => {
         return value && Object.keys(value).length !== 0 ? value : null;
     },
+    // Подзадачи
+    subtasks: value => {
+        return value && value.length !== 0 ? value : null;
+    },
+    // Времязатраты
+    timeCosts: value => {
+        return value && value.length !== 0 ? value : null;
+    },
     // Соисполнители
     coExecutors: value => {
         return value && value.length !== 0 ? value : null;

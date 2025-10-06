@@ -282,7 +282,7 @@ export const COMPANY_DATA_CONF = {
         {
             mode: 'Сотрудники',
             keyMode: 'employees',
-            keys: ['id', 'responsible', 'post', 'phone', 'email']
+            keys: ['id', 'employee', 'department', 'post', 'chief', 'office', 'phone', 'email']
             // keys: ['id', 'responsible', 'subsection', 'phone', 'email']
         },
         {

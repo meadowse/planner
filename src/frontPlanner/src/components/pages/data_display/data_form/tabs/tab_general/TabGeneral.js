@@ -1172,9 +1172,7 @@ export default function TabGeneral() {
                     });
             } else {
                 // Логика для создания новых данных
-                alert(`data for submit: ${JSON.stringify(values, null, 4)}`);
             }
-            // navigate('../../department');
         }
     }
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 // Импорт компонетов
@@ -12,8 +12,20 @@ import { useInputDataPopup } from '@hooks/useInputDataPopup';
 import './input_data_popup.css';
 
 export default function InputDataPopup(props) {
-    const { children, idForm, title, additClass, overlay, statePopup, setStatePopup, deleteConfig, changeLink } = props;
-    const { modalWindow, onDelete } = deleteConfig;
+    const {
+        children,
+        idForm,
+        title,
+        additClass,
+        overlay,
+        modalWindowConf,
+        statePopup,
+        setStatePopup,
+        onDelete,
+        changeLink
+    } = props;
+    // const { modalWindow, onDelete } = deleteConfig;
+
     const params = { statePopup, changeLink, setStatePopup };
 
     const { popupRef, onSaveData, onCancelClick, onItemClick } = useInputDataPopup(params);
@@ -46,9 +58,8 @@ export default function InputDataPopup(props) {
             {isModalOpen ? (
                 <ModalWindow
                     additClass="action-selection"
-                    title={modalWindow?.title}
+                    modalWindowConf={{ ...modalWindowConf, onDelete }}
                     statePopup={isModalOpen}
-                    actionRef={onDelete}
                     setStatePopup={setIsModalOpen}
                 />
             ) : null}

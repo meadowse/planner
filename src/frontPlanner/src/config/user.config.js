@@ -5,7 +5,7 @@ export const EMPLOYEE_CONF = {
     workPhone: 'Рабочий телефон',
     internalPhone: 'Внутренний телефон',
     telegramm: 'Telegram',
-    division: 'Подразделение',
+    division: 'Отдел',
     birthday: 'День рождения',
     office: 'Офис',
     director: 'Руководитель'

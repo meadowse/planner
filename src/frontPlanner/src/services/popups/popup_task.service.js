@@ -155,7 +155,7 @@ const getTaskInfo = async (idTask, idParent) => {
                         parent: formItem(parent),
                         subtasks: subtasks?.map(subtask => formItem(subtask))
                     };
-                    console.log(`getTaskInfo taskInfoData: ${JSON.stringify(taskInfoData, null, 4)}`);
+                    // console.log(`getTaskInfo taskInfoData: ${JSON.stringify(taskInfoData, null, 4)}`);
                 }
             }
         })
@@ -264,50 +264,17 @@ const getAuthorizedEmployee = async idEmployee => {
 };
 
 // Добавление задачи
-const addTask = async (data, socket, notificationData) => {
-    const endpoints = {
-        [`${window.location.origin}/api/addTask`]: data,
-        [`${window.location.origin}/api/getDataUser`]: { employeeId: notificationData?.director?.mmId }
-    };
-
-    // console.log(`keys: ${JSON.stringify(Object.keys(endpoints), null, 4)}`);
-
+const addTask = async data => {
     await axios
-        .all(Object.keys(endpoints).map(key => axios.post(key, endpoints[key])))
-        .then(
-            axios.spread((response, user) => {
-                if (response.status === 200) {
-                    const employee = user.data && user.data.length !== 0 ? user.data[0] : {};
-
-                    // socket.emit('addTask', {
-                    //     task: {
-                    //         title: data?.task,
-                    //         director: {
-                    //             mmId: employee?.id,
-                    //             fullName: employee?.FIO
-                    //         },
-                    //         deadline: data?.deadline?.value,
-                    //         comment: data?.comment
-                    //     },
-                    //     assigneeId: notificationData?.executor?.mmId
-                    // });
-
-                    // setAddTaskState(false);
-                    // navigate(window.location.pathname);
-                }
-            })
-        )
+        .post(`${window.location.origin}/api/addTask`, data)
+        .then(response => response)
         .catch(error => {
             if (error.response) {
-                console.log(error.response);
                 console.log('server responded');
-                return false;
             } else if (error.request) {
                 console.log('network error');
-                return false;
             } else {
                 console.log(error);
-                return false;
             }
         });
 };
