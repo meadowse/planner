@@ -2,10 +2,9 @@ import axios from 'axios';
 
 // Импорт доп.функционала
 import { isArray, findNestedObj } from '@helpers/helper';
-import { getDateInSpecificFormat } from '@helpers/calendar';
 
 // Импорт конфигураций
-import { DATA_CONVERSION_MAP, DATA_FORM_OPERATIONS } from '@config/tabs/tab_work.config';
+import { DATA_CONVERSION_MAP, DATA_FORM_OPERATIONS, DEFAULT_VALUES } from '@config/popups/popup_task.config';
 
 const getDataFormOperation = operation => {
     return findNestedObj(DATA_FORM_OPERATIONS, 'key', operation);
@@ -50,70 +49,25 @@ const formItem = data => {
             mmId: data?.idMMExecutor || data?.mmId || null,
             fullName: data?.executorFIO || data?.directorName || data?.fullName
             //   photo: director.mmId ? `https://mm-mpk.ru/api/v4/users/${director.mmId}/image` : '/img/user.svg'
-        }
+        },
+        coExecutors:
+            data?.coExecutors && data?.coExecutors.length !== 0
+                ? data?.coExecutors?.map(coExecutor => {
+                      return {
+                          id: coExecutor?.id || null,
+                          mmId: coExecutor?.idMM || null,
+                          fullName: coExecutor?.fio || coExecutor?.fullName,
+                          post: coExecutor?.post || null,
+                          phone: coExecutor?.telephone || coExecutor?.phone || null
+                      };
+                  })
+                : null
     };
 };
 
 const getTaskData = (data, disabledFields) => {
     // console.log(`getTask data: ${JSON.stringify(data, null, 4)}`);
     const dataConf = {};
-    const DEFAULT_VALUES = {
-        //
-        // contractNum: value => {
-        //     return value ? value : '';
-        // },
-        // Статус задачи
-        status: value => {
-            return value ?? '';
-        },
-        // Планируемые времязатраты
-        plannedTimeCosts: value => value ?? 0,
-        // Вид работы
-        idTypeWork: value => {
-            // return value && Object.keys(value).length !== 0 ? value : null;
-            return value ?? null;
-        },
-        // Родительcкая Задача
-        parentId: value => {
-            return value ?? null;
-        },
-        // Задача
-        task: value => {
-            return value && Object.keys(value).length !== 0 ? value : '';
-        },
-        // Постановщик
-        director: value => {
-            return value && Object.keys(value).length !== 0 ? value : null;
-        },
-        // Исполнитель
-        executor: value => {
-            return value && Object.keys(value).length !== 0 ? value : null;
-        },
-        // Дата начала
-        dateStart: value => {
-            const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
-                format: 'YYYYMMDD',
-                separator: '-'
-            });
-            return value ? value : currDateYYYYMMDD;
-        },
-        // Дедлайн
-        deadlineTask: value => {
-            const currDateYYYYMMDD = getDateInSpecificFormat(new Date(), {
-                format: 'YYYYMMDD',
-                separator: '-'
-            });
-            return value && Object.keys(value).length !== 0 ? value : { value: currDateYYYYMMDD };
-        },
-        // Завершено
-        done: value => {
-            return !value || value === null ? 0 : value;
-        },
-        // Комментарий
-        comment: value => {
-            return value ?? '';
-        }
-    };
 
     if (data && Object.keys(data).length !== 0) {
         if (disabledFields) {
@@ -159,14 +113,16 @@ const getAllTasks = (tasks, newTasks) => {
     const tasksData = newTasks;
 
     tasks?.forEach(item => {
-        const { id, subtasks, ...otherElems } = item;
-        if (subtasks && subtasks.length !== 0) {
-            tasksData[id] = { id, ...otherElems, subtasks };
-            return getAllTasks(subtasks, tasksData);
-        } else tasksData[id] = { id, ...otherElems, subtasks };
+        if (item && Object.keys(item).length !== 0) {
+            const { id, subtasks, ...otherElems } = item;
+            if (subtasks && subtasks.length !== 0) {
+                tasksData[id] = { id, ...otherElems, subtasks };
+                return getAllTasks(subtasks, tasksData);
+            } else tasksData[id] = { id, ...otherElems, subtasks };
+        }
     });
 
-    Object.keys(tasksData).forEach(key => {
+    Object.keys(tasksData)?.forEach(key => {
         const newItem = {};
         Object.keys(tasksData[key]).forEach(keyTask => {
             newItem[keyTask] = DATA_CONVERSION_MAP[keyTask]
@@ -193,11 +149,13 @@ const getTaskInfo = async (idTask, idParent) => {
                 // console.log(`typeof taskInfoData: ${typeof taskInfoData}`);
                 // console.log(`id: ${JSON.parse(localStorage.getItem('idContract'))}`);
                 if (response?.data && response?.data.length !== 0) {
-                    const { subtasks, ...otherElems } = response.data;
+                    const { subtasks, parent, ...otherElems } = response.data;
                     taskInfoData = {
                         ...formItem(otherElems),
+                        parent: formItem(parent),
                         subtasks: subtasks?.map(subtask => formItem(subtask))
                     };
+                    console.log(`getTaskInfo taskInfoData: ${JSON.stringify(taskInfoData, null, 4)}`);
                 }
             }
         })
@@ -396,6 +354,47 @@ const deleteTask = async (idTask, idEmployee) => {
         });
 };
 
+// Добавление соисполнителя
+const addCoExecutor = async (employeeId, taskId) => {
+    await axios
+        .post(`${window.location.origin}/api/addCoExecutor`, { idCoExecutor: employeeId, idTask: taskId })
+        .then(response => {
+            if (response.status === 200) {
+                //
+            }
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log(error.response);
+                console.log('server responded');
+            } else if (error.request) {
+                console.log('network error');
+            } else {
+                console.log(error);
+            }
+        });
+};
+
+// Удаление соисполнителя
+const deleteCoExecutor = async (employeeId, taskId) => {
+    let success = false;
+    await axios
+        .post(`${window.location.origin}/api/deleteCoExecutor`, { idCoExecutor: employeeId, idTask: taskId })
+        .then(response => {
+            if (response.status === 200) success = true;
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log(error.response);
+                console.log('server responded');
+            } else if (error.request) {
+                console.log('network error');
+            } else console.log(error);
+        });
+
+    return success;
+};
+
 const TaskService = {
     formItem,
     formData,
@@ -408,7 +407,9 @@ const TaskService = {
     getTaskInfo,
     addTask,
     editTask,
-    deleteTask
+    deleteTask,
+    addCoExecutor,
+    deleteCoExecutor
 };
 
 export default TaskService;

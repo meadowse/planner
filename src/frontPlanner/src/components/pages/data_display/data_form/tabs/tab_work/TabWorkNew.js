@@ -15,23 +15,14 @@ import './tab_worknew.css';
 
 export default function TabWorkNew() {
     // const socket = useContext(SocketContext);
-    const { idContract, partition } = useOutletContext();
+    const { idContract, partition, popupConf } = useOutletContext();
     const { uploadedData } = useLoaderData();
+
+    // console.log(`TabWorkNew openTaskConf: ${JSON.stringify(openTaskConf, null, 4)}`);
 
     const [works, setWorks] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    // useEffect(() => {
-    //     socket.on('taskAssigned', taskData => {
-    //         toast.info(<AddTaskToast task={taskData} />, { className: 'toast', position: 'bottom-right', icon: false });
-    //         // alert(` Вам назначена новая задача: "${taskData.task}"`);
-    //     });
-
-    //     return () => {
-    //         socket.off('taskAssigned');
-    //     };
-    // }, []);
 
     useEffect(() => {
         // console.log(`loaded data: ${JSON.stringify(uploadedData, null, 4)}`);
@@ -59,21 +50,22 @@ export default function TabWorkNew() {
                             partition: 'dataform',
                             path: `${window.location.pathname}`,
                             dataOperations: [],
-                            idContract: idContract
+                            idContract
                         }}
                     />
                     <ListMode
                         key={`${partition}-table-tasks`}
                         testData={tasks.sort((a, b) => parseInt(a?.id) - parseInt(b?.id))}
                         modeConfig={{
-                            keys: ['task', 'status', 'director', 'executor', 'deadlineTask', 'done'],
+                            keys: ['task', 'status', 'director', 'executor', 'deadlineTask'],
                             mode: {
                                 key: 'listTasks'
                             },
                             partition: 'dataform',
                             path: `${window.location.pathname}`,
                             dataOperations: [],
-                            idContract: idContract
+                            popupConf,
+                            idContract
                         }}
                     />
                 </div>

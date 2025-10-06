@@ -15,6 +15,7 @@ function getTaskConfig(initialData, disabledFields) {
 }
 
 export const useTaskForm = (initialData, disabledFields) => {
+    const [errorsInfo, setErrorsInfo] = useState({});
     const [values, setValues] = useState(initialData);
     // console.log(`initialData: ${JSON.stringify(initialData, null, 4)}`);
 
@@ -22,7 +23,36 @@ export const useTaskForm = (initialData, disabledFields) => {
     // let dataForm = Object.assign({}, values);
 
     // Валидация формы
-    const validate = () => {};
+    const validate = (name, value) => {
+        let error = {};
+
+        const VALIDATION_CONF = {
+            task: () => {
+                if (!value) {
+                    error = { message: 'Поле обязательно для заполнения!' };
+                    config.condition = error;
+                    setErrorsInfo(config);
+                } else {
+                    delete config.condition;
+                    setErrorsInfo(config);
+                }
+            },
+            plannedTimeCosts: () => {
+                if (!value) {
+                    error = { message: 'Выберите план. времязатраты!' };
+                    config.condition = error;
+                    setErrorsInfo(config);
+                } else if (+value === 0) {
+                    error = { message: 'Значение в поле план. времязатраты должно быть > 0!' };
+                    config.condition = error;
+                    setErrorsInfo(config);
+                } else {
+                    delete config.condition;
+                    setErrorsInfo(config);
+                }
+            }
+        };
+    };
 
     // Изменение значения
     const onChange = e => {

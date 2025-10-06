@@ -126,7 +126,6 @@ function Tabs(props) {
                 <Outlet context={config} />
                 <MattermostIntegration channelId={config?.data?.channelId} />
             </div>
-            {/* {PARTITION_CONF[config?.partition] ? PARTITION_CONF[config?.partition]() : PARTITION_CONF?.default()} */}
         </div>
     );
 }
@@ -167,8 +166,6 @@ export default function DataFormNew() {
             };
         }
     }
-
-    //
 
     return (
         <section className="section__dataform">

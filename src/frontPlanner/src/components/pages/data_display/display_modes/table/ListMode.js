@@ -84,7 +84,6 @@ export default function ListMode(props) {
         task: headData => {
             const config = {
                 idContract: modeConfig?.idContract,
-                // contractsIDs: modeConfig?.contractsIDs,
                 tasks: data,
                 task: {},
                 setPopupState,
@@ -119,8 +118,6 @@ export default function ListMode(props) {
         },
         coExecutor: cellData => {
             const config = {
-                id: data[cellData?.indRow]?.id,
-                task: data[cellData?.indRow]?.task,
                 coExecutor: data[cellData?.indRow]?.coExecutor ?? null,
                 coExecutors: data[cellData?.indRow]?.coExecutors ?? null
             };

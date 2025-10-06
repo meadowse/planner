@@ -1,10 +1,12 @@
 import { startTransition, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
 // Импорт компонентов
 import FiltersGantt from './filters/FiltersGantt';
+import TaskPopup from '@components/pages/data_display/data_form/tabs/tab_work/popups/task/TaskPopup';
+import TaskService from '@services/popups/popup_task.service';
 
 // Импорт конфигураций
 import { MONTHS } from '@config/calendar.config';
@@ -30,6 +32,8 @@ import { useHistoryContext } from '../../../../../contexts/history.context';
 
 // Импорт стилей
 import './gantt_mode.css';
+import { createPortal } from 'react-dom';
+import GanttService from '../../../../../services/display_modes/gantt.service';
 
 function AssignedUser({ employee }) {
     const { addToHistory } = useHistoryContext();
@@ -138,7 +142,7 @@ function TotalTaskRow(props) {
 
 // Отображение задач
 function TaskRow(props) {
-    const { timeLine, partition, task, dateState, config, dataOperations } = props;
+    const { timeLine, partition, task, dateState, config, dataOperations, setPopupState, openPopup } = props;
 
     const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
@@ -177,7 +181,7 @@ function TaskRow(props) {
 
     // Просмотр подробной информации о ...
     function onShowInfo(event, task, operationVal) {
-        console.log(`task: ${JSON.stringify(task, null, 4)}`);
+        // console.log(`task: ${JSON.stringify(task, null, 4)}`);
         localStorage.setItem('idContract', JSON.stringify(task?.contractId));
 
         const NAVIGATION_CONF = {
@@ -219,34 +223,42 @@ function TaskRow(props) {
                     localStorage.setItem('selectedTab', JSON.stringify({ key: 'general', title: 'Общие' }));
                 }
             },
-            task: () => {
+            task: async () => {
                 if (task?.contractId && task?.contractId !== -1) {
-                    const navigationArg = {
-                        state: {
+                    if (event && event.button === 0) {
+                        // Работаем пока здесь
+                        const tasksContract = await GanttService.getTasksContract(task?.contractId);
+                        // Получение информации о задаче
+                        const taskData = await TaskService.getTaskInfo(+task?.taskId, +task?.parentTaskId);
+
+                        setPopupState(true);
+                        openPopup('update', 'editTask', {
                             idContract: task?.contractId,
-                            tabForm: { key: 'works', title: 'Работа и задачи' },
-                            partition: partition,
-                            path: `${window.location.pathname}`,
-                            dataOperation: findNestedObj(dataOperations, 'key', operationVal)
-                        }
-                    };
+                            partition,
+                            tasks: tasksContract || [],
+                            task: taskData,
+                            contractOperations: findNestedObj(dataOperations, 'key', operationVal)
+                        });
+                    }
 
-                    startTransition(() => {
-                        addToHistory(`${window.location.pathname}`);
-                        // window.open(`../../dataform/works/${task?.contractId}`, '_blank');
-                        if (event && event.button === 1) {
-                            const url = `../../dataform/works/${task?.contractId}?data=${encodeURIComponent(
-                                JSON.stringify(navigationArg.state)
-                            )}`;
-                            window.open(url, '_blank');
-                        } else navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
-                        // navigate(`../../dataform/works/${task?.contractId}`, navigationArg);
-                    });
+                    if (event && event.button === 1) {
+                        const url = `${window.location.pathname}?data=${encodeURIComponent(
+                            JSON.stringify({
+                                idContract: task?.contractId,
+                                rowItem: 'task',
+                                partition,
+                                taskInfo: { id: +task?.taskId, parentTaskId: +task?.parentTaskId },
+                                contractOperations: findNestedObj(dataOperations, 'key', operationVal)
+                            })
+                        )}`;
+                        window.open(url, '_blank');
+                    }
 
-                    localStorage.setItem('selectedTab', JSON.stringify({ key: 'works', title: 'Работа и задачи' }));
+                    // localStorage.setItem('selectedTab', JSON.stringify({ key: 'works', title: 'Работа и задачи' }));
                 }
             }
         };
+
         return task?.navKey in NAVIGATION_CONF ? NAVIGATION_CONF[task?.navKey]() : null;
     }
 
@@ -257,13 +269,6 @@ function TaskRow(props) {
             <div className="gantt-grid__main-row">
                 {containTasks ? (
                     <div className="gantt-task-title-wrapper" style={{ paddingLeft: `${config.indent / 16}rem` }}>
-                        {/* <div
-                            className="gantt-task-title"
-                            onClick={() => onShowInfo(null, task, 'update')}
-                            onMouseDown={e => onShowInfo(e, task, 'update')}
-                        >
-                            <span>{task?.title}</span>
-                        </div> */}
                         {isObject(task?.title) && Object.keys(task?.title).length !== 0 ? (
                             <p
                                 className="gantt-task-title"
@@ -378,6 +383,8 @@ function TaskRow(props) {
                           dateState={dateState}
                           config={{ indent: config.indent * 2 }}
                           dataOperations={dataOperations}
+                          setPopupState={setPopupState}
+                          openPopup={openPopup}
                       />
                   ))
                 : null}
@@ -386,12 +393,45 @@ function TaskRow(props) {
 }
 
 function GanttChart(props) {
-    const { timeLine, partition, gantt, dateState, selectedItemInd, modeConfig, onSelectItem } = props;
+    const {
+        timeLine,
+        partition,
+        gantt,
+        dateState,
+        selectedItemInd,
+        modeConfig,
+        onSelectItem,
+        setPopupState,
+        openPopup
+    } = props;
 
     const [showTasks, setShowTasks] = useState(true);
     // const [currTask, setCurrTask] = useState({});
     const ganttGridMain = useRef(null);
     const refCurrMonth = useRef(null);
+
+    const location = useLocation();
+
+    // Конфигурация по обработке направлений
+    const PROCESSING_DIRECTIONS_CONF = {
+        task: async queryData => {
+            const tasksContract = await GanttService.getTasksContract(queryData?.idContract);
+            // Получение информации о задаче
+            const taskData = await TaskService.getTaskInfo(queryData?.taskInfo?.id, queryData?.taskInfo?.parentTaskId);
+
+            // Установил чтобы не дергалось окно
+            setTimeout(() => {
+                setPopupState(true);
+                openPopup('update', 'editTask', {
+                    idContract: queryData?.idContract,
+                    partition,
+                    tasks: tasksContract || [],
+                    task: taskData,
+                    contractOperations: queryData?.contractOperations
+                });
+            }, 500);
+        }
+    };
 
     // Скрытие основных задач
     function onHideTasks() {
@@ -414,7 +454,17 @@ function GanttChart(props) {
     // function onDrop(e, taskData) {}
 
     // console.log(`year: ${JSON.stringify(getDaysYear(dateState), null, 4)}`);
-    console.log(`new Data: ${JSON.stringify(gantt, null, 4)}`);
+    // console.log(`new Data: ${JSON.stringify(gantt, null, 4)}`);
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const queryData = JSON.parse(decodeURIComponent(queryParams.get('data')));
+
+        if (queryData && Object.keys(queryData).length !== 0) {
+            if (queryData?.rowItem in PROCESSING_DIRECTIONS_CONF)
+                PROCESSING_DIRECTIONS_CONF[queryData?.rowItem](queryData);
+        }
+    }, []);
 
     useEffect(() => {
         if (!ganttGridMain.current || !refCurrMonth.current) return;
@@ -512,6 +562,8 @@ function GanttChart(props) {
                                       dateState={dateState}
                                       config={{ indent: 10 }}
                                       dataOperations={modeConfig?.dataOperations}
+                                      setPopupState={setPopupState}
+                                      openPopup={openPopup}
                                   />
                               ))
                             : null}
@@ -525,7 +577,6 @@ function GanttChart(props) {
 }
 
 export default function GanttMode(props) {
-    // console.log(`GanttMode data: ${JSON.stringify(data, null, 4)}`);
     const { partition, data, modeConfig } = props;
 
     // Сохраненные значения выпадающего списка
@@ -536,6 +587,14 @@ export default function GanttMode(props) {
             services: 0
         }
     );
+
+    const [popupState, setPopupState] = useState(false);
+    const [popupInfo, setPopupInfo] = useState({
+        operation: null,
+        mode: null,
+        data: null
+    });
+
     const { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter } = useFiltersGantt(
         partition,
         modeConfig?.modeOption,
@@ -554,6 +613,52 @@ export default function GanttMode(props) {
     const [dateState] = useState({ year: new Date().getFullYear(), month: new Date().getMonth() });
     // Данные для диаграммы Ганта
     const [ganttData, setGanttData] = useState({});
+
+    // Конфигурация по всплывающим окнам
+    const POPUP_CONF = {
+        'addSubTask': (
+            <TaskPopup
+                key={`key${
+                    +popupInfo?.data?.editingTask?.id + Date.now().toString(36) + Math.random().toString(36).substr(2)
+                }`}
+                additClass="add-task"
+                title="Новая подзадача"
+                data={popupInfo?.data}
+                taskOperation={popupInfo?.operation}
+                popupState={popupState}
+                setPopupState={setPopupState}
+                switchPopup={switchPopup}
+            />
+        ),
+        'editTask': (
+            <TaskPopup
+                key={`key${
+                    +popupInfo?.data?.editingTask?.id + Date.now().toString(36) + Math.random().toString(36).substr(2)
+                }`}
+                additClass="add-task"
+                title="Редактирование задачи"
+                data={popupInfo?.data}
+                taskOperation={popupInfo?.operation}
+                popupState={popupState}
+                setPopupState={setPopupState}
+                switchPopup={switchPopup}
+            />
+        )
+    };
+
+    // Открыть всплывающее окно
+    function openPopup(operation, mode, data = null) {
+        setPopupInfo({
+            operation,
+            mode,
+            data
+        });
+    }
+
+    // Переключить всплывающее окно
+    function switchPopup(operation, mode, data) {
+        setPopupInfo({ operation, mode, data });
+    }
 
     function onSelectItem(e) {
         const tempGanttFilters = Object.assign({}, ganttFilters);
@@ -623,7 +728,10 @@ export default function GanttMode(props) {
                 selectedItemInd={ganttFilters[modeConfig?.modeOption?.key]}
                 modeConfig={modeConfig}
                 onSelectItem={onSelectItem}
+                setPopupState={setPopupState}
+                openPopup={openPopup}
             />
+            {popupState ? createPortal(POPUP_CONF[popupInfo?.mode] ?? null, document.getElementById('root')) : null}
         </div>
     );
 }

@@ -27,6 +27,21 @@
 /* Пользователь */
 
 .app__user {
+    margin-top: auto;
+    height: max-content;
+    display: flex;
+    align-items: center;
+    column-gap: 0.5vw;
+    cursor: pointer;
+}
+
+.app__user img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+/* .app__user {
     padding: 0.3125rem;
     width: 100%;
     height: 3rem;
@@ -43,7 +58,7 @@
     object-fit: cover;
     object-position: top center;
     border-radius: 50%;
-}
+} */
 
 .app__user-profile {
     padding: 0.3125rem 0.625rem;
