@@ -498,7 +498,7 @@ def getTask(request):
                 EXECUTOR.ID AS ID_OF_EXECUTOR,
                 EXECUTOR.F16 AS ID_MM_EXECUTOR,
                 EXECUTOR.F4886 AS EXECUTOR_NAME,
-                LIST(coExecutor.ID || ';' || coExecutor.F16 || ';' || coExecutor.F10 || ';' || coExecutor.F14 || ';' || T4.F7) AS coExecutor
+                LIST(coExecutor.ID || ';' || coExecutor.F16 || ';' || coExecutor.F10 || ';' || CASE WHEN coExecutor.F14 IS NULL THEN '' ELSE coExecutor.F14 || ';' || T4.F7) AS coExecutor
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
