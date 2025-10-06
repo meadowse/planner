@@ -1053,7 +1053,7 @@ def getContractsEmployee(request):
             LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
             responsible.F16 AS responsibleId,
             responsible.F4886 AS responsible,
-            LIST(DISTINCT T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks,
+            LIST(DISTINCT T218.F4695 || '&' || T218.F5569 || '&' || T218.F4696 || '&' || T218.F4697 || '&' || T218.ID || '&' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || '&' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || '&' || director.F16 || '&' || director.F4886 || '&' || executor.F16 || '&' || executor.F4886, '^') AS tasks,
             projectManager.F16 AS idMMProjectManager,
             projectManager.F10 AS fioProjectManager
             FROM T212
@@ -1133,9 +1133,9 @@ def getContractsEmployee(request):
                 Str = obj.get('tasks')
                 tasks = {'tasks': []}
                 if Str is not None:
-                    List = Str.split('*')
+                    List = Str.split('^')
                     for allData in List:
-                        list2 = allData.split(';')
+                        list2 = allData.split('&')
                         list2[0].strip()
                         if list2[0] == '' and list2[1] == '' and list2[2] == '':
                             continue
