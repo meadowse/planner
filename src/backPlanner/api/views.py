@@ -1145,17 +1145,17 @@ def getContractsEmployee(request):
                                                        'director': {'mmId': list2[7], 'fullName': list2[8]},
                                                        'executor': {'mmId': list2[9], 'fullName': list2[10]},
                                                        'status': list2[5], 'parentId': list2[6], 'tasks': []})
-                        indexSubtask = 0
-                        removeIndexesSubtasks = []
-                        for subtask in tasks.get('tasks'):
-                            for task in tasks.get('tasks'):
-                                if task.get('id') == subtask.get('parentId') and task.get('id') != task.get('parentId'):
-                                    task.get('tasks').append(subtask)
-                                    removeIndexesSubtasks.append(indexSubtask)
-                            indexSubtask += 1
-                        removeIndexesSubtasks = sorted(removeIndexesSubtasks, reverse=True)
-                        for indexSubtask in removeIndexesSubtasks:
-                            tasks.get('tasks').pop(indexSubtask)
+                    indexSubtask = 0
+                    removeIndexesSubtasks = []
+                    for subtask in tasks.get('tasks'):
+                        for task in tasks.get('tasks'):
+                            if task.get('id') == subtask.get('parentId') and task.get('id') != task.get('parentId'):
+                                task.get('tasks').append(subtask)
+                                removeIndexesSubtasks.append(indexSubtask)
+                        indexSubtask += 1
+                    removeIndexesSubtasks = sorted(removeIndexesSubtasks, reverse=True)
+                    for indexSubtask in removeIndexesSubtasks:
+                        tasks.get('tasks').pop(indexSubtask)
                 obj.update(tasks)
             end = perf_counter()
             print(end - start)
