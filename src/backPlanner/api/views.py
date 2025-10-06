@@ -156,14 +156,22 @@ def employees(request):
         T3.F4887SRC AS photo,
         T3.F14 AS phone,
         T3.F12 AS email,
-        T4.F7 AS post
+        T3.F5572 AS OFFICE,
+        T4.F7 AS post,
+        T5.F26 AS DEPARTMENT,
+        director.ID AS idDirector,
+        director.F16 AS idMMDirector,
+        director.F10 AS fioDirector
         FROM T3
         LEFT JOIN T4 ON T3.F11 = T4.ID
+        LEFT JOIN T5 ON T3.F27 = T5.ID
+        LEFT JOIN T3 AS director ON director.F27 = T3.F27 AND director.F5846 = 1
         WHERE T3.F5383 = 1"""
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
-        columns = ('id', 'mmId', 'nickName', 'fullName', 'photo', 'phone', 'email', 'post')
+        columns = ('id', 'mmId', 'nickName', 'fullName', 'photo', 'phone', 'email', 'office', 'post', 'department',
+                   'idDirector', 'idMMDirector', 'fioDirector')
         json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
         # end = perf_counter()
         # print(end - start)
