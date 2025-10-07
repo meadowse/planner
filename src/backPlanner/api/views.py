@@ -165,7 +165,7 @@ def employees(request):
         FROM T3
         LEFT JOIN T4 ON T3.F11 = T4.ID
         LEFT JOIN T5 ON T3.F27 = T5.ID
-        LEFT JOIN T3 AS director ON director.F27 = T3.F27 AND director.F5846 = 1
+        LEFT JOIN T3 AS director ON director.ID = T3.F5854
         WHERE T3.F5383 = 1"""
         cur.execute(sql)
         result = cur.fetchall()
@@ -1191,7 +1191,7 @@ def getDataUser(request):
                 FROM T3
                 LEFT JOIN T5 ON T3.F27 = T5.ID
                 LEFT JOIN T4 ON T3.F11 = T4.ID
-                LEFT JOIN T3 AS director ON director.F27 = T3.F27 AND director.F5846 = 1
+                LEFT JOIN T3 AS director ON director.ID = T3.F5854
                 WHERE T3.F16 = '{employeeId}'"""
                 cur.execute(sql)
                 result = cur.fetchall()
