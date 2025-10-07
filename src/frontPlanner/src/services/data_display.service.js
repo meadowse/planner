@@ -29,18 +29,21 @@ const formData = (data, partition, key) => {
                     newData = data.map(item => {
                         if (item && Object.keys(item).length !== 0) {
                             newItem = {};
-                            newItem['id'] = item?.id;
-                            newItem['responsible'] = {
+                            newItem.id = item?.id;
+                            newItem.employee = {
                                 mmId: item?.mmId,
                                 fullName: item?.fullName,
                                 photo: item?.mmId
                                     ? `https://mm-mpk.ru/api/v4/users/${item?.mmId}/image`
                                     : '/img/user.svg'
                             };
-                            newItem['post'] = item?.post ?? 'Нет данных';
+                            newItem.department = item?.department ?? 'Нет данных';
+                            newItem.post = item?.post ?? 'Нет данных';
+                            newItem.chief = item?.fioDirector ?? 'Нет данных';
+                            newItem.office = item?.office ?? 'Нет данных';
                             // newItem['subsection'] = item?.subsection;
-                            newItem['phone'] = item?.phone ?? 'Нет данных';
-                            newItem['email'] = item?.email ?? 'Нет данных';
+                            newItem.phone = item?.phone ?? 'Нет данных';
+                            newItem.email = item?.email ?? 'Нет данных';
                         }
                         return newItem;
                     });

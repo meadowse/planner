@@ -254,8 +254,58 @@ const COLUMNS = [
         }
     },
     {
+        Header: 'Сотрудник',
+        accessor: 'employee',
+        sortable: true,
+        sortBy: 'fullName',
+        Cell: props => {
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee(employee) {
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+                    navigate(`../../user/${employee?.mmId}/profile/profile/`, {
+                        state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                    });
+                });
+            }
+
+            return props?.value && Object.keys(props?.value).length !== 0
+                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
+                : 'Нет данных';
+        }
+    },
+    {
+        Header: 'Отдел',
+        accessor: 'department',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            return CELLS['text'](props?.value, 'post');
+        }
+    },
+    {
         Header: 'Должность',
         accessor: 'post',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            return CELLS['text'](props?.value, 'post');
+        }
+    },
+    {
+        Header: 'Руководитель',
+        accessor: 'chief',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            return CELLS['text'](props?.value, 'post');
+        }
+    },
+    {
+        Header: 'Офис',
+        accessor: 'office',
         sortable: false,
         sortBy: undefined,
         Cell: props => {
@@ -701,7 +751,8 @@ const COLUMNS = [
         sortable: true,
         sortBy: 'value',
         Cell: props => {
-            const { coExecutor, coExecutors } = props.config;
+            // const { coExecutor, coExecutors } = props.config;
+            const { coExecutor, coExecutors } = props.row.original;
             let coExecutorVal = null;
             let coExecutorsArr = coExecutors && coExecutors.length !== 0 ? [...coExecutors] : [];
 
@@ -750,7 +801,7 @@ const COLUMNS = [
                             {coExecutorVal?.coExecutorName ?? coExecutorVal?.fullName}
                         </h2>
                     </div>
-                    {coExecutorsArr && coExecutorsArr.length !== 0 ? (
+                    {coExecutorsArr && coExecutorsArr.length > 0 ? (
                         <button
                             ref={ref}
                             className="cell__btn-show-persons"

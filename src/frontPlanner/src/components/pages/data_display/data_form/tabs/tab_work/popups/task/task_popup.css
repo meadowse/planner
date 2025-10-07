@@ -42,6 +42,19 @@
     grid-template-columns: 0.3fr 1.5fr 1.5fr;
 }
 
+.popup__wrapper-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup__wrapper-field::after {
+    content: attr(data-error);
+    padding-top: calc(5px + 0.15vw);
+    display: block;
+    text-align: right;
+    color: #c92432;
+}
+
 /* Цепочка статусов */
 
 .popup-task-steps {
@@ -391,12 +404,15 @@
 
 /* Общие стили для блоков "Времязатраты" и "Подзадачи" */
 
+.popup__content-timecosts .popup__wrapper-field {
+    align-items: flex-start;
+}
+
 .popup__task-form-row {
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    /* row-gap: 25px; */
     row-gap: 1vw;
 }
 

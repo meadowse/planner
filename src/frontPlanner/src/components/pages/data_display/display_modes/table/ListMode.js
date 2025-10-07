@@ -117,11 +117,12 @@ export default function ListMode(props) {
             return <Cell cellData={cellData} cellConfig={config} />;
         },
         coExecutor: cellData => {
-            const config = {
-                coExecutor: data[cellData?.indRow]?.coExecutor ?? null,
-                coExecutors: data[cellData?.indRow]?.coExecutors ?? null
-            };
-            return <Cell cellData={cellData} cellConfig={config} />;
+            // const config = {
+            //     coExecutor: data[cellData?.indRow]?.coExecutor ?? null,
+            //     coExecutors: data[cellData?.indRow]?.coExecutors ?? null
+            // };
+            // return <Cell cellData={cellData} cellConfig={config} />;
+            return <Cell cellData={cellData} />;
         },
         default: cellData => {
             return <Cell cellData={cellData} />;

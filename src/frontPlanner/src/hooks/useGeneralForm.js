@@ -70,224 +70,172 @@ export const useGeneralForm = (initialData, disabledFields) => {
                 if (!value) {
                     error = { message: 'Выберите статус из списка!' };
                     config.condition = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.condition;
-                    setErrorsInfo(config);
-                }
+                } else delete config.condition;
+                setErrorsInfo(config);
             },
             manager: () => {
                 if (!value || Object.keys(value).length === 0) {
                     error = { message: 'Выберите менеджера!' };
                     config.manager = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.manager;
-                    setErrorsInfo(config);
-                }
+                } else delete config.manager;
+                setErrorsInfo(config);
             },
             responsible: () => {
                 if (!value || Object.keys(value).length === 0) {
                     error = { message: 'Выберите ответственного!' };
                     config.responsible = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.responsible;
-                    setErrorsInfo(config);
-                }
+                } else delete config.responsible;
+                setErrorsInfo(config);
             },
             participants: () => {
                 if (value.length === 0) {
                     error = { message: 'Выберите участника!' };
                     config.participants = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.participants;
-                    setErrorsInfo(config);
-                }
+                } else delete config.participants;
+                setErrorsInfo(config);
             },
             company: () => {
                 regExp = /[`!@#$%^&*()_=\[\]{};:\\|,.<>\/?~]/;
                 if (!value) {
                     error = { message: 'Поле обязательно для заполнения!' };
                     config.company = error;
-                    setErrorsInfo(config);
                 } else if (regExp.test(value)) {
                     error = { message: 'Некорректное значение!' };
                     config.company = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.company;
-                    setErrorsInfo(config);
-                }
+                } else delete config.company;
+                setErrorsInfo(config);
             },
             address: () => {
                 regExp = /[`!@#$%^&*()_+=\[\]{};':"\\|<>\?~]/;
                 if (!value) {
                     error = { message: 'Поле обязательно для заполнения!' };
                     config.address = error;
-                    setErrorsInfo(config);
                 } else if (regExp.test(value)) {
                     error = { message: 'Некорректное значение!' };
                     config.address = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.address;
-                    setErrorsInfo(config);
-                }
+                } else delete config.address;
+
+                setErrorsInfo(config);
             },
             pathToFolder: () => {
                 if (!value) {
                     error = { message: 'Поле обязательно для заполнения!' };
                     config.pathToFolder = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.pathToFolder;
-                    setErrorsInfo(config);
-                }
+                } else delete config.pathToFolder;
+                setErrorsInfo(config);
             },
             dateCreation: () => {
                 if (!value) {
                     error = { message: 'Поле обязательно для заполнения!' };
                     config.dateCreation = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.dateCreation;
-                    setErrorsInfo(config);
-                }
+                } else delete config.dateCreation;
+                setErrorsInfo(config);
             },
             dateOfStart: () => {
                 if (!value) {
                     error = { message: 'Выберите дату начала!' };
                     config.dateOfStart = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.dateOfStart;
-                    setErrorsInfo(config);
-                }
+                } else delete config.dateOfStart;
+
+                setErrorsInfo(config);
             },
             dateOfEnding: () => {
                 if (!value) {
                     error = { message: 'Выберите дату конца!' };
                     config.dateOfEnding = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.dateOfEnding;
-                    setErrorsInfo(config);
-                }
+                } else delete config.dateOfEnding;
+
+                setErrorsInfo(config);
             },
             contractNum: () => {
                 regExp = /[`!@#$%^&*()_+=\[\]{};':"\\|<>\?~]/;
                 if (!value) {
                     error = { message: 'Поле обязательно для заполнения!' };
                     config.contractNum = error;
-                    setErrorsInfo(config);
                 } else if (regExp.test(value)) {
                     error = { message: 'Некорректное значение!' };
                     config.contractNum = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.contractNum;
-                    setErrorsInfo(config);
-                }
+                } else delete config.contractNum;
+
+                setErrorsInfo(config);
             },
-            contacts: () => {
-                if (value !== null && value.length === 0) {
-                    error = { message: 'Выберите контакт!' };
-                    config.contacts = [error];
-                    setErrorsInfo(config);
-                } else setErrorsInfo(config);
-            },
-            fullName: () => {
-                if (!value) {
-                    error = { message: 'Поле обязательно для заполнения!' };
-                    configContact.fullName = error;
-                    config.contacts[index] = configContact;
-                    setErrorsInfo(config);
-                } else if (value) {
-                    regExp = /^(?=.{1,40}$)[а-яёА-ЯЁ]+(?:[-' ][а-яёА-ЯЁ]+)*$/;
-                    if (!regExp.test(value)) {
-                        error = { message: 'Некорректное значение!' };
-                        configContact.fullName = error;
-                        config.contacts[index] = configContact;
-                        setErrorsInfo(config);
-                    } else {
-                        delete configContact.fullName;
-                        setErrorsInfo(config);
-                    }
-                }
-            },
-            post: () => {
-                if (!value) {
-                    error = { message: 'Поле обязательно для заполнения!' };
-                    configContact.post = error;
-                    config.contacts[index] = configContact;
-                    setErrorsInfo(config);
-                } else {
-                    delete configContact.post;
-                    config.contacts[index] = configContact;
-                    setErrorsInfo(config);
-                }
-            },
-            phone: () => {
-                if (!value) {
-                    error = { message: 'Поле обязательно для заполнения!' };
-                    configContact.phone = error;
-                    config.contacts[index] = configContact;
-                    setErrorsInfo(config);
-                } else {
-                    regExp = /\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/;
-                    if (regExp.test(value)) {
-                        error = { message: 'Некорректное значение!' };
-                        configContact.phone = error;
-                        config.contacts[index] = configContact;
-                        setErrorsInfo(config);
-                    } else {
-                        delete configContact.phone;
-                        config.contacts[index] = configContact;
-                        setErrorsInfo(config);
-                    }
-                }
-            },
-            email: () => {
-                regExp =
-                    /^(([^<>()[\]\\.,;:\s!?@\"]+(\.[^<>()[\]\\.,;:\s!?@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                if (!value) {
-                    error = { message: 'Поле обязательно для заполнения!' };
-                    configContact.email = error;
-                    config.contacts[index] = configContact;
-                    setErrorsInfo(config);
-                } else if (value) {
-                    if (!regExp.test(value)) {
-                        // console.log('Некорректное значение!');
-                        error = { message: 'Некорректное значение!' };
-                        configContact.email = error;
-                        config.contacts[index] = configContact;
-                        setErrorsInfo(config);
-                    } else {
-                        delete configContact.email;
-                        config.contacts[index] = configContact;
-                        setErrorsInfo(config);
-                    }
-                }
-            },
+            // contacts: () => {
+            //     if (value !== null && value.length === 0) {
+            //         error = { message: 'Выберите контакт!' };
+            //         config.contacts = [error];
+            //     }
+            //     setErrorsInfo(config);
+            // },
+            // fullName: () => {
+            //     if (!value) {
+            //         error = { message: 'Поле обязательно для заполнения!' };
+            //         configContact.fullName = error;
+            //         config.contacts[index] = configContact;
+            //     } else if (value) {
+            //         regExp = /^(?=.{1,40}$)[а-яёА-ЯЁ]+(?:[-' ][а-яёА-ЯЁ]+)*$/;
+            //         if (!regExp.test(value)) {
+            //             error = { message: 'Некорректное значение!' };
+            //             configContact.fullName = error;
+            //             config.contacts[index] = configContact;
+            //         } else delete configContact.fullName;
+            //     }
+            //     setErrorsInfo(config);
+            // },
+            // post: () => {
+            //     if (!value) {
+            //         error = { message: 'Поле обязательно для заполнения!' };
+            //         configContact.post = error;
+            //         config.contacts[index] = configContact;
+            //     } else {
+            //         delete configContact.post;
+            //         config.contacts[index] = configContact;
+            //     }
+            //     setErrorsInfo(config);
+            // },
+            // phone: () => {
+            //     if (!value) {
+            //         error = { message: 'Поле обязательно для заполнения!' };
+            //         configContact.phone = error;
+            //         config.contacts[index] = configContact;
+            //     } else {
+            //         regExp = /\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/;
+            //         if (regExp.test(value)) {
+            //             error = { message: 'Некорректное значение!' };
+            //             configContact.phone = error;
+            //             config.contacts[index] = configContact;
+            //         } else {
+            //             delete configContact.phone;
+            //             config.contacts[index] = configContact;
+            //         }
+            //     }
+            //     setErrorsInfo(config);
+            // },
+            // email: () => {
+            //     regExp =
+            //         /^(([^<>()[\]\\.,;:\s!?@\"]+(\.[^<>()[\]\\.,;:\s!?@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            //     if (!value) {
+            //         error = { message: 'Поле обязательно для заполнения!' };
+            //         configContact.email = error;
+            //         config.contacts[index] = configContact;
+            //     } else if (value) {
+            //         if (!regExp.test(value)) {
+            //             // console.log('Некорректное значение!');
+            //             error = { message: 'Некорректное значение!' };
+            //             configContact.email = error;
+            //             config.contacts[index] = configContact;
+            //         } else {
+            //             delete configContact.email;
+            //             config.contacts[index] = configContact;
+            //         }
+            //     }
+            //     setErrorsInfo(config);
+            // },
             services: () => {
                 if (!value || Object.keys(value).length === 0) {
                     error = { message: 'Выберите сервис из списка!' };
                     config.services = error;
-                    setErrorsInfo(config);
-                } else {
-                    delete config.services;
-                    setErrorsInfo(config);
-                }
-                // if (value !== null && value.length === 0) {
-                //     error = { message: 'Выберите сервис из списка!' };
-                //     config.services = error;
-                //     setErrorsInfo(config);
-                // } else {
-                //     delete config.services;
-                //     setErrorsInfo(config);
-                // }
+                } else delete config.services;
+                setErrorsInfo(config);
             }
         };
 

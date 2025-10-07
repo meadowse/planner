@@ -11,6 +11,7 @@ import IconButton from '@generic/elements/buttons/IcButton';
 import DropdownMenu from '@generic/elements/dropdown_menu/DropdownMenu';
 
 import CalendarWindow from '@generic/elements/calendar/CalendarWindow';
+import ModalWindow from '@generic/elements/popup/ModalWindow';
 import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
 import InputDataPopup from '@generic/elements/popup/InputDataPopup';
 
@@ -21,7 +22,7 @@ import TimeCostsPopup from '../timecosts/TimeCostsPopup';
 import { useHistoryContext } from '../../../../../../../../contexts/history.context';
 
 // Импорт кастомных хуков
-import { useTaskForm } from '@hooks/useAddTaskForm';
+import { useTaskForm } from '@hooks/useTaskForm';
 
 // Импорт конфигурации
 import { EMPLOYEE_ACTIONS, ACTIONS_TASK, IMAGES_ACTIONS_TASK } from '@config/popups/popup_task.config';
@@ -331,7 +332,7 @@ function TypeWork(props) {
 
 // Постановщик
 function Director(props) {
-    const { presetValue, config, onSelect } = props;
+    const { presetValue, config, directorError, onSelect } = props;
     // console.log(`Director presetValue: ${JSON.stringify(presetValue, null, 4)}`);
 
     const [statePopup, setStatePopup] = useState(false);
@@ -384,50 +385,55 @@ function Director(props) {
     return !config?.hidden ? (
         <li className="popup__content-user popup-content-item">
             <h2 className="popup-content-title">Постановщик</h2>
-            <div className="popup__user-inner">
-                {statePopup
-                    ? createPortal(
-                          <UsersPopupWindow
-                              additClass="add_user"
-                              overlay={true}
-                              statePopup={statePopup}
-                              setStatePopup={setStatePopup}
-                              selectUser={onSelectDirector}
-                          />,
-                          document.getElementById('portal')
-                      )
-                    : null}
-                {director && Object.keys(director).length !== 0 ? (
-                    <ul className="popup__director-list popup__users-list">
-                        <li className="popup__director-list-item" onClick={onClickUser}>
-                            <BgFillText
-                                type="p"
-                                text={director.fullName}
-                                bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
-                            />
-                        </li>
-                        <li className="popup__director-list-item">
-                            <IconButton
-                                nameClass="icon-btn__delete-director icon-btn__delete-user"
-                                type="button"
-                                icon="cancel.svg"
-                                onClick={onDeleteDirector}
-                            />
-                        </li>
-                    </ul>
-                ) : (
-                    <BgFillText
-                        type="p"
-                        text="Добавить"
-                        bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+            <div
+                className="popup__wrapper-field"
+                data-error={directorError && Object.keys(directorError).length !== 0 ? directorError?.message : null}
+            >
+                <div className="popup__user-inner">
+                    {statePopup
+                        ? createPortal(
+                              <UsersPopupWindow
+                                  additClass="add_user"
+                                  overlay={true}
+                                  statePopup={statePopup}
+                                  setStatePopup={setStatePopup}
+                                  selectUser={onSelectDirector}
+                              />,
+                              document.getElementById('portal')
+                          )
+                        : null}
+                    {director && Object.keys(director).length !== 0 ? (
+                        <ul className="popup__director-list popup__users-list">
+                            <li className="popup__director-list-item" onClick={onClickUser}>
+                                <BgFillText
+                                    type="p"
+                                    text={director.fullName}
+                                    bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                                />
+                            </li>
+                            <li className="popup__director-list-item">
+                                <IconButton
+                                    nameClass="icon-btn__delete-director icon-btn__delete-user"
+                                    type="button"
+                                    icon="cancel.svg"
+                                    onClick={onDeleteDirector}
+                                />
+                            </li>
+                        </ul>
+                    ) : (
+                        <BgFillText
+                            type="p"
+                            text="Добавить"
+                            bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                        />
+                    )}
+                    <IconButton
+                        nameClass="icon-btn__add-director icon-btn__add-user"
+                        type="button"
+                        icon="edit.svg"
+                        onClick={onShowPopup}
                     />
-                )}
-                <IconButton
-                    nameClass="icon-btn__add-director icon-btn__add-user"
-                    type="button"
-                    icon="edit.svg"
-                    onClick={onShowPopup}
-                />
+                </div>
             </div>
         </li>
     ) : null;
@@ -435,7 +441,7 @@ function Director(props) {
 
 // Исполнитель
 function Executor(props) {
-    const { presetValue, config, onSelect } = props;
+    const { presetValue, config, executorError, onSelect } = props;
     // console.log(`Executor presetValue: ${JSON.stringify(presetValue, null, 4)}`);
 
     const [statePopup, setStatePopup] = useState(false);
@@ -484,50 +490,55 @@ function Executor(props) {
     return !config?.hidden ? (
         <li className="popup__content-user popup-content-item">
             <h2 className="popup-content-title">Исполнитель</h2>
-            <div className="popup__user-inner">
-                {statePopup
-                    ? createPortal(
-                          <UsersPopupWindow
-                              additClass="add_user"
-                              overlay={true}
-                              statePopup={statePopup}
-                              setStatePopup={setStatePopup}
-                              selectUser={onSelectExecutor}
-                          />,
-                          document.getElementById('portal')
-                      )
-                    : null}
-                {executor && Object.keys(executor).length !== 0 ? (
-                    <ul className="popup__executor-list popup__users-list">
-                        <li className="popup__executor-list-item" onClick={onClickUser}>
-                            <BgFillText
-                                type="p"
-                                text={executor.fullName}
-                                bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
-                            />
-                        </li>
-                        <li className="popup__executor-list-item">
-                            <IconButton
-                                nameClass="icon-btn__delete-executor icon-btn__delete-user"
-                                type="button"
-                                icon="cancel.svg"
-                                onClick={onDeleteExecutor}
-                            />
-                        </li>
-                    </ul>
-                ) : (
-                    <BgFillText
-                        type="p"
-                        text="Добавить"
-                        bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+            <div
+                className="popup__wrapper-field"
+                data-error={executorError && Object.keys(executorError).length !== 0 ? executorError?.message : null}
+            >
+                <div className="popup__user-inner">
+                    {statePopup
+                        ? createPortal(
+                              <UsersPopupWindow
+                                  additClass="add_user"
+                                  overlay={true}
+                                  statePopup={statePopup}
+                                  setStatePopup={setStatePopup}
+                                  selectUser={onSelectExecutor}
+                              />,
+                              document.getElementById('portal')
+                          )
+                        : null}
+                    {executor && Object.keys(executor).length !== 0 ? (
+                        <ul className="popup__executor-list popup__users-list">
+                            <li className="popup__executor-list-item" onClick={onClickUser}>
+                                <BgFillText
+                                    type="p"
+                                    text={executor.fullName}
+                                    bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                                />
+                            </li>
+                            <li className="popup__executor-list-item">
+                                <IconButton
+                                    nameClass="icon-btn__delete-executor icon-btn__delete-user"
+                                    type="button"
+                                    icon="cancel.svg"
+                                    onClick={onDeleteExecutor}
+                                />
+                            </li>
+                        </ul>
+                    ) : (
+                        <BgFillText
+                            type="p"
+                            text="Добавить"
+                            bgColor={config?.appTheme === 'dark' ? '#4c4c4e' : '#f1f1f1'}
+                        />
+                    )}
+                    <IconButton
+                        nameClass="icon-btn__add-executor icon-btn__add-user"
+                        type="button"
+                        icon="edit.svg"
+                        onClick={onShowPopup}
                     />
-                )}
-                <IconButton
-                    nameClass="icon-btn__add-executor icon-btn__add-user"
-                    type="button"
-                    icon="edit.svg"
-                    onClick={onShowPopup}
-                />
+                </div>
             </div>
         </li>
     ) : null;
@@ -658,19 +669,26 @@ function ParentsTasks(props) {
 
 // Задача
 function TaskName(props) {
-    const { presetValue, config, onChange } = props;
+    const { presetValue, config, taskError, onChange, onSelect } = props;
 
-    const [taskName, setTaskName] = useState(presetValue ?? '');
+    const [taskName, setTaskName] = useState(null);
 
     function onChangeTaskName(e) {
         setTaskName(e.target.value);
         onChange(e);
     }
 
+    useEffect(() => {
+        setTaskName(presetValue ?? '');
+        onSelect('task', presetValue ?? '');
+    }, []);
+
     return !config?.hidden ? (
         <li className="popup__content-task popup-content-item">
             <h2 className="popup-content-title">Задача</h2>
-            <textarea className="txt-area-task" name="task" value={taskName} onChange={e => onChangeTaskName(e)} />
+            <div className="popup__wrapper-field" data-error={taskError ? taskError.message : null}>
+                <textarea className="txt-area-task" name="task" value={taskName} onChange={e => onChangeTaskName(e)} />
+            </div>
         </li>
     ) : null;
 }
@@ -846,7 +864,7 @@ function DeadlineTask(props) {
 
 // Планируемые времязатраты
 function PlannedTimeCosts(props) {
-    const { presetValue, onSelect, onChange } = props;
+    const { presetValue, plannedTimeCostsError, onSelect, onChange } = props;
 
     const [plannedTimeCosts, setPlannedTimeCosts] = useState(null);
 
@@ -870,19 +888,24 @@ function PlannedTimeCosts(props) {
     }, []);
 
     return (
-        <li className="popup__content-deadline popup-content-item">
+        <li className="popup__content-timecosts popup-content-item">
             <h2 className="popup-content-title">План. времязатраты, ч</h2>
-            <div className="popup__date-wrapper">
-                <div className="popup__deadline popup-task-date">
-                    <input
-                        className="popup-task-date-input"
-                        name="plannedTimeCosts"
-                        type="text"
-                        placeholder="0.00"
-                        value={plannedTimeCosts}
-                        onBlur={onFocusOut}
-                        onChange={onChangePlannedTime}
-                    />
+            <div
+                className="popup__wrapper-field"
+                data-error={plannedTimeCostsError ? plannedTimeCostsError.message : null}
+            >
+                <div className="popup__date-wrapper ">
+                    <div className="popup__timecosts popup-task-date">
+                        <input
+                            className="popup-task-date-input"
+                            name="plannedTimeCosts"
+                            type="text"
+                            placeholder="0.00"
+                            value={plannedTimeCosts}
+                            onBlur={onFocusOut}
+                            onChange={onChangePlannedTime}
+                        />
+                    </div>
                 </div>
             </div>
         </li>
@@ -1003,19 +1026,6 @@ function TaskItem(props) {
                     )}
                 </div>
             </li>
-            {/* Завершено */}
-            {/* <li className="popup__table-row-cell">
-                <div className="popup__checkbox-wrapper">
-                    <input
-                        className="popup__inpt-checkbox"
-                        type="checkbox"
-                        checked={taskItem?.done}
-                        disabled={true}
-                        // onChange={onChangeCompleteness}
-                    />
-                    <span className="popup__custom-checkbox"></span>
-                </div>
-            </li> */}
         </ul>
     );
 }
@@ -1179,12 +1189,12 @@ function TimeCostsItem(props) {
 
 // Таблица врмязатрат
 function TimeCosts(props) {
-    const { config, timeCostsConf, setTimeCostsApi } = props;
+    const { refreshTask, config, timeCostsConf, setTimeCostsApi, refreshTaskData } = props;
     const { taskInfo, timeCosts } = timeCostsConf;
 
     const [popupState, setPopupState] = useState(false);
     const [popupInfo, setPopupInfo] = useState({ operation: null, key: null, data: null });
-    const [timeCostsData, setTimeCostsData] = useState(timeCosts ?? []);
+    const [timeCostsData, setTimeCostsData] = useState([]);
     const [totalTime, setTotalTime] = useState(0);
 
     // Конфигурация по всплывающим окнам
@@ -1198,7 +1208,7 @@ function TimeCosts(props) {
                     operation: popupInfo?.operation,
                     popupState,
                     setPopupState,
-                    refreshTimeCostsData
+                    refreshTaskData
                 }}
                 config={config}
             />
@@ -1212,20 +1222,12 @@ function TimeCosts(props) {
                     operation: popupInfo?.operation,
                     popupState,
                     setPopupState,
-                    refreshTimeCostsData
+                    refreshTaskData
                 }}
                 config={config}
             />
         )
     };
-
-    // Обновить данные по времязатратам
-    async function refreshTimeCostsData() {
-        // Получение информации о задаче
-        const taskData = await TaskService.getTaskInfo(taskInfo?.task?.id, taskInfo?.task?.parentTaskId);
-
-        setTimeCostsData(taskData?.timeCosts);
-    }
 
     // Открыть всплывающее окно
     function onOpenPopup(operation, key, data = null) {
@@ -1257,9 +1259,13 @@ function TimeCosts(props) {
     }
 
     useEffect(() => {
-        refreshTimeCostsData();
+        refreshTaskData();
         initTimeCost();
     }, []);
+
+    useEffect(() => {
+        setTimeCostsData(refreshTask?.timeCosts && refreshTask?.timeCosts?.length !== 0 ? refreshTask?.timeCosts : []);
+    }, [refreshTask]);
 
     useEffect(() => {
         // Общее время
@@ -1312,7 +1318,7 @@ function TimeCosts(props) {
                                             }}
                                             config={config}
                                             onOpenPopup={onOpenPopup}
-                                            refreshTimeCostsData={refreshTimeCostsData}
+                                            refreshTaskData={refreshTaskData}
                                         />
                                     );
                                 })}
@@ -1330,12 +1336,12 @@ function TimeCosts(props) {
 
 // Соисполнитель
 function CoExecutorItem(props) {
-    const { taskId, coExecutor, refreshCoExecutors } = props;
+    const { taskId, coExecutor, setIsModalOpen, setDataToDelete } = props;
 
     // Удаление соисполнителя
-    async function onDeleteCoExecutor() {
-        const success = await TaskService.deleteCoExecutor(+coExecutor?.id, taskId);
-        if (success) refreshCoExecutors();
+    function onDeleteCoExecutor() {
+        setIsModalOpen(true);
+        setDataToDelete({ employeeId: +coExecutor?.id, taskId });
     }
 
     return (
@@ -1358,23 +1364,22 @@ function CoExecutorItem(props) {
 
 // Таблица Соисполнителей
 function CoExecutors(props) {
-    const { config, setCoExecutorsApi, onSelect } = props;
+    const { refreshTask, config, setCoExecutorsApi, refreshTaskData } = props;
     const { task } = config;
 
     const [statePopup, setStatePopup] = useState(false);
-    const [coExecutorsData, setCoExecutorsData] = useState(null);
-    // const [coExecutorData, setCoExecutorData] = useState(null);
-    // console.log(`coExecutors config: ${JSON.stringify(config, null, 4)}`);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Обновить данные по времязатратам
-    async function refreshCoExecutors() {
-        // Получение информации о задаче
-        const taskData = await TaskService.getTaskInfo(task?.id, task?.parentTaskId);
+    const [coExecutorsData, setCoExecutorsData] = useState([]);
+    const [dataToDelete, setDataToDelete] = useState(null);
 
-        setCoExecutorsData(taskData?.coExecutors);
+    // Удаление сотрудника
+    async function onDeleteCoExecutor() {
+        const success = await TaskService.deleteCoExecutor(dataToDelete?.employeeId, dataToDelete?.taskId);
+        if (success) refreshTaskData();
     }
 
-    // Выбор пользователя
+    // Выбор сотрудника
     async function onSelectCoExecutor(user) {
         const tempData = coExecutorsData && coExecutorsData.length !== 0 ? [...coExecutorsData] : [];
         const coExecutorsIds = tempData.map(item => +item?.id);
@@ -1385,18 +1390,23 @@ function CoExecutors(props) {
             setCoExecutorsData(tempData);
 
             await TaskService.addCoExecutor(+user?.id, task?.id);
+            refreshTaskData();
         }
         // onSelect('coExecutors', tempData);
     }
 
     useEffect(() => {
-        refreshCoExecutors();
+        // refreshTaskData();
         setCoExecutorsApi({
             onShowPopup: () => setStatePopup(true)
         });
     }, []);
 
-    // useEffect(() => console.log(`coExecutorsData: ${JSON.stringify(coExecutorsData, null, 4)}`), [coExecutorsData]);
+    useEffect(() => {
+        setCoExecutorsData(
+            refreshTask?.coExecutors && refreshTask?.coExecutors?.length !== 0 ? refreshTask.coExecutors : []
+        );
+    }, [refreshTask]);
 
     return (
         <div className="popup__task-form-row">
@@ -1419,7 +1429,8 @@ function CoExecutors(props) {
                                     <CoExecutorItem
                                         coExecutor={coExecutor}
                                         taskId={task?.id}
-                                        refreshCoExecutors={refreshCoExecutors}
+                                        setIsModalOpen={setIsModalOpen}
+                                        setDataToDelete={setDataToDelete}
                                     />
                                 ))}
                             </div>
@@ -1441,13 +1452,26 @@ function CoExecutors(props) {
                       document.getElementById('portal')
                   )
                 : null}
+            {isModalOpen ? (
+                <ModalWindow
+                    additClass="action-selection"
+                    modalWindowConf={{
+                        type: 'confirm',
+                        title: 'Вы действительно хотите удалить соисполнителя?',
+                        onDelete: onDeleteCoExecutor
+                    }}
+                    statePopup={isModalOpen}
+                    actionRef={onDeleteCoExecutor}
+                    setStatePopup={setIsModalOpen}
+                />
+            ) : null}
         </div>
     );
 }
 
 // Разделы с таблицами
 function TablesPopup(props) {
-    const { config, taskInfoConfig, timeCostsConfig, coExecutorsConfig, onSelect } = props;
+    const { config, refreshTask, taskInfoConfig, timeCostsConfig, coExecutorsConfig, refreshTaskData } = props;
 
     const [selectedTab, setSelectedTab] = useState({ tab: 'subtasks' });
     const [subtaskApi, setSubtaskApi] = useState(null);
@@ -1462,9 +1486,22 @@ function TablesPopup(props) {
     // Конфигурация по разделам
     const TABS_TABLES_CONF = {
         subtasks: <TaskInfo config={config} taskInfoConf={taskInfoConfig} setSubtaskApi={setSubtaskApi} />,
-        timecosts: <TimeCosts config={config} timeCostsConf={timeCostsConfig} setTimeCostsApi={setTimeCostsApi} />,
+        timecosts: (
+            <TimeCosts
+                refreshTask={refreshTask}
+                config={config}
+                timeCostsConf={timeCostsConfig}
+                setTimeCostsApi={setTimeCostsApi}
+                refreshTaskData={refreshTaskData}
+            />
+        ),
         coExecutors: (
-            <CoExecutors config={coExecutorsConfig} setCoExecutorsApi={setCoExecutorsApi} onSelect={onSelect} />
+            <CoExecutors
+                refreshTask={refreshTask}
+                config={coExecutorsConfig}
+                setCoExecutorsApi={setCoExecutorsApi}
+                refreshTaskData={refreshTaskData}
+            />
         ),
         default: null
     };
@@ -1518,7 +1555,9 @@ export default function TaskPopup(props) {
     const [idContract, setIdContract] = useState(data?.idContract ?? null);
     const [contractsIDs, setContractsIDs] = useState({});
 
-    const { values, onChange, onChangeByKey, onClick } = useTaskForm(
+    const [refreshTask, setRefreshTask] = useState(null);
+
+    const { values, errorsInfo, onChange, onChangeByKey, onClick, getModalConfig, checkData } = useTaskForm(
         TaskService.getTaskData(data?.task, operationData?.disabledFields),
         operationData?.disabledFields
     );
@@ -1527,7 +1566,10 @@ export default function TaskPopup(props) {
     const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
 
-    console.log(`data?.task: ${JSON.stringify(data?.task, null, 4)}`);
+    // console.log(`data?.task: ${JSON.stringify(data?.task, null, 4)}`);
+    // console.log(`TaskPopup errorsInfo: ${JSON.stringify(errorsInfo, null, 4)}`);
+    console.log(`TaskPopup deleteInfo: ${JSON.stringify(getModalConfig(refreshTask), null, 4)}`);
+
     // console.log(`values: ${JSON.stringify(values, null, 4)}`);
     // console.log(`operationData: ${JSON.stringify(operationData, null, 4)}`);
     // console.log(`TaskPopup data: ${JSON.stringify(data, null, 4)}`);
@@ -1536,13 +1578,20 @@ export default function TaskPopup(props) {
     async function onDeleteTask() {
         if (data?.task && Object.keys(data?.task).length !== 0) {
             await TaskService.deleteTask(data?.task?.id, Cookies.get('MMUSERID'));
-
             setPopupState(false);
             navigate(window.location.pathname);
         }
     }
 
-    // Получение
+    // Обновить данные по задаче
+    async function refreshTaskData() {
+        // Получение информации о задаче
+        const taskData = await TaskService.getTaskInfo(data?.task?.id, data?.task?.parentTaskId);
+
+        setRefreshTask(taskData);
+    }
+
+    // Получение идентификаторов
     async function fetchContractsIDs() {
         try {
             setIsLoading(true);
@@ -1559,7 +1608,7 @@ export default function TaskPopup(props) {
     // Сохранение и редактирование задачи
     async function onOnSubmitData(e) {
         e.preventDefault();
-        // const idContract = JSON.parse(localStorage.getItem('idContract'));
+
         // Создание новой задачи
         if (taskOperation === 'creation') {
             const resultData = {
@@ -1575,12 +1624,16 @@ export default function TaskPopup(props) {
                 comment: values?.comment
             };
 
-            // alert(`Add task data: ${JSON.stringify(values, null, 4)}`);
+            if (checkData()) {
+                // alert(`Add task data: ${JSON.stringify(values, null, 4)}`);
+                await TaskService.addTask(resultData, null, {
+                    director: values?.director,
+                    executor: values?.executor
+                });
 
-            await TaskService.addTask(resultData, null, {
-                director: values?.director,
-                executor: values?.executor
-            });
+                setPopupState(false);
+                navigate(window.location.pathname);
+            }
         }
         // Редактирование задачи
         if (taskOperation === 'update') {
@@ -1600,15 +1653,19 @@ export default function TaskPopup(props) {
                 comment: values?.comment
             };
 
-            // alert(`Edit task resultData: ${JSON.stringify(resultData, null, 4)}`);
-            // alert(`Edit task values: ${JSON.stringify(values, null, 4)}`);
-
-            await TaskService.editTask(resultData);
+            if (checkData()) {
+                // alert(`Edit task resultData: ${JSON.stringify(resultData, null, 4)}`);
+                // alert(`Edit task values: ${JSON.stringify(values, null, 4)}`);
+                await TaskService.editTask(resultData);
+                setPopupState(false);
+                navigate(window.location.pathname);
+            }
         }
-
-        setPopupState(false);
-        navigate(window.location.pathname);
     }
+
+    useEffect(() => {
+        refreshTaskData();
+    }, []);
 
     useEffect(() => {
         // Загрузка номеров договоров
@@ -1623,20 +1680,14 @@ export default function TaskPopup(props) {
                 title={title}
                 additClass={additClass}
                 overlay={true}
+                modalWindowConf={getModalConfig(refreshTask)}
                 statePopup={popupState}
                 setStatePopup={setPopupState}
-                deleteConfig={{
-                    modalWindow: {
-                        title: 'Вы действительно хотите удалить эту задачу?'
-                    },
-                    onDelete: EMPLOYEE_ACTIONS?.delete(
-                        taskOperation,
-                        data?.task?.director?.mmId,
-                        Cookies.get('MMUSERID')
-                    )
+                onDelete={
+                    EMPLOYEE_ACTIONS?.delete(taskOperation, data?.task?.director?.mmId, Cookies.get('MMUSERID'))
                         ? onDeleteTask
                         : null
-                }}
+                }
             >
                 <form
                     id="task-form"
@@ -1689,6 +1740,7 @@ export default function TaskPopup(props) {
                                     appTheme: theme,
                                     hidden: operationData?.hiddenFields?.director ? true : false
                                 }}
+                                directorError={errorsInfo?.director}
                                 onSelect={onClick}
                             />
                             {/* Исполнитель */}
@@ -1698,6 +1750,7 @@ export default function TaskPopup(props) {
                                     appTheme: theme,
                                     hidden: operationData?.hiddenFields?.executor ? true : false
                                 }}
+                                executorError={errorsInfo?.executor}
                                 onSelect={onClick}
                             />
                             {/* Родительская задача */}
@@ -1718,7 +1771,9 @@ export default function TaskPopup(props) {
                             <TaskName
                                 presetValue={data?.task?.task}
                                 config={{ hidden: operationData?.hiddenFields?.task ? true : false }}
+                                taskError={errorsInfo?.task}
                                 onChange={onChange}
+                                onSelect={onClick}
                             />
                             {/* Дата начала */}
                             <CommencementDate
@@ -1734,6 +1789,7 @@ export default function TaskPopup(props) {
                             />
                             <PlannedTimeCosts
                                 presetValue={data?.task?.plannedTimeCosts}
+                                plannedTimeCostsError={errorsInfo?.plannedTimeCosts}
                                 onSelect={onClick}
                                 onChange={onChange}
                             />
@@ -1759,6 +1815,7 @@ export default function TaskPopup(props) {
                                 navigate,
                                 addToHistory
                             }}
+                            refreshTask={refreshTask}
                             taskInfoConfig={{
                                 popupData: { ...data },
                                 taskData: data?.task?.subtasks,
@@ -1780,9 +1837,7 @@ export default function TaskPopup(props) {
                                         director: data?.task?.director ?? {},
                                         executor: data?.task?.executor ?? {}
                                     }
-                                },
-                                plannedTimeCosts: data?.task?.plannedTimeCosts,
-                                timeCosts: data?.task?.timeCosts
+                                }
                             }}
                             coExecutorsConfig={{
                                 task: {
@@ -1790,6 +1845,7 @@ export default function TaskPopup(props) {
                                     parentTaskId: data?.task?.parent?.id
                                 }
                             }}
+                            refreshTaskData={refreshTaskData}
                             onSelect={onClick}
                         />
                     ) : null}

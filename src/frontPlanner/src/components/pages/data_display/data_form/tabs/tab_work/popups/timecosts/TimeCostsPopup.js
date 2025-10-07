@@ -16,9 +16,6 @@ import CalendarWindow from '@generic/elements/calendar/CalendarWindow';
 import UsersPopupWindow from '@generic/elements/popup/UsersPopupWindow';
 import InputDataPopup from '@generic/elements/popup/InputDataPopup';
 
-// Импорт контекстов
-import { useHistoryContext } from '../../../../../../../../contexts/history.context';
-
 // Импорт кастомных хуков
 import { useTimeCosts } from '@hooks/useTimeCosts';
 
@@ -380,7 +377,7 @@ export default function TimeCostsPopup(props) {
     const { data, config, popupConf } = props;
     const { immutableVals, timeCostData } = data;
     // const { navigate, addToHistory, appTheme } = config;
-    const { additClass, title, operation, popupState, setPopupState, refreshTimeCostsData } = popupConf;
+    const { additClass, title, operation, popupState, setPopupState, refreshTaskData } = popupConf;
     const { allTasks, task } = immutableVals;
 
     const { disabledFields } = PopupTimeCostsService.getDataFormOperation(operation);
@@ -391,7 +388,7 @@ export default function TimeCostsPopup(props) {
     );
 
     // console.log(`TimeCostsPopup data: ${JSON.stringify(data, null, 4)}`);
-    console.log(`operation: ${operation}\nTimeCostsPopup task: ${JSON.stringify(task, null, 4)}`);
+    // console.log(`operation: ${operation}\nTimeCostsPopup task: ${JSON.stringify(task, null, 4)}`);
     // console.log(`TimeCostsPopup values: ${JSON.stringify(values, null, 4)}`);
 
     // Удаление времязатрат
@@ -400,7 +397,7 @@ export default function TimeCostsPopup(props) {
             await PopupTimeCostsService.deleteTimeCost(timeCostData?.id);
             setPopupState(false);
             // После удаления данных обновляем таблицу времязатрат
-            refreshTimeCostsData();
+            refreshTaskData();
         }
     }
 
@@ -436,7 +433,7 @@ export default function TimeCostsPopup(props) {
         setPopupState(false);
 
         // После добавления или редактирования данных обновляем таблицу времязатрат
-        refreshTimeCostsData();
+        refreshTaskData();
     }
 
     return (
@@ -449,12 +446,11 @@ export default function TimeCostsPopup(props) {
                 overlay={true}
                 statePopup={popupState}
                 setStatePopup={setPopupState}
-                deleteConfig={{
-                    modalWindow: {
-                        title: 'Вы действительно хотите удалить данные?'
-                    },
-                    onDelete: timeCostData?.executor?.mmId === Cookies.get('MMUSERID') ? onDeleteTimeCost : null
+                modalWindowConf={{
+                    type: 'confirm',
+                    title: 'Вы действительно хотите удалить данные?'
                 }}
+                onDelete={timeCostData?.executor?.mmId === Cookies.get('MMUSERID') ? onDeleteTimeCost : null}
             >
                 <form id="timecosts-form" className="popup__timecosts-form" onSubmit={e => onOnSubmitData(e)}>
                     <div className="popup__timecosts-form-top">
