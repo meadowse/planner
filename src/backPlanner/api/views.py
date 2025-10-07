@@ -595,6 +595,7 @@ def getTask(request):
 def addTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
+        executorMMId = obj.get('executorMMId')
         contractId = obj.get('contractId')
         task = obj.get('task')
         comment = obj.get('comment')
@@ -605,8 +606,7 @@ def addTask(request):
         executorId = obj.get('executorId')
         parenId = obj.get('parentId')
         plannedTimeCosts = obj.get('plannedTimeCosts')
-        with firebirdsql.connect(host=host, database=database, user=user, password=password,
-                                 charset=charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             if contractId is None:
                 idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
@@ -620,6 +620,11 @@ def addTask(request):
             sql = f"SELECT F4932 FROM T3 WHERE ID = {executorId}"
             cur.execute(sql)
             executor = cur.fetchone()[0]
+            if executorMMId is None:
+                executorID = executorMMId
+            else:
+                cur.execute(f"SELECT ID FROM T3 WHERE F16 = '{executorMMId}'")
+                executorID = cur.fetchone()[0]
             message = f'**Добавлена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
             message += f'Дата добавления: *{dateStart}*\n'
             message += f'Постановщик: *@{director}*\n'
@@ -641,7 +646,7 @@ def addTask(request):
             values = {'id': ID, 'F4691': contractId, 'F4695': task, 'F4698': comment, 'F5724': typeWorkId,
                       'F4970': dateStart, 'F5569': dateStart, 'F4696': deadline, 'F4693': directorId,  # должно быть ID пользователя
                       'F4694': executorId, 'F4697': 0, 'F5646': parenId, 'F5872': 'Новая', 'F5451': idMessage,
-                      'F5889': plannedTimeCosts, }
+                      'F5889': plannedTimeCosts, 'F5910': executorID, }
             # Преобразование значений в SQL-формат
             sql_values = []
             for key, value in values.items():
