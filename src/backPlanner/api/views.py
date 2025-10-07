@@ -3,7 +3,7 @@ import firebirdsql
 from django.http import JsonResponse
 from time import perf_counter
 from django.views.decorators.csrf import csrf_exempt
-import config
+from config import *
 import datetime
 import requests
 
@@ -13,7 +13,7 @@ def timeToFloat(t: datetime.time) -> float:
 
 def getAgreements(request):
     start = perf_counter()
-    with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password, charset=config.charset) as con:
+    with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
         cur = con.cursor()
         sql = """SELECT T212.ID AS contractId,
         T212.F4538 AS contractNum,
@@ -147,8 +147,8 @@ def getAgreements(request):
 
 def employees(request):
     # start = perf_counter()
-    with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                             charset=config.charset) as con:
+    with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                             charset=charset) as con:
         cur = con.cursor()
         sql = """SELECT T3.ID AS id,
         T3.F16 AS mmId,
@@ -186,8 +186,8 @@ def corParticipants(request):
         obj = json.loads(request.body)
         contractId = obj.get('contractId')
         participants = obj.get('participants')
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                                 charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                 charset=charset) as con:
             cur = con.cursor()
             cur.execute(f'SELECT T253.F5022 FROM T253 WHERE T253.F5024 = {contractId}')
             List = cur.fetchall()
@@ -220,7 +220,7 @@ def getAgreement(request):
     else:
         obj = json.loads(request.body)
         contractId = obj.get('contractId')
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password, charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             sql = f"""SELECT T212.ID AS id,
             T212.F4538 AS contractNum,
@@ -359,7 +359,7 @@ def getTypesWork(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         contractId = obj.get('contractId')
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password, charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
                 sql = f"""SELECT F4601 AS NUM,
@@ -395,7 +395,7 @@ def getTasksContracts(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         contractId = obj.get('contractId')
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password, charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
                 sql = f"""SELECT T218.ID,
@@ -484,8 +484,8 @@ def getTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         taskId = obj.get('taskId')
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                                 charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                 charset=charset) as con:
             cur = con.cursor()
             try:
                 sql = f'SELECT F5646 AS parentId FROM T218 WHERE ID = {taskId}'
@@ -605,8 +605,8 @@ def addTask(request):
         executorId = obj.get('executorId')
         parenId = obj.get('parentId')
         plannedTimeCosts = obj.get('plannedTimeCosts')
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                                 charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                 charset=charset) as con:
             cur = con.cursor()
             if contractId is None:
                 idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
@@ -633,7 +633,7 @@ def addTask(request):
             message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
             data = {'channel_id': idChannel, 'message': message}
             response = requests.post(
-                f"{config.MATTERMOST_URL}:{config.MATTERMOST_PORT}/api/v4/posts", json=data, headers=config.headers)
+                f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data, headers=headers)
             idMessage = response.json().get('id')
             cur.execute(f'SELECT GEN_ID(GEN_T218, 1) FROM RDB$DATABASE')
             ID = cur.fetchonemap().get('GEN_ID', None)
@@ -679,8 +679,8 @@ def editTask(request):
         status = obj.get('status')
         today = datetime.date.today().strftime('%Y-%m-%d')
         plannedTimeCosts = obj.get('plannedTimeCosts')
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                                 charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                 charset=charset) as con:
             cur = con.cursor()
             # Подготовка значений для обновления
             values = {'F4695': task, 'F4698': comment, 'F5724': typeWorkId, 'F5569': dateStart, 'F4696': deadline,
@@ -749,8 +749,8 @@ def editTask(request):
             cur.execute(sql)
             rootId = cur.fetchone()[0]
             data = {'channel_id': idChannel, 'message': message, 'root_id': rootId}
-            response = requests.post(f"{config.MATTERMOST_URL}:{config.MATTERMOST_PORT}/api/v4/posts", json=data,
-                                     headers=config.headers)
+            response = requests.post(f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data,
+                                     headers=headers)
         return JsonResponse({'status': response.json()}, status=response.status_code)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
@@ -762,8 +762,8 @@ def deleteTask(request):
         taskId = obj.get('taskId')
         idMM = obj.get('idMM')
         try:
-            with firebirdsql.connect(host=config.host, database=config.database, user=config.user,
-                                     password=config.password, charset=config.charset) as con:
+            with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                     charset=charset) as con:
                 cur = con.cursor()
                 cur.execute(f'SELECT * FROM T313 WHERE F5750 = {taskId}')
                 result = cur.fetchall()
@@ -794,8 +794,8 @@ def deleteTask(request):
                         director = cur.fetchone()[0]
                         message = f"**Удалена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**"
                         data = {'channel_id': idChannel, 'message': message, 'root_id': rootId}
-                        response = requests.post(f"{config.MATTERMOST_URL}:{config.MATTERMOST_PORT}/api/v4/posts",
-                                                 json=data, headers=config.headers)
+                        response = requests.post(f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data,
+                                                 headers=headers)
                         return JsonResponse({'status': response.json()}, status=response.status_code)
                     else:
                         return JsonResponse({'error': f"НЕ удалось удалить задачу {taskId}, т.к. у задачи присутствуют записи по отчётам времязатрат"}, status=500)
@@ -811,7 +811,7 @@ def deleteTask(request):
 def auth(request):
     if request.method == 'POST':
         payload = json.loads(request.body)
-        url = f'{config.MATTERMOST_URL}/api/v4/users/login'
+        url = f'{MATTERMOST_URL}/api/v4/users/login'
         response = requests.post(url, json=payload)
         if response.status_code == 200:
             token = response.headers.get('Token')
@@ -825,8 +825,7 @@ def auth(request):
 @csrf_exempt
 def getAllDepartmentsStaffAndTasks(request):
     start = perf_counter()
-    with (firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                              charset=config.charset) as con):
+    with (firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con):
         cur = con.cursor()
         try:
             sql = """SELECT sectionId,
@@ -926,8 +925,7 @@ def getTasksEmployee(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         employeeId = obj.get('employeeId')
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                                 charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
                 sql = f"""SELECT T218.ID,
@@ -1046,8 +1044,7 @@ def getContractsEmployee(request):
         start = perf_counter()
         obj = json.loads(request.body)
         employeeId = obj.get('employeeId')
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                                 charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             sql = f"""SELECT T212.ID AS contractId,
             T212.F4538 AS contractNum,
@@ -1178,8 +1175,7 @@ def getDataUser(request):
         obj = json.loads(request.body)
         employeeId = obj.get('employeeId')
         start = perf_counter()
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                                 charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
                 sql = f"""SELECT T3.ID as ID,
@@ -1222,8 +1218,7 @@ def getDataUser(request):
 @csrf_exempt
 def getVacations(request):
     if request.method == 'POST':
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                                 charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
                 sql = """SELECT T3.ID AS id,
@@ -1255,7 +1250,7 @@ def getVacations(request):
 @csrf_exempt
 def getContracts(request):
     if request.method == 'POST':
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password, charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
                 cur.execute('SELECT T212.ID AS id, T212.F4538 AS contractNum FROM T212')
@@ -1280,8 +1275,7 @@ def addTimeCost(request):
         spent = obj.get('spent')
         strToTime = datetime.datetime.strptime(spent, '%H:%M').time()
         timeHours = timeToFloat(strToTime)
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                                 charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
                 cur.execute(f'SELECT GEN_ID(GEN_T320, 1) FROM RDB$DATABASE')
@@ -1321,8 +1315,7 @@ def editTimeCost(request):
         spent = obj.get('spent')
         strToTime = datetime.datetime.strptime(spent, '%H:%M').time()
         timeHours = timeToFloat(strToTime)
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                                 charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
                 values = {'F5869': dataReport, 'F5870': report, 'F5882': timeHours, 'F5863': spent, }
@@ -1353,8 +1346,8 @@ def deleteTimeCost(request):
         obj = json.loads(request.body)
         Id = obj.get('Id')
         try:
-            with firebirdsql.connect(host=config.host, database=config.database, user=config.user,
-                                     password=config.password, charset=config.charset) as con:
+            with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                     charset=charset) as con:
                 cur = con.cursor()
                 sql = f"DELETE FROM T320 WHERE ID = {Id}"
                 cur.execute(sql)
@@ -1372,8 +1365,7 @@ def addCoExecutor(request):
         obj = json.loads(request.body)
         idCoExecutor = obj.get('idCoExecutor')
         idTask = obj.get('idTask')
-        with firebirdsql.connect(host=config.host, database=config.database, user=config.user, password=config.password,
-                                 charset=config.charset) as con:
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
                 cur.execute(f'SELECT * FROM T313 WHERE F5750 = {idTask} AND F5751 = {idCoExecutor}')
@@ -1409,8 +1401,8 @@ def deleteCoExecutor(request):
         idCoExecutor = obj.get('idCoExecutor')
         idTask = obj.get('idTask')
         try:
-            with firebirdsql.connect(host=config.host, database=config.database, user=config.user,
-                                     password=config.password, charset=config.charset) as con:
+            with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                     charset=charset) as con:
                 cur = con.cursor()
                 sql = f"DELETE FROM T313 WHERE F5750 = {idTask} AND F5751 = {idCoExecutor}"
                 cur.execute(sql)
