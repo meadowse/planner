@@ -620,11 +620,8 @@ def addTask(request):
             sql = f"SELECT F4932 FROM T3 WHERE ID = {executorId}"
             cur.execute(sql)
             executor = cur.fetchone()[0]
-            if executorMMId is None:
-                executorID = executorMMId
-            else:
-                cur.execute(f"SELECT ID FROM T3 WHERE F16 = '{executorMMId}'")
-                executorID = cur.fetchone()[0]
+            cur.execute(f"SELECT ID FROM T3 WHERE F16 = '{executorMMId}'")
+            executorID = cur.fetchone()[0]
             message = f'**Добавлена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**\n'
             message += f'Дата добавления: *{dateStart}*\n'
             message += f'Постановщик: *@{director}*\n'
