@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-// Импорт кастомных хуков
-import { useFiltersTable } from '@hooks/useFiltersTable';
+// Импорт дополнительного функционала
+import { isArray } from '@helpers/helper';
 
 // Импорт стилей
 import './filters_table.css';
 
 const FILTERS_CONF = {
     // Текстовые поля
-    contractNum: (_, activeOption, toggleState, onChange) => {
+    contractNum: (_, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <InputTextFilter
                 id="contractNum"
@@ -19,7 +19,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    address: (_, activeOption, toggleState, onChange) => {
+    address: (_, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <InputTextFilter
                 id="address"
@@ -30,7 +30,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    company: (_, activeOption, toggleState, onChange) => {
+    company: (_, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <InputTextFilter
                 id="company"
@@ -41,7 +41,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    group: (_, activeOption, toggleState, onChange) => {
+    group: (_, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <InputTextFilter
                 id="group"
@@ -52,7 +52,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    departure: (_, activeOption, toggleState, onChange) => {
+    departure: (_, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <InputTextFilter
                 id="departure"
@@ -63,7 +63,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    pathToFolder: (_, activeOption, toggleState, onChange) => {
+    pathToFolder: (_, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <InputTextFilter
                 id="pathToFolder"
@@ -74,7 +74,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    car: (_, activeOption, toggleState, onChange) => {
+    car: (_, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <InputTextFilter
                 id="car"
@@ -85,7 +85,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    subsection: (_, activeOption, toggleState, onChange) => {
+    subsection: (_, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <InputTextFilter
                 id="subsection"
@@ -96,7 +96,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    phone: (_, activeOption, toggleState, onChange) => {
+    phone: (_, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <InputTextFilter
                 id="phone"
@@ -107,7 +107,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    email: (_, activeOption, toggleState, onChange) => {
+    email: (_, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <InputTextFilter
                 id="email"
@@ -119,7 +119,7 @@ const FILTERS_CONF = {
         );
     },
     // Выпадающие списки
-    stage: (options, activeOption, toggleState, onChange) => {
+    stage: (options, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <DropDownFilter
                 id="stage"
@@ -130,7 +130,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    services: (options, activeOption, toggleState, onChange) => {
+    services: (options, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <DropDownFilter
                 id="services"
@@ -141,18 +141,29 @@ const FILTERS_CONF = {
             />
         );
     },
-    status: (options, activeOption, toggleState, onChange) => {
+    status: (options, activeOption, toggleState, onChange, onMultipleSelectFilter) => {
         return (
-            <DropDownFilter
+            <MultipleDropDownFilter
                 id="status"
                 defaultVal={activeOption}
                 options={options}
                 toggle={toggleState}
-                onChange={onChange}
+                onMultipleSelectFilter={onMultipleSelectFilter}
             />
         );
     },
-    done: (options, activeOption, toggleState, onChange) => {
+    // status: (options, activeOption, toggleState, onChange) => {
+    //     return (
+    //         <DropDownFilter
+    //             id="status"
+    //             defaultVal={activeOption}
+    //             options={options}
+    //             toggle={toggleState}
+    //             onChange={onChange}
+    //         />
+    //     );
+    // },
+    done: (options, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <DropDownFilter
                 id="done"
@@ -174,7 +185,7 @@ const FILTERS_CONF = {
     //         />
     //     );
     // },
-    deadlineTask: (options, activeOption, toggleState, onChange) => {
+    deadlineTask: (options, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <DropDownFilter
                 id="deadlineTask"
@@ -185,7 +196,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    dateOfEnding: (options, activeOption, toggleState, onChange) => {
+    dateOfEnding: (options, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <DropDownFilter
                 id="dateOfEnding"
@@ -196,7 +207,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    manager: (options, activeOption, toggleState, onChange) => {
+    manager: (options, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <DropDownFilter
                 id="manager"
@@ -207,7 +218,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    responsible: (options, activeOption, toggleState, onChange) => {
+    responsible: (options, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <DropDownFilter
                 id="responsible"
@@ -218,7 +229,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    participants: (options, activeOption, toggleState, onChange) => {
+    participants: (options, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <DropDownFilter
                 id="participants"
@@ -229,7 +240,7 @@ const FILTERS_CONF = {
             />
         );
     },
-    contacts: (options, activeOption, toggleState, onChange) => {
+    contacts: (options, activeOption, toggleState, onChange, onMultipleSelect) => {
         return (
             <DropDownFilter
                 id="contacts"
@@ -260,7 +271,7 @@ function InputTextFilter(props) {
     return (
         <input
             id={id}
-            className="table-mode__filters-inpt-filter"
+            className="table__filters-inpt-filter"
             type="text"
             // value={enteredText}
             value={defaultVal}
@@ -289,7 +300,7 @@ function DropDownFilter(props) {
     }, [toggle]);
 
     return (
-        <select id={id} className="dropdown_filter" value={selectedItem} onChange={onSelectOption}>
+        <select id={id} className="table__dropdown-filter" value={selectedItem} onChange={onSelectOption}>
             {options &&
                 options.length !== 0 &&
                 options.map(value => (
@@ -301,12 +312,79 @@ function DropDownFilter(props) {
     );
 }
 
+function MultipleDropDownFilter(props) {
+    const { id, defaultVal, options, toggle, onMultipleSelectFilter } = props;
+
+    // console.log(`MultipleDropDownFilter defaultVal: ${JSON.stringify(defaultVal, null, 4)}`);
+
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const refSelectList = useRef(null);
+
+    // Выбор элемента из списка
+    const handleChange = e => {
+        const tempData = [...new Set([...selectedOptions, e?.target?.value])];
+
+        if (tempData.includes('Все')) tempData.shift();
+
+        onMultipleSelectFilter(e?.target?.id, tempData);
+        setSelectedOptions(tempData);
+    };
+
+    // Удаление элемента
+    const onDelete = indElem => {
+        const tempData = [...selectedOptions];
+        tempData.splice(indElem, 1);
+
+        if (tempData.length === 0) tempData.push('Все');
+
+        onMultipleSelectFilter('status', tempData);
+        setSelectedOptions(tempData);
+    };
+
+    useEffect(() => {
+        setSelectedOptions(defaultVal && defaultVal.length > 0 ? defaultVal : []);
+    }, [defaultVal, toggle]);
+
+    useEffect(() => {
+        if (refSelectList.current) refSelectList.current.value = 'default';
+    }, [selectedOptions]);
+
+    return (
+        <div className="table__dropdown-filter-wrapper">
+            <select ref={refSelectList} id={id} className="table__dropdown-filter" value={null} onChange={handleChange}>
+                <option value="default" selected disabled hidden>
+                    Выберите статус
+                </option>
+                {options &&
+                    options.length !== 0 &&
+                    options.map(value => (
+                        <option key={value} value={value}>
+                            {value}
+                        </option>
+                    ))}
+            </select>
+            <div className="table__selected-filters-wrapper">
+                <ul className="table__selected-filters-list">
+                    {isArray(selectedOptions) &&
+                        selectedOptions.length > 0 &&
+                        selectedOptions?.map((option, ind) => (
+                            <li className="table__selected-filters-list-item" key={option}>
+                                <p>{option}</p>
+                                <button onClick={() => onDelete(ind)}>&#215;</button>
+                            </li>
+                        ))}
+                </ul>
+            </div>
+        </div>
+    );
+}
+
 function Cell(props) {
-    const { keyVal, options, activeFilter, toggleState, onChangeFilter } = props;
+    const { keyVal, options, activeFilter, toggleState, onChangeFilter, onMultipleSelectFilter } = props;
 
     return FILTERS_CONF[keyVal] ? (
         <td className="table-mode__thead-td">
-            {FILTERS_CONF[keyVal](options, activeFilter, toggleState, onChangeFilter)}
+            {FILTERS_CONF[keyVal](options, activeFilter, toggleState, onChangeFilter, onMultipleSelectFilter)}
         </td>
     ) : (
         <td className="table-mode__thead-td"></td>
@@ -314,7 +392,16 @@ function Cell(props) {
 }
 
 export default function FiltersTable(props) {
-    const { keys, activeFilters, optionsFilter, data, toggleState, onChangeFilter, onResetFilters } = props;
+    const {
+        keys,
+        activeFilters,
+        optionsFilter,
+        data,
+        toggleState,
+        onChangeFilter,
+        onMultipleSelectFilter,
+        onResetFilters
+    } = props;
 
     return data && data.length !== 0 ? (
         <>
@@ -334,6 +421,7 @@ export default function FiltersTable(props) {
                             activeFilter={activeFilters[key]}
                             toggleState={toggleState}
                             onChangeFilter={onChangeFilter}
+                            onMultipleSelectFilter={onMultipleSelectFilter}
                         />
                     );
                 })}

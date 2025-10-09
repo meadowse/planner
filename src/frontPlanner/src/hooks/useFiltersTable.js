@@ -2,12 +2,16 @@ import { useEffect, useState } from 'react';
 
 // Импорт конфигураций
 import {
+    VERSION_FILTERS,
     DEFAULT_FILTERS,
     INITIAL_FILTERS,
     KEYS_FOR_STORAGE,
     OPTIONS_FILTER_CONF,
     FILTER_HANDLERS_CONF
 } from '@config/filterstable.config';
+
+// Импорт доп.функционала
+import { isArray } from '@helpers/helper';
 
 // Инициализация фильтров
 function initializeFilters(data, keys) {
@@ -17,14 +21,22 @@ function initializeFilters(data, keys) {
         keys.forEach(key => {
             if (key in DEFAULT_FILTERS) initFilters[key] = DEFAULT_FILTERS[key];
         });
-
-        Object.keys(INITIAL_FILTERS).map(key => {
+        Object.keys(INITIAL_FILTERS).forEach(key => {
             if (initFilters[key]) {
                 const options = OPTIONS_FILTER_CONF[key](data);
-                console.log(`options[${key}]: ${JSON.stringify(options, null, 4)}`);
-                if (options && options.length !== 0) {
-                    if (!options.includes(INITIAL_FILTERS[key])) initFilters[key] = DEFAULT_FILTERS[key];
-                    else initFilters[key] = INITIAL_FILTERS[key];
+                // console.log(`options[${key}]: ${JSON.stringify(options, null, 4)}`);
+                if (options && options.length > 0) {
+                    if (isArray(INITIAL_FILTERS[key])) {
+                        for (let item of INITIAL_FILTERS[key]) {
+                            if (options.includes(item)) {
+                                initFilters[key] = INITIAL_FILTERS[key];
+                                break;
+                            }
+                        }
+                    } else {
+                        if (!options.includes(INITIAL_FILTERS[key])) initFilters[key] = DEFAULT_FILTERS[key];
+                        else initFilters[key] = INITIAL_FILTERS[key];
+                    }
                 }
             }
         });
@@ -75,7 +87,24 @@ export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleSta
     // Изменение фильтров
     const onChangeFilter = e => {
         const tempFilters = Object.assign({}, activeFilters);
-        tempFilters[e.target.id] = e.target.value;
+        tempFilters[e?.target?.id] = e?.target?.value;
+
+        if (partition in KEYS_FOR_STORAGE) {
+            const keyStorage = KEYS_FOR_STORAGE[partition](mode?.key, option?.key);
+
+            savedFilters[keyStorage] = tempFilters;
+            setActiveFilters(savedFilters[keyStorage]);
+            setFilteredData(applyFilters(tableData, savedFilters[keyStorage]));
+
+            localStorage.setItem('listmode-filters', JSON.stringify(savedFilters));
+        }
+    };
+
+    const onMultipleSelectFilter = (key, value) => {
+        console.log(`key: ${key}\n value: ${JSON.stringify(value, null, 4)}`);
+
+        const tempFilters = Object.assign({}, activeFilters);
+        tempFilters[key] = value;
 
         if (partition in KEYS_FOR_STORAGE) {
             const keyStorage = KEYS_FOR_STORAGE[partition](mode?.key, option?.key);
@@ -95,10 +124,15 @@ export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleSta
 
         if (partition in KEYS_FOR_STORAGE) {
             const keyStorage = KEYS_FOR_STORAGE[partition](mode?.key, option?.key);
-            // console.log(`keyStorage: ${keyStorage}`);
 
-            if (!savedFilters[keyStorage] || Object.keys(savedFilters[keyStorage]).length === 0) {
+            if (
+                !savedFilters[keyStorage] ||
+                Object.keys(savedFilters[keyStorage]).length === 0 ||
+                savedFilters?.version !== VERSION_FILTERS
+            ) {
+                savedFilters.version = VERSION_FILTERS;
                 savedFilters[keyStorage] = initializeFilters(tableData, keys);
+
                 localStorage.setItem('listmode-filters', JSON.stringify(savedFilters));
             }
 
@@ -107,5 +141,5 @@ export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleSta
         }
     }, [modeConfig]);
 
-    return { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter, onResetFilters };
+    return { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter, onMultipleSelectFilter, onResetFilters };
 };

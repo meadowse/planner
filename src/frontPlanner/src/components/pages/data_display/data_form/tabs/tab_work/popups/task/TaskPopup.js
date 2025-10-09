@@ -1190,7 +1190,7 @@ function TimeCostsItem(props) {
 // Таблица врмязатрат
 function TimeCosts(props) {
     const { refreshTask, config, timeCostsConf, setTimeCostsApi, refreshTaskData } = props;
-    const { taskInfo, timeCosts } = timeCostsConf;
+    const { taskInfo } = timeCostsConf;
 
     const [popupState, setPopupState] = useState(false);
     const [popupInfo, setPopupInfo] = useState({ operation: null, key: null, data: null });
@@ -1269,14 +1269,10 @@ function TimeCosts(props) {
 
     useEffect(() => {
         // Общее время
-        let total = 0;
-
-        if (timeCostsData && timeCostsData.length !== 0) timeCostsData?.forEach(item => (total += item?.timeHours));
+        let total = timeCostsData.reduce((currSum, currElem) => currSum + currElem?.timeHours, 0) ?? 0;
 
         setTotalTime(Number(total).toFixed(2));
     }, [timeCostsData]);
-
-    // console.log(`timeCostsData: ${JSON.stringify(timeCostsData, null, 4)}`);
 
     return (
         <div className="popup__task-form-row">
@@ -1477,6 +1473,7 @@ function TablesPopup(props) {
     const [subtaskApi, setSubtaskApi] = useState(null);
     const [timeCostsApi, setTimeCostsApi] = useState(null);
     const [coExecutorsApi, setCoExecutorsApi] = useState(null);
+    const totalHours = refreshTask?.timeCosts?.reduce((currSum, currElem) => currSum + currElem?.timeHours, 0);
 
     // Выбор раздела
     function onSelectTab(value) {
@@ -1515,7 +1512,7 @@ function TablesPopup(props) {
                     })}
                     onClick={() => onSelectTab('subtasks')}
                 >
-                    Подзадачи
+                    Подзадачи ({refreshTask?.subtasks?.length ?? 0})
                     {selectedTab?.tab === 'subtasks' ? <span onClick={subtaskApi?.addSubtask}>+</span> : null}
                 </li>
                 <li
@@ -1524,7 +1521,7 @@ function TablesPopup(props) {
                     })}
                     onClick={() => onSelectTab('timecosts')}
                 >
-                    Затраченное время
+                    Затраченное время ({Number(totalHours).toFixed(2) ?? 0} чел.ч)
                     {selectedTab?.tab === 'timecosts' ? <span onClick={timeCostsApi?.openPopup}>+</span> : null}
                 </li>
                 <li
@@ -1533,7 +1530,7 @@ function TablesPopup(props) {
                     })}
                     onClick={() => onSelectTab('coExecutors')}
                 >
-                    Соисполнители
+                    Соисполнители ({refreshTask?.coExecutors?.length ?? 0})
                     {selectedTab?.tab === 'coExecutors' ? <span onClick={coExecutorsApi?.onShowPopup}>+</span> : null}
                 </li>
             </ul>
@@ -1616,6 +1613,7 @@ export default function TaskPopup(props) {
                 contractId: idContract ?? null,
                 directorId: values?.director?.id,
                 executorId: values?.executor?.id,
+                executorMMId: Cookies.get('MMUSERID'),
                 dateStart: values?.dateStart,
                 deadline: values?.deadlineTask?.value,
                 plannedTimeCosts: Number(values?.plannedTimeCosts),
@@ -1664,7 +1662,7 @@ export default function TaskPopup(props) {
     }
 
     useEffect(() => {
-        refreshTaskData();
+        if (taskOperation === 'update') refreshTaskData();
     }, []);
 
     useEffect(() => {

@@ -1,6 +1,8 @@
 // Импорт доп.функционала
 import { getDateFromString } from '@helpers/calendar';
-import { isObject } from '@helpers/helper';
+import { isObject, isArray } from '@helpers/helper';
+
+export const VERSION_FILTERS = 0;
 
 export const DEFAULT_FILTERS = {
     contractNum: '',
@@ -8,7 +10,8 @@ export const DEFAULT_FILTERS = {
     company: '',
     services: 'Все',
     stage: 'Все',
-    status: 'Все',
+    // status: 'Все',
+    status: ['Новая', 'В работе', 'Выполненная'],
     deadlineTask: 'Все',
     dateOfEnding: 'Все',
     manager: 'Все',
@@ -26,9 +29,8 @@ export const DEFAULT_FILTERS = {
 };
 
 export const INITIAL_FILTERS = {
-    stage: 'В работе'
-    // status: 'В работе'
-    // done: 'Не завершено'
+    stage: 'В работе',
+    status: ['Новая', 'В работе', 'Выполненная']
 };
 
 export const KEYS_FOR_STORAGE = {
@@ -74,21 +76,29 @@ export const OPTIONS_FILTER_CONF = {
         if (data && data.length !== 0) {
             const newData = [];
 
-            let tempData = [
-                'Все',
-                ...Array.from(
-                    new Set(
-                        data.map(item => {
-                            if (!item?.status) return 'Без статуса';
-                            else return item?.status;
-                        })
-                    )
+            // let tempData = [
+            //     'Все',
+            //     ...Array.from(
+            //         new Set(
+            //             data.map(item => {
+            //                 if (!item?.status) return 'Без статуса';
+            //                 else return item?.status;
+            //             })
+            //         )
+            //     )
+            // ];
+            const tempData = Array.from(
+                new Set(
+                    data.map(item => {
+                        if (!item?.status) return 'Без статуса';
+                        else return item?.status;
+                    })
                 )
-            ];
+            );
 
             // console.log(`status: ${JSON.stringify(tempData, null, 4)}`);
 
-            tempData.map(item => {
+            tempData.forEach(item => {
                 if (item) newData.push(item);
             });
 
@@ -269,14 +279,23 @@ export const FILTER_HANDLERS_CONF = new Map([
         (filterVal, stage) =>
             filterVal?.includes('Все') || stage?.title.toLowerCase().includes(filterVal?.toLowerCase())
     ],
+    // [
+    //     'status',
+    //     (filterVal, status) => {
+    //         if (filterVal?.includes('Все')) return true;
+    //         else {
+    //             if (!status) return filterVal === 'Без статуса';
+    //             else return filterVal?.includes('Все') || status.toLowerCase().includes(filterVal?.toLowerCase());
+    //         }
+    //     }
+    // ],
     [
         'status',
         (filterVal, status) => {
-            if (filterVal?.includes('Все')) return true;
-            else {
-                if (!status) return filterVal === 'Без статуса';
-                else return filterVal?.includes('Все') || status.toLowerCase().includes(filterVal?.toLowerCase());
-            }
+            console.log(`status filterVal: ${JSON.stringify(filterVal, null, 4)}`);
+            if (isArray(filterVal) && filterVal?.includes('Все')) return true;
+            else
+                return isArray(filterVal) && filterVal.map(item => item?.toLowerCase()).includes(status?.toLowerCase());
         }
     ],
     [
@@ -284,7 +303,6 @@ export const FILTER_HANDLERS_CONF = new Map([
         (filterVal, services) =>
             filterVal?.includes('Все') || services?.title?.toLowerCase().includes(filterVal?.toLowerCase())
     ],
-    // ['status', (filterVal, status) => filterVal?.includes('Все') || Object.values(status)?.includes(filterVal)],
     [
         'manager',
         (filterVal, manager) => {
@@ -331,7 +349,6 @@ export const FILTER_HANDLERS_CONF = new Map([
     [
         'dateOfEnding',
         (filterVal, date) => {
-            // console.log(`filterVal: ${filterVal}\ndate: ${JSON.stringify(date, null, 4)}`);
             if (date) {
                 if (filterVal?.includes('Все')) return Object.values({ value: filterVal })?.includes(filterVal);
                 else {
@@ -350,7 +367,6 @@ export const FILTER_HANDLERS_CONF = new Map([
     [
         'deadlineTask',
         (filterVal, date) => {
-            // console.log(`filterVal: ${filterVal}\ndate: ${JSON.stringify(date, null, 4)}`);
             if (date) {
                 if (filterVal?.includes('Все')) return true;
                 else {
