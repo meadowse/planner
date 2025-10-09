@@ -128,6 +128,7 @@ export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleSta
             if (
                 !savedFilters[keyStorage] ||
                 Object.keys(savedFilters[keyStorage]).length === 0 ||
+                !savedFilters?.version ||
                 savedFilters?.version !== VERSION_FILTERS
             ) {
                 savedFilters.version = VERSION_FILTERS;
