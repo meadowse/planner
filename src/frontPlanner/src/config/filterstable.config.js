@@ -2,7 +2,7 @@
 import { getDateFromString } from '@helpers/calendar';
 import { isObject, isArray } from '@helpers/helper';
 
-export const VERSION_FILTERS = 0;
+export const VERSION_FILTERS = 1;
 
 export const DEFAULT_FILTERS = {
     contractNum: '',
@@ -10,8 +10,8 @@ export const DEFAULT_FILTERS = {
     company: '',
     services: 'Все',
     stage: 'Все',
-    status: 'Все',
-    // status: ['Новая', 'В работе', 'Выполненная'],
+    // status: 'Все',
+    status: ['Новая', 'В работе', 'Выполненная'],
     deadlineTask: 'Все',
     dateOfEnding: 'Все',
     manager: 'Все',
@@ -30,8 +30,8 @@ export const DEFAULT_FILTERS = {
 
 export const INITIAL_FILTERS = {
     stage: 'В работе',
-    status: 'Все'
-    // status: ['Новая', 'В работе', 'Выполненная']
+    // status: 'Все'
+    status: ['Новая', 'В работе', 'Выполненная']
 };
 
 export const KEYS_FOR_STORAGE = {
