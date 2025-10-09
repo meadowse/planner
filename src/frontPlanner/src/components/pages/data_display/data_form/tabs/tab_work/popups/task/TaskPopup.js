@@ -1565,7 +1565,7 @@ export default function TaskPopup(props) {
 
     // console.log(`data?.task: ${JSON.stringify(data?.task, null, 4)}`);
     // console.log(`TaskPopup errorsInfo: ${JSON.stringify(errorsInfo, null, 4)}`);
-    console.log(`TaskPopup deleteInfo: ${JSON.stringify(getModalConfig(refreshTask), null, 4)}`);
+    // console.log(`TaskPopup deleteInfo: ${JSON.stringify(getModalConfig(refreshTask), null, 4)}`);
 
     // console.log(`values: ${JSON.stringify(values, null, 4)}`);
     // console.log(`operationData: ${JSON.stringify(operationData, null, 4)}`);

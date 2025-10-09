@@ -293,7 +293,7 @@ export const FILTER_HANDLERS_CONF = new Map([
     [
         'status',
         (filterVal, status) => {
-            console.log(`status filterVal: ${JSON.stringify(filterVal, null, 4)}`);
+            // console.log(`status filterVal: ${JSON.stringify(filterVal, null, 4)}`);
             if (isArray(filterVal) && filterVal?.includes('Все')) return true;
             else
                 return isArray(filterVal) && filterVal.map(item => item?.toLowerCase()).includes(status?.toLowerCase());

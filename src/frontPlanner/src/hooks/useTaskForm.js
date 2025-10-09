@@ -67,14 +67,14 @@ export const useTaskForm = (initialData, disabledFields) => {
                     config.task = error;
                 } else delete config.task;
                 setErrorsInfo(config);
-            },
-            plannedTimeCosts: () => {
-                if (!value || value <= 0) {
-                    error = { message: 'Выберите план. времязатраты!' };
-                    config.plannedTimeCosts = error;
-                } else delete config.plannedTimeCosts;
-                setErrorsInfo(config);
             }
+            // plannedTimeCosts: () => {
+            //     if (!value || value <= 0) {
+            //         error = { message: 'Выберите план. времязатраты!' };
+            //         config.plannedTimeCosts = error;
+            //     } else delete config.plannedTimeCosts;
+            //     setErrorsInfo(config);
+            // }
         };
 
         if (name in VALIDATION_CONF) VALIDATION_CONF[name]();
