@@ -297,10 +297,24 @@ const COLUMNS = [
     {
         Header: 'Руководитель',
         accessor: 'chief',
-        sortable: false,
-        sortBy: undefined,
+        sortable: true,
+        sortBy: 'fullName',
         Cell: props => {
-            return CELLS['text'](props?.value, 'post');
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee(employee) {
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+                    navigate(`../../user/${employee?.mmId}/profile/profile/`, {
+                        state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                    });
+                });
+            }
+
+            return props?.value && Object.keys(props?.value).length !== 0
+                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
+                : 'Нет данных';
         }
     },
     {

@@ -30,6 +30,7 @@ html[data-theme='light'] {
     --bg-color-table-mode-header-reset-filters: #fff;
     --bg-color-table-mode-header: #f1f1f1;
     --bg-color-table-mode-filter-dropdown-list: #fff;
+    --bg-color-table__selected-filters-list-item: #f1f1f1;
     --border-color-table-mode-cell: #dfdfdf;
     --text-color-cell-stage: #000;
     --text-color-cell-subtitle: #a9a9a9;
@@ -126,6 +127,7 @@ html[data-theme='dark'] {
     --bg-color-table-mode-header-reset-filters: #2c2b29;
     --bg-color-table-mode-header: #353535;
     --bg-color-table-mode-filter-dropdown-list: #444444;
+    --bg-color-table__selected-filters-list-item: #444444;
     --border-color-table-mode-cell: #adb5bd;
     --text-color-cell-stage: #000;
     --text-color-cell-subtitle: #a8a9ad;

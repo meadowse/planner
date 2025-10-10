@@ -39,22 +39,14 @@ export const STATUSES_CONF = {
 
 // Конфигурация по преобразованию данных
 export const DATA_CONVERSION_MAP = {
-    contractNum: contractNum => {
-        return contractNum ? contractNum : 'Нет данных';
-    },
-    address: address => {
-        return address ? address : 'Нет данных';
-    },
+    contractNum: contractNum => contractNum ?? 'Нет данных',
+    address: address => address ?? 'Нет данных',
+    status: status => status ?? 'Без статуса',
     stage: stage => {
         return Object.keys(stage).length !== 0 && stage?.title
             ? { title: stage?.title, color: STAGES_CONF_MAP[stage.title] }
             : { title: 'Без стадии', color: STAGES_CONF_MAP['Без стадии'] };
     },
-    // status: status => {
-    //     return Object.keys(status).length !== 0 && status?.title
-    //         ? { title: status?.title, color: STATUSES_CONF[status.title] }
-    //         : { title: 'Без статуса', color: STATUSES_CONF['Без статуса'] };
-    // },
     services: services => {
         if (services && services.length !== 0) {
             if (services[0]?.title) return services[0];
@@ -168,31 +160,12 @@ export const TASKS_DATA_CONF = {
             mode: 'Список задач',
             keyMode: 'listTasks',
             modeOptions: [
-                // { value: 'Исполнитель', key: 'executor', uniqueness: 'id' },
                 { value: 'Исполнитель', key: 'executor', uniqueness: 'id' },
                 { value: 'Постановщик', key: 'director', uniqueness: 'id' }
             ],
             keys: {
-                executor: [
-                    'task',
-                    'status',
-                    // 'contractNum',
-                    // 'address',
-                    // 'customer',
-                    'director',
-                    'coExecutor',
-                    'deadlineTask'
-                ],
-                director: [
-                    'task',
-                    'status',
-                    // 'contractNum',
-                    // 'address',
-                    // 'customer',
-                    'executor',
-                    'coExecutor',
-                    'deadlineTask'
-                ]
+                executor: ['task', 'status', 'director', 'coExecutor', 'deadlineTask'],
+                director: ['task', 'status', 'executor', 'coExecutor', 'deadlineTask']
             }
         },
         {

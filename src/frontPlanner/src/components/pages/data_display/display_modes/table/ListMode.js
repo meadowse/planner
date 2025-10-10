@@ -9,7 +9,7 @@ import TaskPopup from '@components/pages/data_display/data_form/tabs/tab_work/po
 import FiltersTable from './filters/FiltersTable.js';
 
 // Импорт кастомных хуков
-import { useListMode } from '@hooks/useListMode.js';
+import { useSortingTable } from '@hooks/useSortingTable.js';
 import { useFiltersTable } from '@hooks/useFiltersTable.js';
 
 // Импорт доп.функционала
@@ -53,7 +53,7 @@ export default function ListMode(props) {
 
     const [toggleState, setToggleState] = useState(false);
     const [data, setData] = useState([]);
-    const [order, setOrder] = useState('ASC');
+    // const [order, setOrder] = useState('ASC');
 
     const [popupState, setPopupState] = useState(false);
     const [popupInfo, setPopupInfo] = useState({
@@ -62,7 +62,6 @@ export default function ListMode(props) {
         data: null
     });
 
-    const { sortData } = useListMode(data);
     const columns = useMemo(() => getSampleColumns(modeConfig?.keys), [testData]);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
@@ -72,12 +71,11 @@ export default function ListMode(props) {
         },
         useExpanded
     );
-    const { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter, onResetFilters } = useFiltersTable(
-        modeConfig,
-        testData,
-        toggleState,
-        setToggleState
-    );
+    // Кастомный хук для фильтрации данных
+    const { OPTIONS_FILTER_CONF, activeFilters, filteredData, onChangeFilter, onMultipleSelectFilter, onResetFilters } =
+        useFiltersTable(modeConfig, testData, toggleState, setToggleState);
+    // Кастомный хук для сортировки данных
+    const { sortingState, onChangeSorting } = useSortingTable(modeConfig, filteredData, setData);
 
     // Конфигурация по заголовкам таблицы
     const HEAD_CELL_CONF = {
@@ -115,14 +113,6 @@ export default function ListMode(props) {
                 openPopup
             };
             return <Cell cellData={cellData} cellConfig={config} />;
-        },
-        coExecutor: cellData => {
-            // const config = {
-            //     coExecutor: data[cellData?.indRow]?.coExecutor ?? null,
-            //     coExecutors: data[cellData?.indRow]?.coExecutors ?? null
-            // };
-            // return <Cell cellData={cellData} cellConfig={config} />;
-            return <Cell cellData={cellData} />;
         },
         default: cellData => {
             return <Cell cellData={cellData} />;
@@ -187,10 +177,10 @@ export default function ListMode(props) {
         setPopupInfo({ operation, mode, data });
     }
 
-    useEffect(() => {
-        // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
-        setData(filteredData);
-    }, [activeFilters, filteredData]);
+    // useEffect(() => {
+    //     // console.log(`filteredData: ${JSON.stringify(filteredData, null, 4)}`);
+    //     setData(filteredData);
+    // }, [activeFilters, filteredData]);
 
     return (
         <div className={classNames('table-mode__wrapper', { 'table-mode__wrapper_empty': !data || data.length === 0 })}>
@@ -206,6 +196,7 @@ export default function ListMode(props) {
                             data={testData}
                             toggleState={toggleState}
                             onChangeFilter={onChangeFilter}
+                            onMultipleSelectFilter={onMultipleSelectFilter}
                             onResetFilters={onResetFilters}
                         />
                     ) : null}
@@ -228,15 +219,31 @@ export default function ListMode(props) {
                                                         className="table-mode__thead-th-btn-sorting"
                                                         onClick={() =>
                                                             column?.sortable &&
-                                                            sortData(
-                                                                filteredData,
-                                                                column.id,
-                                                                column.sortBy,
-                                                                order,
-                                                                setOrder,
-                                                                setData
+                                                            onChangeSorting(
+                                                                sortingState?.order === 'ASC'
+                                                                    ? {
+                                                                          column: column.id,
+                                                                          sortBy: column.sortBy,
+                                                                          order: 'DESC'
+                                                                      }
+                                                                    : {
+                                                                          column: column.id,
+                                                                          sortBy: column.sortBy,
+                                                                          order: 'ASC'
+                                                                      }
                                                             )
                                                         }
+                                                        // onClick={() =>
+                                                        //     column?.sortable &&
+                                                        //     sortData(
+                                                        //         filteredData,
+                                                        //         column.id,
+                                                        //         column.sortBy
+                                                        //         // order,
+                                                        //         // setOrder,
+                                                        //         // setData
+                                                        //     )
+                                                        // }
                                                     >
                                                         &#8693;
                                                     </button>

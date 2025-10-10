@@ -39,7 +39,13 @@ const formData = (data, partition, key) => {
                             };
                             newItem.department = item?.department ?? 'Нет данных';
                             newItem.post = item?.post ?? 'Нет данных';
-                            newItem.chief = item?.fioDirector ?? 'Нет данных';
+                            newItem.chief = {
+                                mmId: item?.idMMDirector,
+                                fullName: item?.fioDirector,
+                                photo: item?.idMMDirector
+                                    ? `https://mm-mpk.ru/api/v4/users/${item?.idMMDirector}/image`
+                                    : '/img/user.svg'
+                            };
                             newItem.office = item?.office ?? 'Нет данных';
                             // newItem['subsection'] = item?.subsection;
                             newItem.phone = item?.phone ?? 'Нет данных';

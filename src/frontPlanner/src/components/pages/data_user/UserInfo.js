@@ -174,7 +174,7 @@ export default function UserInfoNew() {
         const valsToDisplayData = UserService.getValuesToDisplay(tabData, tabOptionData) || [];
         const dataOperationsData = UserService.getDataOperations() || [];
 
-        console.log(`User info: ${JSON.stringify(userInfo, null, 4)}`);
+        // console.log(`User info: ${JSON.stringify(userInfo, null, 4)}`);
 
         if (refTabBar.current) refTabBar.current.style.marginLeft = `${0 * 12.5}%`;
 

@@ -7,15 +7,58 @@
     padding: 0 0.5rem;
 }
 
-.table-mode__filters-inpt-filter,
-.dropdown_filter {
+.table__filters-inpt-filter,
+.table__dropdown-filter {
     width: 100%;
     outline: none;
     background-color: inherit;
     /* background-color: var(--bg-color-table-mode-filter-dropdown-list); */
 }
 
-.dropdown_filter option {
+/* Фильтр "Выпадающий список" */
+
+.table__dropdown-filter-wrapper {
+    padding: 10px;
+    display: grid;
+    grid-template-rows: 1fr 1.5fr;
+    row-gap: 0.5vw;
+}
+
+.table__selected-filters-wrapper {
+    display: flex;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.table__selected-filters-list {
+    display: flex;
+    column-gap: 0.5vw;
+    flex-wrap: nowrap;
+    position: absolute;
+    inset: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.table__selected-filters-list-item {
+    padding: 10px 5px;
+    display: flex;
+    align-items: center;
+    column-gap: 0.5vw;
+    border-radius: 8px;
+    background-color: var(--bg-color-table__selected-filters-list-item);
+}
+
+.table__selected-filters-list-item p {
+    white-space: nowrap;
+}
+
+.table__selected-filters-list-item button {
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+.table__dropdown-filter option {
     background-color: var(--bg-color-dropdown-menu-option);
 }
 
