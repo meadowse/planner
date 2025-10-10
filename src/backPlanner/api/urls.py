@@ -44,4 +44,5 @@ urlpatterns = [
     path('deleteTimeCost', deleteTimeCost, name='deleteTimeCost'),
     path('addCoExecutor', addCoExecutor, name='addCoExecutor'),
     path('deleteCoExecutor', deleteCoExecutor, name='deleteCoExecutor'),
+    path('getAllDepartments', getAllDepartments, name='getAllDepartments'),
 ]

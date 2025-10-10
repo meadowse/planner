@@ -179,6 +179,41 @@ def employees(request):
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
 @csrf_exempt
+def getAllDepartments(request):
+    # start = perf_counter()
+    with firebirdsql.connect(host=host, database=database, user=user, password=password,
+                             charset=charset) as con:
+        cur = con.cursor()
+        sql = """SELECT T5.F26 AS DEPARTMENT,
+        T3.ID AS id,
+        T3.F16 AS mmId,
+        T3.F4932 AS nickMame,
+        T3.F4886 AS fullName,
+        T3.F4887SRC AS photo,
+        T3.F14 AS phone,
+        T3.F12 AS email,
+        T3.F5572 AS OFFICE,
+        T4.F7 AS post,
+        director.ID AS idDirector,
+        director.F16 AS idMMDirector,
+        director.F10 AS fioDirector
+        FROM T5
+        LEFT JOIN T3 ON T3.F27 = T5.ID
+        LEFT JOIN T4 ON T3.F11 = T4.ID
+        LEFT JOIN T3 AS director ON director.ID = T3.F5854
+        WHERE T3.F5383 = 1"""
+        cur.execute(sql)
+        result = cur.fetchall()
+        # Преобразование результата в список словарей
+        columns = ('id', 'mmId', 'nickName', 'fullName', 'photo', 'phone', 'email', 'office', 'post', 'department',
+                   'idDirector', 'idMMDirector', 'fioDirector')
+        json_result = [{col: value for col, value in zip(columns, row)} for row in
+                       result]  # Создаем список словарей с сериализацией значений
+        # end = perf_counter()
+        # print(end - start)
+        return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+
+@csrf_exempt
 def corParticipants(request):
     if request.method != "POST":
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
