@@ -211,7 +211,6 @@ def getAllDepartments(request):
             employees = {'employees': [{col: value for col, value in zip(columns, row)} for row in
                            result]}  # Создаем список словарей с сериализацией значений
             department.update(employees)
-            cur.execute()
         # end = perf_counter()
         # print(end - start)
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
