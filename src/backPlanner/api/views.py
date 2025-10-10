@@ -205,7 +205,7 @@ def getAllDepartments(request):
         cur.execute(sql)
         result = cur.fetchall()
         # Преобразование результата в список словарей
-        columns = ('id', 'mmId', 'nickName', 'fullName', 'photo', 'phone', 'email', 'office', 'post', 'department',
+        columns = ('department', 'id', 'mmId', 'nickName', 'fullName', 'photo', 'phone', 'email', 'office', 'post',
                    'idDirector', 'idMMDirector', 'fioDirector')
         json_result = [{col: value for col, value in zip(columns, row)} for row in
                        result]  # Создаем список словарей с сериализацией значений
