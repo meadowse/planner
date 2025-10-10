@@ -178,7 +178,6 @@ def employees(request):
         # print(end - start)
         return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
-@csrf_exempt
 def getAllDepartments(request):
     # start = perf_counter()
     with firebirdsql.connect(host=host, database=database, user=user, password=password,
