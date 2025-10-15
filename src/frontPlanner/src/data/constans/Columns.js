@@ -16,6 +16,13 @@ const CELLS = {
     text: (value, additClass) => {
         return <p className={`cell__${additClass}`}>{value ?? 'Нет данных'}</p>;
     },
+    link: (type, value, additClass) => {
+        return (
+            <a className={`cell__${additClass}`} href={`${type}:${value}`}>
+                {value}
+            </a>
+        );
+    },
     longtext: (value, additClass, refCell) => {
         return value ? (
             <p className={`cell__${additClass}`} ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
@@ -282,7 +289,30 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return CELLS['text'](props?.value, 'post');
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowSection() {
+                const mode = {
+                    key: 'sections',
+                    value: 'Отделы'
+                };
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+                    navigate(`/company/sections/`, {
+                        state: { section: props?.value }
+                    });
+
+                    localStorage.setItem(`mode_company`, JSON.stringify(mode));
+                });
+            }
+
+            return (
+                <p className="cell__section" onClick={onShowSection}>
+                    {props?.value}
+                </p>
+            );
+            // return CELLS['text'](props?.value, 'post');
         }
     },
     {
@@ -332,7 +362,8 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return CELLS['text'](props?.value, 'phone');
+            // return CELLS['text'](props?.value, 'phone');
+            return CELLS['link']('tel', props?.value, 'phone');
         }
     },
     {
@@ -341,7 +372,8 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return CELLS['text'](props?.value, 'email');
+            // return CELLS['text'](props?.value, 'email');
+            return CELLS['link']('mailto', props?.value, 'email');
         }
     },
     {
@@ -636,8 +668,6 @@ const COLUMNS = [
         Cell: props => {
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
-
-            // console.log(`Руководитель отдела: ${JSON.stringify(props?.value, null, 4)}`);
 
             function onShowInfoEmployee(employee) {
                 // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};

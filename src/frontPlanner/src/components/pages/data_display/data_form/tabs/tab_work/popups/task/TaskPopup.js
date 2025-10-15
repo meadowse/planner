@@ -1031,7 +1031,7 @@ function TaskItem(props) {
 }
 
 function TaskInfo(props) {
-    const { config, taskInfoConf, setSubtaskApi } = props;
+    const { config, taskInfoConf, expandState, setSubtaskApi } = props;
     const { popupData, taskData, switchPopup } = taskInfoConf;
     const { navigate, addToHistory, appTheme } = config;
     // console.log(`TaskInfo\ntaskId: ${taskId}parentId: ${parentId}`);
@@ -1095,7 +1095,8 @@ function TaskInfo(props) {
         <div className="popup__task-form-row">
             <div
                 className={classNames('popup__table-wrapper', {
-                    'popup__table-wrapper_empty': !taskData || taskData.length === 0
+                    'popup__table-wrapper_empty': !taskData || taskData.length === 0,
+                    'popup__table-wrapper_expand': expandState
                 })}
             >
                 {taskData && taskData.length !== 0 ? (
@@ -1189,7 +1190,7 @@ function TimeCostsItem(props) {
 
 // Таблица врмязатрат
 function TimeCosts(props) {
-    const { refreshTask, config, timeCostsConf, setTimeCostsApi, refreshTaskData } = props;
+    const { refreshTask, config, timeCostsConf, expandState, setTimeCostsApi, refreshTaskData } = props;
     const { taskInfo } = timeCostsConf;
 
     const [popupState, setPopupState] = useState(false);
@@ -1278,7 +1279,8 @@ function TimeCosts(props) {
         <div className="popup__task-form-row">
             <div
                 className={classNames('popup__table-wrapper', {
-                    'popup__table-wrapper_empty': !timeCostsData || timeCostsData.length === 0
+                    'popup__table-wrapper_empty': !timeCostsData || timeCostsData.length === 0,
+                    'popup__table-wrapper_expand': expandState
                 })}
             >
                 {timeCostsData && timeCostsData.length !== 0 ? (
@@ -1360,7 +1362,7 @@ function CoExecutorItem(props) {
 
 // Таблица Соисполнителей
 function CoExecutors(props) {
-    const { refreshTask, config, setCoExecutorsApi, refreshTaskData } = props;
+    const { refreshTask, config, expandState, setCoExecutorsApi, refreshTaskData } = props;
     const { task } = config;
 
     const [statePopup, setStatePopup] = useState(false);
@@ -1408,7 +1410,8 @@ function CoExecutors(props) {
         <div className="popup__task-form-row">
             <div
                 className={classNames('popup__table-wrapper', {
-                    'popup__table-wrapper_empty': !coExecutorsData || coExecutorsData.length === 0
+                    'popup__table-wrapper_empty': !coExecutorsData || coExecutorsData.length === 0,
+                    'popup__table-wrapper_expand': expandState
                 })}
             >
                 {coExecutorsData && coExecutorsData.length !== 0 ? (
@@ -1467,7 +1470,16 @@ function CoExecutors(props) {
 
 // Разделы с таблицами
 function TablesPopup(props) {
-    const { config, refreshTask, taskInfoConfig, timeCostsConfig, coExecutorsConfig, refreshTaskData } = props;
+    const {
+        config,
+        refreshTask,
+        taskInfoConfig,
+        timeCostsConfig,
+        coExecutorsConfig,
+        refreshTaskData,
+        expandState,
+        setExpandState
+    } = props;
 
     const [selectedTab, setSelectedTab] = useState({ tab: 'subtasks' });
     const [subtaskApi, setSubtaskApi] = useState(null);
@@ -1482,12 +1494,20 @@ function TablesPopup(props) {
 
     // Конфигурация по разделам
     const TABS_TABLES_CONF = {
-        subtasks: <TaskInfo config={config} taskInfoConf={taskInfoConfig} setSubtaskApi={setSubtaskApi} />,
+        subtasks: (
+            <TaskInfo
+                config={config}
+                taskInfoConf={taskInfoConfig}
+                expandState={expandState}
+                setSubtaskApi={setSubtaskApi}
+            />
+        ),
         timecosts: (
             <TimeCosts
                 refreshTask={refreshTask}
                 config={config}
                 timeCostsConf={timeCostsConfig}
+                expandState={expandState}
                 setTimeCostsApi={setTimeCostsApi}
                 refreshTaskData={refreshTaskData}
             />
@@ -1496,6 +1516,7 @@ function TablesPopup(props) {
             <CoExecutors
                 refreshTask={refreshTask}
                 config={coExecutorsConfig}
+                expandState={expandState}
                 setCoExecutorsApi={setCoExecutorsApi}
                 refreshTaskData={refreshTaskData}
             />
@@ -1533,6 +1554,13 @@ function TablesPopup(props) {
                     Соисполнители ({refreshTask?.coExecutors?.length ?? 0})
                     {selectedTab?.tab === 'coExecutors' ? <span onClick={coExecutorsApi?.onShowPopup}>+</span> : null}
                 </li>
+                <li
+                    className="popup__task-form-tabs-header-item"
+                    style={{ marginLeft: 'auto' }}
+                    onClick={() => setExpandState(!expandState)}
+                >
+                    {!expandState ? 'Раскрыть содержимое' : 'Скрыть содержимое'}
+                </li>
             </ul>
             <div className="popup__task-form-tabs-content">
                 {TABS_TABLES_CONF[selectedTab?.tab] ?? TABS_TABLES_CONF.default}
@@ -1553,13 +1581,13 @@ export default function TaskPopup(props) {
     const [contractsIDs, setContractsIDs] = useState({});
 
     const [refreshTask, setRefreshTask] = useState(null);
+    const [expandState, setExpandState] = useState(false);
 
     const { values, errorsInfo, onChange, onChangeByKey, onClick, getModalConfig, checkData } = useTaskForm(
         TaskService.getTaskData(data?.task, operationData?.disabledFields),
         operationData?.disabledFields
     );
 
-    // const socket = useContext(SocketContext);
     const { addToHistory } = useHistoryContext();
     const navigate = useNavigate();
 
@@ -1694,8 +1722,10 @@ export default function TaskPopup(props) {
                     onSubmit={e => onOnSubmitData(e)}
                 >
                     <div
-                        className={classNames('popup__add-task-form', {
-                            'popup__edit-task-form': taskOperation === 'update'
+                        className={classNames('popup__task-form', {
+                            'popup__add-task-form': taskOperation !== 'update',
+                            'popup__edit-task-form': taskOperation === 'update',
+                            'popup__task-form_hidden': expandState
                         })}
                     >
                         {/* Цепочка статусов */}
@@ -1845,6 +1875,8 @@ export default function TaskPopup(props) {
                             }}
                             refreshTaskData={refreshTaskData}
                             onSelect={onClick}
+                            expandState={expandState}
+                            setExpandState={setExpandState}
                         />
                     ) : null}
                 </form>

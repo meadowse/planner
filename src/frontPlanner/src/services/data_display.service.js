@@ -55,6 +55,26 @@ const formData = (data, partition, key) => {
                     });
                     // console.log(`newData: ${JSON.stringify(newData, null, 4)}`);
                     return newData;
+                },
+                // Сотрудники отделов
+                section: () => {
+                    let newItem, newData;
+                    newData = data.map(item => {
+                        if (item && Object.keys(item).length !== 0) {
+                            newItem = {};
+                            newItem.id = item?.id;
+                            newItem.mmId = item?.mmId;
+                            newItem.fullName = item?.fullName;
+                            newItem.photo = item?.mmId
+                                ? `https://mm-mpk.ru/api/v4/users/${item?.mmId}/image`
+                                : '/img/user.svg';
+                            newItem.post = item?.post ?? 'Нет данных';
+                            newItem.director = item?.director;
+                        }
+                        return newItem;
+                    });
+                    // console.log(`newData: ${JSON.stringify(newData, null, 4)}`);
+                    return newData;
                 }
             };
             return key ? COMPANY_CONF[key]() : [];
@@ -127,20 +147,25 @@ const loadData = async partition => {
         // Компания
         company: async () => {
             const endpoints = [
-                `${window.location.origin}/structure_company.json`,
-                `${window.location.origin}/api/employee/`
-                // `${window.location.origin}/api/getVacations/`
+                `${window.location.origin}/api/employee/`,
+                `${window.location.origin}/api/getAllDepartments`
             ];
             const resolvedData = {};
 
             await axios
-                .all(endpoints.map(endpoint => dataLoader(endpoint)))
+                .all(endpoints.map(endpoint => axios.post(endpoint)))
                 .then(
-                    axios.spread((structureData, employeesData) => {
-                        if (structureData && structureData.length !== 0) resolvedData.structure = structureData;
-                        if (employeesData && employeesData.length !== 0)
-                            resolvedData.employees = formData(employeesData, partition, 'employees');
-                        // if (vacationsData && vacationsData.length !== 0) resolvedData.vacationsData = vacationsData;
+                    axios.spread((employees, sections) => {
+                        if (employees?.data && employees?.data.length > 0)
+                            resolvedData.employees = formData(employees?.data, partition, 'employees');
+                        if (sections?.data && sections?.data.length > 0) {
+                            resolvedData.sections = sections?.data?.map(item => {
+                                return {
+                                    department: item?.department,
+                                    employees: [...formData(item?.employees, partition, 'section')]
+                                };
+                            });
+                        }
                     })
                 )
                 .catch(error => {
@@ -172,8 +197,6 @@ const loadData = async partition => {
                             formData(personalContracts?.data, partition, null).sort(
                                 (a, b) => b?.contractId - a?.contractId
                             ) || [];
-                        // if (tasks?.data && tasks?.data.length !== 0) resolvedData.tasks = tasks?.data;
-                        // if (contracts && contracts.length !== 0) resolvedData.contracts = contracts;
                     })
                 )
                 .catch(error => {
@@ -281,16 +304,6 @@ const getDataOperations = partition => {
     };
     return partition ? PARTITION_CONF[partition]() : [];
 };
-
-// const PARTITION_CONF = {
-//     // Производственный департамент
-//     department: () => {
-//     },
-//     // Оборудование
-//     equipment: () => {},
-//     // Компания
-//     company: () => {}
-// };
 
 const DataDisplayService = {
     formData,

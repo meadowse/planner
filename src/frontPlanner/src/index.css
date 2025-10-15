@@ -7,6 +7,7 @@ html {
 
 /* Светлая тема */
 html[data-theme='light'] {
+    --text-color-sections: #000;
     --text-color: #000;
     --hr-line-color: #dfdfdf;
     /* Задний фон */
@@ -72,6 +73,12 @@ html[data-theme='light'] {
     --bg-color-tab-general-image-actions: #fff;
     --text-color-dropdown-menu-services: #666666;
     --bg-color-tab-general-row-item-user: #f1f1f1;
+    /* Раздел Отделы */
+    --text-color-sections: #e8e9eb;
+    --color-details-open: #0c090a;
+    --color-details-title: #343434;
+    /* --color-details-is-open: #; */
+    --bg-color-details-employee-card: #e8e9eb;
     /* Раздел Работа и задачи */
     --bg-color-tab-work: #fff;
     --text-color-popup-content-title: #666;
@@ -168,6 +175,12 @@ html[data-theme='dark'] {
     --bg-color-tab-general-image-actions: #4c4c4e;
     --text-color-dropdown-menu-services: #f1f1f1;
     --bg-color-tab-general-row-item-user: #4c4c4e;
+    /* Раздел Отделы */
+    --text-color-sections: #f1f1f1;
+    --color-details-open: #fafafa;
+    --color-details-title: #e8e9eb;
+    /* --color-details-is-open: #; */
+    --bg-color-details-employee-card: #343434;
     /* Раздел Работа и задачи */
     --bg-color-tab-work: #353535;
     --text-color-popup-content-title: #bec3c6;

@@ -24,6 +24,7 @@ const ListMode = lazy(() => import('./display_modes/table/ListMode'));
 const CalendarMode = lazy(() => import('./display_modes/calendar/CalendarMode'));
 const GanttMode = lazy(() => import('./display_modes/gantt/GanttMode'));
 const CompanyStructure = lazy(() => import('./display_modes/structure/CompanyStructure'));
+const CompanySections = lazy(() => import('./display_modes/sections/CompanySections'));
 const TimeTableMode = lazy(() => import('./display_modes/timetable/TimeTableMode'));
 
 // Отфильтровать данные
@@ -448,6 +449,37 @@ export default function DataDisplayPage({ partition }) {
     // useEffect(() => clearHistory(`${itemSideMenu?.path}${mode?.key}`), [itemSideMenu]);
 
     useEffect(() => {
+        const dataDisplayModes = DataDisplayService.getDisplayModes(partition)?.map(item => {
+            return { key: item?.keyMode, value: item?.mode };
+        });
+        const displayMode = JSON.parse(localStorage.getItem(`mode_${partition}`)) || dataDisplayModes[0];
+        const dataModeOptions = DataDisplayService.getModeOptions(partition, displayMode);
+
+        setDisplayModes(dataDisplayModes);
+        setMode(() => {
+            localStorage.setItem(`mode_${partition}`, JSON.stringify(displayMode));
+            return displayMode;
+        });
+
+        if (dataModeOptions && dataModeOptions.length > 0) {
+            setModeOptions(dataModeOptions);
+            setOption(() => {
+                let option = {};
+                let savedOption = JSON.parse(localStorage.getItem(`mode-option_${partition}`));
+                if (!savedOption || Object.keys(savedOption).length === 0) {
+                    option = {
+                        [displayMode?.key]: dataModeOptions[0]
+                    };
+                    localStorage.setItem(`mode-option_${partition}`, JSON.stringify(option));
+                    return option;
+                } else return savedOption;
+            });
+        }
+
+        // navigate(displayMode?.key);
+    }, [window.location.pathname]);
+
+    useEffect(() => {
         // Очитска истории маршрутов
         clearHistory(`${itemSideMenu?.path}${mode?.key}`);
 
@@ -592,6 +624,20 @@ export default function DataDisplayPage({ partition }) {
                             }
                         />
                         <Route
+                            path="sections"
+                            // element={
+                            //     <Suspense fallback={<Preloader />}>
+                            //         <Await resolve={uploadedData}>
+                            //             {resolvedData => {
+                            //                 return <CompanySections data={resolvedData?.sections ?? []} />;
+                            //             }}
+                            //         </Await>
+                            //     </Suspense>
+                            // }
+                            // element={<CompanySections data={uploadedData?.sections ?? []} />}
+                            element={<CompanySections uploadedData={uploadedData} data={[]} />}
+                        />
+                        <Route
                             path="listTasks"
                             element={
                                 <Suspense fallback={<Preloader />}>
@@ -618,7 +664,7 @@ export default function DataDisplayPage({ partition }) {
                                             // Сформированные данные после слияния
                                             const mergedData = filteredDataByIdExec.concat(filteredDataByIdCoExec);
                                             // Массив уникальных идентификаторов
-                                            const uniqueIds = [...new Set(mergedData.map(elem => elem.id))];
+                                            const uniqueIds = [...new Set(mergedData.map(elem => elem?.id))];
                                             // Уникальные данные
                                             const uniqueData = resolvedData?.tasks?.filter(item =>
                                                 uniqueIds.includes(item?.id)

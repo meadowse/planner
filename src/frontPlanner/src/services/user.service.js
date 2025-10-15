@@ -54,7 +54,10 @@ const loadData = async (partition, idEmployee) => {
                                 division: employee?.department || 'Нет данных',
                                 birthday: employee?.birthday || 'Нет данных',
                                 office: employee?.office || 'Нет данных',
-                                director: employee?.fioDirector || 'Нет данных'
+                                director: {
+                                    mmId: employee?.idMMDirector || -1,
+                                    fullName: employee?.fioDirector || 'Нет данных'
+                                }
                             };
                             resolvedData.employee = Object.assign({}, userData);
                         }

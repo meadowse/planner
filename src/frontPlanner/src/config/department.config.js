@@ -259,6 +259,11 @@ export const COMPANY_DATA_CONF = {
             // keys: ['id', 'responsible', 'subsection', 'phone', 'email']
         },
         {
+            mode: 'Отделы',
+            keyMode: 'sections',
+            keys: []
+        },
+        {
             mode: 'График отпусков',
             keyMode: 'timetable',
             keys: ['id', 'responsible', 'post', 'phone', 'email']

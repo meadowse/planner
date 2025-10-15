@@ -33,24 +33,89 @@ function CardProfile({ profileData }) {
     );
 }
 
-function CardInfoItem({ title, value }) {
-    const refValue = useRef();
+function CardInfo(props) {
+    const { config, userData, navigate } = props;
 
-    return (
-        <li className="user__data-item">
-            <h2 className="user__item-title">{title}</h2>
-            <p className="user__item-value" ref={refValue} onMouseLeave={() => refValue?.current?.scrollTo(0, 0)}>
-                <span>{value}</span>
-            </p>
-        </li>
-    );
-}
+    // console.log(`CardInfo: ${JSON.stringify(config, null, 4)}`);
 
-function CardInfo({ config, userData }) {
+    const ITEM_CONF = {
+        personalPhone: value => {
+            return (
+                <a className="user__item-value_clickable" href={`tel:${value}`}>
+                    {value}
+                </a>
+            );
+        },
+        mail: value => {
+            return (
+                <a className="user__item-value_clickable" href={`mailto:${value}`}>
+                    {value}
+                </a>
+            );
+        },
+        workPhone: value => {
+            return (
+                <a className="user__item-value_clickable" href={`tel:${value}`}>
+                    {value}
+                </a>
+            );
+        },
+        internalPhone: value => {
+            return (
+                <a className="user__item-value_clickable" href={`tel:${value}`}>
+                    {value}
+                </a>
+            );
+        },
+        division: value => {
+            return (
+                <p className="user__item-value_clickable" onClick={() => onShowSection(value)}>
+                    {value}
+                </p>
+            );
+        },
+        director: value => {
+            return (
+                <p className="user__item-value_clickable" onClick={() => onShowInfoEmployee(value.mmId)}>
+                    {value.fullName}
+                </p>
+            );
+        },
+        default: value => <p className="user__item-value">{value}</p>
+    };
+
+    function onShowInfoEmployee(mmId) {
+        navigate(`../../user/${mmId}/profile/profile/`, {
+            state: { idEmployee: mmId, path: `${window.location.pathname}` }
+        });
+    }
+
+    // Перейти к странице с отделами
+    function onShowSection(section) {
+        const itemSideMenu = {
+            'key': 'company',
+            'title': 'Компания',
+            'path': 'company/',
+            'imgName': 'company'
+        };
+        const mode = {
+            key: 'sections',
+            value: 'Отделы'
+        };
+
+        navigate(`/company/sections`, { state: { section } });
+
+        localStorage.setItem('itemSideMenu', JSON.stringify(itemSideMenu));
+        localStorage.setItem(`mode_company`, JSON.stringify(mode));
+    }
+
     return (
         <ul className="user__personal-data">
             {Object.keys(config).map(key => (
-                <CardInfoItem title={config[key]} value={userData[key]} />
+                <li className="user__data-item">
+                    <h2 className="user__item-title">{config[key]}</h2>
+                    {key in ITEM_CONF ? ITEM_CONF[key](userData[key]) : ITEM_CONF?.default(userData[key])}
+                </li>
             ))}
         </ul>
     );
@@ -82,8 +147,6 @@ export default function UserInfoNew() {
 
     const refTabBar = useRef(null);
 
-    // const [isLoading, setIsLoading] = useState(false);
-    // const [data, setData] = useState([]);
     const [userInfo, setUserInfo] = useState({
         // Разделы пользователя
         tabs: [],
@@ -101,15 +164,15 @@ export default function UserInfoNew() {
 
     // console.log(`UserInfo uploadedData: ${JSON.stringify(data, null, 4)}`);
 
-    function onClose() {
-        startTransition(() => {
-            setTimeout(() => {
-                backToPrevPath();
-            }, 1000);
+    // function onClose() {
+    //     startTransition(() => {
+    //         setTimeout(() => {
+    //             backToPrevPath();
+    //         }, 1000);
 
-            navigate(history[history.length - 1]);
-        });
-    }
+    //         navigate(history[history.length - 1]);
+    //     });
+    // }
 
     function onSelectTab(indTab, tabData) {
         const tabOptionsData = UserService.getTabOptions(tabData) || [];
@@ -214,7 +277,8 @@ export default function UserInfoNew() {
                         type="button"
                         text="Закрыть"
                         icon="cancel_bl.svg"
-                        onClick={onClose}
+                        // onClick={onClose}
+                        onClick={() => navigate(-1)}
                     />
                 </div>
             </div>
@@ -254,7 +318,7 @@ export default function UserInfoNew() {
                                 <Await resolve={data?.uploadedData}>
                                     {resolvedData => {
                                         const employee = Object.assign({}, resolvedData?.employee);
-                                        return employee && Object.keys(employee).length !== 0 ? (
+                                        return employee && Object.keys(employee).length > 0 ? (
                                             <div className="user__profile">
                                                 <CardProfile
                                                     profileData={{
@@ -265,6 +329,7 @@ export default function UserInfoNew() {
                                                 <CardInfo
                                                     config={UserService.getEmployeeConfig()}
                                                     userData={employee}
+                                                    navigate={navigate}
                                                 />
                                             </div>
                                         ) : null;
@@ -298,11 +363,14 @@ export default function UserInfoNew() {
                                         );
 
                                         // Сформированные данные после слияния
-                                        const mergedData = filteredDataById.concat(filteredDataByIdCoExec);
+                                        const mergedData = filteredDataById?.concat(filteredDataByIdCoExec);
                                         // Массив уникальных идентификаторов
-                                        const uniqueIds = [...new Set(mergedData.map(elem => elem.id))];
-                                        //
-                                        const uniqueData = resolvedData?.tabData.filter(item =>
+                                        const uniqueIds =
+                                            mergedData && mergedData.length > 0
+                                                ? [...new Set(mergedData.map(elem => elem.id))]
+                                                : [];
+                                        // Формируем уникальные данные
+                                        const uniqueData = resolvedData?.tabData?.filter(item =>
                                             uniqueIds.includes(item?.id)
                                         );
 
