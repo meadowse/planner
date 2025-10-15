@@ -10,7 +10,7 @@ import { isObject, isArray } from '@helpers/helper';
 import { getDateFromString } from '@helpers/calendar';
 
 // Импорт контекста
-import { useHistoryContext } from '../../contexts/history.context';
+import { useHistoryContext } from '@contexts/history.context';
 
 const CELLS = {
     text: (value, additClass) => {

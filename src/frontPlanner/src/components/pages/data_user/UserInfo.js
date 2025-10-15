@@ -15,7 +15,7 @@ import { getFilteredData } from '@helpers/helper';
 import UserService from '@services/user.service';
 
 // Импорт контекста
-import { useHistoryContext } from '../../../contexts/history.context';
+import { useHistoryContext } from '@contexts/history.context';
 
 import { queryClient } from '../../../query/queryClient';
 

@@ -14,7 +14,7 @@ import DataDisplayService from '@services/data_display.service';
 import { extractSampleData, simplifyData, getUniqueData, getFilteredData } from '@helpers/helper';
 
 // Импорт контекста
-import { useHistoryContext } from '../../../contexts/history.context';
+import { useHistoryContext } from '@contexts/history.context';
 
 // Импорт стилей
 import './data_display_page.css';

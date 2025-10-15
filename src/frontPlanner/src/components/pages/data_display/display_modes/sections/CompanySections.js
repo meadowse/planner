@@ -1,5 +1,5 @@
-import { startTransition, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { Await, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { startTransition, Suspense, useEffect, useRef, useState } from 'react';
+import { Await, useLocation, useNavigate } from 'react-router-dom';
 
 import classNames from 'classnames';
 
@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import Preloader from '@components/auxiliary_pages/loader/Preloader';
 
 // Импорт контекста
-import { useHistoryContext } from '../../../../../contexts/history.context';
+import { useHistoryContext } from '@contexts/history.context';
 
 // Импорт стилей
 import './company_sections.css';

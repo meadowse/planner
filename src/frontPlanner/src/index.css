@@ -35,6 +35,10 @@ html[data-theme='light'] {
     --border-color-table-mode-cell: #dfdfdf;
     --text-color-cell-stage: #000;
     --text-color-cell-subtitle: #a9a9a9;
+    /* Фильтры списка */
+    --border-color-table-filters-inpt-filter: #dcdcdc;
+    --border-color-table-dropdown-filter: #d3d3d3;
+    --bg-color-table-dropdown-filter: #f1f1f1;
     /* Режим отображения Список в разделе просмотра договора*/
     --bg-color-tab-work-table-mode-header-reset-filters: #fff;
     --bg-color-tab-work-table-mode-header: #f1f1f1;
@@ -138,6 +142,10 @@ html[data-theme='dark'] {
     --border-color-table-mode-cell: #adb5bd;
     --text-color-cell-stage: #000;
     --text-color-cell-subtitle: #a8a9ad;
+    /* Фильтры списка */
+    --border-color-table-filters-inpt-filter: #808080;
+    --border-color-tabl-dropdown-filter: #231f20;
+    --bg-color-table-dropdown-filter: #343434;
     /* Режим отображения Список в разделе просмотра договора*/
     --bg-color-tab-work-table-mode-header-reset-filters: #353535;
     --bg-color-tab-work-table-mode-header: #2d2c2a;
@@ -179,7 +187,6 @@ html[data-theme='dark'] {
     --text-color-sections: #f1f1f1;
     --color-details-open: #fafafa;
     --color-details-title: #e8e9eb;
-    /* --color-details-is-open: #; */
     --bg-color-details-employee-card: #343434;
     /* Раздел Работа и задачи */
     --bg-color-tab-work: #353535;

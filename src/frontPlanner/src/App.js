@@ -9,11 +9,11 @@ import { ROUTES_FOR_NOT_AUTH, ROUTES_FOR_AUTH } from './routes/Routes';
 
 // Импорт контекстов
 import { socket, SocketContext } from './contexts/socket.context';
-import { authContext } from './contexts/auth.context';
+import { authContext } from '@contexts/auth.context';
 
 // Импорт провайдеров
-import { HistoryProvider } from './contexts/history.context';
-import { ThemeProvider } from './contexts/theme.context';
+import { HistoryProvider } from '@contexts/history.context';
+import { ThemeProvider } from '@contexts/theme.context';
 
 //
 import { queryClient } from './query/queryClient';
