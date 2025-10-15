@@ -12,6 +12,24 @@ import { useHistoryContext } from '../../../../../contexts/history.context';
 // Импорт стилей
 import './company_sections.css';
 
+function EmployeeCard({ employee, onClickUser }) {
+    const refPost = useRef(null);
+
+    return (
+        <li className="details__content-list-item" onClick={() => onClickUser(employee)}>
+            <div className="details__content-list-employee">
+                <img className="details__employee-photo" src={employee?.photo} alt="" />
+                <div className="details__employee-info">
+                    <h3>{employee?.fullName}</h3>
+                    <p ref={refPost} onMouseLeave={() => refPost?.current.scrollTo(0, 0)}>
+                        <span>{employee?.post}</span>
+                    </p>
+                </div>
+            </div>
+        </li>
+    );
+}
+
 function Section(props) {
     const { index, indSelectedSection, item, refDetails, onClickUser } = props;
 
@@ -56,22 +74,9 @@ function Section(props) {
                     <h3 className="details__wrapper-title">Сотрудники</h3>
                     {employees && item?.employees.length > 0 && (
                         <ul className="details__content-list">
-                            {employees.map(employee => {
-                                const refPost = useRef(null);
-                                return (
-                                    <li className="details__content-list-item" onClick={() => onClickUser(employee)}>
-                                        <div className="details__content-list-employee">
-                                            <img className="details__employee-photo" src={employee?.photo} alt="" />
-                                            <div className="details__employee-info">
-                                                <h3>{employee?.fullName}</h3>
-                                                <p ref={refPost} onMouseLeave={() => refPost?.current.scrollTo(0, 0)}>
-                                                    <span>{employee?.post}</span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                );
-                            })}
+                            {employees.map(employee => (
+                                <EmployeeCard employee={employee} onClickUser={onClickUser} />
+                            ))}
                         </ul>
                     )}
                 </div>
