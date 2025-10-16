@@ -1461,18 +1461,18 @@ def internalContracts(request):
             start = perf_counter()
             with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
                 cur = con.cursor()
-                sql = f"""SELECT T313.ID AS id,
-                T313.F5890 AS title,
-                T313.F5892 AS description,
-                T313.F5893 AS dateAdded,
-                T313.F5894 AS deadline,
-                T313.F5897 AS stage,
-                T313.F5898 AS folderPath,
+                sql = f"""SELECT T323.ID AS id,
+                T323.F5890 AS title,
+                T323.F5892 AS description,
+                T323.F5893 AS dateAdded,
+                T323.F5894 AS deadline,
+                T323.F5897 AS stage,
+                T323.F5898 AS folderPath,
                 responsible.ID AS responsibleId,
                 responsible.F16 AS responsibleMMId,
                 responsible.F4886 AS responsible
                 FROM T323
-                LEFT JOIN T3 responsible ON responsible.ID = T313.F5891"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
+                LEFT JOIN T3 responsible ON responsible.ID = T323.F5891"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
                 cur.execute(sql)
                 result = cur.fetchall()
                 # Преобразование результата в список словарей
