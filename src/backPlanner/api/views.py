@@ -1465,7 +1465,7 @@ def internalContracts(request):
                 T323.F5890 AS project,
                 T323.F5892 AS description,
                 T323.F5893 AS dateAdded,
-                T323.F5894 AS deadline,
+                T323.F5894 AS lustDate,
                 T323.F5897 AS stage,
                 T323.F5898 AS folderPath,
                 responsible.ID AS responsibleId,
@@ -1476,7 +1476,7 @@ def internalContracts(request):
                 cur.execute(sql)
                 result = cur.fetchall()
                 # Преобразование результата в список словарей
-                columns = ('id', 'project', 'description', 'dateAdded', 'deadline', 'stage', 'folderPath','responsibleId',
+                columns = ('id', 'project', 'description', 'dateAdded', 'lustDate', 'stage', 'folderPath','responsibleId',
                            'responsibleMMId', 'responsible')
                 json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
@@ -1498,18 +1498,18 @@ def internalContracts(request):
                     obj.pop('responsibleMMId')
                     dateAdded = {'dateAdded': {'title': '', 'value': obj.get('dateAdded')}}
                     obj.update(dateAdded)
-                    deadline = obj.get('deadline')
-                    if deadline is not None:
-                        if status == 'В работе' and deadline < today:
-                            deadline = {
-                                'deadline': {'title': 'Срок работы', 'value': obj.get('deadline'), 'expired': True}}
+                    lustDate = obj.get('lustDate')
+                    if lustDate is not None:
+                        if status == 'В работе' and lustDate < today:
+                            lustDate = {
+                                'lustDate': {'title': 'Срок работы', 'value': obj.get('lustDate'), 'expired': True}}
                         else:
-                            deadline = {
-                                'deadline': {'title': 'Срок работы', 'value': obj.get('deadline'), 'expired': False}}
+                            lustDate = {
+                                'lustDate': {'title': 'Срок работы', 'value': obj.get('lustDate'), 'expired': False}}
                     else:
-                        deadline = {
-                            'deadline': {'title': 'Срок работы', 'value': obj.get('deadline'), 'expired': False}}
-                    obj.update(deadline)
+                        lustDate = {
+                            'lustDate': {'title': 'Срок работы', 'value': obj.get('lustDate'), 'expired': False}}
+                    obj.update(lustDate)
                 end = perf_counter()
                 print(end - start)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
