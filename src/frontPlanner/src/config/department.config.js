@@ -1,5 +1,6 @@
 // Импорт доп.функционала
 import { isObject } from '@helpers/helper';
+import { id } from 'date-fns/locale';
 
 // Конфигурация по стадиям
 export const STAGES_CONF_MAP = {
@@ -39,116 +40,117 @@ export const STATUSES_CONF = {
 
 // Конфигурация по преобразованию данных
 export const DATA_CONVERSION_MAP = {
-    contractNum: contractNum => contractNum ?? 'Нет данных',
-    address: address => address ?? 'Нет данных',
-    project: project => project ?? 'Нет данных',
-    folderPath: folderPath => folderPath ?? 'Нет данных',
-    description: description => description ?? 'Нет данных',
-    status: status => status ?? 'Без статуса',
-    stage: stage => {
-        return Object.keys(stage).length !== 0 && stage?.title
-            ? { title: stage?.title, color: STAGES_CONF_MAP[stage.title] }
+    contractNum: value => value ?? 'Нет данных',
+    address: value => value ?? 'Нет данных',
+    folderPath: value => value ?? 'Нет данных',
+    description: value => value ?? 'Нет данных',
+    status: value => value ?? 'Без статуса',
+    stage: value => {
+        return Object.keys(value).length !== 0 && value?.title
+            ? { title: value?.title, color: STAGES_CONF_MAP[value.title] }
             : { title: 'Без стадии', color: STAGES_CONF_MAP['Без стадии'] };
     },
-    services: services => {
-        if (services && services.length !== 0) {
-            if (services[0]?.title) return services[0];
+    services: value => {
+        if (value && value.length !== 0) {
+            if (value[0]?.title) return value[0];
         }
         return null;
     },
-    responsible: responsible => {
-        // console.log(`responsible: ${JSON.stringify(responsible, null, 4)}`);
-
-        if (responsible && Object.keys(responsible).length !== 0) {
+    project: value => {
+        if (value && Object.keys(value).length > 0) return value;
+        return value;
+    },
+    responsible: value => {
+        if (value && Object.keys(value).length > 0) {
             return {
-                id: responsible?.id || responsible?.idMM || null,
-                mmId: responsible?.id || responsible?.idMM || null,
-                fullName: responsible?.fullName,
-                photo: responsible?.idMM
-                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.idMM}/image`
-                    : responsible?.id
-                    ? `https://mm-mpk.ru/api/v4/users/${responsible?.id}/image`
+                id: value?.id || value?.idMM || null,
+                mmId: value?.idMM || null,
+                fullName: value?.fullName,
+                photo: value?.idMM
+                    ? `https://mm-mpk.ru/api/v4/users/${value?.idMM}/image`
+                    : value?.id
+                    ? `https://mm-mpk.ru/api/v4/users/${value?.id}/image`
                     : '/img/user.svg',
                 post: null
             };
         }
         return null;
     },
-    manager: manager => {
-        if (manager && Object.keys(manager).length !== 0) {
+    manager: value => {
+        if (value && Object.keys(value).length > 0) {
             return {
-                id: manager?.idMM ?? null,
-                mmId: manager?.idMM ?? null,
-                fullName: manager?.fullName || 'Нет данных',
-                photo: manager?.idMM
-                    ? `https://mm-mpk.ru/api/v4/users/${manager?.idMM}/image`
-                    : manager?.id
-                    ? `https://mm-mpk.ru/api/v4/users/${manager?.id}/image`
+                id: value?.idMM ?? null,
+                mmId: value?.idMM ?? null,
+                fullName: value?.fullName || 'Нет данных',
+                photo: value?.idMM
+                    ? `https://mm-mpk.ru/api/v4/users/${value?.idMM}/image`
+                    : value?.id
+                    ? `https://mm-mpk.ru/api/v4/users/${value?.id}/image`
                     : '/img/user.svg',
                 post: null
             };
         }
     },
-    projectManager: projectManager => {
-        if (projectManager && Object.keys(projectManager).length !== 0) {
+    projectManager: value => {
+        if (value && Object.keys(value).length > 0) {
             return {
-                id: projectManager?.idMM ?? null,
-                mmId: projectManager?.idMM ?? null,
-                fullName: projectManager?.fullName || 'Нет данных',
-                photo: projectManager?.idMM
-                    ? `https://mm-mpk.ru/api/v4/users/${projectManager?.idMM}/image`
-                    : projectManager?.id
-                    ? `https://mm-mpk.ru/api/v4/users/${projectManager?.id}/image`
+                id: value?.idMM ?? null,
+                mmId: value?.idMM ?? null,
+                fullName: value?.fullName || 'Нет данных',
+                photo: value?.idMM
+                    ? `https://mm-mpk.ru/api/v4/users/${value?.idMM}/image`
+                    : value?.id
+                    ? `https://mm-mpk.ru/api/v4/users/${value?.id}/image`
                     : '/img/user.svg',
                 post: null
             };
         }
     },
-    participants: participants => {
-        return participants && participants.length !== 0
-            ? participants.map(participant => {
-                  const { idMM, ...restElems } = participant;
+    participants: value => {
+        return value && value.length > 0
+            ? value.map(elem => {
+                  const { idMM, ...restElems } = elem;
                   return {
-                      id: idMM ?? participant?.participantId,
-                      mmId: idMM ?? participant?.participantId,
+                      id: idMM ?? elem?.participantId,
+                      mmId: idMM ?? elem?.participantId,
                       ...restElems,
                       photo: idMM
                           ? `https://mm-mpk.ru/api/v4/users/${idMM}/image`
-                          : participant?.participantId
-                          ? `https://mm-mpk.ru/api/v4/users/${participant?.participantId}/image`
+                          : elem?.participantId
+                          ? `https://mm-mpk.ru/api/v4/users/${elem?.participantId}/image`
                           : '/img/user.svg',
                       post: null
                   };
               })
             : null;
     },
-    director: director => {
-        return director && Object.keys(director).length !== 0
+    director: value => {
+        return value && Object.keys(value).length > 0
             ? {
-                  id: director.idDirector || director.id || -1,
-                  mmId: director.mmId,
-                  fullName: director.fullName || director.directorName,
-                  photo: director.mmId ? `https://mm-mpk.ru/api/v4/users/${director.mmId}/image` : '/img/user.svg'
+                  id: value.idDirector || value.id || -1,
+                  mmId: value.mmId,
+                  fullName: value.fullName || value.directorName,
+                  photo: value.mmId ? `https://mm-mpk.ru/api/v4/users/${value.mmId}/image` : '/img/user.svg'
               }
             : null;
     },
-    executor: executor => {
-        return executor && Object.keys(executor).length !== 0
+    executor: value => {
+        return value && Object.keys(value).length > 0
             ? {
-                  id: executor.idExecutor || executor.id || -1,
-                  mmId: executor.mmId,
-                  fullName: executor.fullName || executor.executorName,
-                  photo: executor.mmId ? `https://mm-mpk.ru/api/v4/users/${executor.mmId}/image` : '/img/user.svg'
+                  id: value.idExecutor || value.id || -1,
+                  mmId: value.mmId,
+                  fullName: value.fullName || value.executorName,
+                  photo: value.mmId ? `https://mm-mpk.ru/api/v4/users/${value.mmId}/image` : '/img/user.svg'
               }
             : null;
     },
-    coExecutor: coExecutor => {
-        if (coExecutor && Object.keys(coExecutor).length !== 0) {
+    coExecutor: value => {
+        if (value && Object.keys(value).length > 0) {
             return {
-                id: coExecutor.idCoExecutor || coExecutor.id || -1,
-                mmId: coExecutor.mmId,
-                fullName: coExecutor.fullName || coExecutor.coExecutorName,
-                photo: coExecutor.mmId ? `https://mm-mpk.ru/api/v4/users/${coExecutor.mmId}/image` : '/img/user.svg'
+                id: value.idCoExecutor || value.id || -1,
+                mmId: value.mmId,
+                fullName: value.fullName || value.coExecutorName,
+                photo: value.mmId ? `https://mm-mpk.ru/api/v4/users/${value.mmId}/image` : '/img/user.svg'
             };
         }
         return null;
@@ -227,12 +229,7 @@ export const TASKS_DATA_CONF = {
         {
             mode: 'Гант',
             keyMode: 'gantContracts',
-            modeOptions: [
-                // { value: 'Услуги', key: 'services', keyData: 'contracts', uniqueness: 'title' },
-                // { value: 'Руководители отделов', key: 'responsible', keyData: 'contracts', uniqueness: 'fullName' },
-                // { value: 'Менеджеры проектов', key: 'manager', keyData: 'contracts', uniqueness: 'fullName' },
-                // { value: 'Сотрудники отделов', key: 'section', keyData: 'sections', uniqueness: 'title' }
-            ],
+            modeOptions: [],
             keys: [
                 'contractId',
                 'stage',

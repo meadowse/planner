@@ -10,12 +10,12 @@ import DataFormService from '@services/data_form.service';
 import { useHistoryContext } from '../../../../contexts/history.context';
 
 // Импорт стилей
-import './data_form.css';
+import './project_form.css';
 
 // Интеграция с Mattermost
 function MattermostIntegration({ channelId }) {
     return (
-        <div className="section__dataform-frame-wrapper">
+        <div className="section__projectform-frame-wrapper">
             <iframe
                 title="Mattermost"
                 src={`https://mm-mpk.ru/mosproektkompleks/channels/${channelId}`}
@@ -42,23 +42,14 @@ function FormHeader(props) {
     }
 
     return (
-        <div className="section__dataform-header">
-            <div className="section__dataform-header-left">
-                <h2
-                    // className="section__dataform-title-contract section__dataform-header-title">
-                    className="section__dataform-header-title"
-                >
-                    {data?.title ?? 'Нет данных'}
-                </h2>
-                <h3
-                    // className="section__dataform-title-address section__dataform-header-title">
-                    className="section__dataform-header-subtitle"
-                >
+        <div className="section__projectform-header">
+            <div className="section__projectform-header-left">
+                <h2 className="section__projectform-header-title">{data?.title ?? 'Нет данных'}</h2>
+                <h3 className="section__projectform-header-subtitle">
                     <span>{data?.subTitle ?? 'Нет данных'}</span>
                 </h3>
-                {/* <img className="section__dataform-header-img" src="/img/edit.svg" alt="Edit" /> */}
             </div>
-            <div className="section__dataform-header-right">
+            <div className="section__projectform-header-right">
                 <button className="icon-btn__save icon-btn" form="general_form">
                     Сохранить<span>&#10003;</span>
                 </button>
@@ -82,21 +73,20 @@ function TabsHeader(props) {
     };
 
     function onTabClick(item) {
-        localStorage.setItem('selectedTab', JSON.stringify(item));
         tabClick(item);
-        // console.log(`config: ${JSON.stringify(config, null, 4)}`);
+
         if (item?.key in NAVIGATION_CONF) NAVIGATION_CONF[item?.key](item);
         else NAVIGATION_CONF?.default(item);
     }
 
     return (
-        <ul className="section__dataform-tabs-header">
+        <ul className="section__projectform-tabs-header">
             {tabs && tabs.length !== 0
                 ? tabs.map((item, index) => (
                       <li
                           key={index}
-                          className={classNames('section__dataform-tab-btn', {
-                              'section__dataform-tab-btn_active': item.key === tab.key
+                          className={classNames('section__projectform-tab-btn', {
+                              'section__projectform-tab-btn_active': item.key === tab.key
                           })}
                           onClick={() => onTabClick(item)}
                       >
@@ -120,66 +110,35 @@ function Tabs(props) {
     }, []);
 
     return (
-        <div className="section__dataform-tabs">
+        <div className="section__projectform-tabs">
             <TabsHeader tabs={tabs} tab={tab} config={config} tabClick={setTab} navigate={navigate} />
-            <div className="section__dataform-tabs-content">
+            <div className="section__projectform-tabs-content">
                 <Outlet context={config} />
-                <MattermostIntegration channelId={config?.data?.channelId} />
+                {/* <MattermostIntegration channelId={config?.data?.channelId} /> */}
             </div>
         </div>
     );
 }
 
-export default function DataFormNew() {
+export default function ProjectForm() {
     const uploadedData = useLoaderData();
     const navigate = useNavigate();
-    // const { state } = useLocation();
 
     const location = useLocation();
     const [prevPath] = useState(location?.state?.path);
 
-    // console.log(`DataFormNew state args: ${JSON.stringify(state, null, 4)}`);
-    // console.log(`DataFormNew configData: ${JSON.stringify(configData, null, 4)}`);
-    // console.log(`DataFormNew state: ${JSON.stringify(location?.state, null, 4)}`);
-
-    function getConfigData() {
-        const queryParams = new URLSearchParams(location.search);
-        const queryData = JSON.parse(decodeURIComponent(queryParams.get('data')));
-
-        // console.log(`section__dataform: ${JSON.stringify(queryData, null, 4)}`);
-
-        if (queryData && Object.keys(queryData).length !== 0) {
-            return {
-                idContract: queryData?.idContract || localStorage.getItem('idContract') || -1,
-                partition: queryData?.partition,
-                dataOperation: queryData?.dataOperation,
-                tabForm: queryData?.tabForm,
-                data: uploadedData
-            };
-        } else {
-            return {
-                idContract: location?.state?.idContract || localStorage.getItem('idContract') || -1,
-                partition: location?.state?.partition,
-                dataOperation: location?.state?.dataOperation,
-                tabForm: location?.state?.tabForm,
-                data: uploadedData
-            };
-        }
-    }
-
+    function getConfigData() {}
     return (
-        <section className="section__dataform">
-            <FormHeader
-                // data={{ contractNum: uploadedData?.contractNum, address: uploadedData?.address }}
+        <section className="section__projectform">
+            {/* <FormHeader
                 data={{
-                    title: uploadedData?.address || uploadedData?.equipment?.title,
-                    subTitle: uploadedData?.contractNum || uploadedData?.equipment?.model
+                    title: uploadedData?.project
                 }}
                 config={{ prevPath }}
                 navigate={navigate}
-            />
+            /> */}
             {/* {PARTITION_CONF[state?.partition] ? PARTITION_CONF[state?.partition]() : PARTITION_CONF?.default()} */}
-            <Tabs tabs={DataFormService.getOptions('tabs')} config={getConfigData()} navigate={navigate} />
+            <Tabs tabs={[{ key: 'general', title: 'Общие' }]} config={getConfigData()} navigate={navigate} />
         </section>
     );
 }

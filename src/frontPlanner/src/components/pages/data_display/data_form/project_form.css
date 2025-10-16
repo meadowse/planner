@@ -1,0 +1,130 @@
+.section__project {
+    padding: calc(1.25rem + 0.3vw);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* align-items: stretch; */
+    row-gap: calc(1.25rem + 0.3vw);
+    border-radius: 0.3125rem;
+    background-color: var(--bg-color-section-project);
+}
+
+/* Шапка формы  */
+
+.section__project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section__project-header-right {
+    display: flex;
+    align-items: center;
+}
+
+.section__project-header-left {
+    height: 100%;
+    flex-grow: 0.5;
+    display: flex;
+    align-items: center;
+    column-gap: calc(0.9375rem + 0.3vw);
+}
+
+.section__project-header-right {
+    column-gap: calc(1.875rem + 0.3vw);
+}
+
+.section__project-header-title,
+.section__project-header-subtitle {
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.75rem + 8 * (100vw - 320px) / 1600);
+}
+
+.section__project-header-title {
+    /* max-width: 50%; */
+    max-width: 900px;
+    width: max-content;
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    font-family: 'Montserrat-SemiBold';
+    font-size: calc(0.75rem + 0.5vw - 1.6px);
+}
+
+.section__project-header-subtitle {
+    color: #666;
+}
+
+.section__project-title-contract {
+    width: max-content;
+    height: max-content;
+    white-space: nowrap;
+}
+
+.section__project-title-address {
+    position: relative;
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.section__project-title-address span {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.section__project-header-img {
+    width: calc(0.75rem + 0.465vw);
+    height: calc(0.75rem + 0.465vw);
+    display: block;
+}
+
+/* Табы */
+
+.section__project-tabs {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.section__project-tabs-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    /* column-gap: calc(20px + 0.3vw); */
+    column-gap: calc(10px + 0.3vw);
+}
+
+.section__project-tabs-header {
+    display: flex;
+}
+
+.section__project-tab-btn {
+    padding: calc(0.3125rem + 0.15vw) calc(10px + 0.15vw);
+    font-size: calc(0.5rem + 6 * (100vw - 320px) / 1600);
+    cursor: pointer;
+}
+
+.section__project-tab-btn_active {
+    border-top-left-radius: 0.3125rem;
+    border-top-right-radius: 0.3125rem;
+    /* background-color: #fff; */
+    background-color: var(--bg-color-section-project-tab-active);
+}
+
+.section__project-tabs-content {
+    flex-grow: 1;
+}
+
+.section__project-frame-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.section__tab {
+    width: 100%;
+    height: 100%;
+}

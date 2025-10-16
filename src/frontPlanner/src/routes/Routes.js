@@ -14,11 +14,10 @@ import UserService from '@services/user.service';
 import Preloader from '../components/auxiliary_pages/loader/Preloader';
 import UserInfo from '../components/pages/data_user/UserInfo';
 import { queryClient } from '../query/queryClient';
-// import UserInfoNew from '../components/pages/data_user/UserInfoNew';
 
 const DataDisplayPage = lazy(() => import('@components/pages/data_display/DataDisplayPage'));
 const DataForm = lazy(() => import('@components/pages/data_display/data_form/DataForm'));
-const DataFormNew = lazy(() => import('@components/pages/data_display/data_form/DataFormNew'));
+const ProjectForm = lazy(() => import('@components/pages/data_display/data_form/ProjectForm'));
 const TasksPage = lazy(() => import('@components/pages/tasks/TasksPage'));
 const ChatPage = lazy(() => import('@components/pages/chat/ChatPage'));
 // const UserInfo = lazy(() => import('@components/pages/data_user/UserInfo'));
@@ -26,6 +25,9 @@ const ChatPage = lazy(() => import('@components/pages/chat/ChatPage'));
 const TabGeneral = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_general/TabGeneral'));
 const TabWorkNew = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_work/TabWorkNew'));
 const TabEquipment = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_equipment/TabEquipment'));
+const TabInnerProject = lazy(() =>
+    import('@components/pages/data_display/data_form/tabs/tab_innerprojects/TabInnerProject')
+);
 
 // Маршруты для пользователей, которые не зарегестрированы
 const ROUTES_FOR_NOT_AUTH = [
@@ -120,11 +122,8 @@ const ROUTES_FOR_AUTH = [
                     },
                     {
                         path: 'dataform/*',
-                        element: <DataFormNew />,
-                        loader: async ({ params }) => {
-                            const { key } = params;
-                            // console.log(`DataFormNew key: ${key}`);
-
+                        element: <DataForm />,
+                        loader: async ({}) => {
                             // const LOAD_DATA_CONF = {
                             //     contract: async () => {
                             //         return await DataFormService.loadData('general', {
@@ -172,6 +171,20 @@ const ROUTES_FOR_AUTH = [
                                 element: (
                                     <Suspense fallback={<Preloader />}>
                                         <TabEquipment />
+                                    </Suspense>
+                                )
+                            }
+                        ]
+                    },
+                    {
+                        path: 'projectform/*',
+                        element: <ProjectForm />,
+                        children: [
+                            {
+                                path: 'general',
+                                element: (
+                                    <Suspense fallback={<Preloader />}>
+                                        <TabInnerProject />
                                     </Suspense>
                                 )
                             }

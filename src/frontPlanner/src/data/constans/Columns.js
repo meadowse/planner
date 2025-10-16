@@ -67,7 +67,6 @@ const COLUMNS = [
             const { addToHistory } = useHistoryContext();
 
             function onShowInfoCard(event) {
-                // alert(`Номер договора: ${JSON.stringify(props?.row.original?.contractNum, null, 4)}`);
                 if (props.row.original?.contractId) {
                     const navigationArg = {
                         state: {
@@ -675,6 +674,7 @@ const COLUMNS = [
             const { addToHistory } = useHistoryContext();
 
             function onShowInfoEmployee(employee) {
+                console.log(`Ответственный: ${JSON.stringify(employee, null, 4)}`);
                 // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
 
                 startTransition(() => {
@@ -905,7 +905,31 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            return props.value ? CELLS['text'](props?.value, 'project') : 'Нет данных';
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoCard(event) {
+                // if (props.row.original?.) {}
+                const navigationArg = {
+                    state: { idProject: 5 }
+                };
+
+                addToHistory(`${window.location.pathname}`);
+
+                navigate('../../projectform/general/', navigationArg);
+            }
+
+            return (
+                <p
+                    className="cell__num"
+                    // onClick={e => {
+                    //     e.stopPropagation();
+                    //     onShowInfoCard(e);
+                    // }}
+                >
+                    {props.value ? props.value : 'Нет данных'}
+                </p>
+            );
         }
     },
     {
