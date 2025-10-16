@@ -26,7 +26,7 @@ const CELLS = {
     longtext: (value, additClass, refCell) => {
         return value ? (
             <p className={`cell__${additClass}`} ref={refCell} onMouseLeave={() => refCell?.current.scrollTo(0, 0)}>
-                <span>{value}</span>
+                <span>{value ?? 'Нет данных'}</span>
             </p>
         ) : (
             'Нет данных'
@@ -131,15 +131,6 @@ const COLUMNS = [
         sortBy: undefined,
         Cell: props => {
             return props.value ? CELLS['text'](props.value, 'customer') : 'Нет данных';
-        }
-    },
-    {
-        Header: 'Группа / Ответственный',
-        accessor: 'group',
-        sortable: false,
-        sortBy: undefined,
-        Cell: props => {
-            return <p className="cell__group cell">{props.value ? props?.value : 'Нет данных'}</p>;
         }
     },
     {
@@ -474,6 +465,20 @@ const COLUMNS = [
         }
     },
     {
+        Header: 'Дедлайн',
+        accessor: 'lastDate',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            if (props?.value) {
+                return !props?.value?.expired
+                    ? CELLS['text'](props?.value?.value, 'date')
+                    : CELLS['text'](props?.value?.value, 'date_expired');
+            }
+            return CELLS['text']('Нет данных', 'date');
+        }
+    },
+    {
         Header: 'Дата выполнения',
         accessor: 'dateDone',
         sortable: true,
@@ -661,7 +666,7 @@ const COLUMNS = [
         }
     },
     {
-        Header: 'Руководитель отдела',
+        Header: 'Ответственный',
         accessor: 'responsible',
         sortable: true,
         sortBy: 'fullName',
@@ -706,10 +711,6 @@ const COLUMNS = [
                     navigate(`../../user/${employee?.mmId}/profile/profile/`, {
                         state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                     });
-
-                    // navigate(`../../user/profile/`, {
-                    //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
-                    // });
                 });
             }
 
@@ -728,16 +729,12 @@ const COLUMNS = [
             const { addToHistory } = useHistoryContext();
 
             function onShowInfoEmployee(employee) {
-                // alert(`employee: ${JSON.stringify(employee, null, 4)}`);
                 startTransition(() => {
                     addToHistory(`${window.location.pathname}`);
 
                     navigate(`../../user/${employee?.mmId}/profile/profile/`, {
                         state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                     });
-                    // navigate(`../../user/profile/`, {
-                    //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
-                    // });
                 });
             }
 
@@ -756,10 +753,6 @@ const COLUMNS = [
             const { addToHistory } = useHistoryContext();
 
             function onShowInfoEmployee(employee) {
-                // alert(`Исполнители employee: ${JSON.stringify(employee, null, 4)}`);
-                // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
-                // localStorage.setItem('employee_settings', JSON.stringify({ activeTab: 0, data: userInfo?.data || [] }));
-
                 startTransition(() => {
                     startTransition(() => {
                         addToHistory(`${window.location.pathname}`);
@@ -767,10 +760,6 @@ const COLUMNS = [
                         navigate(`../../user/${employee?.mmId}/profile/profile/`, {
                             state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                         });
-
-                        // navigate(`../../user/profile/`, {
-                        //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
-                        // });
                     });
                 });
             }
@@ -895,12 +884,112 @@ const COLUMNS = [
             }
             return 'Нет данных';
         }
+    },
+    {
+        Header: 'Дедлайн',
+        accessor: 'deadline',
+        sortable: true,
+        sortBy: 'value',
+        Cell: props => {
+            if (props?.value?.value) {
+                return !props?.value?.expired
+                    ? CELLS['text'](props?.value?.value, 'date')
+                    : CELLS['text'](props?.value?.value, 'date_expired');
+            }
+            return 'Нет данных';
+        }
+    },
+    {
+        Header: 'Название',
+        accessor: 'project',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            return props.value ? CELLS['text'](props?.value, 'project') : 'Нет данных';
+        }
+    },
+    {
+        Header: 'Ответственный',
+        accessor: 'responsible',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            const navigate = useNavigate();
+            const { addToHistory } = useHistoryContext();
+
+            function onShowInfoEmployee(employee) {
+                // const userInfo = JSON.parse(localStorage.getItem('employee_settings')) || {};
+
+                startTransition(() => {
+                    addToHistory(`${window.location.pathname}`);
+                    navigate(`../../user/${employee?.mmId}/profile/profile/`, {
+                        state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                    });
+
+                    // navigate(`../../user/profile/`, {
+                    //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
+                    // });
+                });
+            }
+
+            return props?.value && Object.keys(props?.value).length !== 0
+                ? CELLS['user'](props?.value, 'person', () => onShowInfoEmployee(props?.value))
+                : 'Нет данных';
+        }
+    },
+    {
+        Header: 'Описание',
+        accessor: 'description',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            return props.value ? CELLS['text'](props?.value, 'description') : 'Нет данных';
+        }
+    },
+    {
+        Header: 'Дата добавления',
+        accessor: 'dateAdded',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            if (props?.value?.value) {
+                return !props?.value?.expired
+                    ? CELLS['text'](props?.value?.value, 'date')
+                    : CELLS['text'](props?.value?.value, 'date_expired');
+            }
+            return 'Нет данных';
+        }
+    },
+    {
+        Header: 'Путь к папке',
+        accessor: 'folderPath',
+        sortable: false,
+        sortBy: undefined,
+        Cell: props => {
+            const refCell = useRef();
+
+            function onCopyToClipboard() {
+                if (!navigator.clipboard) return;
+                navigator.clipboard.writeText(props?.value);
+            }
+
+            return (
+                <div className="cell__path-to-folder cell">
+                    {CELLS?.longtext(props?.value, 'cell__path-to-folder', refCell)}
+                    <button className="cell__btn-copy-path" onClick={onCopyToClipboard}>
+                        <img src="/img/copy.svg" alt="" />
+                    </button>
+                </div>
+            );
+        }
     }
 ];
 
 export default function getSampleColumns(keys) {
     const filteredData = COLUMNS.filter(column => keys?.indexOf(column.accessor) >= 0);
     const data = new Array(keys.length);
+
+    // console.log(`getSampleColumns filteredData: ${JSON.stringify(filteredData, null, 4)}`);
 
     for (let i = 0; i < keys.length; i++) {
         for (let j = 0; j < filteredData.length; j++) {

@@ -16,5 +16,11 @@
         "title": "Мои задачи и договоры",
         "path": "personal/",
         "imgName": "tasks"
+    },
+    {
+        "key": "innerprojects",
+        "title": "Внутренние проекты",
+        "path": "innerprojects/",
+        "imgName": "innerprojects"
     }
 ]

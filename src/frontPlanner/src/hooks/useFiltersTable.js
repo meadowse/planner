@@ -101,7 +101,7 @@ export const useFiltersTable = (modeConfig, tableData, toggleState, setToggleSta
     };
 
     const onMultipleSelectFilter = (key, value) => {
-        console.log(`key: ${key}\n value: ${JSON.stringify(value, null, 4)}`);
+        // console.log(`key: ${key}\n value: ${JSON.stringify(value, null, 4)}`);
 
         const tempFilters = Object.assign({}, activeFilters);
         tempFilters[key] = value;

@@ -108,7 +108,15 @@ const ROUTES_FOR_AUTH = [
                             return defer({ uploadedData: DataDisplayService.loadData('tasks') });
                         },
                         // shouldRevalidate: () => false,
-                        element: <DataDisplayPage partition="personal" additClass="tasks" />
+                        element: <DataDisplayPage partition="personal" additClass="personal" />
+                    },
+                    {
+                        path: 'innerprojects/*',
+                        loader: () => {
+                            return defer({ uploadedData: DataDisplayService.loadData('innerprojects') });
+                        },
+                        shouldRevalidate: () => false,
+                        element: <DataDisplayPage partition="innerprojects" additClass="innerprojects" />
                     },
                     {
                         path: 'dataform/*',
