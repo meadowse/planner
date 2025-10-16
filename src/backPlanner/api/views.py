@@ -1462,7 +1462,7 @@ def internalContracts(request):
             with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
                 cur = con.cursor()
                 sql = f"""SELECT T323.ID AS id,
-                T323.F5890 AS title,
+                T323.F5890 AS project,
                 T323.F5892 AS description,
                 T323.F5893 AS dateAdded,
                 T323.F5894 AS deadline,
@@ -1476,7 +1476,7 @@ def internalContracts(request):
                 cur.execute(sql)
                 result = cur.fetchall()
                 # Преобразование результата в список словарей
-                columns = ('id', 'title', 'description', 'dateAdded', 'deadline', 'stage', 'folderPath','responsibleId',
+                columns = ('id', 'project', 'description', 'dateAdded', 'deadline', 'stage', 'folderPath','responsibleId',
                            'responsibleMMId', 'responsible')
                 json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
