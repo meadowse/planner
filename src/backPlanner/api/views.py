@@ -1453,3 +1453,68 @@ def deleteCoExecutor(request):
                 {'error': f"НЕ удалось удалить соисполнителя {idCoExecutor} задачи {idTask}: {ex}"}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+
+@csrf_exempt
+def internalContracts(request):
+    try:
+        if request.method == "POST":
+            start = perf_counter()
+            with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
+                cur = con.cursor()
+                sql = f"""SELECT T313.ID AS id,
+                T313.F5890 AS title,
+                T313.F5892 AS description,
+                T313.F5893 AS dateAdded,
+                T313.F5894 AS deadline,
+                T313.F5897 AS stage,
+                T313.F5898 AS folderPath,
+                responsible.ID AS responsibleId,
+                responsible.F16 AS responsibleMMId,
+                responsible.F4886 AS responsible
+                FROM T323
+                LEFT JOIN T3 responsible ON responsible.ID = T313.F5891"""  # F4648 - путь, F4538 - номер договора, F4544 - стадия, F4946 - адрес, F4948 - направление, F4566 - дата окончания
+                cur.execute(sql)
+                result = cur.fetchall()
+                # Преобразование результата в список словарей
+                columns = ('id', 'title', 'description', 'dateAdded', 'deadline', 'stage', 'folderPath','responsibleId',
+                           'responsibleMMId', 'responsible')
+                json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
+                today = datetime.date.today()
+                for obj in json_result:
+                    status = obj.get('stage')
+                    stage = {'stage': {'title': status}}
+                    obj.update(stage)
+                    responsible = obj.get('responsible')
+                    if responsible is not None:
+                        responsible = {'responsible': {'id': obj.get('responsibleId'),
+                                                       'idMM': obj.get('responsibleMMId'),
+                                                       'fullName': responsible.strip()}}
+                    else:
+                        responsible = {'responsible': {'id': obj.get('responsibleId'),
+                                                       'idMM': obj.get('responsibleMMId'),
+                                                       'fullName': responsible}}
+                    obj.update(responsible)
+                    obj.pop('responsibleId')
+                    obj.pop('responsibleMMId')
+                    dateAdded = {'dateAdded': {'title': '', 'value': obj.get('dateAdded')}}
+                    obj.update(dateAdded)
+                    deadline = obj.get('deadline')
+                    if deadline is not None:
+                        if status == 'В работе' and deadline < today:
+                            deadline = {
+                                'deadline': {'title': 'Срок работы', 'value': obj.get('deadline'), 'expired': True}}
+                        else:
+                            deadline = {
+                                'deadline': {'title': 'Срок работы', 'value': obj.get('deadline'), 'expired': False}}
+                    else:
+                        deadline = {
+                            'deadline': {'title': 'Срок работы', 'value': obj.get('deadline'), 'expired': False}}
+                    obj.update(deadline)
+                end = perf_counter()
+                print(end - start)
+                return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+        else:
+            return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+    except Exception as ex:
+        print(f"НЕ удалось получить данные по внутренним договорам {ex}")
+        return JsonResponse({'error': f'НЕ удалось получить данные по внутренним договорам {ex}'}, status=404)

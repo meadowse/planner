@@ -45,4 +45,5 @@ urlpatterns = [
     path('addCoExecutor', addCoExecutor, name='addCoExecutor'),
     path('deleteCoExecutor', deleteCoExecutor, name='deleteCoExecutor'),
     path('getAllDepartments', getAllDepartments, name='getAllDepartments'),
+    path('internalContracts', internalContracts, name='internalContracts'),
 ]
