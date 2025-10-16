@@ -10,7 +10,8 @@ import {
     DEPARTMENT_DATA_CONF,
     EQUIPMENT_DATA_CONF,
     COMPANY_DATA_CONF,
-    TASKS_DATA_CONF
+    TASKS_DATA_CONF,
+    PROJECTS_DATA_CONF
 } from '@config/department.config';
 
 // Импорт данных
@@ -202,15 +203,39 @@ const loadData = async partition => {
                 .catch(error => {
                     if (error.response) {
                         console.log('server responded');
-                        resolvedData.tasks = resolvedData.contracts = [];
+                        resolvedData.tasks = [];
                     } else if (error.request) {
                         console.log('network error');
-                        resolvedData.tasks = resolvedData.contracts = [];
+                        resolvedData.tasks = [];
                     } else {
                         console.log(error);
-                        resolvedData.tasks = resolvedData.contracts = [];
+                        resolvedData.tasks = [];
                     }
                 });
+            return resolvedData;
+        },
+        // Внутренние проекты
+        innerprojects: async () => {
+            const resolvedData = {};
+
+            await axios
+                .post(`${window.location.origin}/api/internalContracts`)
+                .then(response => {
+                    resolvedData.innerProjects = formData(response?.data, partition, null);
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.log('server responded');
+                        resolvedData.innerProjects = [];
+                    } else if (error.request) {
+                        console.log('network error');
+                        resolvedData.innerProjects = [];
+                    } else {
+                        console.log(error);
+                        resolvedData.innerProjects = [];
+                    }
+                });
+
             return resolvedData;
         }
     };
@@ -239,6 +264,11 @@ const getDisplayModes = partition => {
         // Персональные Задачи и Договоры
         personal: () => {
             const displayModes = TASKS_DATA_CONF?.displayModes;
+            return displayModes && displayModes.length !== 0 ? displayModes : [];
+        },
+        // Внутренние проекты
+        innerprojects: () => {
+            const displayModes = PROJECTS_DATA_CONF?.displayModes;
             return displayModes && displayModes.length !== 0 ? displayModes : [];
         }
     };
@@ -299,6 +329,11 @@ const getDataOperations = partition => {
         // Персональные Задачи и Договоры
         personal: () => {
             const dataOperations = TASKS_DATA_CONF?.dataOperations;
+            return dataOperations && dataOperations.length !== 0 ? dataOperations : [];
+        },
+        // Внутренние проекты
+        innerprojects: () => {
+            const dataOperations = PROJECTS_DATA_CONF?.dataOperations;
             return dataOperations && dataOperations.length !== 0 ? dataOperations : [];
         }
     };

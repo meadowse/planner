@@ -41,6 +41,9 @@ export const STATUSES_CONF = {
 export const DATA_CONVERSION_MAP = {
     contractNum: contractNum => contractNum ?? 'Нет данных',
     address: address => address ?? 'Нет данных',
+    project: project => project ?? 'Нет данных',
+    folderPath: folderPath => folderPath ?? 'Нет данных',
+    description: description => description ?? 'Нет данных',
     status: status => status ?? 'Без статуса',
     stage: stage => {
         return Object.keys(stage).length !== 0 && stage?.title
@@ -150,6 +153,18 @@ export const DATA_CONVERSION_MAP = {
         }
         return null;
     }
+};
+
+export const PROJECTS_DATA_CONF = {
+    title: 'Внутренние проекты',
+    displayModes: [
+        {
+            mode: 'Список проектов',
+            keyMode: 'listProjects',
+            modeOptions: [],
+            keys: ['project', 'stage', 'responsible', 'description', 'dateAdded', 'lastDate', 'folderPath']
+        }
+    ]
 };
 
 // Конфигурация по разделу "Задачи"

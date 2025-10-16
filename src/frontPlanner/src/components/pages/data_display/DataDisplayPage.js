@@ -248,6 +248,29 @@ function HeaderBottom(props) {
                     </div>
                 </div>
             );
+        },
+        // Внутренние проекты
+        innerprojects: () => {
+            return (
+                <div className="page-section-header__bottom">
+                    <div className="page-section-header__bottom-left">
+                        <input
+                            className="page-section__inpt-search"
+                            type="text"
+                            placeholder="Поиск по проектам"
+                            value={searchElem}
+                            onBlur={onFocusOut}
+                            onChange={e => setSearchElem(e.target.value)}
+                        />
+                        <DisplayModes
+                            displayModes={displayModes}
+                            mode={mode}
+                            onSelectMode={onSelectMode}
+                            onSelectOption={onSelectMode}
+                        />
+                    </div>
+                </div>
+            );
         }
     };
 
@@ -787,17 +810,36 @@ export default function DataDisplayPage({ partition }) {
                             }
                         />
                         <Route
-                            path="timetable"
+                            path="listProjects"
                             element={
                                 <Suspense fallback={<Preloader />}>
                                     <Await resolve={uploadedData}>
                                         {resolvedData => {
-                                            return <TimeTableMode />;
+                                            const filteredData = filterData(
+                                                resolvedData?.innerProjects,
+                                                simplifyData(
+                                                    extractSampleData(resolvedData?.innerProjects, valsToDisplay)
+                                                ),
+                                                searchElem
+                                            );
+                                            return (
+                                                <ListMode
+                                                    testData={filteredData ?? []}
+                                                    modeConfig={{
+                                                        keys: valsToDisplay,
+                                                        mode: mode,
+                                                        option: modeOption[mode?.key],
+                                                        partition: partition,
+                                                        dataOperations: dataOperations
+                                                    }}
+                                                />
+                                            );
                                         }}
                                     </Await>
                                 </Suspense>
                             }
                         />
+                        <Route path="timetable" element={<TimeTableMode />} />
                     </Routes>
                 ) : null}
             </div>

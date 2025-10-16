@@ -9,6 +9,7 @@ const KEYS_FOR_STORAGE = {
     equipment: keyMode => `equipment${keyMode ? `-${keyMode}` : ''}`,
     company: keyMode => `company${keyMode ? `-${keyMode}` : ''}`,
     personal: keyMode => `personal${keyMode ? `-${keyMode}` : ''}`,
+    innerprojects: keyMode => `innerprojects${keyMode ? `-${keyMode}` : ''}`,
     user: keyMode => `user${keyMode ? `-${keyMode}` : ''}`,
     dataform: keyMode => `dataform${keyMode ? `-${keyMode}` : ''}`
 };
