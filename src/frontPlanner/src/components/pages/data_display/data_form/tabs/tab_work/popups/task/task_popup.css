@@ -42,6 +42,10 @@
     grid-template-columns: 0.3fr 1.5fr 1.5fr;
 }
 
+.popup__task-form_hidden {
+    display: none;
+}
+
 .popup__wrapper-field {
     display: flex;
     flex-direction: column;
@@ -441,6 +445,10 @@
     overflow-y: auto;
 }
 
+.popup__table-wrapper_expand {
+    max-height: 500px;
+}
+
 .popup__table-wrapper_empty {
     padding: 1vw;
     display: flex;
@@ -543,6 +551,7 @@
 
 .popup__table-cell-user p {
     padding: 0;
+    cursor: pointer;
 }
 
 /* Блок "Времязатраты" */

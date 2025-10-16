@@ -114,6 +114,14 @@
     cursor: default;
 }
 
+/* Ячейки  "Номер телефона", "Почта" */
+
+.cell__phone,
+.cell__address {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 /* Ячейкa "Компания" */
 
 .cell__company {
@@ -308,6 +316,13 @@
 .cell__persons-list-item:hover {
     border-radius: 8px;
     background-color: #c5c6d0;
+}
+
+/* Ячейка "Отделы" */
+
+.cell__section {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 /* Ячейка "Название прибора" */

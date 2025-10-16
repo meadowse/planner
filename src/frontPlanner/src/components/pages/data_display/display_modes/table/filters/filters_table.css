@@ -4,7 +4,7 @@
 }
 
 .table-mode__thead-td {
-    padding: 0 0.5rem;
+    padding: 0.5rem;
 }
 
 .table__filters-inpt-filter,
@@ -15,13 +15,36 @@
     /* background-color: var(--bg-color-table-mode-filter-dropdown-list); */
 }
 
+/* Фильтр "Поле ввода" */
+
+.table__filters-inpt-filter {
+    padding: 5px 10px;
+    border: 1px solid var(--border-color-table-filters-inpt-filter);
+    border-radius: 5px;
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+}
+
 /* Фильтр "Выпадающий список" */
 
+.table__dropdown-filter {
+    padding: 5px 10px 5px 5px;
+    border: 1px solid var(--border-color-tabl-dropdown-filter);
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    background-color: var(--bg-color-table-dropdown-filter);
+    /* background-color: #343434; */
+    /* background-color: #f1f1f1; */
+    /* background-color: rgba(241, 241, 241, 0.7); */
+}
+
+/* Список выбранных элементов из выпадающего списка */
+
 .table__dropdown-filter-wrapper {
-    padding: 10px;
+    padding: 0 10px;
     display: grid;
     grid-template-rows: 1fr 1.5fr;
-    row-gap: 0.5vw;
+    row-gap: 0.25vw;
 }
 
 .table__selected-filters-wrapper {
@@ -32,8 +55,9 @@
 
 .table__selected-filters-list {
     display: flex;
-    column-gap: 0.5vw;
     flex-wrap: nowrap;
+    align-items: center;
+    column-gap: 0.5vw;
     position: absolute;
     inset: 0;
     overflow-x: auto;
@@ -41,11 +65,13 @@
 }
 
 .table__selected-filters-list-item {
-    padding: 10px 5px;
+    padding: 0 5px;
     display: flex;
     align-items: center;
     column-gap: 0.5vw;
+    border: 1px solid var(--border-color-tabl-dropdown-filter);
     border-radius: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     background-color: var(--bg-color-table__selected-filters-list-item);
 }
 
@@ -60,6 +86,53 @@
 
 .table__dropdown-filter option {
     background-color: var(--bg-color-dropdown-menu-option);
+}
+
+/* Выпадающий список с множественным выбором */
+
+.table__multiple-dropdown-filter {
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 1px solid var(--border-color-tabl-dropdown-filter);
+    border-radius: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    /* background-color: #343434; */
+    background-color: var(--bg-color-table-dropdown-filter);
+}
+
+.table__multiple-dropdown-filter p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.table__multiple-dropdown-filter span {
+    transform: rotate(90deg);
+}
+
+.table__multiple-filter-options {
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5vw;
+    position: absolute;
+    top: 125%;
+    left: 0;
+    border-radius: 8px;
+    background-color: var(--bg-color-table-dropdown-filter);
+    /* background-color: #444; */
+    z-index: 20;
+}
+
+.table__multiple-filter-option {
+    display: flex;
+    align-items: center;
+    column-gap: 0.5vw;
+    cursor: pointer;
 }
 
 .table-mode__thead-tr-reset-filters,

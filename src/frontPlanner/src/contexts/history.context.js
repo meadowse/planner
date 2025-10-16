@@ -20,11 +20,10 @@ export const HistoryProvider = ({ children }) => {
             if (!pathSegments.includes(unsavedRoute)) tempData.push(routeVal);
         });
 
+        localStorage.setItem('history', JSON.stringify(tempData));
+
         setRoute(routeVal);
-        setHistory(() => {
-            localStorage.setItem('history', JSON.stringify(tempData));
-            return tempData;
-        });
+        setHistory(tempData);
     };
 
     // const backToPrevPath = () => {
@@ -51,10 +50,9 @@ export const HistoryProvider = ({ children }) => {
             updatedHistory.splice(updatedHistory.length - 1, 1);
         }
 
-        setHistory(() => {
-            localStorage.setItem('history', JSON.stringify(updatedHistory));
-            return updatedHistory;
-        });
+        localStorage.setItem('history', JSON.stringify(updatedHistory));
+
+        setHistory(updatedHistory);
 
         return updatedHistory;
 

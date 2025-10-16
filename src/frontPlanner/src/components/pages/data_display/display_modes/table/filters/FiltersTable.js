@@ -317,16 +317,27 @@ function MultipleDropDownFilter(props) {
 
     // console.log(`MultipleDropDownFilter defaultVal: ${JSON.stringify(defaultVal, null, 4)}`);
 
+    const [expanded, setExpanded] = useState(false);
     const [selectedOptions, setSelectedOptions] = useState([]);
     const refSelectList = useRef(null);
 
     // Выбор элемента из списка
-    const handleChange = e => {
-        const tempData = [...new Set([...selectedOptions, e?.target?.value])];
+    // const handleChange = e => {
+    //     const tempData = [...new Set([...selectedOptions, e?.target?.value])];
+
+    //     if (tempData.includes('Все')) tempData.shift();
+
+    //     onMultipleSelectFilter(e?.target?.id, tempData);
+    //     setSelectedOptions(tempData);
+    // };
+
+    // Выбор элемента
+    const onChangeItem = value => {
+        const tempData = [...new Set([...selectedOptions, value])];
 
         if (tempData.includes('Все')) tempData.shift();
 
-        onMultipleSelectFilter(e?.target?.id, tempData);
+        onMultipleSelectFilter(id, tempData);
         setSelectedOptions(tempData);
     };
 
@@ -351,7 +362,7 @@ function MultipleDropDownFilter(props) {
 
     return (
         <div className="table__dropdown-filter-wrapper">
-            <select ref={refSelectList} id={id} className="table__dropdown-filter" value={null} onChange={handleChange}>
+            {/* <select ref={refSelectList} id={id} className="table__dropdown-filter" value={null} onChange={handleChange}>
                 <option value="default" selected disabled hidden>
                     Выберите статус
                 </option>
@@ -362,7 +373,35 @@ function MultipleDropDownFilter(props) {
                             {value}
                         </option>
                     ))}
-            </select>
+            </select> */}
+            <div className="table__multiple-dropdown-filter">
+                <p onClick={() => setExpanded(!expanded)}>
+                    Выберите статус
+                    <span>&#10095;</span>
+                </p>
+                {expanded && (
+                    <ul className="table__multiple-filter-options">
+                        {options &&
+                            options.length !== 0 &&
+                            options.map((value, ind) => (
+                                <li
+                                    className="table__multiple-filter-option"
+                                    key={value}
+                                    onClick={() => onChangeItem(value)}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id={`status${ind + 1}`}
+                                        name={`status${ind + 1}`}
+                                        value={value}
+                                        checked={selectedOptions.includes(value) || selectedOptions.includes('Все')}
+                                    />
+                                    <label for={`status${ind + 1}`}>{value}</label>
+                                </li>
+                            ))}
+                    </ul>
+                )}
+            </div>
             <div className="table__selected-filters-wrapper">
                 <ul className="table__selected-filters-list">
                     {isArray(selectedOptions) &&

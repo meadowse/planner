@@ -46,7 +46,6 @@ const ROUTES_FOR_AUTH = [
                 element: <Authentication />
             },
             {
-                // path: 'user/*',
                 path: 'user/:idEmployee/:tab/*',
                 loader: ({ params }) => {
                     const { tab, idEmployee } = params;

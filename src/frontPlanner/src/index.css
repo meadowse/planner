@@ -7,6 +7,7 @@ html {
 
 /* Светлая тема */
 html[data-theme='light'] {
+    --text-color-sections: #000;
     --text-color: #000;
     --hr-line-color: #dfdfdf;
     /* Задний фон */
@@ -34,6 +35,10 @@ html[data-theme='light'] {
     --border-color-table-mode-cell: #dfdfdf;
     --text-color-cell-stage: #000;
     --text-color-cell-subtitle: #a9a9a9;
+    /* Фильтры списка */
+    --border-color-table-filters-inpt-filter: #dcdcdc;
+    --border-color-table-dropdown-filter: #d3d3d3;
+    --bg-color-table-dropdown-filter: #f1f1f1;
     /* Режим отображения Список в разделе просмотра договора*/
     --bg-color-tab-work-table-mode-header-reset-filters: #fff;
     --bg-color-tab-work-table-mode-header: #f1f1f1;
@@ -72,6 +77,12 @@ html[data-theme='light'] {
     --bg-color-tab-general-image-actions: #fff;
     --text-color-dropdown-menu-services: #666666;
     --bg-color-tab-general-row-item-user: #f1f1f1;
+    /* Раздел Отделы */
+    --text-color-sections: #e8e9eb;
+    --color-details-open: #0c090a;
+    --color-details-title: #343434;
+    /* --color-details-is-open: #; */
+    --bg-color-details-employee-card: #e8e9eb;
     /* Раздел Работа и задачи */
     --bg-color-tab-work: #fff;
     --text-color-popup-content-title: #666;
@@ -131,6 +142,10 @@ html[data-theme='dark'] {
     --border-color-table-mode-cell: #adb5bd;
     --text-color-cell-stage: #000;
     --text-color-cell-subtitle: #a8a9ad;
+    /* Фильтры списка */
+    --border-color-table-filters-inpt-filter: #808080;
+    --border-color-tabl-dropdown-filter: #231f20;
+    --bg-color-table-dropdown-filter: #343434;
     /* Режим отображения Список в разделе просмотра договора*/
     --bg-color-tab-work-table-mode-header-reset-filters: #353535;
     --bg-color-tab-work-table-mode-header: #2d2c2a;
@@ -168,6 +183,11 @@ html[data-theme='dark'] {
     --bg-color-tab-general-image-actions: #4c4c4e;
     --text-color-dropdown-menu-services: #f1f1f1;
     --bg-color-tab-general-row-item-user: #4c4c4e;
+    /* Раздел Отделы */
+    --text-color-sections: #f1f1f1;
+    --color-details-open: #fafafa;
+    --color-details-title: #e8e9eb;
+    --bg-color-details-employee-card: #343434;
     /* Раздел Работа и задачи */
     --bg-color-tab-work: #353535;
     --text-color-popup-content-title: #bec3c6;

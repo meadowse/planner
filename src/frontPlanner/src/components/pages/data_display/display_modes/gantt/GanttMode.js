@@ -1,12 +1,12 @@
 import { startTransition, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import Cookies from 'js-cookie';
 import classNames from 'classnames';
 
 // Импорт компонентов
 import FiltersGantt from './filters/FiltersGantt';
 import TaskPopup from '@components/pages/data_display/data_form/tabs/tab_work/popups/task/TaskPopup';
-import TaskService from '@services/popups/popup_task.service';
 
 // Импорт конфигураций
 import { MONTHS } from '@config/calendar.config';
@@ -14,6 +14,10 @@ import { MONTHS } from '@config/calendar.config';
 // Импорт кастомных хуков
 import { useGanttMode } from '@hooks/useGanttMode';
 import { useFiltersGantt } from '@hooks/useFiltersGantt';
+
+// Импорт сервисов
+import GanttService from '@services/display_modes/gantt.service';
+import TaskService from '@services/popups/popup_task.service';
 
 // Импорт дополнительного функционала
 import { isObject, isArray, findNestedObj } from '@helpers/helper';
@@ -28,12 +32,10 @@ import {
 } from '@helpers/calendar';
 
 // Импорт контекста
-import { useHistoryContext } from '../../../../../contexts/history.context';
+import { useHistoryContext } from '@contexts/history.context';
 
 // Импорт стилей
 import './gantt_mode.css';
-import { createPortal } from 'react-dom';
-import GanttService from '../../../../../services/display_modes/gantt.service';
 
 function AssignedUser({ employee }) {
     const { addToHistory } = useHistoryContext();

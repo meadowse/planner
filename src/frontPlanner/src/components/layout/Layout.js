@@ -7,9 +7,9 @@ import Preloader from '@components/auxiliary_pages/loader/Preloader';
 import SideMenu from './side_menu/SideMenu';
 
 // Импорт контекстов
-import { useHistoryContext } from '../../contexts/history.context';
+import { useHistoryContext } from '@contexts/history.context';
 // import { SocketContext } from '../../contexts/socket.context';
-import { ThemeContext } from '../../contexts/theme.context';
+import { ThemeContext } from '@contexts/theme.context';
 
 // Импорт данных
 import menuItems from '@data/sideMenuData.json';
