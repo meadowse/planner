@@ -1481,6 +1481,9 @@ def internalContracts(request):
                 json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
                 for obj in json_result:
+                    project = {'project': {'title': obj.get('project'), 'id': obj.get('id')}}
+                    obj.update(project)
+                    obj.pop('id')
                     status = obj.get('stage')
                     stage = {'stage': {'title': status}}
                     obj.update(stage)
