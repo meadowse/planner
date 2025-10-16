@@ -1465,7 +1465,7 @@ def internalContracts(request):
                 T323.F5890 AS project,
                 T323.F5892 AS description,
                 T323.F5893 AS dateAdded,
-                T323.F5894 AS lustDate,
+                T323.F5894 AS lastDate,
                 T323.F5897 AS stage,
                 T323.F5898 AS folderPath,
                 responsible.ID AS responsibleId,
@@ -1476,7 +1476,7 @@ def internalContracts(request):
                 cur.execute(sql)
                 result = cur.fetchall()
                 # Преобразование результата в список словарей
-                columns = ('id', 'project', 'description', 'dateAdded', 'lustDate', 'stage', 'folderPath','responsibleId',
+                columns = ('id', 'project', 'description', 'dateAdded', 'lastDate', 'stage', 'folderPath','responsibleId',
                            'responsibleMMId', 'responsible')
                 json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
@@ -1498,18 +1498,18 @@ def internalContracts(request):
                     obj.pop('responsibleMMId')
                     dateAdded = {'dateAdded': {'title': '', 'value': obj.get('dateAdded')}}
                     obj.update(dateAdded)
-                    lustDate = obj.get('lustDate')
-                    if lustDate is not None:
-                        if status == 'В работе' and lustDate < today:
-                            lustDate = {
-                                'lustDate': {'title': 'Срок работы', 'value': obj.get('lustDate'), 'expired': True}}
+                    lastDate = obj.get('lastDate')
+                    if lastDate is not None:
+                        if status == 'В работе' and lastDate < today:
+                            lastDate = {
+                                'lastDate': {'title': 'Срок работы', 'value': obj.get('lastDate'), 'expired': True}}
                         else:
-                            lustDate = {
-                                'lustDate': {'title': 'Срок работы', 'value': obj.get('lustDate'), 'expired': False}}
+                            lastDate = {
+                                'lastDate': {'title': 'Срок работы', 'value': obj.get('lastDate'), 'expired': False}}
                     else:
-                        lustDate = {
-                            'lustDate': {'title': 'Срок работы', 'value': obj.get('lustDate'), 'expired': False}}
-                    obj.update(lustDate)
+                        lastDate = {
+                            'lastDate': {'title': 'Срок работы', 'value': obj.get('lastDate'), 'expired': False}}
+                    obj.update(lastDate)
                 end = perf_counter()
                 print(end - start)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
