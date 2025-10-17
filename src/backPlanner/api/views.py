@@ -1468,6 +1468,7 @@ def internalContracts(request):
                 T323.F5894 AS lastDate,
                 T323.F5897 AS stage,
                 T323.F5898 AS folderPath,
+                T323.F5895 AS channelId,
                 responsible.ID AS responsibleId,
                 responsible.F16 AS responsibleMMId,
                 responsible.F4886 AS responsible
@@ -1476,8 +1477,8 @@ def internalContracts(request):
                 cur.execute(sql)
                 result = cur.fetchall()
                 # Преобразование результата в список словарей
-                columns = ('id', 'project', 'description', 'dateAdded', 'lastDate', 'stage', 'folderPath','responsibleId',
-                           'responsibleMMId', 'responsible')
+                columns = ('id', 'project', 'description', 'dateAdded', 'lastDate', 'stage', 'folderPath', 'channelId',
+                           'responsibleId', 'responsibleMMId', 'responsible')
                 json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 today = datetime.date.today()
                 for obj in json_result:
