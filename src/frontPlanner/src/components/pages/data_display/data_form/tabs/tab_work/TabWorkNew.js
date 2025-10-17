@@ -1,20 +1,15 @@
-import { useContext, useEffect, useState } from 'react';
-import { useLocation, useLoaderData, useOutletContext } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { useEffect, useState } from 'react';
+import { useLoaderData, useOutletContext } from 'react-router-dom';
 
 // Импорт компонентов
 import ListMode from '@components/pages/data_display/display_modes/table/ListMode';
 import AddTaskToast from '@generic/elements/notifications/AddTaskToast';
 import Preloader from '../../../../../auxiliary_pages/loader/Preloader';
 
-// Импорт контекста
-// import { SocketContext } from '../../../../../../contexts/socket.context';
-
 // Импорт стилей
 import './tab_worknew.css';
 
 export default function TabWorkNew() {
-    // const socket = useContext(SocketContext);
     const { idContract, partition, popupConf } = useOutletContext();
     const { uploadedData } = useLoaderData();
 

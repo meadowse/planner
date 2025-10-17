@@ -11,15 +11,14 @@ import Authentication from '../authentication/Authentication';
 import DataDisplayService from '@services/data_display.service';
 import DataFormService from '@services/data_form.service';
 import UserService from '@services/user.service';
-import Preloader from '../components/auxiliary_pages/loader/Preloader';
-import UserInfo from '../components/pages/data_user/UserInfo';
+import Preloader from '@components/auxiliary_pages/loader/Preloader';
+import UserInfo from '@components/pages/data_user/UserInfo';
 import { queryClient } from '../query/queryClient';
 
 const DataDisplayPage = lazy(() => import('@components/pages/data_display/DataDisplayPage'));
 const DataForm = lazy(() => import('@components/pages/data_display/data_form/DataForm'));
 const ProjectForm = lazy(() => import('@components/pages/data_display/data_form/ProjectForm'));
 const TasksPage = lazy(() => import('@components/pages/tasks/TasksPage'));
-const ChatPage = lazy(() => import('@components/pages/chat/ChatPage'));
 // const UserInfo = lazy(() => import('@components/pages/data_user/UserInfo'));
 // const UserInfoNew = lazy(() => import('@components/pages/data_user/UserInfoNew'));
 const TabGeneral = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_general/TabGeneral'));

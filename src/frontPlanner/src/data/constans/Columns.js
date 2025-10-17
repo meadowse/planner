@@ -62,7 +62,6 @@ const COLUMNS = [
         sortable: false,
         sortBy: undefined,
         Cell: props => {
-            // console.log(`props.original.row: ${JSON.stringify(props.original.row, null, 4)}`);
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
 
@@ -908,15 +907,22 @@ const COLUMNS = [
             const navigate = useNavigate();
             const { addToHistory } = useHistoryContext();
 
-            function onShowInfoCard(event) {
+            function onShowInfoProject(event) {
                 // if (props.row.original?.) {}
                 const navigationArg = {
-                    state: { idProject: 5 }
+                    state: {
+                        channelId: props.row.original?.channelId,
+                        project: props.row.original?.project,
+                        tabForm: { key: 'general', title: 'Общие' },
+                        partition: props?.config?.partition,
+                        dataOperation: props?.config?.dataOperation
+                    }
                 };
 
                 addToHistory(`${window.location.pathname}`);
 
-                navigate('../../projectform/general/', navigationArg);
+                if (event.button === 1) {
+                } else navigate('../../projectform/general/', navigationArg);
             }
 
             return (
@@ -924,10 +930,10 @@ const COLUMNS = [
                     className="cell__num"
                     // onClick={e => {
                     //     e.stopPropagation();
-                    //     onShowInfoCard(e);
+                    //     onShowInfoProject(e);
                     // }}
                 >
-                    {props.value ? props.value : 'Нет данных'}
+                    {props.value && Object.keys(props.value).length > 0 ? props.value?.title : 'Нет данных'}
                 </p>
             );
         }
@@ -949,10 +955,6 @@ const COLUMNS = [
                     navigate(`../../user/${employee?.mmId}/profile/profile/`, {
                         state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
                     });
-
-                    // navigate(`../../user/profile/`, {
-                    //     state: { idEmployee: employee?.mmId, path: `${window.location.pathname}` }
-                    // });
                 });
             }
 

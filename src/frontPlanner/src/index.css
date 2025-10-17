@@ -68,6 +68,8 @@ html[data-theme='light'] {
     /* Формы заполнения данных */
     --bg-color-section-dataform: #f1f1f1;
     --bg-color-section-dataform-tab-active: #fff;
+    --bg-color-section-projectform: #f1f1f1;
+    --bg-color-section-projectform-tab-active: #fff;
     /* Раздел Общие данные по договору */
     --bg-color-tab-general: #f1f1f1;
     --bg-color-icon-btn-save: #e0e8b2;
@@ -174,6 +176,8 @@ html[data-theme='dark'] {
     /* Формы заполнения данных */
     --bg-color-section-dataform: #2c2b29;
     --bg-color-section-dataform-tab-active: #353535;
+    --bg-color-section-projectform: #2c2b29;
+    --bg-color-section-projectform-tab-active: #353535;
     /* Раздел Общие данные по договору */
     --bg-color-tab-general: #2c2b29;
     --bg-color-icon-btn-save: #3da35d;

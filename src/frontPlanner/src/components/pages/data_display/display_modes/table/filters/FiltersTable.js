@@ -303,6 +303,7 @@ function DropDownFilter(props) {
 
 function MultipleDropDownFilter(props) {
     const { id, defaultVal, options, toggle, onMultipleSelectFilter } = props;
+    const { data: optionsData, info } = options;
 
     // console.log(`MultipleDropDownFilter defaultVal: ${JSON.stringify(defaultVal, null, 4)}`);
 
@@ -348,9 +349,9 @@ function MultipleDropDownFilter(props) {
             </p>
             {expanded && (
                 <ul className="table__multiple-filter-options">
-                    {options &&
-                        options.length !== 0 &&
-                        options.map((value, ind) => (
+                    {optionsData &&
+                        optionsData.length !== 0 &&
+                        optionsData.map((value, ind) => (
                             <li
                                 className="table__multiple-filter-option"
                                 key={value}
@@ -361,7 +362,7 @@ function MultipleDropDownFilter(props) {
                                     name={`status${ind + 1}`}
                                     checked={selectedOptions.includes(value) || selectedOptions.includes('Все')}
                                 />
-                                <p>{value}</p>
+                                <p>{String(`${value} (${info.get(value)})`)}</p>
                             </li>
                         ))}
                 </ul>
