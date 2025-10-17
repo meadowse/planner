@@ -1,68 +1,83 @@
-import { startTransition, useState } from 'react';
-import { useLoaderData, useLocation, useNavigate } from 'react-router-dom';
+import { startTransition, useEffect, useState } from 'react';
+import { useLocation, useLoaderData, useNavigate, Outlet } from 'react-router-dom';
 import classNames from 'classnames';
-
-// Импорт компонетов
-import TabGeneral from './tabs/tab_general/TabGeneral';
-import TabWorkNew from './tabs/tab_work/TabWorkNew';
-import TabDepartures from './tabs/tab_departures/TabDepartures';
-import TabContractors from './tabs/tab_contractors/TabContractors';
-import TabDocuments from './tabs/tab_documents/TabDocuments';
-import TabEquipment from './tabs/tab_equipment/TabEquipment';
-
-import IconButton from '@generic/elements/buttons/IcButton';
+import axios from 'axios';
 
 // Импорт сервисов
 import DataFormService from '@services/data_form.service';
 
+// Импорт контекста
+import { useHistoryContext } from '../../../../contexts/history.context';
+
 // Импорт стилей
 import './data_form.css';
 
-function FormHeader({ title }) {
-    const navigate = useNavigate();
+// Интеграция с Mattermost
+function MattermostIntegration({ channelId }) {
+    return (
+        <div className="section__dataform-frame-wrapper">
+            <iframe
+                title="Mattermost"
+                src={`https://mm-mpk.ru/mosproektkompleks/channels/${channelId}`}
+                style={{ width: '100%', height: '100%', border: 'none' }}
+            />
+        </div>
+    );
+}
 
-    function onSelectAction(value) {}
+function FormHeader(props) {
+    const { data, config, navigate } = props;
+    const { history, backToPrevPath } = useHistoryContext();
 
     function onCancelAction() {
         startTransition(() => {
-            navigate('/');
+            // alert(`prevpath: ${config?.prevPath}`);
+            // navigate(`../../${config?.prevPath}`);
+            setTimeout(() => {
+                backToPrevPath();
+            }, 1000);
+
+            navigate(`../../${history[history.length - 1]}`);
         });
     }
 
     return (
         <div className="section__dataform-header">
             <div className="section__dataform-header-left">
-                <h2 className="section__dataform-header-title">
-                    <span>{title ? title : 'Нет данных'}</span>
-                </h2>
-                <img className="section__dataform-header-img" src="/img/edit.svg" alt="Edit" />
+                <h2 className="section__dataform-header-title">{data?.title ?? 'Нет данных'}</h2>
+                <h3 className="section__dataform-header-subtitle">
+                    <span>{data?.subTitle ?? 'Нет данных'}</span>
+                </h3>
             </div>
             <div className="section__dataform-header-right">
-                <IconButton
-                    nameClass="icon-btn__save icon-btn"
-                    idForm="general_form"
-                    type="submit"
-                    text="Сохранить"
-                    icon="check_mark.svg"
-                />
-                <IconButton
-                    nameClass="icon-btn__cancel icon-btn"
-                    type="button"
-                    text="Отменить"
-                    icon="cancel_bl.svg"
-                    onClick={onCancelAction}
-                />
+                <button className="icon-btn__save icon-btn" form="general_form">
+                    Сохранить<span>&#10003;</span>
+                </button>
+                <button className="icon-btn__cancel icon-btn" onClick={onCancelAction}>
+                    Отменить<span>&#10006;</span>
+                </button>
             </div>
         </div>
     );
 }
 
 function TabsHeader(props) {
-    const { tabs, tab, tabClick } = props;
+    const { tabs, tab, config, tabClick, navigate } = props;
+
+    // console.log(`TabsHeader config: ${JSON.stringify(config, null, 4)}`);
+    // console.log(`Selected tab: ${JSON.stringify(tab, null, 4)}`);
+
+    const NAVIGATION_CONF = {
+        works: item => navigate(`${item?.key}/${config?.idContract}`, { state: config }),
+        default: item => navigate(`${item?.key}/`, { state: config })
+    };
 
     function onTabClick(item) {
         localStorage.setItem('selectedTab', JSON.stringify(item));
         tabClick(item);
+        // console.log(`config: ${JSON.stringify(config, null, 4)}`);
+        if (item?.key in NAVIGATION_CONF) NAVIGATION_CONF[item?.key](item);
+        else NAVIGATION_CONF?.default(item);
     }
 
     return (
@@ -84,90 +99,78 @@ function TabsHeader(props) {
     );
 }
 
-function TabsContent(props) {
-    const { idCard, partition, tab, data, dataOperation } = props;
-
-    console.log(`tab: ${JSON.stringify(tab, null, 4)}`);
-    // console.log(`idCard: ${idCard}\nsubsectionData: ${JSON.stringify(subsectionData, null, 4)}`);
-    // console.log(`cardData: ${JSON.stringify(data, null, 4)}`);
-
-    const TABS_NEW = {
-        // Производство
-        department: {
-            general: <TabGeneral idCard={idCard} data={data} dataOperation={dataOperation} />,
-            works: <TabWorkNew idContract={data?.id} partition={partition} tab={tab?.key} />,
-            contractors: <TabContractors />,
-            documents: <TabDocuments />,
-            default: <p>Нет данных</p>
-        },
-        // Оборудование
-        equipment: {
-            default: <TabEquipment />
-        },
-        default: <p>Нет данных</p>
-    };
-
-    if (TABS_NEW[partition]) {
-        if (TABS_NEW[partition][tab?.key]) {
-            return <div className="section__dataform-tabs-content">{TABS_NEW[partition][tab?.key]}</div>;
-        } else return TABS_NEW[partition].default;
-    } else return TABS_NEW.default;
-}
-
 function Tabs(props) {
-    const { id, partition, tabs, data, options, dataOperation } = props;
-    const [tab, setTab] = useState(JSON.parse(localStorage.getItem('selectedTab')) || tabs[0]);
+    const { tabs, config, navigate } = props;
+    console.log(`config: ${JSON.stringify(config, null, 4)}`);
 
-    // console.log(`partition: ${partition}`);
+    const [tab, setTab] = useState(tabs[0] || {});
 
-    const PARTITION_CONF = {
-        department: (
-            <>
-                <TabsHeader tabs={tabs} tab={tab} tabClick={setTab} />
-                <TabsContent
-                    idCard={id}
-                    partition={partition}
-                    tab={tab}
-                    data={data}
-                    options={options}
-                    dataOperation={dataOperation}
-                />
-            </>
-        ),
-        equipment: (
-            <TabsContent
-                idCard={id}
-                partition={partition}
-                tab={tab}
-                data={data}
-                options={options}
-                dataOperation={dataOperation}
-            />
-        )
-    };
+    useEffect(() => {
+        const savedTab = JSON.parse(localStorage.getItem('selectedTab'));
+        if (savedTab && Object.keys(savedTab).length !== 0) setTab(savedTab);
+    }, []);
 
-    return <div className="section__dataform-tabs">{partition ? PARTITION_CONF[partition] : null}</div>;
+    return (
+        <div className="section__dataform-tabs">
+            <TabsHeader tabs={tabs} tab={tab} config={config} tabClick={setTab} navigate={navigate} />
+            <div className="section__dataform-tabs-content">
+                <Outlet context={config} />
+                <MattermostIntegration channelId={config?.data?.channelId} />
+            </div>
+        </div>
+    );
 }
 
-export default function DataForm() {
-    const { state } = useLocation();
-    const options = useLoaderData();
+export default function DataFormNew() {
+    const uploadedData = useLoaderData();
+    const navigate = useNavigate();
+    // const { state } = useLocation();
 
-    // console.log(`Loader options: ${JSON.stringify(options, null, 4)}`);
-    // const { idCard } = state && Object.keys(state).length !== 0 ? state : { idCard: null };
-    // console.log(`state: ${JSON.stringify(state, null, 4)}`);
+    const location = useLocation();
+    const [prevPath] = useState(location?.state?.path);
+
+    // console.log(`DataFormNew state args: ${JSON.stringify(state, null, 4)}`);
+    // console.log(`DataFormNew configData: ${JSON.stringify(configData, null, 4)}`);
+    // console.log(`DataFormNew state: ${JSON.stringify(location?.state, null, 4)}`);
+
+    function getConfigData() {
+        const queryParams = new URLSearchParams(location.search);
+        const queryData = JSON.parse(decodeURIComponent(queryParams.get('data')));
+
+        // console.log(`section__dataform: ${JSON.stringify(queryData, null, 4)}`);
+
+        if (queryData && Object.keys(queryData).length !== 0) {
+            return {
+                idContract: queryData?.idContract || localStorage.getItem('idContract') || -1,
+                partition: queryData?.partition,
+                dataOperation: queryData?.dataOperation,
+                tabForm: queryData?.tabForm,
+                data: uploadedData
+            };
+        } else {
+            return {
+                idContract: location?.state?.idContract || localStorage.getItem('idContract') || -1,
+                partition: location?.state?.partition,
+                dataOperation: location?.state?.dataOperation,
+                tabForm: location?.state?.tabForm,
+                data: uploadedData
+            };
+        }
+    }
 
     return (
         <section className="section__dataform">
-            <FormHeader title={state?.data?.address} />
-            <Tabs
-                id={-1}
-                partition={state?.partition}
-                tabs={DataFormService.getOptions('tabs')}
-                data={state?.data}
-                options={options}
-                dataOperation={state?.dataOperation}
+            <FormHeader
+                // data={{ contractNum: uploadedData?.contractNum, address: uploadedData?.address }}
+                data={{
+                    title: uploadedData?.address || uploadedData?.equipment?.title,
+                    subTitle: uploadedData?.contractNum || uploadedData?.equipment?.model
+                }}
+                config={{ prevPath }}
+                navigate={navigate}
             />
+            {/* {PARTITION_CONF[state?.partition] ? PARTITION_CONF[state?.partition]() : PARTITION_CONF?.default()} */}
+            <Tabs tabs={DataFormService.getOptions('tabs')} config={getConfigData()} navigate={navigate} />
         </section>
     );
 }

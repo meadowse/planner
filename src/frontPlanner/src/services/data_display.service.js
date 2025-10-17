@@ -19,6 +19,17 @@ import EMPLOYEES from '@data/usersData.json';
 
 const formData = (data, partition, key) => {
     const PARTITION_CONF = {
+        default: () => {
+            return data && isArray(data) && data.length !== 0
+                ? data?.map(item => {
+                      const newItem = {};
+                      Object.keys(item).map(key => {
+                          newItem[key] = DATA_CONVERSION_MAP[key] ? DATA_CONVERSION_MAP[key](item[key]) : item[key];
+                      });
+                      return newItem;
+                  })
+                : [];
+        },
         // Компания
         company: () => {
             const COMPANY_CONF = {
@@ -79,17 +90,6 @@ const formData = (data, partition, key) => {
                 }
             };
             return key ? COMPANY_CONF[key]() : [];
-        },
-        default: () => {
-            return data && isArray(data) && data.length !== 0
-                ? data?.map(item => {
-                      const newItem = {};
-                      Object.keys(item).map(key => {
-                          newItem[key] = DATA_CONVERSION_MAP[key] ? DATA_CONVERSION_MAP[key](item[key]) : item[key];
-                      });
-                      return newItem;
-                  })
-                : [];
         }
     };
     return PARTITION_CONF[partition] ? PARTITION_CONF[partition]() : PARTITION_CONF.default();
