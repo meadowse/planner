@@ -103,6 +103,13 @@ export default function ListMode(props) {
             };
             return <Cell cellData={cellData} cellConfig={config} />;
         },
+        project: cellData => {
+            const config = {
+                partition: modeConfig?.partition,
+                dataOperation: findNestedObj(modeConfig?.dataOperations, 'key', 'update')
+            };
+            return <Cell cellData={cellData} cellConfig={config} />;
+        },
         task: cellData => {
             const config = {
                 idContract: data[cellData?.indRow]?.contractId,

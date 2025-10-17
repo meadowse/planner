@@ -7,7 +7,7 @@ import axios from 'axios';
 import DataFormService from '@services/data_form.service';
 
 // Импорт контекста
-import { useHistoryContext } from '../../../../contexts/history.context';
+import { useHistoryContext } from '@contexts/history.context';
 
 // Импорт стилей
 import './project_form.css';
@@ -45,14 +45,11 @@ function FormHeader(props) {
         <div className="section__projectform-header">
             <div className="section__projectform-header-left">
                 <h2 className="section__projectform-header-title">{data?.title ?? 'Нет данных'}</h2>
-                <h3 className="section__projectform-header-subtitle">
-                    <span>{data?.subTitle ?? 'Нет данных'}</span>
-                </h3>
             </div>
             <div className="section__projectform-header-right">
-                <button className="icon-btn__save icon-btn" form="general_form">
+                {/* <button className="icon-btn__save icon-btn" form="general_form">
                     Сохранить<span>&#10003;</span>
-                </button>
+                </button> */}
                 <button className="icon-btn__cancel icon-btn" onClick={onCancelAction}>
                     Отменить<span>&#10006;</span>
                 </button>
@@ -68,7 +65,6 @@ function TabsHeader(props) {
     // console.log(`Selected tab: ${JSON.stringify(tab, null, 4)}`);
 
     const NAVIGATION_CONF = {
-        works: item => navigate(`${item?.key}/${config?.idContract}`, { state: config }),
         default: item => navigate(`${item?.key}/`, { state: config })
     };
 
@@ -114,7 +110,7 @@ function Tabs(props) {
             <TabsHeader tabs={tabs} tab={tab} config={config} tabClick={setTab} navigate={navigate} />
             <div className="section__projectform-tabs-content">
                 <Outlet context={config} />
-                {/* <MattermostIntegration channelId={config?.data?.channelId} /> */}
+                <MattermostIntegration channelId={config?.channelId} />
             </div>
         </div>
     );
@@ -127,17 +123,28 @@ export default function ProjectForm() {
     const location = useLocation();
     const [prevPath] = useState(location?.state?.path);
 
-    function getConfigData() {}
+    function getConfigData() {
+        const queryParams = new URLSearchParams(location.search);
+        const queryData = JSON.parse(decodeURIComponent(queryParams.get('data')));
+
+        if (queryData && Object.keys(queryData).length !== 0) {
+        } else {
+            return {
+                channelId: location?.state?.channelId ?? -1
+            };
+        }
+    }
+
     return (
         <section className="section__projectform">
-            {/* <FormHeader
+            <FormHeader
                 data={{
-                    title: uploadedData?.project
+                    // title: uploadedData?.project?.title
+                    title: location?.state?.project?.title
                 }}
                 config={{ prevPath }}
                 navigate={navigate}
-            /> */}
-            {/* {PARTITION_CONF[state?.partition] ? PARTITION_CONF[state?.partition]() : PARTITION_CONF?.default()} */}
+            />
             <Tabs tabs={[{ key: 'general', title: 'Общие' }]} config={getConfigData()} navigate={navigate} />
         </section>
     );

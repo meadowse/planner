@@ -76,6 +76,7 @@ export const OPTIONS_FILTER_CONF = {
     status: data => {
         if (data && data.length !== 0) {
             const newData = [];
+            const info = new Map();
 
             const tempData = Array.from(
                 new Set(
@@ -86,13 +87,21 @@ export const OPTIONS_FILTER_CONF = {
                 )
             );
 
-            // console.log(`status: ${JSON.stringify(tempData, null, 4)}`);
-
             tempData.forEach(item => {
                 if (item) newData.push(item);
+                info.set(
+                    item,
+                    data?.reduce((sum, elem) => {
+                        if (elem?.status === item) sum += 1;
+                        return sum;
+                    }, 0)
+                );
             });
 
-            return newData;
+            return {
+                data: newData,
+                info
+            };
         }
     },
     dateOfEnding: data => {

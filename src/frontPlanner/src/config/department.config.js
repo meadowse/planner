@@ -1,7 +1,3 @@
-// Импорт доп.функционала
-import { isObject } from '@helpers/helper';
-import { id } from 'date-fns/locale';
-
 // Конфигурация по стадиям
 export const STAGES_CONF_MAP = {
     'Без стадии': '#e9ecef',
