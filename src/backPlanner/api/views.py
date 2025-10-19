@@ -683,7 +683,7 @@ def addTask(request):
             message += 'Статус: :new: *Новая* :new:\n:large_yellow_circle: *Задача ожидает исполнения...*'
             data = {'channel_id': idChannel, 'message': message}
             response = requests.post(
-                f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data, headers=headers)
+                f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data, headers=headers_notify_tasks_bot)
             idMessage = response.json().get('id')
             cur.execute(f'SELECT GEN_ID(GEN_T218, 1) FROM RDB$DATABASE')
             ID = cur.fetchonemap().get('GEN_ID', None)
@@ -800,7 +800,7 @@ def editTask(request):
             rootId = cur.fetchone()[0]
             data = {'channel_id': idChannel, 'message': message, 'root_id': rootId}
             response = requests.post(f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data,
-                                     headers=headers)
+                                     headers=headers_notify_tasks_bot)
         return JsonResponse({'status': response.json()}, status=response.status_code)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
@@ -845,7 +845,7 @@ def deleteTask(request):
                         message = f"**Удалена :hammer_and_wrench: Задача :hammer_and_wrench: by @{director}**"
                         data = {'channel_id': idChannel, 'message': message, 'root_id': rootId}
                         response = requests.post(f"{MATTERMOST_URL}:{MATTERMOST_PORT}/api/v4/posts", json=data,
-                                                 headers=headers)
+                                                 headers=headers_notify_tasks_bot)
                         return JsonResponse({'status': response.json()}, status=response.status_code)
                     else:
                         return JsonResponse({'error': f"НЕ удалось удалить задачу {taskId}, т.к. у задачи присутствуют записи по отчётам времязатрат"}, status=500)
