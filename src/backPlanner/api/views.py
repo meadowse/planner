@@ -554,8 +554,7 @@ def getTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         taskId = obj.get('taskId')
-        with (((firebirdsql.connect(host=host, database=database, user=user, password=password,
-                                 charset=charset) as con))):
+        with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
                 sql = f'SELECT F5646 AS parentId FROM T218 WHERE ID = {taskId}'
