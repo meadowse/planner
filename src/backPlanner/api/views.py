@@ -879,6 +879,33 @@ def getAllDepartmentsStaffAndTasks(request):
     with (firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con):
         cur = con.cursor()
         try:
+            # sql = """SELECT sectionId,
+            # sectionName,
+            # employeeId,
+            # employeeName,
+            # photo,
+            # LIST(contractId || '$' || contractNum || '$' || address || '$' || dateOfStart || '$' || dateOfEnding || '$' || contractStage || '$' || CASE WHEN tasks IS NULL THEN '' ELSE tasks END, '^') AS contracts
+            # FROM (SELECT T5.ID AS sectionId,
+            # T5.F26 AS sectionName,
+            # T3.F16 AS employeeId,
+            # T3.F4886 AS employeeName,
+            # T3.F4887SRC as photo,
+            # T212.ID AS contractId,
+            # T212.F4538 AS contractNum,
+            # T212.F4946 AS address,
+            # T212.F4610 AS dateOfStart,
+            # T212.F4566 AS dateOfEnding,
+            # T212.F4544 AS contractStage,
+            # LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
+            # FROM T5
+            # LEFT JOIN T3 ON T5.ID = T3.F27
+            # LEFT JOIN T253 ON T3.ID = T253.F5022
+            # LEFT JOIN T212 ON T253.F5024 = T212.ID
+            # LEFT JOIN T218 ON T212.ID = T218.F4691
+            # LEFT JOIN T3 director ON T218.F4693 = director.ID
+            # LEFT JOIN T3 executor ON T218.F4694 = executor.ID
+            # WHERE T3.F5383 = 1
+            # GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) tasks GROUP BY 1, 2, 3, 4, 5"""
             sql = """SELECT sectionId,
             sectionName,
             employeeId,
@@ -901,10 +928,10 @@ def getAllDepartmentsStaffAndTasks(request):
             LEFT JOIN T3 ON T5.ID = T3.F27
             LEFT JOIN T253 ON T3.ID = T253.F5022
             LEFT JOIN T212 ON T253.F5024 = T212.ID
-            LEFT JOIN T218 ON T212.ID = T218.F4691
+            LEFT JOIN T218 ON T212.ID = T218.F4691 AND T218.F4697 = 0
             LEFT JOIN T3 director ON T218.F4693 = director.ID
             LEFT JOIN T3 executor ON T218.F4694 = executor.ID
-            WHERE T3.F5383 = 1
+            WHERE T3.F5383 = 1 AND (T3.ID = director.ID OR T3.ID = executor.ID)
             GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) tasks GROUP BY 1, 2, 3, 4, 5"""
             cur.execute(sql)
             result = cur.fetchall()
