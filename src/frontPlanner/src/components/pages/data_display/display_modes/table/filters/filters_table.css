@@ -12,7 +12,6 @@
     width: 100%;
     outline: none;
     background-color: inherit;
-    /* background-color: var(--bg-color-table-mode-filter-dropdown-list); */
 }
 
 /* Фильтр "Поле ввода" */
@@ -33,9 +32,6 @@
     cursor: pointer;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     background-color: var(--bg-color-table-dropdown-filter);
-    /* background-color: #343434; */
-    /* background-color: #f1f1f1; */
-    /* background-color: rgba(241, 241, 241, 0.7); */
 }
 
 /* Список выбранных элементов из выпадающего списка */
@@ -98,7 +94,6 @@
     border: 1px solid var(--border-color-tabl-dropdown-filter);
     border-radius: 8px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    /* background-color: #343434; */
     background-color: var(--bg-color-table-dropdown-filter);
 }
 
@@ -106,6 +101,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    column-gap: 10px;
     cursor: pointer;
 }
 
@@ -124,7 +120,6 @@
     left: 0;
     border-radius: 8px;
     background-color: var(--bg-color-table-dropdown-filter);
-    /* background-color: #444; */
     z-index: 20;
 }
 
@@ -137,7 +132,6 @@
 
 .table-mode__thead-tr-reset-filters,
 .table-mode__thead-tr-filters {
-    /* background-color: #fff; */
     background-color: var(--bg-color-table-mode-header-reset-filters);
 }
 

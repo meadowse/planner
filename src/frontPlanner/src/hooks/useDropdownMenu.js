@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 
 // Импорт сервисов
-import DataFormService from '@services/data_form.service';
+import DataFormService from '@services/forms/data_form.service';
 
 export const useDropdownMenu = params => {
     const { keyMenu, nameMenu, additClass, dataSource, specifiedVal, onItemClick } = params;

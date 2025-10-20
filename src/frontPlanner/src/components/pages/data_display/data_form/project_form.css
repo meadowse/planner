@@ -1,10 +1,9 @@
 .section__projectform {
-    padding: calc(1.25rem + 0.3vw);
+    padding: 10px;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    /* align-items: stretch; */
     row-gap: calc(1.25rem + 0.3vw);
     border-radius: 0.3125rem;
     background-color: var(--bg-color-section-projectform);
@@ -92,9 +91,9 @@
 
 .section__projectform-tabs-content {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1.75fr 1fr;
     align-items: center;
-    column-gap: calc(10px + 0.3vw);
+    column-gap: 1vw;
 }
 
 .section__projectform-tabs-header {
@@ -122,14 +121,21 @@
     height: 100%;
 }
 
-.section__tab,
-.tab-project__main {
-    width: 100%;
-    height: 100%;
-}
-
-.tab-project__main {
+.section__projectform-frame-wrapper_empty {
     display: flex;
     flex-direction: column;
-    row-gap: 1vw;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    background-color: #353535;
+}
+
+.section__projectform-info-message {
+    font-size: calc(0.75rem + 0.6875 * (100vw - 20rem) / 100);
+    font-family: 'Montserrat-SemiBold';
+}
+
+.section__tab {
+    width: 100%;
+    height: 100%;
 }

@@ -912,26 +912,25 @@ const COLUMNS = [
                 const navigationArg = {
                     state: {
                         channelId: props.row.original?.channelId,
-                        project: props.row.original?.project,
+                        projectData: props.row.original,
                         tabForm: { key: 'general', title: 'Общие' },
-                        partition: props?.config?.partition,
-                        dataOperation: props?.config?.dataOperation
+                        partition: props?.config?.partition
                     }
                 };
 
                 addToHistory(`${window.location.pathname}`);
 
                 if (event.button === 1) {
-                } else navigate('../../projectform/general/', navigationArg);
+                } else navigate(`/projectform/general/${props.row.original?.project?.id}`, navigationArg);
             }
 
             return (
                 <p
                     className="cell__num"
-                    // onClick={e => {
-                    //     e.stopPropagation();
-                    //     onShowInfoProject(e);
-                    // }}
+                    onClick={e => {
+                        e.stopPropagation();
+                        onShowInfoProject(e);
+                    }}
                 >
                     {props.value && Object.keys(props.value).length > 0 ? props.value?.title : 'Нет данных'}
                 </p>

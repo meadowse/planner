@@ -1,10 +1,6 @@
-import { startTransition, useEffect, useState } from 'react';
+import { startTransition, useState } from 'react';
 import { useLocation, useLoaderData, useNavigate, Outlet } from 'react-router-dom';
 import classNames from 'classnames';
-import axios from 'axios';
-
-// Импорт сервисов
-import DataFormService from '@services/data_form.service';
 
 // Импорт контекста
 import { useHistoryContext } from '@contexts/history.context';
@@ -15,12 +11,20 @@ import './project_form.css';
 // Интеграция с Mattermost
 function MattermostIntegration({ channelId }) {
     return (
-        <div className="section__projectform-frame-wrapper">
-            <iframe
-                title="Mattermost"
-                src={`https://mm-mpk.ru/mosproektkompleks/channels/${channelId}`}
-                style={{ width: '100%', height: '100%', border: 'none' }}
-            />
+        <div
+            className={classNames('section__projectform-frame-wrapper', {
+                'section__projectform-frame-wrapper_empty': !channelId || channelId === -1
+            })}
+        >
+            {!channelId || channelId === -1 ? (
+                <h2 className="section__projectform-info-message">Канал не найден</h2>
+            ) : (
+                <iframe
+                    title="Mattermost"
+                    src={`https://mm-mpk.ru/mosproektkompleks/channels/${channelId}`}
+                    style={{ width: '100%', height: '100%', border: 'none' }}
+                />
+            )}
         </div>
     );
 }
@@ -96,14 +100,8 @@ function TabsHeader(props) {
 
 function Tabs(props) {
     const { tabs, config, navigate } = props;
-    console.log(`config: ${JSON.stringify(config, null, 4)}`);
 
     const [tab, setTab] = useState(tabs[0] || {});
-
-    useEffect(() => {
-        const savedTab = JSON.parse(localStorage.getItem('selectedTab'));
-        if (savedTab && Object.keys(savedTab).length !== 0) setTab(savedTab);
-    }, []);
 
     return (
         <div className="section__projectform-tabs">
@@ -117,10 +115,11 @@ function Tabs(props) {
 }
 
 export default function ProjectForm() {
-    const uploadedData = useLoaderData();
-    const navigate = useNavigate();
+    const tabs = [{ key: 'general', title: 'Общие' }];
 
     const location = useLocation();
+    const navigate = useNavigate();
+
     const [prevPath] = useState(location?.state?.path);
 
     function getConfigData() {
@@ -130,7 +129,9 @@ export default function ProjectForm() {
         if (queryData && Object.keys(queryData).length !== 0) {
         } else {
             return {
-                channelId: location?.state?.channelId ?? -1
+                channelId: location?.state?.channelId ?? -1,
+                partition: location?.state?.partition,
+                projectData: location?.state?.projectData ?? []
             };
         }
     }
@@ -139,13 +140,12 @@ export default function ProjectForm() {
         <section className="section__projectform">
             <FormHeader
                 data={{
-                    // title: uploadedData?.project?.title
-                    title: location?.state?.project?.title
+                    title: location?.state?.projectData?.project?.title
                 }}
                 config={{ prevPath }}
                 navigate={navigate}
             />
-            <Tabs tabs={[{ key: 'general', title: 'Общие' }]} config={getConfigData()} navigate={navigate} />
+            <Tabs tabs={tabs} config={getConfigData()} navigate={navigate} />
         </section>
     );
 }

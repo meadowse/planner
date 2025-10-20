@@ -23,7 +23,6 @@
 
 .tab-general-row__title {
     font-family: 'Montserrat-SemiBold';
-    /* color: #666666; */
     color: var(--text-color-tab-general-row-title);
 }
 
