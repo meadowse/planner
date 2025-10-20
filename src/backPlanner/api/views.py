@@ -24,13 +24,27 @@ def getAgreements(request):
         T212.F4566 AS dateOfEnding,
         T237.F4890 AS services,
         T205.F4331 AS customer,
-        LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358, '*') AS contacts,
-        LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
+        LIST(DISTINCT T206.F4359 || '^' ||
+        T206.F4356 || '^' ||
+        T206.F4357 || '^' ||
+        T206.F4358, '*') AS contacts,
+        LIST(DISTINCT CASE WHEN participants.F16 IS NULL THEN '' ELSE participants.F16 END || ';' ||
+        participants.F4886) AS participants,
         responsible.F16 AS idMMResponsible,
         responsible.F4886 AS responsible,
         manager.F16 AS idMMManager,
         manager.F4886 AS manager,
-        LIST(DISTINCT T218.F4695 || '&' || T218.F5569 || '&' || T218.F4696 || '&' || T218.F4697 || '&' || T218.ID || '&' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || '&' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || '&' || director.F16 || '&' || director.F4886 || '&' || executor.F16 || '&' || executor.F4886, '^') AS tasks
+        LIST(DISTINCT CASE WHEN T218.F4695 IS NULL THEN '' ELSE T218.F4695 END || '&' ||
+        CASE WHEN T218.F5569 IS NULL THEN '' ELSE T218.F5569 END || '&' ||
+        T218.F4696 || '&' ||
+        T218.F4697 || '&' ||
+        T218.ID || '&' ||
+        CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || '&' ||
+        CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || '&' ||
+        CASE WHEN director.F16 IS NULL THEN '' ELSE director.F16 END || '&' ||
+        director.F4886 || '&' ||
+        CASE WHEN executor.F16 IS NULL THEN '' ELSE executor.F16 END || '&' ||
+        executor.F4886, '^') AS tasks
         FROM T212
         LEFT JOIN T237 ON T212.F4948 = T237.ID
         LEFT JOIN T205 ON T212.F4540 = T205.ID
@@ -107,7 +121,7 @@ def getAgreements(request):
             if Str is not None:
                 List = Str.split('*')
                 for allData in List:
-                    list2 = allData.split(';')
+                    list2 = allData.split('^')
                     flag = 0
                     for data in list2:
                         data.strip()
@@ -269,15 +283,23 @@ def getAgreement(request):
             T212.F4644 AS channelId,
             T237.F4890 AS services,
             T205.F4332 AS company,
-            LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358, '*') AS contacts,
-            LIST(DISTINCT participants.ID || ';' || participants.F16 || ';' || participants.F4886, '*') AS participants,
+            LIST(DISTINCT CASE WHEN T206.F4359 IS NULL THEN '' ELSE T206.F4359 END || '^' ||
+            CASE WHEN T206.F4356 IS NULL THEN '' ELSE T206.F4356 END || '^' ||
+            CASE WHEN T206.F4357 IS NULL THEN '' ELSE T206.F4357 END || '^' ||
+            CASE WHEN T206.F4358 IS NULL THEN '' ELSE T206.F4358 END, '*') AS contacts,
+            LIST(DISTINCT participants.ID || ';' ||
+            CASE WHEN participants.F16 IS NULL THEN '' ELSE participants.F16 END || ';' ||
+            participants.F4886, '*') AS participants,
             responsible.ID AS responsibleId,
             responsible.F16 AS responsibleMMId,
             responsible.F4886 AS responsible,
             manager.ID AS managerId,
             manager.F16 AS managerMMId,
             manager.F4886 AS manager,
-            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F5872, '*') AS tasks
+            LIST(CASE WHEN T218.F4695 IS NULL THEN '' ELSE T218.F4695 END || '&' ||
+            CASE WHEN T218.F5569 IS NULL THEN '' ELSE T218.F5569 END || '&' ||
+            T218.F4696 || '&' ||
+            CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END, '^') AS tasks
             FROM T212
             LEFT JOIN T237 ON T212.F4948 = T237.ID
             LEFT JOIN T205 ON T212.F4540 = T205.ID
@@ -353,7 +375,7 @@ def getAgreement(request):
                 if Str is not None:
                     List = Str.split('*')
                     for allData in List:
-                        list2 = allData.split(';')
+                        list2 = allData.split('^')
                         flag = 0
                         for data in list2:
                             data.strip()
@@ -366,9 +388,9 @@ def getAgreement(request):
                 Str = obj.get('tasks')
                 tasks = {'tasks': []}
                 if Str is not None:
-                    List = Str.split('*')
+                    List = Str.split('^')
                     for allData in List:
-                        list2 = allData.split(';')
+                        list2 = allData.split('&')
                         list2[0].strip()
                         if list2[0] == '' and list2[1] == '' and list2[2] == '':
                             continue
@@ -532,8 +554,8 @@ def getTask(request):
     if request.method == 'POST':
         obj = json.loads(request.body)
         taskId = obj.get('taskId')
-        with firebirdsql.connect(host=host, database=database, user=user, password=password,
-                                 charset=charset) as con:
+        with (((firebirdsql.connect(host=host, database=database, user=user, password=password,
+                                 charset=charset) as con))):
             cur = con.cursor()
             try:
                 sql = f'SELECT F5646 AS parentId FROM T218 WHERE ID = {taskId}'
@@ -557,14 +579,21 @@ def getTask(request):
                 EXECUTOR.ID AS ID_OF_EXECUTOR,
                 EXECUTOR.F16 AS ID_MM_EXECUTOR,
                 EXECUTOR.F4886 AS EXECUTOR_NAME,
-                LIST(coExecutor.ID || ';' || coExecutor.F16 || ';' || coExecutor.F10 || ';' || CASE WHEN coExecutor.F14 IS NULL THEN '' ELSE coExecutor.F14 END || ';' || T4.F7) AS coExecutor
+                LIST(coExecutor.ID || ';' ||
+                CASE WHEN coExecutor.F16 IS NULL THEN '' ELSE coExecutor.F16 END || ';' ||
+                coExecutor.F10 || ';' ||
+                CASE WHEN coExecutor.F14 IS NULL THEN '' ELSE coExecutor.F14 END || ';' ||
+                T4.F7, '*') AS coExecutor
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
                 LEFT JOIN T313 ON T218.ID = T313.F5750
                 LEFT JOIN T3 AS coExecutor ON T313.F5751 = coExecutor.ID
                 LEFT JOIN T4 ON coExecutor.F11 = T4.ID
-                WHERE T218.F5646 = {taskId} OR T218.ID = {taskId}""" + (f' OR T218.ID = {parentId}' if parentId is not None else '') + ' GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18'
+                WHERE T218.F5646 = {taskId} OR T218.ID = {taskId}"""
+                if parentId is not None:
+                    sql += f' OR T218.ID = {parentId}'
+                sql += ' GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18'
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
@@ -578,7 +607,7 @@ def getTask(request):
                 for task in json_result.get('subtasks'):
                     strCoExecutors = task.get('coExecutors')
                     if strCoExecutors is not None:
-                        listCoExecutors = strCoExecutors.split(',')
+                        listCoExecutors = strCoExecutors.split('*')
                         coExecutors = {'coExecutors': []}
                         for strDataCoExecutor in listCoExecutors:
                             dataCoExecutor = strDataCoExecutor.split(';')
@@ -911,7 +940,13 @@ def getAllDepartmentsStaffAndTasks(request):
             employeeId,
             employeeName,
             photo,
-            LIST(contractId || '$' || contractNum || '$' || address || '$' || CASE WHEN dateOfStart IS NULL THEN '' ELSE dateOfStart END || '$' || CASE WHEN dateOfEnding IS NULL THEN '' ELSE dateOfEnding END || '$' || CASE WHEN contractStage IS NULL THEN '' ELSE contractStage END || '$' || CASE WHEN tasks IS NULL THEN '' ELSE tasks END, '^') AS contracts
+            LIST(contractId || '`' ||
+                 contractNum || '`' ||
+                 address || '`' ||
+                 CASE WHEN dateOfStart IS NULL THEN '' ELSE dateOfStart END || '`' ||
+                 CASE WHEN dateOfEnding IS NULL THEN '' ELSE dateOfEnding END || '`' ||
+                 CASE WHEN contractStage IS NULL THEN '' ELSE contractStage END || '`' ||
+                 CASE WHEN tasks IS NULL THEN '' ELSE tasks END, '^') AS contracts
             FROM (SELECT T5.ID AS sectionId,
             T5.F26 AS sectionName,
             T3.F16 AS employeeId,
@@ -923,7 +958,17 @@ def getAllDepartmentsStaffAndTasks(request):
             T212.F4610 AS dateOfStart,
             T212.F4566 AS dateOfEnding,
             T212.F4544 AS contractStage,
-            LIST(T218.F4695 || ';' || T218.F5569 || ';' || T218.F4696 || ';' || T218.F4697 || ';' || T218.ID || ';' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || ';' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || ';' || director.F16 || ';' || director.F4886 || ';' || executor.F16 || ';' || executor.F4886, '*') AS tasks
+            LIST(CASE WHEN T218.F4695 IS NULL THEN '' ELSE T218.F4695 END || '&' ||
+                 CASE WHEN T218.F5569 IS NULL THEN '' ELSE T218.F5569 END || '&' ||
+                 T218.F4696 || '&' ||
+                 T218.F4697 || '&' ||
+                 T218.ID || '&' ||
+                 CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || '&' ||
+                 CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || '&' ||
+                 CASE WHEN director.F16 IS NULL THEN '' ELSE director.F16 END || '&' ||
+                 director.F4886 || '&' ||
+                 CASE WHEN executor.F16 IS NULL THEN '' ELSE executor.F16 END || '&' ||
+                 executor.F4886, '~') AS tasks
             FROM T5
             LEFT JOIN T3 ON T5.ID = T3.F27
             LEFT JOIN T253 ON T3.ID = T253.F5022
@@ -959,7 +1004,7 @@ def getAllDepartmentsStaffAndTasks(request):
                     count = -1
                     for contract in Contracts:
                         count += 1
-                        data = contract.split('$')
+                        data = contract.split('`')
                         contracts.get('contracts').append({'contractId': data[0], 'contractNum': data[1],
                                                            'address': data[2],
                                                            'dateOfStart': {'title': '', 'value': data[3]},
@@ -967,9 +1012,9 @@ def getAllDepartmentsStaffAndTasks(request):
                                                            'stage': {'title': data[5]}, 'tasks': []})
                         Str = data[6]
                         if Str != '':
-                            List = Str.split('*')
+                            List = Str.split('~')
                             for allData in List:
-                                list2 = allData.split(';')
+                                list2 = allData.split('&')
                                 list2[0].strip()
                                 if list2[0] == '' and list2[1] == '' and list2[2] == '':
                                     continue
@@ -1025,7 +1070,9 @@ def getTasksEmployee(request):
                 T212.F4538 AS CONTRACT_NUMBER,
                 T212.F4946 AS OBJECT_ADDRESS,
                 T205.F4331 AS CUSTOMER_NAME,
-                LIST(co_executor.ID || ';' || co_executor.F16 || ';' || co_executor.F4886) AS coExecutors
+                LIST(co_executor.ID || ';' ||
+                CASE WHEN co_executor.F16 IS NULL THEN '' ELSE co_executor.F16 END || ';' || 
+                co_executor.F4886) AS coExecutors
                 FROM T218
                 LEFT JOIN T3 AS DIRECTOR ON T218.F4693 = DIRECTOR.ID
                 LEFT JOIN T3 AS EXECUTOR ON T218.F4694 = EXECUTOR.ID
@@ -1133,11 +1180,25 @@ def getContractsEmployee(request):
             T212.F4566 AS dateOfEnding,
             T237.F4890 AS services,
             T205.F4331 AS customer,
-            LIST(DISTINCT T206.F4359 || ';' || T206.F4356 || ';' || T206.F4357 || ';' || T206.F4358) AS contacts,
-            LIST(DISTINCT participants.F16 || ';' || participants.F4886) AS participants,
+            LIST(DISTINCT CASE WHEN T206.F4359 IS NULL THEN '' ELSE T206.F4359 END || '^' ||
+            CASE WHEN T206.F4356 IS NULL THEN '' ELSE T206.F4356 END || '^' ||
+            CASE WHEN T206.F4357 IS NULL THEN '' ELSE T206.F4357 END || '^' ||
+            CASE WHEN T206.F4358 IS NULL THEN '' ELSE T206.F4358 END, '*') AS contacts,
+            LIST(DISTINCT CASE WHEN participants.F16 IS NULL THEN '' ELSE participants.F16 END || ';' ||
+            participants.F4886) AS participants,
             responsible.F16 AS responsibleId,
             responsible.F4886 AS responsible,
-            LIST(DISTINCT T218.F4695 || '&' || T218.F5569 || '&' || T218.F4696 || '&' || T218.F4697 || '&' || T218.ID || '&' || CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || '&' || CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || '&' || director.F16 || '&' || director.F4886 || '&' || executor.F16 || '&' || executor.F4886, '^') AS tasks,
+            LIST(DISTINCT CASE WHEN T218.F4695 IS NULL THEN '' ELSE T218.F4695 END || '&' ||
+            CASE WHEN T218.F5569 IS NULL THEN '' ELSE T218.F5569 END || '&' ||
+            T218.F4696 || '&' ||
+            T218.F4697 || '&' ||
+            T218.ID || '&' ||
+            CASE WHEN T218.F5872 IS NULL THEN '' ELSE T218.F5872 END || '&' ||
+            CASE WHEN T218.F5646 IS NULL THEN '' ELSE T218.F5646 END || '&' ||
+            CASE WHEN director.F16 IS NULL THEN '' ELSE director.F16 END || '&' ||
+            director.F4886 || '&' ||
+            CASE WHEN executor.F16 IS NULL THEN '' ELSE executor.F16 END || '&' ||
+            executor.F4886, '^') AS tasks,
             projectManager.F16 AS idMMProjectManager,
             projectManager.F10 AS fioProjectManager
             FROM T212
@@ -1202,9 +1263,9 @@ def getContractsEmployee(request):
                 Str = obj.get('contacts')
                 contacts = {'contacts': []}
                 if Str is not None:
-                    List = Str.split(',')
+                    List = Str.split('*')
                     for allData in List:
-                        list2 = allData.split(';')
+                        list2 = allData.split('^')
                         count = 0
                         for data in list2:
                             data.strip()
