@@ -911,7 +911,7 @@ def getAllDepartmentsStaffAndTasks(request):
             employeeId,
             employeeName,
             photo,
-            LIST(contractId || '$' || contractNum || '$' || address || '$' || dateOfStart || '$' || dateOfEnding || '$' || contractStage || '$' || CASE WHEN tasks IS NULL THEN '' ELSE tasks END, '^') AS contracts
+            LIST(contractId || '$' || contractNum || '$' || address || '$' || CASE WHEN dateOfStart IS NULL THEN '' ELSE dateOfStart END || '$' || CASE WHEN dateOfEnding IS NULL THEN '' ELSE dateOfEnding END || '$' || CASE WHEN contractStage IS NULL THEN '' ELSE contractStage END || '$' || CASE WHEN tasks IS NULL THEN '' ELSE tasks END, '^') AS contracts
             FROM (SELECT T5.ID AS sectionId,
             T5.F26 AS sectionName,
             T3.F16 AS employeeId,
