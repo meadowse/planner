@@ -9,18 +9,17 @@ import Authentication from '../authentication/Authentication';
 
 // Импорт сервисов
 import DataDisplayService from '@services/data_display.service';
-import DataFormService from '@services/data_form.service';
+import DataFormService from '@services/forms/data_form.service';
 import UserService from '@services/user.service';
 import Preloader from '@components/auxiliary_pages/loader/Preloader';
 import UserInfo from '@components/pages/data_user/UserInfo';
+import ProjectFormService from '@services/forms/project_form.service';
+
 import { queryClient } from '../query/queryClient';
 
 const DataDisplayPage = lazy(() => import('@components/pages/data_display/DataDisplayPage'));
 const DataForm = lazy(() => import('@components/pages/data_display/data_form/DataForm'));
 const ProjectForm = lazy(() => import('@components/pages/data_display/data_form/ProjectForm'));
-const TasksPage = lazy(() => import('@components/pages/tasks/TasksPage'));
-// const UserInfo = lazy(() => import('@components/pages/data_user/UserInfo'));
-// const UserInfoNew = lazy(() => import('@components/pages/data_user/UserInfoNew'));
 const TabGeneral = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_general/TabGeneral'));
 const TabWorkNew = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_work/TabWorkNew'));
 const TabEquipment = lazy(() => import('@components/pages/data_display/data_form/tabs/tab_equipment/TabEquipment'));
@@ -180,7 +179,15 @@ const ROUTES_FOR_AUTH = [
                         element: <ProjectForm />,
                         children: [
                             {
-                                path: 'general',
+                                path: 'general/:idProject',
+                                loader: async ({ params }) => {
+                                    const { idProject } = params;
+                                    return {
+                                        uploadedData: await ProjectFormService.loadData('tasks', {
+                                            projectId: idProject
+                                        })
+                                    };
+                                },
                                 element: (
                                     <Suspense fallback={<Preloader />}>
                                         <TabInnerProject />

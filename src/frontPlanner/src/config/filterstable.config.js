@@ -40,7 +40,8 @@ export const KEYS_FOR_STORAGE = {
     innerprojects: (keyMode, keyOption) =>
         `innerprojects${keyMode ? `-${keyMode}` : ''}${keyOption ? `_${keyOption}` : ''}`,
     user: (keyMode, keyOption) => `user${keyMode ? `-${keyMode}` : ''}${keyOption ? `_${keyOption}` : ''}`,
-    dataform: (keyMode, keyOption) => `dataform${keyMode ? `-${keyMode}` : ''}${keyOption ? `_${keyOption}` : ''}`
+    dataform: (keyMode, keyOption) => `dataform${keyMode ? `-${keyMode}` : ''}${keyOption ? `_${keyOption}` : ''}`,
+    projectform: (keyMode, keyOption) => `projectform${keyMode ? `-${keyMode}` : ''}${keyOption ? `_${keyOption}` : ''}`
 };
 
 export const OPTIONS_FILTER_CONF = {

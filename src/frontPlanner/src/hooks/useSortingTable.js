@@ -11,7 +11,8 @@ const KEYS_FOR_STORAGE = {
     personal: keyMode => `personal${keyMode ? `-${keyMode}` : ''}`,
     innerprojects: keyMode => `innerprojects${keyMode ? `-${keyMode}` : ''}`,
     user: keyMode => `user${keyMode ? `-${keyMode}` : ''}`,
-    dataform: keyMode => `dataform${keyMode ? `-${keyMode}` : ''}`
+    dataform: keyMode => `dataform${keyMode ? `-${keyMode}` : ''}`,
+    projectform: keyMode => `projectform${keyMode ? `-${keyMode}` : ''}`
 };
 
 export const useSortingTable = (modeConfig, data, setData) => {

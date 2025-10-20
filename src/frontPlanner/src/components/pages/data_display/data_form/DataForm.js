@@ -4,10 +4,10 @@ import classNames from 'classnames';
 import axios from 'axios';
 
 // Импорт сервисов
-import DataFormService from '@services/data_form.service';
+import DataFormService from '@services/forms/data_form.service';
 
 // Импорт контекста
-import { useHistoryContext } from '../../../../contexts/history.context';
+import { useHistoryContext } from '@contexts/history.context';
 
 // Импорт стилей
 import './data_form.css';
@@ -124,7 +124,6 @@ function Tabs(props) {
 export default function DataFormNew() {
     const uploadedData = useLoaderData();
     const navigate = useNavigate();
-    // const { state } = useLocation();
 
     const location = useLocation();
     const [prevPath] = useState(location?.state?.path);
