@@ -904,7 +904,7 @@ def auth(request):
 @csrf_exempt
 def getAllDepartmentsStaffAndTasks(request):
     start = perf_counter()
-    with (firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con):
+    with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
         cur = con.cursor()
         try:
             # sql = """SELECT sectionId,
