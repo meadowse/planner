@@ -674,8 +674,7 @@ def addTask(request):
             message += f'Дата добавления: *{dateStart}*\n'
             message += f'Постановщик: *@{director}*\n'
             message += f'Исполнитель: *@{executor}*\n'
-            if task != '':
-                message += f'Задача: :hammer: *{task}*\n'
+            message += f'Задача: :hammer: *{task}*\n'
             message += f'Deadline: :calendar: *{deadline}*\n'
             if comment != '':
                 message += f'Комментарий: :speech_balloon: *{comment}*\n'
@@ -691,7 +690,7 @@ def addTask(request):
             values = {'id': ID, 'F4691': contractId, 'F4695': task, 'F4698': comment, 'F5724': typeWorkId,
                       'F4970': dateStart, 'F5569': dateStart, 'F4696': deadline, 'F4693': directorId,  # должно быть ID пользователя
                       'F4694': executorId, 'F4697': 0, 'F5646': parenId, 'F5872': 'Новая', 'F5451': idMessage,
-                      'F5889': plannedTimeCosts, 'F5910': executorID, }
+                      'F5889': plannedTimeCosts, 'F5910': executorID}
             # Преобразование значений в SQL-формат
             sql_values = []
             for key, value in values.items():
@@ -727,7 +726,10 @@ def editTask(request):
         done = obj.get('done')
         parenId = obj.get('parentId')
         status = obj.get('status')
-        today = datetime.date.today().strftime('%Y-%m-%d')
+        if done == 1:
+            today = datetime.date.today().strftime('%Y-%m-%d')
+        else:
+            today = None
         plannedTimeCosts = obj.get('plannedTimeCosts')
         with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                  charset=charset) as con:
@@ -770,8 +772,7 @@ def editTask(request):
             message += f'Дата добавления: *{dateStart}*\n'
             message += f'Постановщик: *@{director}*\n'
             message += f'Исполнитель: *@{executor}*\n'
-            if task != '':
-                message += f'Задача: :hammer: *{task}*\n'
+            message += f'Задача: :hammer: *{task}*\n'
             message += f'Deadline: :calendar: *{deadline}*\n'
             if comment != '':
                 message += f'Комментарий: :speech_balloon: *{comment}*\n'
