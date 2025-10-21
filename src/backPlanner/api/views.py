@@ -804,7 +804,8 @@ def editTask(request):
             message += f'Deadline: :calendar: *{deadline}*\n'
             if comment != '':
                 message += f'Комментарий: :speech_balloon: *{comment}*\n'
-            message += f'Планируемые времязатраты: :clock3: *{plannedTimeCosts}ч.*\n'
+            if plannedTimeCosts is not None:
+                message += f'Планируемые времязатраты: :clock3: *{plannedTimeCosts}ч.*\n'
             sql = f"SELECT SUM(F5882) FROM T320 WHERE F5862 = {taskId}"
             cur.execute(sql)
             currentTimeCosts = cur.fetchone()[0]
