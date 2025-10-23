@@ -751,9 +751,12 @@ def editTask(request):
         deadline = obj.get('deadline')
         directorId = obj.get('directorId')
         executorId = obj.get('executorId')
-        done = obj.get('done')
         parenId = obj.get('parentId')
         status = obj.get('status')
+        if status == 'Завершенная' or status == 'Отмененная':
+            done = 1
+        else:
+            done = 0
         if done == 1:
             today = datetime.date.today().strftime('%Y-%m-%d')
         else:
