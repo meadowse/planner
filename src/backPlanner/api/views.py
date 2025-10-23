@@ -755,11 +755,9 @@ def editTask(request):
         status = obj.get('status')
         if status == 'Завершенная' or status == 'Отмененная':
             done = 1
-        else:
-            done = 0
-        if done == 1:
             today = datetime.date.today().strftime('%Y-%m-%d')
         else:
+            done = 0
             today = None
         plannedTimeCosts = obj.get('plannedTimeCosts')
         with firebirdsql.connect(host=host, database=database, user=user, password=password,
@@ -788,7 +786,15 @@ def editTask(request):
             cur.execute(sql)
             contractId = cur.fetchone()[0]
             if contractId is None:
-                idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
+                sql = f'SELECT F5900 AS projectId FROM T218 WHERE ID = {taskId}'
+                cur.execute(sql)
+                projectId = cur.fetchone()[0]
+                if projectId is None:
+                    idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
+                else:
+                    sql = f'select F5895 AS channelId from T323 where ID = {projectId}'
+                    cur.execute(sql)
+                    idChannel = cur.fetchone()[0]
             else:
                 sql = f'select F4644 from T212 where ID = {contractId}'
                 cur.execute(sql)
@@ -848,15 +854,17 @@ def deleteTask(request):
             with firebirdsql.connect(host=host, database=database, user=user, password=password,
                                      charset=charset) as con:
                 cur = con.cursor()
-                cur.execute(f'SELECT * FROM T313 WHERE F5750 = {taskId}')
+                cur.execute(f'SELECT ID FROM T313 WHERE F5750 = {taskId}')
                 result = cur.fetchall()
                 if len(result) == 0:
-                    cur.execute(f'SELECT * FROM T320 WHERE F5862 = {taskId}')
+                    cur.execute(f'SELECT ID FROM T320 WHERE F5862 = {taskId}')
                     result = cur.fetchall()
                     if len(result) == 0:
-                        sql = f'SELECT F4691 FROM T218 WHERE ID = {taskId}'
+                        sql = f'SELECT F4691 AS contractId, F5900 AS projectId FROM T218 WHERE ID = {taskId}'
                         cur.execute(sql)
-                        contractId = cur.fetchone()[0]
+                        data = cur.fetchone()
+                        contractId = data[0]
+                        projectId = data[1]
                         sql = f"SELECT F5451 FROM T218 WHERE ID = {taskId}"
                         cur.execute(sql)
                         rootId = cur.fetchone()[0]
@@ -864,7 +872,12 @@ def deleteTask(request):
                         cur.execute(sql)
                         con.commit()
                         if contractId is None:
-                            idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
+                            if projectId is None:
+                                idChannel = 'fd9nra9nx3n47jk7eyo1fg5t7o'
+                            else:
+                                sql = f'select F5895 AS channelId from T323 where ID = {projectId}'
+                                cur.execute(sql)
+                                idChannel = cur.fetchone()[0]
                         else:
                             sql = f'select F4644 from T212 where ID = {contractId}'
                             cur.execute(sql)
