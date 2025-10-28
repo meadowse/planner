@@ -247,7 +247,7 @@ def corParticipants(request):
                 if participantId[0] is not None:
                     List2.append(participantId[0])
             for data in participants:
-                participantId = data.get('participantId')
+                participantId = int(data.get('id'))
                 if participantId not in List2:
                     cur.execute(f'SELECT GEN_ID(GEN_T253, 1) FROM RDB$DATABASE')
                     Id = cur.fetchonemap().get('GEN_ID', None)
