@@ -244,7 +244,8 @@ def corParticipants(request):
             List = cur.fetchall()
             List2 = []
             for participantId in List:
-                List2.append(participantId[0])
+                if participantId[0] is not None:
+                    List2.append(participantId[0])
             for data in participants:
                 participantId = data.get('participantId')
                 if participantId not in List2:
@@ -562,6 +563,7 @@ def getTask(request):
                 parentId = cur.fetchone()[0]
                 sql = f"""SELECT T218.ID,
                 T218.F4691 AS CONRACT_ID,
+                T218.F5900 AS projectId,
                 T218.F4695 AS TASK,
                 T218.F5724 AS ID_OF_TYPE_OF_WORK,
                 T218.F5569 AS dateStart,
@@ -596,9 +598,9 @@ def getTask(request):
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
-                    'id', 'contractId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'done', 'parentId',
-                    'comment', 'status', 'plannedTimeCosts', 'idPost', 'idDirector', 'idMMDirector', 'directorFIO',
-                    'idExecutor', 'idMMExecutor', 'executorFIO', 'coExecutors')
+                    'id', 'contractId', 'projectId', 'task', 'idTypeWork', 'dateStart', 'deadlineTask', 'done',
+                    'parentId', 'comment', 'status', 'plannedTimeCosts', 'idPost', 'idDirector', 'idMMDirector',
+                    'directorFIO', 'idExecutor', 'idMMExecutor', 'executorFIO', 'coExecutors')
                 json_result = {
                     'parent': {}, 'subtasks': [{col: value for col, value in zip(columns, row)} for row in result]}  # Создаем список словарей с сериализацией значений
                 i = 0
