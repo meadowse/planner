@@ -664,8 +664,8 @@ def getTask(request):
                 json_result.update(jsonResult)
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
-                print(f"НЕ удалось получить задачи по задаче {taskId}: {ex}")
-                return JsonResponse({'error': f"НЕ удалось получить задачи по задаче {taskId}: {ex}"}, status=500)
+                print(f"НЕ удалось получить данные по задаче {taskId}: {ex}")
+                return JsonResponse({'error': f"НЕ удалось получить данные по задаче {taskId}: {ex}"}, status=500)
     else:
         return JsonResponse({'error': 'Method Not Allowed'}, status=405)
 

@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
-    # 'corsheaders',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     # 'csp.middleware.CSPMiddleware',
 ]
 
@@ -144,20 +144,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Add to project/settings.py
-# SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 # project/settings.py
 # Allow browsers to load normalize.css from cdn.jsdelivr.net
 # CSP_STYLE_SRC = ["'self'", "cdn.jsdelivr.net"]
 
 # CORS SETTINGS
-# CORS_ALLOW_ALL_ORIGINS = False  # Разрешить все источники или нет
-# CORS_ALLOWED_ORIGINS = [
-#     "https://rasilka.ru",       # Добавьте разрешенные источники
-#     "https://rasilka.online",  # Другие разрешенные источники
-#     'http://localhost:3500',
+CORS_ALLOW_ALL_ORIGINS = False  # Разрешить все источники или нет
+CORS_ALLOWED_ORIGINS = [
+    "https://planer.mosproektkompleks.ru",       # Добавьте разрешенные источники
+    "https://planner.mosproektkompleks.ru",  # Другие разрешенные источники
+    'http://localhost:3000',
 #     'http://10.199.2.118:3500',
-#     'http://10.13.13.5:3000'
-# ]
+    'http://10.199.254.28:3000'
+]
 #
 # CSRF_TRUSTED_ORIGINS = ['https://rasilka.ru', 'https://rasilka.online', 'http://localhost:3500', 'http://10.199.2.118:3500', 'http://10.13.13.5:3000', ]
