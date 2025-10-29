@@ -1378,24 +1378,32 @@ def getVacations(request):
         with firebirdsql.connect(host=host, database=database, user=user, password=password, charset=charset) as con:
             cur = con.cursor()
             try:
-                sql = """SELECT T3.ID AS id,
-                T3.F16 AS mmId,
-                T3.F4886 AS employeeFI,
-                T302.F5577 AS vacation,
-                T302.F5579 AS vacationStart,
-                T302.F5581 AS vacationEnd,
-                T4.F7 AS post,
-                T5.F26 AS department
+                sql = """SELECT T3.ID                   AS USER_DB_ID,
+                T3.F16                                  AS USER_MM_ID,
+                T3.F4886                                AS USER_FI,
+                T3.F27                                  AS DEPARTMENT_ID,
+                COALESCE(T5.F26, 'Без отдела')          AS DEPARTMENT_NAME,
+                T3.F11                                  AS POSITION_ID,
+                COALESCE(T4.F7, 'Должность не указана') AS POSITION_NAME,
+                T302.F5579                              AS PERIOD_START,
+                T302.F5581                              AS PERIOD_END,
+                T319.F5855                              AS PERIOD_TYPE
                 FROM T3
-                LEFT JOIN T4 ON T4.ID = T3.F11
-                LEFT JOIN T5 ON T5.ID = T3.F27
+                LEFT JOIN T5   ON T3.F27 = T5.ID
+                LEFT JOIN T4   ON T3.F11 = T4.ID
                 LEFT JOIN T302 ON T302.F5574 = T3.ID
-                WHERE T3.F5383 = 1 AND
-                (T302.F5577 = 'отпуск' OR T302.F5577 = 'отпуск без содержания' OR T302.F5577 = 'удаленная работа' OR T302.F5577 = 'работа в выходной' OR T302.F5577 = 'отсутствие на рабочем месте' OR T302.F5577 = 'больничный' OR T302.F5577 IS NULL)
-                ORDER BY department, employeeFI, vacation"""
+                LEFT JOIN T319 ON T302.F5857 = T319.ID AND T319.F5855 IN ('отпуск',
+                'отпуск без содержания',
+                'удаленная работа',
+                'больничный',
+                'работа в выходной',
+                'отсутствие на рабочем месте')
+                WHERE T3.F5383 = 1  -- Только работающие сотрудники
+                ORDER BY T5.F26, T3.F4886, T302.F5579"""
                 cur.execute(sql)
                 result = cur.fetchall()
-                columns = ('id', 'mmId', 'employeeFI', 'vacation', 'vacationStart', 'vacationEnd', 'post', 'department')
+                columns = ('id', 'mmId', 'employeeFI', 'departmentId', 'departmentName', 'postId', 'post',
+                           'vacationStart', 'vacationEnd', 'vacation')
                 json_result = [{col: value for col, value in zip(columns, row)} for row in result]  # Создаем список словарей с сериализацией значений
                 return JsonResponse(json_result, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
             except Exception as ex:
