@@ -594,7 +594,7 @@ def getTask(request):
                 WHERE T218.F5646 = {taskId} OR T218.ID = {taskId}"""
                 if parentId is not None:
                     sql += f' OR T218.ID = {parentId}'
-                sql += ' GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18'
+                sql += ' GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19'
                 cur.execute(sql)
                 result = cur.fetchall()
                 columns = (
