@@ -29,7 +29,9 @@ from .DJANGO_SECRET_KEY import SECRET_KEY, DOMEN, DOMEN2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.199.2.112', '10.199.2.118', '127.0.0.1', 'backplanner', 'localhost', '0.0.0.0', '10.199.2.118', '10.199.2.144', '10.199.254.28', DOMEN, DOMEN2, ]
+ALLOWED_HOSTS = ['10.199.2.112', '10.199.2.118', '127.0.0.1', 'backplanner', 'localhost', '0.0.0.0', '10.199.2.118',
+                 '10.199.2.144', '10.199.254.28', DOMEN, DOMEN2, 'react.mosproektkompleks.com',
+                 'mosproektkompleks.com', ]
 
 
 # Application definition
@@ -157,7 +159,9 @@ CORS_ALLOWED_ORIGINS = [
     "https://planner.mosproektkompleks.ru",  # Другие разрешенные источники
     'http://localhost:3000',
 #     'http://10.199.2.118:3500',
-    'http://10.199.254.28:3000'
+    'http://10.199.254.28:3000',
+    'https://mosproektkompleks.com/',
+    'https://react.mosproektkompleks.com/',
 ]
 #
 # CSRF_TRUSTED_ORIGINS = ['https://rasilka.ru', 'https://rasilka.online', 'http://localhost:3500', 'http://10.199.2.118:3500', 'http://10.13.13.5:3000', ]
